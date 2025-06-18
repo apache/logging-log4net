@@ -353,7 +353,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
       {
         _recursiveGuard = true;
 
-        var filteredEvents = new List<LoggingEvent>(loggingEvents.Length);
+        List<LoggingEvent> filteredEvents = new(loggingEvents.Length);
 
         foreach (LoggingEvent loggingEvent in loggingEvents)
         {
@@ -628,7 +628,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     lock (LockObj)
     {
       // Create the render writer on first use
-      _renderWriter ??= new ReusableStringWriter(System.Globalization.CultureInfo.InvariantCulture);
+      _renderWriter ??= new(System.Globalization.CultureInfo.InvariantCulture);
 
       // Reset the writer so we can reuse it
       _renderWriter.Reset(RenderBufferMaxCapacity, RenderBufferSize);

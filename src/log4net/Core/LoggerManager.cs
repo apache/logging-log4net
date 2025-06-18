@@ -527,7 +527,7 @@ public static class LoggerManager
   /// <returns>A string of version info.</returns>
   private static string GetVersionInfo()
   {
-    var sb = new StringBuilder();
+    StringBuilder sb = new();
 
     Assembly myAssembly = Assembly.GetExecutingAssembly();
     sb.Append("log4net assembly [").Append(myAssembly.FullName).Append("]. ");

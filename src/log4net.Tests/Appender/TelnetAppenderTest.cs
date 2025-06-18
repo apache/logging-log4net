@@ -1,4 +1,4 @@
-﻿#region Apache License
+#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -37,7 +37,7 @@ namespace log4net.Tests.Appender;
 public sealed class TelnetAppenderTest
 {
   /// <summary>
-  /// Simple Test für the <see cref="TelnetAppender"/>
+  /// Simple Test for the <see cref="TelnetAppender"/>
   /// </summary>
   /// <remarks>
   /// https://github.com/apache/logging-log4net/issues/194
