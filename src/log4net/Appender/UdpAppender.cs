@@ -21,7 +21,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -206,13 +206,10 @@ public class UdpAppender : AppenderSkeleton
     {
       if (value is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
       {
-        throw Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
           $"The value specified is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
       }
-      else
-      {
-        _remotePort = value;
-      }
+      _remotePort = value;
     }
   }
 
@@ -240,13 +237,10 @@ public class UdpAppender : AppenderSkeleton
     {
       if (value is not 0 and (< IPEndPoint.MinPort or > IPEndPoint.MaxPort))
       {
-        throw Util.SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
           $"The value specified is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
       }
-      else
-      {
-        _localPort = value;
-      }
+      _localPort = value;
     }
   }
 
@@ -270,7 +264,7 @@ public class UdpAppender : AppenderSkeleton
   /// The underlying <see cref="UdpClient" />.
   /// </value>
   /// <remarks>
-  /// <see cref="UdpAppender" /> creates a <see cref="UdpClient" /> to send logging events 
+  /// <see cref="UdpAppender" /> creates a <see cref="UdpClient" /> to send logging events
   /// over a network.  Classes deriving from <see cref="UdpAppender" /> can use this
   /// property to get or set this <see cref="UdpClient" />.  Use the underlying <see cref="UdpClient" />
   /// returned from <see cref="Client" /> if you require access beyond that which 
@@ -282,7 +276,7 @@ public class UdpAppender : AppenderSkeleton
   /// Gets or sets the cached remote endpoint to which the logging events should be sent.
   /// </summary>
   /// <remarks>
-  /// The <see cref="ActivateOptions" /> method will initialize the remote endpoint 
+  /// The <see cref="ActivateOptions" /> method will initialize the remote endpoint
   /// with the values of the <see cref="RemoteAddress" /> and <see cref="RemotePort"/>
   /// properties.
   /// </remarks>
@@ -294,13 +288,13 @@ public class UdpAppender : AppenderSkeleton
   /// <remarks>
   /// <para>
   /// This is part of the <see cref="IOptionHandler"/> delayed object
-  /// activation scheme. The <see cref="ActivateOptions"/> method must 
+  /// activation scheme. The <see cref="ActivateOptions"/> method must
   /// be called on this object after the configuration properties have
   /// been set. Until <see cref="ActivateOptions"/> is called this
-  /// object is in an undefined state and must not be used. 
+  /// object is in an undefined state and must not be used.
   /// </para>
   /// <para>
-  /// If any of the configuration properties are modified then 
+  /// If any of the configuration properties are modified then
   /// <see cref="ActivateOptions"/> must be called again.
   /// </para>
   /// <para>
@@ -371,7 +365,7 @@ public class UdpAppender : AppenderSkeleton
   protected override bool RequiresLayout => true;
 
   /// <summary>
-  /// Closes the UDP connection and releases all resources associated with 
+  /// Closes the UDP connection and releases all resources associated with
   /// this <see cref="UdpAppender" /> instance.
   /// </summary>
   /// <remarks>
@@ -392,7 +386,7 @@ public class UdpAppender : AppenderSkeleton
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The underlying <see cref="UdpClient"/> is initialized and binds to the 
+  /// The underlying <see cref="UdpClient"/> is initialized and binds to the
   /// port number from which you intend to communicate.
   /// </para>
   /// <para>
@@ -403,14 +397,7 @@ public class UdpAppender : AppenderSkeleton
   {
     try
     {
-      if (LocalPort == 0)
-      {
-        Client = new(RemoteAddress!.AddressFamily);
-      }
-      else
-      {
-        Client = new(LocalPort, RemoteAddress!.AddressFamily);
-      }
+      Client = UdpConnection.CreateClient(LocalPort, RemoteAddress.EnsureNotNull());
     }
     catch (Exception e) when (!e.IsFatal())
     {
@@ -423,7 +410,7 @@ public class UdpAppender : AppenderSkeleton
   }
 
   /// <summary>
-  /// The TCP port number of the remote host or multicast group to 
+  /// The TCP port number of the remote host or multicast group to
   /// which the logging event will be sent.
   /// </summary>
   private int _remotePort;

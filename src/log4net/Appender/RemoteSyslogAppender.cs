@@ -18,15 +18,14 @@
 #endregion
 
 using System;
-
-using log4net.Core;
-using log4net.Util;
-using log4net.Layout;
-using System.Text;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Concurrent;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using log4net.Appender.Internal;
+using log4net.Core;
+using log4net.Layout;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -260,9 +259,9 @@ public class RemoteSyslogAppender : UdpAppender
   }
 
   private readonly BlockingCollection<byte[]> _sendQueue = new();
-  private CancellationTokenSource? _cts;
+  private CancellationTokenSource? _cancellationTokenSource;
   private Task? _pumpTask;
-  
+
   /// <summary>
   /// Initializes a new instance of the <see cref="RemoteSyslogAppender" /> class.
   /// </summary>
@@ -302,6 +301,11 @@ public class RemoteSyslogAppender : UdpAppender
   public SyslogFacility Facility { get; set; } = SyslogFacility.User;
 
   /// <summary>
+  /// Gets or sets the delegate used to create instances of <see cref="IUdpConnection"/>.
+  /// </summary>
+  protected virtual IUdpConnection CreateUdpConnection() => new UdpConnection();
+
+  /// <summary>
   /// Add a mapping of level to severity
   /// </summary>
   /// <param name="mapping">The mapping to add</param>
@@ -326,15 +330,6 @@ public class RemoteSyslogAppender : UdpAppender
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    if (Client is null)
-    {
-      ErrorHandler.Error(
-        $"Unable to send logging event to remote syslog {RemoteAddress} on port {RemotePort}, no client created",
-        e: null,
-        ErrorCode.WriteFailure);
-      return;
-    }
-
     loggingEvent.EnsureNotNull();
     try
     {
@@ -342,22 +337,14 @@ public class RemoteSyslogAppender : UdpAppender
       int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.Level));
 
       // Identity
-      string? identity;
-      if (Identity is not null)
-      {
-        identity = Identity.Format(loggingEvent);
-      }
-      else
-      {
-        identity = loggingEvent.Domain;
-      }
+      string? identity = Identity?.Format(loggingEvent) ?? loggingEvent.Domain;
 
       // Message. The message goes after the tag/identity
       string message = RenderLoggingEvent(loggingEvent);
 
       int i = 0;
 
-      var builder = new StringBuilder();
+      StringBuilder builder = new();
 
       while (i < message.Length)
       {
@@ -375,14 +362,13 @@ public class RemoteSyslogAppender : UdpAppender
         // Grab as a byte array
         byte[] buffer = Encoding.GetBytes(builder.ToString());
 
-        //Client.SendAsync(buffer, buffer.Length, RemoteEndPoint).Wait();
         _sendQueue.Add(buffer);
       }
     }
     catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error(
-        $"Unable to send logging event to remote syslog {RemoteAddress} on port {RemotePort}.",
+        $"Unable to enqueue logging event to remote syslog {RemoteAddress} on port {RemotePort}.",
         e, ErrorCode.WriteFailure);
     }
   }
@@ -434,10 +420,11 @@ public class RemoteSyslogAppender : UdpAppender
     base.ActivateOptions();
     _levelMapping.ActivateOptions();
     // Start the background pump
-    _cts = new CancellationTokenSource();
-    _pumpTask = Task.Run(() => ProcessQueueAsync(_cts.Token), CancellationToken.None);
+    _cancellationTokenSource = new();
+    _pumpTask = Task.Factory.StartNew(() => ProcessQueueAsync(_cancellationTokenSource.Token), CancellationToken.None,
+      TaskCreationOptions.LongRunning, TaskScheduler.Default);
   }
-  
+
   /// <summary>
   /// Translates a log4net level to a syslog severity.
   /// </summary>
@@ -544,44 +531,49 @@ public class RemoteSyslogAppender : UdpAppender
     public SyslogSeverity Severity { get; set; }
   }
 
+  /// <inheritdoc/>
   protected override void OnClose()
   {
     // Signal shutdown and wait for the pump to drain
-    _cts?.Cancel();
-    _pumpTask?.Wait(TimeSpan.FromSeconds(5)); // or your own timeout
+    _cancellationTokenSource?.Cancel();
+    _pumpTask?.Wait(TimeSpan.FromSeconds(5));
     base.OnClose();
   }
 
   private async Task ProcessQueueAsync(CancellationToken token)
   {
     // We create our own UdpClient here, so that client lifetime is tied to this task
-    using (var udp = new UdpClient())
-    {
-      udp.Connect(RemoteAddress?.ToString(), RemotePort);
+    using IUdpConnection udpClient = CreateUdpConnection();
+    udpClient.Connect(LocalPort, RemoteAddress.EnsureNotNull(), RemotePort);
 
-      try
+    try
+    {
+      while (!token.IsCancellationRequested)
       {
-        while (!token.IsCancellationRequested)
+        // Take next message or throw when cancelled
+        byte[] datagram = _sendQueue.Take(token);
+        try
         {
-          // Take next message or throw when cancelled
-          byte[] datagram = _sendQueue.Take(token);
-          try
-          {
-            await udp.SendAsync(datagram, datagram.Length);
-          }
-          catch (Exception ex) when (!ex.IsFatal())
-          {
-            ErrorHandler.Error("RemoteSyslogAppender: send failed", ex, ErrorCode.WriteFailure);
-          }
+          await udpClient.SendAsync(datagram, datagram.Length).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (!ex.IsFatal())
+        {
+          ErrorHandler.Error("RemoteSyslogAppender: send failed", ex, ErrorCode.WriteFailure);
         }
       }
-      catch (OperationCanceledException)
+    }
+    catch (OperationCanceledException)
+    {
+      // Clean shutdown: drain remaining items if desired
+      while (_sendQueue.TryTake(out byte[]? leftover))
       {
-        // Clean shutdown: drain remaining items if desired
-        while (_sendQueue.TryTake(out var leftover))
+        try
         {
-          try { await udp.SendAsync(leftover, leftover.Length); }
-          catch { /* ignore */ }
+          await udpClient.SendAsync(leftover, leftover.Length).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (!ex.IsFatal())
+        {
+          ErrorHandler.Error("RemoteSyslogAppender: send failed during shutdown", ex, ErrorCode.FlushFailure);
         }
       }
     }
