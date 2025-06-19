@@ -38,4 +38,16 @@
 
 <#if release.date?has_content>Release date:: ${release.date}</#if>
 
+[#release-notes-3-2-0-added]
+=== Added
+
+* Asynchronous Sending for RemoteSyslogAppender
+** requested by @yogitasingh001 https://github.com/apache/logging-log4net/issues/255[#255]
+** implemented by @yogitasingh001 (in https://github.com/apache/logging-log4net/pull/253[#253]) and @FreeAndNil (in https://github.com/apache/logging-log4net/pull/258[#258])
+** Refactored the RemoteSyslogAppender to use an asynchronous, non-blocking logging model.
+   Introduced a background worker pattern using `BlockingCollection&lt;byte[]&gt;` to decouple UDP log transmission from the calling thread.
+   This eliminates thread blocking caused by `.Wait()` on `SendAsync()` and significantly improves performance under high-load conditions.
+   A graceful shutdown ensures any buffered logs are flushed on appender closure.
+   No changes to external behavior - maintains backward compatibility.
+
 <#include "../.changelog.adoc.ftl">
