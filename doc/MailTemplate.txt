@@ -1,12 +1,12 @@
 To: dev@logging.apache.org
-Subject: [VOTE] Release Apache Log4net 3.1.1
+Subject: [VOTE] Release Apache Log4net 3.2.0
 
-This is a vote to release the Apache Log4net 3.1.1.
+This is a vote to release the Apache Log4net 3.2.0.
 
 Website: https://logging.staged.apache.org/log4net/release-notes.html
 GitHub: https://github.com/apache/logging-log4net
 Commit: <todo>
-Distribution: https://dist.apache.org/repos/dist/dev/logging/log4net/3.1.1
+Distribution: https://dist.apache.org/repos/dist/dev/logging/log4net/3.2.0
 Signing key: 0x7D24496A230E29D6349A99EF583E491578F02D5D
 Review kit: https://logging.staged.apache.org/log4net/release-review.html
 

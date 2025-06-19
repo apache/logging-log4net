@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -20,12 +20,12 @@
   <parent>
     <groupId>org.apache.logging</groupId>
     <artifactId>logging-parent</artifactId>
-    <version>12.1.0</version>
+    <version>12.1.1</version>
   </parent>
   <packaging>pom</packaging>
   <groupId>org.apache.logging.log4net</groupId>
   <artifactId>apache-log4net</artifactId>
-  <version>3.1.1</version>
+  <version>3.2.0</version>
   <name>Apache log4net</name>
   <description>Logging framework for Microsoft .NET Framework.</description>
   <url>https://logging.apache.org/log4net</url>
@@ -54,7 +54,7 @@
   </ciManagement>
   <properties>
     <!-- project version -->
-    <revision>3.1.0-SNAPSHOT</revision>
+    <revision>3.2.0-SNAPSHOT</revision>
   </properties>
   <build>
     <plugins>
