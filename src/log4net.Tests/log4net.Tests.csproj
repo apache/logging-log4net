@@ -35,6 +35,15 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Integration\log4net.maxsizeroll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Integration\log4net.maxsizeroll_date.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Integration\log4net.roll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Integration\log4net.roll.config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
