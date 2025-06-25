@@ -97,7 +97,7 @@ namespace log4net.Tests.Integration
       }
 
       // Assert: log file exists and contains expected content
-      string[] logFiles = Directory.GetFiles("integrationTestLogDir_1");
+      string[] logFiles = Directory.GetFiles("integrationTestLogDir_roll");
       Assert.That(logFiles.Length, Is.EqualTo(12+1));
     }
 
@@ -158,6 +158,29 @@ namespace log4net.Tests.Integration
       {
         TestContext.WriteLine($"Date group: {group.Key}, file count: {group.Value}");
       }
+    }
+
+    [Test]
+    public void Log4Net_ConfigWithoutFileName_CreatesOneFile()
+    {
+      var logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_no_file_name");
+      if (Directory.Exists(logDir)) Directory.Delete(logDir, true);
+      Directory.CreateDirectory(logDir);
+      var config = "log4net.no_file_name.config";
+      string configPath = Path.Combine(TestContext.CurrentContext.TestDirectory, "Integration", config);
+      var repo = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      log4net.Config.XmlConfigurator.Configure(repo, new FileInfo(configPath));
+      var log = LogManager.GetLogger(repo.Name, "log");
+      log.Info("Test entry with no file name");
+      repo.Shutdown();
+      // Check if exactly one log file was created in the directory
+      var files = Directory.GetFiles(logDir, "*", SearchOption.AllDirectories);
+      Assert.That(files.Length, Is.EqualTo(1), "Should create exactly one log file");
+      var fileName = Path.GetFileName(files[0]);
+      TestContext.WriteLine($"Created file: {fileName}");
+      // Assert the file name matches the date pattern yyyy-MM-dd.log
+      var todayPattern = DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+      Assert.That(fileName, Is.EqualTo(todayPattern), $"File name should match pattern: {todayPattern}");
     }
   }
 }

@@ -41,6 +41,9 @@
     <None Update="Integration\log4net.maxsizeroll_date.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Integration\log4net.no_file_name.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Integration\log4net.roll.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
