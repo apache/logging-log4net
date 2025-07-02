@@ -88,7 +88,7 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_WritesLogFile_WithMaxSizeRoll_Config_Works()
     {
-        var logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_maxsizeroll");
+        string logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_maxsizeroll");
         if (Directory.Exists(logDir)) Directory.Delete(logDir, true);
         Directory.CreateDirectory(logDir);
         var (log, repo) = ArrangeLogger("log4net.maxsizeroll.config");
@@ -108,11 +108,11 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_WritesLogFile_WithDateAndSizeRoll_Config_Works()
     {
-        var logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_maxsizerolldate");
+        string logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_maxsizerolldate");
         if (Directory.Exists(logDir)) Directory.Delete(logDir, true);
         Directory.CreateDirectory(logDir);
         var (log, repo) = ArrangeLogger("log4net.maxsizeroll_date.config");
-// Write enough lines to trigger rolling by size and date
+        // Write enough lines to trigger rolling by size and date
         for (int i = 1; i < 10000; ++i)
         {
             log.Debug($"DateRoll entry {i}");
@@ -132,14 +132,14 @@ namespace log4net.Tests.Integration
         Assert.That(dateGroups.Count, Is.EqualTo(2));
         foreach (var group in dateGroups)
         {
-            TestContext.WriteLine($"Date group: {group.Key}, file count: {group.Value}");
+            TestContext.Out.WriteLine($"Date group: {group.Key}, file count: {group.Value}");
         }
     }
 
     [Test]
     public void Log4Net_ConfigWithoutFileName_CreatesOneFile()
     {
-        var logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_no_file_name");
+        string logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_no_file_name");
         if (Directory.Exists(logDir)) Directory.Delete(logDir, true);
         Directory.CreateDirectory(logDir);
         var (log, repo) = ArrangeLogger("log4net.no_file_name.config");
@@ -149,9 +149,9 @@ namespace log4net.Tests.Integration
         var files = Directory.GetFiles(logDir, "*", SearchOption.AllDirectories);
         Assert.That(files.Length, Is.EqualTo(1), "Should create exactly one log file");
         var fileName = Path.GetFileName(files[0]);
-        TestContext.WriteLine($"Created file: {fileName}");
+        TestContext.Out.WriteLine($"Created file: {fileName}");
         // Assert the file name matches the date pattern yyyy-MM-dd.log
-        var todayPattern = DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+        string todayPattern = DateTime.Now.ToString("yyyy-MM-dd") + ".log";
         Assert.That(fileName, Is.EqualTo(todayPattern), $"File name should match pattern: {todayPattern}");
     }
 
