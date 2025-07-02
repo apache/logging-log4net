@@ -33,6 +33,14 @@ namespace log4net.Tests.Integration
       RemoveDirsFromPreviousRuns();
     }
 
+    /// <summary>
+    /// Tests basic log4net functionality - writing log entries to a file.
+    /// This is the most fundamental integration test verifying that:
+    /// 1. Log4net can be configured from XML config
+    /// 2. Log entries are written to the specified file
+    /// 3. Content is preserved exactly as logged
+    /// Catch: Validates end-to-end logging pipeline works correctly.
+    /// </summary>
     [Test]
     public void Log4Net_WritesLogFile_AndContentIsCorrect()
     {
@@ -48,6 +56,14 @@ namespace log4net.Tests.Integration
         Assert.That(logLines[1], Does.Contain("This is an error"));
     }
 
+    /// <summary>
+    /// Tests log4net's append behavior across multiple logger instances with repository shutdown/restart cycles.
+    /// Verifies that:
+    /// 1. Log entries accumulate correctly when repeatedly creating and shutting down logger repositories
+    /// 2. File append mode works properly across repository restarts
+    /// 3. No log entries are lost during the restart process
+    /// Catch: This tests persistence and append behavior - critical for applications that restart logging frequently.
+    /// </summary>
     [Test]
     public void Log4Net_WritesLogFile_AndContentIsCorrectAfterRestart()
     {
@@ -68,6 +84,15 @@ namespace log4net.Tests.Integration
         }
     }
 
+    /// <summary>
+    /// Tests log4net's file rolling behavior with no append mode enabled.
+    /// This test verifies that:
+    /// 1. Multiple logger instances generate multiple rolled log files
+    /// 2. Rolling configuration works correctly across repository restarts
+    /// 3. Files are rolled according to the configuration policy
+    /// Catch: Tests rolling without append - ensuring each restart creates new files rather than appending to existing ones.
+    /// The expected file count (13) includes the current log file plus rolled files from previous iterations.
+    /// </summary>
     [Test]
     public void Log4Net_WritesLogFile_WithRollAndNoAppend_AndContentIsCorrectAfterRestart()
     {
@@ -85,6 +110,15 @@ namespace log4net.Tests.Integration
         Assert.That(logFiles.Length, Is.EqualTo(12 + 1));
     }
 
+    /// <summary>
+    /// Tests log4net's file rolling behavior based on maximum file size.
+    /// This test verifies that:
+    /// 1. Log files are rolled when they exceed the configured maximum size
+    /// 2. The correct number of backup files are maintained
+    /// 3. Each file remains within the size limit (10KB + small buffer for overhead)
+    /// Catch: Tests size-based rolling policy - critical for preventing log files from growing indefinitely.
+    /// Expected: 1 current file + 3 backup files = 4 total files.
+    /// </summary>
     [Test]
     public void Log4Net_WritesLogFile_WithMaxSizeRoll_Config_Works()
     {
@@ -105,6 +139,16 @@ namespace log4net.Tests.Integration
             Assert.That(new FileInfo(file).Length, Is.LessThanOrEqualTo(10 * 1024 + 100));
     }
 
+    /// <summary>
+    /// Tests log4net's composite rolling behavior based on both date and file size.
+    /// This test verifies that:
+    /// 1. Log files are rolled when they exceed the configured maximum size
+    /// 2. Log files are also rolled based on date/time patterns
+    /// 3. The combination of date and size rolling creates multiple files grouped by date
+    /// 4. Each date group maintains its own rolling sequence
+    /// Catch: Tests composite rolling policy - ensures both date and size triggers work together correctly.
+    /// Expected: Multiple files grouped by date, with size-based rolling within each date group.
+    /// </summary>
     [Test]
     public void Log4Net_WritesLogFile_WithDateAndSizeRoll_Config_Works()
     {
@@ -136,6 +180,15 @@ namespace log4net.Tests.Integration
         }
     }
 
+    /// <summary>
+    /// Tests log4net's automatic file naming behavior when no explicit filename is configured.
+    /// This test verifies that:
+    /// 1. Log4net can automatically generate file names based on date patterns
+    /// 2. Only one file is created when no explicit file name is provided
+    /// 3. The generated file name follows the expected date format (yyyy-MM-dd.log)
+    /// Catch: Tests the framework's ability to handle missing file name configuration gracefully.
+    /// Expected: A single log file with name matching today's date pattern.
+    /// </summary>
     [Test]
     public void Log4Net_ConfigWithoutFileName_CreatesOneFile()
     {
