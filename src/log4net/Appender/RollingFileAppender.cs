@@ -790,7 +790,7 @@ public partial class RollingFileAppender : FileAppender
     curFileName = curFileName.ToLowerInvariant();
     baseFile = baseFile.ToLowerInvariant();
     string dir = string.IsNullOrEmpty(baseFile) ? "" : Path.GetDirectoryName(baseFile);
-    var baseFileWithoutExtension = Path.Combine(dir ?? "", Path.GetFileNameWithoutExtension(baseFile));
+    string baseFileWithoutExtension = Path.Combine(dir ?? "", Path.GetFileNameWithoutExtension(baseFile));
     
     if (curFileName.StartsWith(baseFileWithoutExtension) == false)
     {
@@ -812,7 +812,7 @@ public partial class RollingFileAppender : FileAppender
       string suffix = PreserveLogFileNameExtension
         ? Path.GetExtension(baseFile).ToLowerInvariant()
         : "";
-      var curFileNameWithoutDir = Path.GetFileName(curFileName);
+      string curFileNameWithoutDir = Path.GetFileName(curFileName);
       if (!curFileNameWithoutDir.StartsWith(prefix) || !curFileNameWithoutDir.EndsWith(suffix))
       {
         LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
