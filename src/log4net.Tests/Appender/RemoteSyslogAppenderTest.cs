@@ -18,6 +18,7 @@
 #endregion
 
 using System.Text;
+using System.Threading;
 using log4net.Appender;
 using log4net.Appender.Internal;
 using log4net.Core;
@@ -64,11 +65,17 @@ public sealed class RemoteSyslogAppenderTest
       Domain = "TestDomain",
     });
     appender.DoAppend(loggingEvent);
+    for (int i = 0; i < 20; i++)
+    {
+      if (appender.Mock.Sent.Count == 0)
+      {
+        Thread.Sleep(10);
+      }
+    }
     appender.Close();
     Assert.That(appender.Mock.ConnectedTo, Is.EqualTo((0, ipAddress, 514)));
     Assert.That(appender.Mock.Sent, Has.Count.EqualTo(1));
     Assert.That(appender.Mock.WasDisposed, Is.True);
-    Assert.That(appender.Mock.Sent, Has.Count.EqualTo(1));
     const string expectedData = @"<14>TestDomain: INFO  - Test message";
     Assert.That(Encoding.ASCII.GetString(appender.Mock.Sent[0].Datagram), Is.EqualTo(expectedData));
   }
