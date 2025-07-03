@@ -17,28 +17,21 @@
 //
 #endregion
 
-using NUnit.Framework;
+using System;
+using log4net.Appender;
 
-namespace log4net.Tests;
+namespace log4net.Tests.Integration;
 
 /// <summary>
-/// Used for internal unit testing the <see cref="NDC"/> class.
+/// Mock implementation of <see cref="RollingFileAppender.IDateTime"/>
 /// </summary>
-[TestFixture]
-public class NdcTest
+internal sealed class MockDateTime : RollingFileAppender.IDateTime
 {
   /// <summary>
-  /// Test regression (https://github.com/apache/logging-log4net/issues/245)
+  /// Offset to apply to the current time.
   /// </summary>
-  [Test]
-  public void InheritTest()
-  {
-    NDC.Push("first");
-    NDC.Push("last");
-    System.Collections.Stack context = NDC.CloneStack();
-    NDC.Clear();
-    NDC.Inherit(context);
-    Assert.That(NDC.Pop(), Is.EqualTo("last"));
-    Assert.That(NDC.Pop(), Is.EqualTo("first"));
-  }
+  internal TimeSpan Offset { get; set; }
+
+  /// <inheritdoc/>
+  public DateTime Now => DateTime.Now + Offset;
 }

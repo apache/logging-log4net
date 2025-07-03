@@ -1,9 +1,29 @@
+#region Apache License
+//
+// Licensed to the Apache Software Foundation (ASF) under one or more 
+// contributor license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright ownership. 
+// The ASF licenses this file to you under the Apache License, Version 2.0
+// (the "License"); you may not use this file except in compliance with 
+// the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+#endregion
+
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using log4net;
+using log4net.Appender;
 using log4net.Config;
+using log4net.Repository;
 using NUnit.Framework;
 
 namespace log4net.Tests.Integration
@@ -13,8 +33,9 @@ namespace log4net.Tests.Integration
   /// <para>
   /// Expectations for test log files and directories:
   /// <list type="bullet">
-  /// <item>Test log files may be placed directly in the test directory with names starting with <c>TestLogFilePrefix</c>, or inside directories whose names start with <c>TestLogDirectoryPrefix</c> and may have arbitrary file names.</item>
-  /// <item>Each test run starts with a clean environment: any files or directories from previous runs matching these prefixes are deleted in <c>SetUp</c>.</item>
+  /// <item>Test log files may be placed directly in the test directory with names starting with <see cref="TestLogFilePrefix"/>,
+  /// or inside directories whose names start with <see cref="TestLogDirectoryPrefix"/> and may have arbitrary file names.</item>
+  /// <item>Each test run starts with a clean environment: any files or directories from previous runs matching these prefixes are deleted in <see cref="SetUp"/>.</item>
   /// <item>Tests assert the existence, count, and content of log files and directories as part of their validation.</item>
   /// </list>
   /// </para>
@@ -44,16 +65,16 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_WritesLogFile_AndContentIsCorrect()
     {
-        var (log, repo) = ArrangeLogger("log4net.integration.basic.config");
-        log.Info("Hello integration test");
-        log.Error("This is an error");
-        repo.Shutdown();
+      (ILog log, ILoggerRepository repo) = ArrangeLogger("log4net.integration.basic.config");
+      log.Info("Hello integration test");
+      log.Error("This is an error");
+      repo.Shutdown();
 
-        // Assert: log file exists and contains expected content
-        string[] logLines = File.ReadAllLines("integrationTestLogFile_integration.log");
-        Assert.That(logLines.Length, Is.EqualTo(2));
-        Assert.That(logLines[0], Does.Contain("Hello integration test"));
-        Assert.That(logLines[1], Does.Contain("This is an error"));
+      // Assert: log file exists and contains expected content
+      string[] logLines = File.ReadAllLines("integrationTestLogFile_integration.log");
+      Assert.That(logLines, Has.Length.EqualTo(2));
+      Assert.That(logLines[0], Does.Contain("Hello integration test"));
+      Assert.That(logLines[1], Does.Contain("This is an error"));
     }
 
     /// <summary>
@@ -67,21 +88,21 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_WritesLogFile_AndContentIsCorrectAfterRestart()
     {
-        for (int i = 0; i < 10; i++)
-        {
-            var (log, repo) = ArrangeLogger("log4net.integration.basic.config");
-            log.Info("Hello integration test");
-            log.Error("This is an error");
-            repo.Shutdown();
-        }
-        // Assert: log file exists and contains expected content
-        string[] logLines = File.ReadAllLines("integrationTestLogFile_integration.log");
-        Assert.That(logLines.Length, Is.EqualTo(20));
-        for (int i = 0; i < 10; i++)
-        {
-            Assert.That(logLines[i * 2], Does.Contain("Hello integration test"));
-            Assert.That(logLines[i * 2 + 1], Does.Contain("This is an error"));
-        }
+      for (int i = 0; i < 10; i++)
+      {
+        (ILog log, ILoggerRepository repo) = ArrangeLogger("log4net.integration.basic.config");
+        log.Info("Hello integration test");
+        log.Error("This is an error");
+        repo.Shutdown();
+      }
+      // Assert: log file exists and contains expected content
+      string[] logLines = File.ReadAllLines("integrationTestLogFile_integration.log");
+      Assert.That(logLines, Has.Length.EqualTo(20));
+      for (int i = 0; i < 10; i++)
+      {
+        Assert.That(logLines[i * 2], Does.Contain("Hello integration test"));
+        Assert.That(logLines[i * 2 + 1], Does.Contain("This is an error"));
+      }
     }
 
     /// <summary>
@@ -96,18 +117,18 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_WritesLogFile_WithRollAndNoAppend_AndContentIsCorrectAfterRestart()
     {
-        for (int i = 0; i < 20; i++)
+      for (int i = 0; i < 20; i++)
+      {
+        (ILog log, ILoggerRepository repo) = ArrangeLogger("log4net.roll.config");
+        for (int j = 0; j < 10; ++j)
         {
-            var (log, repo) = ArrangeLogger("log4net.roll.config");
-            for (int j = 0; j < 10; ++j)
-            {
-                log.Info($"Hello, log4net! {i} {j}");
-            }
-            repo.Shutdown();
+          log.Info($"Hello, log4net! {i} {j}");
         }
-        // Assert: log file exists and contains expected content
-        string[] logFiles = Directory.GetFiles("integrationTestLogDir_roll");
-        Assert.That(logFiles.Length, Is.EqualTo(12 + 1));
+        repo.Shutdown();
+      }
+      // Assert: log file exists and contains expected content
+      string[] logFiles = Directory.GetFiles("integrationTestLogDir_roll");
+      Assert.That(logFiles, Has.Length.EqualTo(12 + 1));
     }
 
     /// <summary>
@@ -122,21 +143,19 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_WritesLogFile_WithMaxSizeRoll_Config_Works()
     {
-        string logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_maxsizeroll");
-        if (Directory.Exists(logDir)) Directory.Delete(logDir, true);
-        Directory.CreateDirectory(logDir);
-        var (log, repo) = ArrangeLogger("log4net.maxsizeroll.config");
-        for (int i = 0; i < 1000; ++i)
-        {
-            log.Info($"Log entry {i}");
-        }
-        repo.Shutdown();
-        // Assert: rolled files exist
-        string[] logFiles = Directory.GetFiles(logDir, "*.log");
-        Assert.That(logFiles.Length, Is.EqualTo(4)); // 1 current + 3 backups
-        // Optionally, check that each file is <= 10KB
-        foreach (var file in logFiles)
-            Assert.That(new FileInfo(file).Length, Is.LessThanOrEqualTo(10 * 1024 + 100));
+      DirectoryInfo logDir = CreateLogDirectory("integrationTestLogDir_maxsizeroll");
+      (ILog log, ILoggerRepository repo) = ArrangeLogger("log4net.maxsizeroll.config");
+      for (int i = 0; i < 1000; ++i)
+      {
+        log.Info($"Log entry {i}");
+      }
+      repo.Shutdown();
+      // Assert: rolled files exist
+      FileInfo[] logFiles = logDir.GetFiles("*.log");
+      Assert.That(logFiles, Has.Length.EqualTo(4)); // 1 current + 3 backups
+      // Check that each file is <= 10KB
+      foreach (FileInfo file in logFiles)
+        Assert.That(file.Length, Is.LessThanOrEqualTo(10 * 1024 + 100));
     }
 
     /// <summary>
@@ -152,32 +171,35 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_WritesLogFile_WithDateAndSizeRoll_Config_Works()
     {
-        string logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_maxsizerolldate");
-        if (Directory.Exists(logDir)) Directory.Delete(logDir, true);
-        Directory.CreateDirectory(logDir);
-        var (log, repo) = ArrangeLogger("log4net.maxsizeroll_date.config");
-        // Write enough lines to trigger rolling by size and date
-        for (int i = 1; i < 10000; ++i)
+      DirectoryInfo logDir = CreateLogDirectory("integrationTestLogDir_maxsizerolldate");
+      (ILog log, ILoggerRepository repo) = ArrangeLogger("log4net.maxsizeroll_date.config");
+      MockDateTime mockDateTime = new();
+      repo.GetAppenders().OfType<RollingFileAppender>().First().DateTimeStrategy = mockDateTime;
+      // Write enough lines to trigger rolling by size and date
+      for (int i = 1; i < 10000; ++i)
+      {
+        log.Debug($"DateRoll entry {i}");
+        if (i % 5000 == 0)
         {
-            log.Debug($"DateRoll entry {i}");
-            if (i % 5000 == 0) System.Threading.Thread.Sleep(TimeSpan.FromMinutes(1)); // allow time for date to change if needed
+          mockDateTime.Offset = TimeSpan.FromMinutes(1); // allow time for date to change if needed
         }
-        repo.Shutdown();
-        // Assert: rolled files exist (date+size pattern)
-        string[] logFiles = Directory.GetFiles(logDir, "*.log");
-        Assert.That(logFiles.Length, Is.EqualTo(8));
-        // Group files by date part in the filename (yyyy-MM-dd-mm)
-        var dateGroups = logFiles
-            .Select(f => Path.GetFileNameWithoutExtension(f))
-            .Select(name => name.Split('.').First())
-            .GroupBy(date => date)
-            .ToDictionary(g => g.Key, g => g.Count());
-        // Assert that at least one group exists and print group counts
-        Assert.That(dateGroups.Count, Is.EqualTo(2));
-        foreach (var group in dateGroups)
-        {
-            TestContext.Out.WriteLine($"Date group: {group.Key}, file count: {group.Value}");
-        }
+      }
+      repo.Shutdown();
+      // Assert: rolled files exist (date+size pattern)
+      FileInfo[] logFiles = logDir.GetFiles("*.log");
+      Assert.That(logFiles, Has.Length.EqualTo(8));
+      // Group files by date part in the filename (yyyy-MM-dd-mm)
+      Dictionary<string, int> dateGroups = logFiles
+        .Select(f => Path.GetFileNameWithoutExtension(f.Name))
+        .Select(name => name.Split('.').First())
+        .GroupBy(date => date)
+        .ToDictionary(g => g.Key, g => g.Count());
+      // Assert that at least one group exists and print group counts
+      Assert.That(dateGroups, Has.Count.EqualTo(2));
+      foreach (KeyValuePair<string, int> group in dateGroups)
+      {
+        TestContext.Out.WriteLine($"Date group: {group.Key}, file count: {group.Value}");
+      }
     }
 
     /// <summary>
@@ -192,20 +214,28 @@ namespace log4net.Tests.Integration
     [Test]
     public void Log4Net_ConfigWithoutFileName_CreatesOneFile()
     {
-        string logDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "integrationTestLogDir_no_file_name");
-        if (Directory.Exists(logDir)) Directory.Delete(logDir, true);
-        Directory.CreateDirectory(logDir);
-        var (log, repo) = ArrangeLogger("log4net.no_file_name.config");
-        log.Info("Test entry with no file name");
-        repo.Shutdown();
-        // Assert: exactly one log file was created in the directory
-        var files = Directory.GetFiles(logDir, "*", SearchOption.AllDirectories);
-        Assert.That(files.Length, Is.EqualTo(1), "Should create exactly one log file");
-        var fileName = Path.GetFileName(files[0]);
-        TestContext.Out.WriteLine($"Created file: {fileName}");
-        // Assert the file name matches the date pattern yyyy-MM-dd.log
-        string todayPattern = DateTime.Now.ToString("yyyy-MM-dd") + ".log";
-        Assert.That(fileName, Is.EqualTo(todayPattern), $"File name should match pattern: {todayPattern}");
+      DirectoryInfo logDir = CreateLogDirectory("integrationTestLogDir_no_file_name");
+      (ILog log, ILoggerRepository repo) = ArrangeLogger("log4net.no_file_name.config");
+      log.Info("Test entry with no file name");
+      repo.Shutdown();
+      // Assert: exactly one log file was created in the directory
+      FileInfo[] files = logDir.GetFiles("*", SearchOption.AllDirectories);
+      Assert.That(files, Has.Length.EqualTo(1), "Should create exactly one log file");
+      TestContext.Out.WriteLine($"Created file: {files[0].Name}");
+      // Assert the file name matches the date pattern yyyy-MM-dd.log
+      string todayPattern = DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+      Assert.That(files[0].Name, Is.EqualTo(todayPattern), $"File name should match pattern: {todayPattern}");
+    }
+
+    private static DirectoryInfo CreateLogDirectory(string name)
+    {
+      DirectoryInfo logDir = new(Path.Combine(TestContext.CurrentContext.TestDirectory, name));
+      if (logDir.Exists)
+      {
+        logDir.Delete(true);
+      }
+      logDir.Create();
+      return logDir;
     }
 
     private const string TestLogFilePrefix = "integrationTestLogFile";
@@ -213,32 +243,32 @@ namespace log4net.Tests.Integration
 
     private static void RemoveDirsFromPreviousRuns()
     {
-      List<string> directoriesFromPreviousRuns =
-              Directory.EnumerateDirectories(TestContext.CurrentContext.TestDirectory)
-              .Where(dirPath => Path.GetFileName(dirPath).StartsWith(TestLogDirectoryPrefix, StringComparison.InvariantCultureIgnoreCase))
-              .ToList();
-      directoriesFromPreviousRuns.ForEach(d => Directory.Delete(d, true));
+      List<DirectoryInfo> directoriesFromPreviousRuns = new DirectoryInfo(TestContext.CurrentContext.TestDirectory)
+        .EnumerateDirectories()
+        .Where(directory => directory.Name.StartsWith(TestLogDirectoryPrefix, StringComparison.InvariantCultureIgnoreCase))
+        .ToList();
+      directoriesFromPreviousRuns.ForEach(d => d.Delete(true));
     }
 
     private static void RemoveFilesFromPreviousRuns()
     {
-      List<string> filesFromPreviousRuns =
-              Directory.EnumerateFiles(TestContext.CurrentContext.TestDirectory)
-              .Where(filePath => Path.GetFileName(filePath).StartsWith(TestLogFilePrefix, StringComparison.InvariantCultureIgnoreCase))
-              .ToList();
-      filesFromPreviousRuns.ForEach(File.Delete);
+      List<FileInfo> filesFromPreviousRuns = new DirectoryInfo(TestContext.CurrentContext.TestDirectory)
+        .EnumerateFiles()
+        .Where(filePath => filePath.Name.StartsWith(TestLogFilePrefix, StringComparison.InvariantCultureIgnoreCase))
+        .ToList();
+      filesFromPreviousRuns.ForEach(file => file.Delete());
     }
 
     private static string GetConfigPath(string configFile)
         => Path.Combine(TestContext.CurrentContext.TestDirectory, "Integration", configFile);
 
-    private static (ILog log, log4net.Repository.ILoggerRepository repo) ArrangeLogger(string configFile)
+    private static (ILog log, ILoggerRepository repo) ArrangeLogger(string configFile)
     {
-        string configPath = GetConfigPath(configFile);
-        var repo = LogManager.CreateRepository(Guid.NewGuid().ToString());
-        XmlConfigurator.Configure(repo, new FileInfo(configPath));
-        var log = LogManager.GetLogger(repo.Name, "IntegrationTestLogger");
-        return (log, repo);
+      string configPath = GetConfigPath(configFile);
+      ILoggerRepository repo = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      XmlConfigurator.Configure(repo, new FileInfo(configPath));
+      ILog log = LogManager.GetLogger(repo.Name, "IntegrationTestLogger");
+      return (log, repo);
     }
   }
 }
