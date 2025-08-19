@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="c3f92ba" link="https://github.com/apache/logging-log4net/commit/c3f92ba0cbca802573dd74843ca2528d9f6ef8f1"/>
+  <description format="asciidoc">
+    change dockerfile from mono:latest to ubuntu:20.04 and install mono manually (by @FreeAndNil)
+  </description>
+</entry>
