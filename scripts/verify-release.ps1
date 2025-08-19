@@ -26,7 +26,7 @@ function Verify-Hash
     $Filename = $Filename.Substring(1).Trim()
   }
 
-  $ComputedHash = (Get-FileHash -Algorithm 'SHA512' "$($File.DirectoryName)/$Filename").Hash.ToUpper()
+  $ComputedHash = (Get-FileHash -Algorithm 'SHA512' "$($File.DirectoryName)/$Filename").Hash.ToUpperInvariant()
 
   if($Hash -eq $ComputedHash)
   {

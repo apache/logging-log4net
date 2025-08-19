@@ -1,8 +1,26 @@
 param(
-  $Version = '3.1.0'
+  $Version = '3.2.0'
 )
-"cleaning $PSScriptRoot/../build/ ..."
-rm -rf $PSScriptRoot/../build/*
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+function Write-HashAndSignature
+{
+  param
+  (
+    [Parameter(Mandatory=$true, HelpMessage='The file to hash.')]
+    [System.IO.FileInfo]$File
+  )
+  $File.FullName
+  $ComputedHash = (Get-FileHash -Algorithm 'SHA512' $File).Hash.ToLowerInvariant()
+  $ComputedHash
+  Set-Content -Path "$($File.FullName).sha512" -Value "$ComputedHash *./$($File.Name)"
+  gpg --armor --output "$($File.FullName).asc" --detach-sig $File.FullName
+}
+
+"cleaning $PSScriptRoot/../build/ ..." 
+Remove-Item $PSScriptRoot/../build/ -Force -Recurse -ErrorAction SilentlyContinue
 'building ...'
 dotnet test -c Release "-p:GeneratePackages=true;PackageVersion=$Version" $PSScriptRoot/../src/log4net/log4net.csproj
 'compressing source ...'
@@ -10,28 +28,21 @@ pushd $PSScriptRoot/..
 git archive --format=zip --output $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip master
 popd
 'compressing binaries ...'
-cp $PSScriptRoot/verify-release.* $PSScriptRoot/../build/artifacts/
-cp $PSScriptRoot/../LICENSE $PSScriptRoot/../build/Release/
-cp $PSScriptRoot/../NOTICE $PSScriptRoot/../build/Release/
+Copy-Item $PSScriptRoot/verify-release.* $PSScriptRoot/../build/artifacts/
+Copy-Item $PSScriptRoot/../LICENSE $PSScriptRoot/../build/Release/
+Copy-Item $PSScriptRoot/../NOTICE $PSScriptRoot/../build/Release/
 pushd $PSScriptRoot/../build/Release
 zip -r $PSScriptRoot/../build/artifacts/apache-log4net-binaries-$Version.zip .
 popd
 'signing ...'
-mv $PSScriptRoot/../build/artifacts/log4net.$Version.nupkg $PSScriptRoot/../build/artifacts/apache-log4net.$Version.nupkg
-pushd $PSScriptRoot/../build/artifacts
-gpg --armor --output ./apache-log4net.$Version.nupkg.asc --detach-sig ./apache-log4net.$Version.nupkg
-sha512sum -b ./apache-log4net.$Version.nupkg > ./apache-log4net.$Version.nupkg.sha512
-gpg --armor --output ./apache-log4net-source-$Version.zip.asc --detach-sig ./apache-log4net-source-$Version.zip
-sha512sum -b ./apache-log4net-source-$Version.zip > ./apache-log4net-source-$Version.zip.sha512
-gpg --armor --output ./apache-log4net-binaries-$Version.zip.asc --detach-sig ./apache-log4net-binaries-$Version.zip
-sha512sum -b ./apache-log4net-binaries-$Version.zip > ./apache-log4net-binaries-$Version.zip.sha512
-gpg --armor --output ./verify-release.ps1.asc --detach-sig ./verify-release.ps1
-sha512sum -b ./verify-release.ps1 > ./verify-release.ps1.sha512
-gpg --armor --output ./verify-release.ps1.asc --detach-sig ./verify-release.sh
-sha512sum -b ./verify-release.ps1 > ./verify-release.sh.sha512
-popd
+Move-Item $PSScriptRoot/../build/artifacts/log4net.$Version.nupkg $PSScriptRoot/../build/artifacts/apache-log4net.$Version.nupkg
+Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net.$Version.nupkg
+Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip
+Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net-binaries-$Version.zip
+Write-HashAndSignature $PSScriptRoot/../build/artifacts/verify-release.ps1
+Write-HashAndSignature $PSScriptRoot/../build/artifacts/verify-release.sh
 'cleaning site ...'
-rm -rf $PSScriptRoot/../target/*
+Remove-Item $PSScriptRoot/../target/ -Force -Recurse -ErrorAction SilentlyContinue
 'building site ...'
 pushd $PSScriptRoot/..
 ./mvnw site

@@ -1,6 +1,6 @@
 # see https://infra.apache.org/release-signing#openpgp-ascii-detach-sig
 $DidSomething = $false
-$Files = Get-Item $PSScriptRoot/../build/artifacts/* -Include *log4net*.nupkg, *log4net*.zip
+$Files = Get-Item $PSScriptRoot/../build/artifacts/* -Include *log4net*.nupkg, *log4net*.zip, verify-release.*
 foreach ($File in $Files)
 {
   $DidSomething = $true
