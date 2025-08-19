@@ -98,7 +98,8 @@ wget --cut-dirs=6 \
 +
 [source,bash]
 ----
-& ./verify-release.sh
+bash ./verify-release.sh
+cd src
 ----
 +
 [%collapsible]
