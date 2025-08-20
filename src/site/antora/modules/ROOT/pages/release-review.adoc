@@ -26,7 +26,8 @@ Releases of log4net can be verified with following steps:
 +
 [source,powershell]
 ----
-$releaseVersion = ...VerionToValidate...
+# as administrator
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 winget install -e --id GnuPG.Gpg4win
 winget install -e --id Slik.Subversion  # or any other subversion client
 winget install -e --id Mono.Mono
@@ -49,6 +50,7 @@ choco install dotnet-8.0-sdk
 +
 [source,powershell]
 ----
+$releaseVersion = ...VersionToValidate...
 svn co https://dist.apache.org/repos/dist/dev/logging/log4net/${releaseVersion} log4net-${releaseVersion}
 pushd log4net-${releaseVersion}
 ----
@@ -57,6 +59,7 @@ pushd log4net-${releaseVersion}
 +
 [source,powershell]
 ----
+Unblock-File ./verify-release.ps1
 & ./verify-release.ps1
 ----
 
@@ -71,6 +74,14 @@ dotnet test ./src/log4net.sln
 
 [#linux]
 == Linux
+
+. Prerequisites
++
+[source,bash]
+----
+sudo apt install unzip -y
+sudo apt install subversion -y
+----
 
 . Check out the release distribution:
 +
@@ -100,7 +111,6 @@ wget --cut-dirs=6 \
 [source,bash]
 ----
 bash ./verify-release.sh
-cd src
 ----
 +
 [%collapsible]
@@ -131,8 +141,10 @@ for sigFile in *.asc; do gpg --verify $sigFile ${sigFile%.asc}; done
 +
 [source,bash]
 ----
-umask 0022
-unzip -q *source*.zip -d src
+mkdir -p src
+cd src
+unzip -q -o ../*source*.zip
+
 cd src
 ----
 ====
