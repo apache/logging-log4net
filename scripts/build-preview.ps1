@@ -1,5 +1,5 @@
 param(
-  $Version = '3.2.0',
+  $Version = '3.2.1',
   $Preview = '1'
 )
 'building ...'
