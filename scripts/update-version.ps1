@@ -36,15 +36,13 @@ function Update-TextVersion([System.IO.FileInfo]$TextFile, [string]$OldVersion, 
   [System.IO.File]::WriteAllText($TextFile, $NewContent, $Utf8NoBomEncoding)
 }
 
-function Update-ReleaseNotes([System.IO.FileInfo]$XmlFile, [string]$Content, [string]$Version)
+function New-ReleaseNotes([string]$Content, [string]$Version)
 {
-  [Xml]$XmlContent = Get-Content $XmlFile
-  $NewChild = New-Object System.Xml.XmlDocument
-  $NewChild.LoadXml($Content.Replace('%Version%', $Version))
-  $Node = $XmlContent.SelectSingleNode('/document/body/section')
-  $Node.PrependChild($XmlContent.ImportNode($NewChild.DocumentElement, $true))
-  "$($XmlFile): $NewVersion"
-  $XmlContent.Save($XmlFile)
+  [System.IO.FileInfo]$XmlFile = "$PSScriptRoot/../src/changelog/$Version/.release.xml"
+  $XmlFile.Directory.Create()
+  $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+  [System.IO.File]::WriteAllText($XmlFile, $Content, $Utf8NoBomEncoding)
+  Copy-Item "$PSScriptRoot/../src/changelog/3.1.0/.release-notes.adoc.ftl" "$PSScriptRoot/../src/changelog/$Version/.release-notes.adoc.ftl"
 }
 
 Update-XmlVersion $PSScriptRoot/../pom.xml $NewVersion '/*[local-name()="project"]/*[local-name()="version"]'
@@ -52,28 +50,16 @@ Update-JsonVersion $PSScriptRoot/../package.json $NewVersion
 Update-TextVersion $PSScriptRoot/../doc/MailTemplate.txt $OldVersion $NewVersion
 Update-TextVersion $PSScriptRoot/../doc/MailTemplate.Result.txt $OldVersion $NewVersion
 Update-TextVersion $PSScriptRoot/../doc/MailTemplate.Announce.txt $OldVersion $NewVersion
+Update-TextVersion $PSScriptRoot/build-preview.ps1 $OldVersion $NewVersion
+Update-TextVersion $PSScriptRoot/build-release.ps1 $OldVersion $NewVersion
 Update-XmlVersion $PSScriptRoot/../src/log4net/log4net.csproj $NewVersion '/Project/PropertyGroup/Version'
 
-$ReleaseNoteSection = '
-<section id="a%Version%" name="%Version%">
-  <section id="a%Version%-breaking" name="Breaking Changes">
-  </section>
-  <br/>
-  Apache log4net %Version% addresses reported issues:
-  <section id="a%Version%-bug" name="Bug fixes">
-    <ul>
-    <li>
-      <a href="https://github.com/apache/logging-log4net/issues/tbd">tbd</a> (by tbd)
-    </li>
-    </ul>
-  </section>
-  <section id="a%Version%-enhancements" name="Enhancements">
-    <ul>
-    <li>
-      <a href="https://github.com/apache/logging-log4net/issues/tbd">tbd</a> (by tbd)
-    </li>
-    </ul>
-  </section>
-</section>'
+$ReleaseNoteXml = '
+<?xml version="1.0" encoding="UTF-8"?>
+<release xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="https://logging.apache.org/xml/ns"
+         xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+         date="~Date~"
+         version="~Version~"/>'.Replace('~Version~', $NewVersion).Replace('~Date~', (Get-Date).AddMonths(2).ToString('yyyy-MM-dd'))
 
-#Update-ReleaseNotes $PSScriptRoot/../src/site/xdoc/release/release-notes.xml $ReleaseNoteSection $NewVersion
+New-ReleaseNotes $ReleaseNoteXml $NewVersion
