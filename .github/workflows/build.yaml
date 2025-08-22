@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-22.04, windows-latest ]
+        os: [ macos-14, ubuntu-22.04, windows-latest ]
 
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -53,7 +53,7 @@ jobs:
       - name: Build
         run: |
             dotnet build ./src/log4net.sln
-      
+
       - name: Test
         run: |
             dotnet test ./src/log4net.sln
