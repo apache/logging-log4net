@@ -37,7 +37,7 @@ log4net is designed with two distinct goals in mind: speed and flexibility
   </PropertyGroup>
   <PropertyGroup Label="NuGet generation">
     <Authors>The Apache Software Foundation</Authors>
-    <Copyright>Copyright 2004-2024 The Apache Software Foundation</Copyright>
+    <Copyright>Copyright 2004-2025 The Apache Software Foundation</Copyright>
     <DevelopmentDependency>false</DevelopmentDependency>
     <IsPackable>true</IsPackable>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
