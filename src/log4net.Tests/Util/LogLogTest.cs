@@ -32,6 +32,9 @@ namespace log4net.Tests.Util;
 [TestFixture]
 public class LogLogTest
 {
+  /// <summary>
+  /// Tests the <see cref="TraceListener"/> functionality
+  /// </summary>
   [Test]
   public void TraceListenerCounterTest()
   {
@@ -46,6 +49,9 @@ public class LogLogTest
     Assert.That(listTraceListener.Count, Is.EqualTo(2));
   }
 
+  /// <summary>
+  /// Tests the <see cref="LogLog.EmitInternalMessages"/> property
+  /// </summary>
   [Test]
   public void EmitInternalMessages()
   {
@@ -71,6 +77,9 @@ public class LogLogTest
     }
   }
 
+  /// <summary>
+  /// Tests the <see cref="LogLog.LogReceivedAdapter"/> class.
+  /// </summary>
   [Test]
   public void LogReceivedAdapter()
   {
@@ -90,10 +99,13 @@ public class LogLogTest
   [Test]
   public void LogReceivedAdapterThreading()
   {
-    for (int i = 0; i < 1000; i++)
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
     {
-      LogReceivedAdapterThreadingCore(i);
-    }
+      for (int i = 0; i < 1000; i++)
+      {
+        LogReceivedAdapterThreadingCore(i);
+      }
+    });
   }
 
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA5394:Do not use insecure randomness", 
@@ -119,13 +131,20 @@ public class LogLogTest
   }
 }
 
+/// <summary>
+/// Mock for <see cref="TraceListener"/> that counts the number of calls to <see cref="Write(string?)"/>
+/// </summary>
 internal sealed class TraceListenerCounter : TraceListener
 {
+  /// <inheritdoc/>
   public override void Write(string? message) => Count++;
 
+  /// <inheritdoc/>
   public override void WriteLine(string? message) => Write(message);
 
+  /// <inheritdoc/>
   public void Reset() => Count = 0;
 
+  /// <inheritdoc/>
   public int Count { get; private set; }
 }
