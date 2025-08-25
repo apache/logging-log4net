@@ -54,8 +54,7 @@ Update-TextVersion $PSScriptRoot/build-preview.ps1 $OldVersion $NewVersion
 Update-TextVersion $PSScriptRoot/build-release.ps1 $OldVersion $NewVersion
 Update-XmlVersion $PSScriptRoot/../src/log4net/log4net.csproj $NewVersion '/Project/PropertyGroup/Version'
 
-$ReleaseNoteXml = '
-<?xml version="1.0" encoding="UTF-8"?>
+$ReleaseNoteXml = '<?xml version="1.0" encoding="UTF-8"?>
 <release xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="https://logging.apache.org/xml/ns"
          xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
