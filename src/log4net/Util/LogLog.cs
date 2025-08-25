@@ -223,9 +223,28 @@ public sealed class LogLog
   public static bool QuietMode { get; set; }
 
   /// <summary>
-  /// 
+  /// Configures whether internal messages are emitted to Console.Out and Console.Error.
   /// </summary>
   public static bool EmitInternalMessages { get; set; } = true;
+
+  /// <summary>
+  /// Execute the callback with internal messages suppressed
+  /// </summary>
+  /// <param name="callback">Callback</param>
+  public static void ExecuteWithoutEmittingInternalMessages(Action callback)
+  {
+    callback.EnsureNotNull();
+    bool oldEmitInternalMessages = EmitInternalMessages;
+    EmitInternalMessages = false;
+    try
+    {
+      callback();
+    }
+    finally
+    {
+      EmitInternalMessages = oldEmitInternalMessages;
+    }
+  }
 
   /// <summary>
   /// Raises the LogReceived event when an internal messages is received.
