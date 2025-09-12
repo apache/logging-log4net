@@ -37,6 +37,7 @@ namespace log4net.Tests.Appender;
 /// Used for internal unit testing the <see cref="OutputDebugStringAppender"/> class.
 /// </remarks>
 [TestFixture]
+[Platform(Include = "Win")]
 public sealed class OutputDebugStringAppenderTest
 {
   /// <summary>
