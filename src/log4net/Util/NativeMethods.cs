@@ -139,7 +139,7 @@ namespace log4net.Util
     /// Stub for OutputDebugString native method
     /// </summary>
     /// <param name="message">the string to output</param>
-    [DllImport("Kernel32.dll")]
+    [DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]    
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     internal static extern void OutputDebugString(string message);
 
