@@ -1,0 +1,19 @@
+# Build outputs
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# User-specific
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Local only - jangan commit
+VULNERABILITY-REPORT.md
+vuln_code.txt
+evidence.txt
+*.asc
