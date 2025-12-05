@@ -28,3 +28,6 @@ Proceed to xref:manual/installation.adoc[].
 Proceed to xref:release-notes.adoc[].
 ====
 
+include::partial$supported-versions.adoc[leveloffset=+1]
+
+See xref:versioning.adoc[Version lifecycle and maintenance policy] for more information about the maintenance lifecycle of log4net versions.

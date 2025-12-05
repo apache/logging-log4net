@@ -48,4 +48,5 @@
 * xref:release-notes.adoc[]
 * xref:release-review.adoc[]
 * {logging-services-url}/support.html[Support]
+** xref:versioning.adoc[]
 * {logging-services-url}/security.html[Security]
