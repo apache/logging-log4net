@@ -60,35 +60,69 @@ You can also specify:
 [#newlinehandling]
 == Newline handling
 
-If your log message contains multiple lines, it will be logged as multiple separate syslog entries instead of a single multiline message.
+Newline handling changed in version 3.3.0.
 
-This might lead to confusion when analyzing logs because related lines could appear interleaved with logs from other sources.
+Before version 3.3.0, newline characters (`\r` or `\n`) were always treated as line breaks.
+Messages containing newlines were therefore split into multiple syslog entries.
 
-Example:
+Starting with 3.3.0, newline handling is configurable through the `NewLineHandling` option.
+The new default is `Escape`.
+
+The available modes are:
+
+`Escape` (default since 3.3.0)::
+  Newlines are replaced with the escaped representations `\r` → "\\r" and `\n` → "\\n`.
+  The message is sent as a single syslog entry.
+
+`Split` (default before 3.3.0)::
+  The message is split at each newline into multiple syslog entries.
+  Combined sequences (\r\n or \n\r) count as a single break.
+  This matches the behaviour in versions before 3.3.0.
+
+`Keep`::
+  Newlines are preserved as-is in the message content.
+  Many syslog servers can process entries containing embedded newlines, but server support varies.
+
+=== Example: Escape
+
+Input:
 
 [source,csharp]
-----
-try
-{
-  throw new InvalidTimeZoneException();
-}
-catch (InvalidTimeZoneException e)
-{
-  logger.Error(e, "setting daylight saving time failed")
-}
-----
+logger.Error("A\nB\r\nC");
 
-Output (with intermixed messages):
+Output (one syslog entry):
 
 [source,log]
-----
-12/21/2024 14:07:41.508 [main] ERROR log4net.Tests - setting daylight saving time failed
-Exception of type 'System.InvalidTimeZoneException' was thrown.
-12/21/2024 14:07:41.511 [worker] WARN log4net.Tests - some unrelated log message
-  at log4net.Tests.Appender.RemoteSyslogAppenderTest.LineBreakTest()
-  at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-  at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-----
+... ERROR ... - A\nB\rC
+
+=== Example: Split
+
+Input:
+
+[source,csharp]
+logger.Error("A\nB\r\nC");
+
+Output (three syslog entries, unrelated messages may interleave):
+
+[source,log]
+... ERROR ... - A
+... ERROR ... - B
+... INFO  ... - something unrelated
+... ERROR ... - C
+
+=== Example: Keep
+
+Input:
+
+[source,csharp]
+logger.Error("A\nB\r\nC");
+
+Output (one syslog entry, with embedded newlines):
+
+[source,log]
+... ERROR ... - A
+B
+C
 
 [#sizelimits]
 == Size limits
