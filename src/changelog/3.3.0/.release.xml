@@ -2,5 +2,5 @@
 <release xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="https://logging.apache.org/xml/ns"
          xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-         date="2025-10-22"
-         version="3.2.1"/>
+         date="2025-12-22"
+         version="3.3.0"/>

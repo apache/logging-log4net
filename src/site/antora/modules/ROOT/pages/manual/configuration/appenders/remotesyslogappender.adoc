@@ -71,12 +71,12 @@ The new default is `Escape`.
 The available modes are:
 
 `Escape` (default since 3.3.0)::
-  Newlines are replaced with the escaped representations `\r` → "\\r" and `\n` → "\\n`.
+  Newlines are replaced with the escaped representations `\r` → "\\r" and `\n` → "\\n".
   The message is sent as a single syslog entry.
 
 `Split` (default before 3.3.0)::
   The message is split at each newline into multiple syslog entries.
-  Combined sequences (\r\n or \n\r) count as a single break.
+  Combined sequences (\r\n) count as a single break.
   This matches the behaviour in versions before 3.3.0.
 
 `Keep`::
