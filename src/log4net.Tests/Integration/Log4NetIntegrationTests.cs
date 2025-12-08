@@ -23,8 +23,12 @@ using System.IO;
 using System.Linq;
 using log4net.Appender;
 using log4net.Config;
+using log4net.Core;
+using log4net.Layout;
 using log4net.Repository;
+using log4net.Repository.Hierarchy;
 using NUnit.Framework;
+using LoggerHierarchy = log4net.Repository.Hierarchy.Hierarchy;
 
 namespace log4net.Tests.Integration
 {
@@ -172,17 +176,24 @@ namespace log4net.Tests.Integration
     public void Log4Net_WritesLogFile_WithDateAndSizeRoll_Config_Works()
     {
       DirectoryInfo logDir = CreateLogDirectory("integrationTestLogDir_maxsizerolldate");
-      (ILog log, ILoggerRepository repo) = ArrangeLogger("log4net.maxsizeroll_date.config");
-      MockDateTime mockDateTime = new();
-      repo.GetAppenders().OfType<RollingFileAppender>().First().DateTimeStrategy = mockDateTime;
-      // Write enough lines to trigger rolling by size and date
-      for (int i = 1; i < 10000; ++i)
+      DateTime startDate = new(2025, 12, 08, 15, 55, 50);
+      MockDateTime mockDateTime = new(startDate); // start at the end of a minute
+      (ILog log, ILoggerRepository repo) = ArrangeCompositeLogger(mockDateTime);
+      // distribute 10.000 log entries over 60 seconds
+      TimeSpan stepIncrement = new(TimeSpan.FromSeconds(60).Ticks / 10000);
+      // 1000 entries (each 100 bytes) -> ~100KB total - 10 rolls expected - 4 will survive
+      for (int i = 1; i < 1000; ++i)
       {
-        log.Debug($"DateRoll entry {i}");
-        if (i % 5000 == 0)
-        {
-          mockDateTime.Offset = TimeSpan.FromMinutes(1); // allow time for date to change if needed
-        }
+        log.Debug($"DateRoll entry {i:D5}");
+        mockDateTime.Now += stepIncrement;
+      }
+      // switch to next minute to force date roll
+      mockDateTime.Now = startDate.AddSeconds(10);
+      // 1000 entries (each 100 bytes) -> ~100KB total - 10 rolls expected - 4 will survive
+      for (int i = 1; i < 1000; ++i)
+      {
+        log.Debug($"DateRoll entry {i:D5}");
+        mockDateTime.Now += stepIncrement;
       }
       repo.Shutdown();
       // Assert: rolled files exist (date+size pattern)
@@ -270,5 +281,36 @@ namespace log4net.Tests.Integration
       ILog log = LogManager.GetLogger(repo.Name, "IntegrationTestLogger");
       return (log, repo);
     }
+
+    private static (ILog log, ILoggerRepository repo) ArrangeCompositeLogger(RollingFileAppender.IDateTime dateTime)
+    {
+      LoggerHierarchy repo = (LoggerHierarchy)LogManager.CreateRepository(Guid.NewGuid().ToString());
+      PatternLayout layout = new() { ConversionPattern = "%d{yyyy/MM/dd HH:mm:ss.fff} %m-%M%n" };
+      layout.ActivateOptions();
+      RollingFileAppender rollingAppender = new()
+      {
+        Name = "LogFileAppender",
+        File = "integrationTestLogDir_maxsizerolldate/.log",
+        AppendToFile = true,
+        RollingStyle = RollingFileAppender.RollingMode.Composite,
+        DatePattern = "HH-mm",
+        DateTimeStrategy = dateTime,
+        MaximumFileSize = "10KB",
+        MaxSizeRollBackups = 3,
+        StaticLogFileName = false,
+        CountDirection = 1,
+        PreserveLogFileNameExtension = true,
+        LockingModel = new FileAppender.NoLock(),
+        Layout = layout
+      };
+      rollingAppender.ActivateOptions();
+      repo.Configured = true;
+      Logger logger = (Logger)repo.GetLogger("IntegrationTestLogger");
+      logger.Level = Level.Debug;
+      logger.AddAppender(rollingAppender);
+      logger.Additivity = false;
+      return (log: new LogImpl(logger), repo);
+    }
+
   }
 }

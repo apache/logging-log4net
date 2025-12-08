@@ -11,6 +11,7 @@
     <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
     <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <SatelliteResourceLanguages>en;en-US</SatelliteResourceLanguages>
   </PropertyGroup>
   <PropertyGroup Label="Package Versions">
     <SystemConfigurationConfigurationManagerPackageVersion>4.5.0</SystemConfigurationConfigurationManagerPackageVersion>
