@@ -258,6 +258,27 @@ public class RemoteSyslogAppender : UdpAppender
     Local7 = 23
   }
 
+  /// <summary>
+  /// Options for handling newlines (\r or \n) in <see ref="AppendMessage" />
+  /// </summary>
+  public enum SyslogNewLineHandling
+  {
+    /// <summary>
+    /// escape the newlines (\\r for \r and \\n for \n)
+    /// </summary>
+    Escape,
+    
+    /// <summary>
+    /// split the message at new lines
+    /// </summary>
+    Split,
+    
+    /// <summary>
+    /// keep newlines as is (many syslog servers can handle newlines in the message part)
+    /// </summary>
+    Keep
+  }
+  
   private readonly BlockingCollection<byte[]> _sendQueue = new();
   private CancellationTokenSource? _cancellationTokenSource;
   private Task? _pumpTask;
@@ -300,6 +321,12 @@ public class RemoteSyslogAppender : UdpAppender
   /// </remarks>
   public SyslogFacility Facility { get; set; } = SyslogFacility.User;
 
+  /// <summary>
+  /// NewLine handling
+  /// </summary>
+  /// <remarks>The default value is <see cref="SyslogNewLineHandling.Escape"/>.</remarks>
+  public SyslogNewLineHandling NewLineHandling { get; set; }
+  
   /// <summary>
   /// Gets or sets the delegate used to create instances of <see cref="IUdpConnection"/>.
   /// </summary>
@@ -393,16 +420,31 @@ public class RemoteSyslogAppender : UdpAppender
       {
         builder.Append(c);
       }
-      // If character is newline, break and send the current line
+      // If character is newline
       else if (c is '\r' or '\n')
       {
-        // Check the next character to handle \r\n or \n\r
-        if ((message.Length > characterIndex + 1) && ((message[characterIndex + 1] == '\r') || (message[characterIndex + 1] == '\n')))
+        if (NewLineHandling == SyslogNewLineHandling.Escape)
         {
-          characterIndex++;
+          // escape
+          builder.Append(c == '\r' ? "\\r" : "\\n");
         }
-        characterIndex++;
-        break;
+        else if (NewLineHandling == SyslogNewLineHandling.Keep)
+        {
+          // keep
+          builder.Append(c);
+        }
+        else if (NewLineHandling == SyslogNewLineHandling.Split)
+        {
+          // break and send the current line
+          // Check the next character to handle \r\n or \n\r
+          if ((message.Length > characterIndex + 1)
+              && ((message[characterIndex + 1] == '\r') || (message[characterIndex + 1] == '\n')))
+          {
+            characterIndex++;
+          }
+          characterIndex++;
+          break;
+        }
       }
     }
   }
@@ -418,6 +460,11 @@ public class RemoteSyslogAppender : UdpAppender
   public override void ActivateOptions()
   {
     base.ActivateOptions();
+    if (NewLineHandling is not (SyslogNewLineHandling.Escape or SyslogNewLineHandling.Keep or SyslogNewLineHandling.Split))
+    {
+      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(NewLineHandling), NewLineHandling,
+        $"The NewLineHandling is not {SyslogNewLineHandling.Escape} or {SyslogNewLineHandling.Keep} or {SyslogNewLineHandling.Split}.");
+    }
     _levelMapping.ActivateOptions();
     // Start the background pump
     _cancellationTokenSource = new();
@@ -550,7 +597,7 @@ public class RemoteSyslogAppender : UdpAppender
     {
       while (!token.IsCancellationRequested)
       {
-        // Take next message or throw when cancelled
+        // Take next message or throw when canceled
         byte[] datagram = _sendQueue.Take(token);
         try
         {
