@@ -53,6 +53,7 @@ Update-TextVersion $PSScriptRoot/../doc/MailTemplate.Announce.txt $OldVersion $N
 Update-TextVersion $PSScriptRoot/build-preview.ps1 $OldVersion $NewVersion
 Update-TextVersion $PSScriptRoot/build-release.ps1 $OldVersion $NewVersion
 Update-XmlVersion $PSScriptRoot/../src/log4net/log4net.csproj $NewVersion '/Project/PropertyGroup/Version'
+Update-TextVersion $PSScriptRoot/../src/site/antora/modules/ROOT/partials/supported-versions.adoc $OldVersion $NewVersion
 
 $ReleaseNoteXml = '<?xml version="1.0" encoding="UTF-8"?>
 <release xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
