@@ -25,13 +25,8 @@ namespace log4net.Tests.Integration;
 /// <summary>
 /// Mock implementation of <see cref="RollingFileAppender.IDateTime"/>
 /// </summary>
-internal sealed class MockDateTime : RollingFileAppender.IDateTime
+internal sealed class MockDateTime(DateTime now) : RollingFileAppender.IDateTime
 {
-  /// <summary>
-  /// Offset to apply to the current time.
-  /// </summary>
-  internal TimeSpan Offset { get; set; }
-
   /// <inheritdoc/>
-  public DateTime Now => DateTime.Now + Offset;
+  public DateTime Now { get; set; } = now;
 }
