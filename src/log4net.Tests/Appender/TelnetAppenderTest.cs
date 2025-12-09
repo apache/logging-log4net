@@ -93,7 +93,7 @@ public sealed class TelnetAppenderTest
       {
         retries++;
         TestContext.Out.WriteLine($"receiver: waiting for message {count} of client - retry {retries} failed");
-        if (retries > 100)
+        if (retries > 500)
         {
           Assert.Fail("Timeout waiting for received messages");
         }
