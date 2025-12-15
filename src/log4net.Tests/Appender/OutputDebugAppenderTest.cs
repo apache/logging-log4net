@@ -19,8 +19,6 @@
 
 
 using System;
-using System.Diagnostics;
-
 using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
@@ -33,13 +31,12 @@ namespace log4net.Tests.Appender;
 /// <summary>
 /// Used for internal unit testing the <see cref="OutputDebugStringAppender"/> class.
 /// </summary>
-/// <remarks>
-/// Used for internal unit testing the <see cref="OutputDebugStringAppender"/> class.
-/// </remarks>
 [TestFixture]
 [Platform(Include = "Win")]
 public sealed class OutputDebugStringAppenderTest
 {
+  private const string DebugMessage = "Message - Сообщение - הודעה";
+
   /// <summary>
   /// Verifies that the OutputDebugString api is called by the appender without issues
   /// </summary>
@@ -47,8 +44,8 @@ public sealed class OutputDebugStringAppenderTest
   public void AppendShouldNotCauseAnyErrors()
   {
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
-
-    OutputDebugStringAppender outputDebugStringAppender = new()
+    string? lastDebugString = null;
+    OutputAppender outputDebugStringAppender = new(value => lastDebugString = value)
     {
       Layout = new SimpleLayout(),
       ErrorHandler = new FailOnError()
@@ -58,15 +55,18 @@ public sealed class OutputDebugStringAppenderTest
     BasicConfigurator.Configure(rep, outputDebugStringAppender);
 
     ILog log = LogManager.GetLogger(rep.Name, GetType());
-    log.Debug("Message - Сообщение - הודעה");
-
-    // need a way to check that the api is actually called and the string is properly marshalled.
+    log.Debug(DebugMessage);
+    Assert.That(lastDebugString, Is.Not.Null.And.Contains(DebugMessage));
   }
 }
 
-class FailOnError : IErrorHandler
+file sealed class OutputAppender(Action<string> outputDebugString)
+  : OutputDebugStringAppender(outputDebugString)
+{ }
+
+file sealed class FailOnError : IErrorHandler
 {
   public void Error(string message, Exception? e, ErrorCode errorCode) => Assert.Fail($"Unexpected error: {message} exception: {e}, errorCode: {errorCode}");
   public void Error(string message, Exception e) => Assert.Fail($"Unexpected error: {message} exception: {e}");
-  public void Error(string message) =>  Assert.Fail($"Unexpected error: {message}");
+  public void Error(string message) => Assert.Fail($"Unexpected error: {message}");
 }

@@ -17,20 +17,33 @@
 //
 #endregion
 
-using System.Runtime.InteropServices;
-
+using System;
 using log4net.Core;
 using log4net.Util;
 
 namespace log4net.Appender;
 
 /// <summary>
-/// Appends log events to the OutputDebugString system.
+/// Appends log events to the OutputDebugString system
 /// </summary>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
 public class OutputDebugStringAppender : AppenderSkeleton
 {
+  private readonly Action<string> _outputDebugString;
+
+  /// <inheritdoc/>
+  public OutputDebugStringAppender()
+    : this(null)
+  { }
+
+  /// <summary>
+  /// Constructor for unit testing
+  /// </summary>
+  /// <param name="outputDebugString">replacement for <see cref="NativeMethods.OutputDebugString"/></param>
+  protected OutputDebugStringAppender(Action<string>? outputDebugString) 
+    => _outputDebugString = outputDebugString ?? NativeMethods.OutputDebugString;
+
   /// <summary>
   /// Writes the logging event to the output debug string API
   /// </summary>
@@ -40,13 +53,13 @@ public class OutputDebugStringAppender : AppenderSkeleton
   protected override void Append(LoggingEvent loggingEvent)
   {
 #if NETSTANDARD2_0_OR_GREATER
-    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    if (!System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
     {
-      throw new System.PlatformNotSupportedException("OutputDebugString is only available on Windows");
+      throw new PlatformNotSupportedException("OutputDebugString is only available on Windows");
     }
 #endif
 
-     NativeMethods.OutputDebugString(RenderLoggingEvent(loggingEvent));
+    _outputDebugString(RenderLoggingEvent(loggingEvent));
   }
 
   /// <summary>
