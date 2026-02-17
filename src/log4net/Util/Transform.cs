@@ -26,9 +26,6 @@ namespace log4net.Util;
 /// Utility class for transforming strings.
 /// </summary>
 /// <remarks>
-/// <para>
-/// Utility class for transforming strings.
-/// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
@@ -46,7 +43,7 @@ public static class Transform
   /// or using CDATA sections.
   /// </para>
   /// </remarks>
-  public static void WriteEscapedXmlString(XmlWriter writer, string textData, string invalidCharReplacement)
+  public static void WriteEscapedXmlString(this XmlWriter writer, string textData, string invalidCharReplacement)
   {
     writer.EnsureNotNull();
     string stringData = MaskXmlInvalidCharacters(textData, invalidCharReplacement);

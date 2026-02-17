@@ -32,10 +32,11 @@ namespace log4net.Layout.Internal;
 internal static partial class XmlWriterExtensions
 {
 #if NETSTANDARD2_0_OR_GREATER
-  private static readonly XmlWriterSettings _settings = new XmlWriterSettings
+  private static readonly XmlWriterSettings _settings = new()
   {
     Indent = false,
-    OmitXmlDeclaration = true
+    OmitXmlDeclaration = true,
+    CheckCharacters = false
   };
 #endif
 
@@ -71,4 +72,14 @@ internal static partial class XmlWriterExtensions
       Namespaces = false
     };
 #endif
+
+  /// <summary>
+  /// writes the attribute and replaces invalid characters
+  /// </summary>
+  internal static void WriteAttributeStringSafe(this XmlWriter writer, string localName, string? value, string mask)
+  {
+    if (string.IsNullOrEmpty(value))
+      return;
+    writer.WriteAttributeString(localName, Transform.MaskXmlInvalidCharacters(value!, mask));
+  }
 }

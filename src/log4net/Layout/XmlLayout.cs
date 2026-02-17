@@ -192,28 +192,30 @@ public class XmlLayout : XmlLayoutBase
   protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
   {
     writer.EnsureNotNull().WriteStartElement(_eventElementName, Prefix, DefaultEventElementName, Prefix);
-    writer.WriteAttributeString(LoggerAttributeName, loggingEvent.EnsureNotNull().LoggerName!);
+    writer.WriteAttributeStringSafe(LoggerAttributeName, loggingEvent.EnsureNotNull().LoggerName, InvalidCharReplacement);
 
-    writer.WriteAttributeString(TimestampAttributeName, XmlConvert.ToString(loggingEvent.TimeStamp, XmlDateTimeSerializationMode.Local));
+    writer.WriteAttributeStringSafe(TimestampAttributeName,
+      XmlConvert.ToString(loggingEvent.TimeStamp, XmlDateTimeSerializationMode.Local),
+      InvalidCharReplacement);
 
     if (loggingEvent.Level is not null)
     {
-      writer.WriteAttributeString(LevelAttributeName, loggingEvent.Level.DisplayName);
+      writer.WriteAttributeStringSafe(LevelAttributeName, loggingEvent.Level.DisplayName, InvalidCharReplacement);
     }
 
-    writer.WriteAttributeString(ThreadAttributeName, loggingEvent.ThreadName!);
+    writer.WriteAttributeStringSafe(ThreadAttributeName, loggingEvent.ThreadName!, InvalidCharReplacement);
 
     if (loggingEvent.Domain is not null && loggingEvent.Domain.Length > 0)
     {
-      writer.WriteAttributeString(DomainAttributeName, loggingEvent.Domain);
+      writer.WriteAttributeStringSafe(DomainAttributeName, loggingEvent.Domain, InvalidCharReplacement);
     }
     if (loggingEvent.Identity is not null && loggingEvent.Identity.Length > 0)
     {
-      writer.WriteAttributeString(IdentityAttributeName, loggingEvent.Identity);
+      writer.WriteAttributeStringSafe(IdentityAttributeName, loggingEvent.Identity, InvalidCharReplacement);
     }
     if (loggingEvent.UserName.Length > 0)
     {
-      writer.WriteAttributeString(UsernameAttributeName, loggingEvent.UserName);
+      writer.WriteAttributeStringSafe(UsernameAttributeName, loggingEvent.UserName, InvalidCharReplacement);
     }
 
     // Append the message text
@@ -222,13 +224,13 @@ public class XmlLayout : XmlLayoutBase
       writer.WriteStartElement(_messageElementName, Prefix, DefaultMessageElementName, Prefix);
       if (!Base64EncodeMessage)
       {
-        Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, InvalidCharReplacement);
+        writer.WriteEscapedXmlString(loggingEvent.RenderedMessage, InvalidCharReplacement);
       }
       else
       {
         byte[] messageBytes = Encoding.UTF8.GetBytes(loggingEvent.RenderedMessage);
         string base64Message = Convert.ToBase64String(messageBytes, 0, messageBytes.Length);
-        Transform.WriteEscapedXmlString(writer, base64Message, InvalidCharReplacement);
+        writer.WriteEscapedXmlString(base64Message, InvalidCharReplacement);
       }
       writer.WriteEndElement();
     }
@@ -242,22 +244,17 @@ public class XmlLayout : XmlLayoutBase
       foreach (KeyValuePair<string, object?> entry in properties)
       {
         writer.WriteStartElement(_dataElementName, Prefix, DefaultDataElementName, Prefix);
-        writer.WriteAttributeString(NameAttributeName, Transform.MaskXmlInvalidCharacters(entry.Key, InvalidCharReplacement));
+        writer.WriteAttributeStringSafe(NameAttributeName, entry.Key, InvalidCharReplacement);
 
         // Use an ObjectRenderer to convert the object to a string
         if (loggingEvent.Repository is not null)
         {
-          string valueStr;
-          if (!Base64EncodeProperties)
+          string valueStr = loggingEvent.Repository.RendererMap.FindAndRender(entry.Value);
+          if (Base64EncodeProperties)
           {
-            valueStr = Transform.MaskXmlInvalidCharacters(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value), InvalidCharReplacement);
+            valueStr = Convert.ToBase64String(Encoding.UTF8.GetBytes(valueStr));
           }
-          else
-          {
-            byte[] propertyValueBytes = Encoding.UTF8.GetBytes(loggingEvent.Repository.RendererMap.FindAndRender(entry.Value));
-            valueStr = Convert.ToBase64String(propertyValueBytes, 0, propertyValueBytes.Length);
-          }
-          writer.WriteAttributeString(ValueAttributeName, valueStr);
+          writer.WriteAttributeStringSafe(ValueAttributeName, valueStr, InvalidCharReplacement);
         }
 
         writer.WriteEndElement();
@@ -270,7 +267,7 @@ public class XmlLayout : XmlLayoutBase
     {
       // Append the stack trace line
       writer.WriteStartElement(_exceptionElementName, Prefix, DefaultExceptionElementName, Prefix);
-      Transform.WriteEscapedXmlString(writer, exceptionStr, InvalidCharReplacement);
+      writer.WriteEscapedXmlString(exceptionStr, InvalidCharReplacement);
       writer.WriteEndElement();
     }
 
@@ -279,10 +276,10 @@ public class XmlLayout : XmlLayoutBase
       if (loggingEvent.LocationInformation is LocationInfo locationInfo)
       {
         writer.WriteStartElement(_locationElementName, Prefix, DefaultLocationElementName, Prefix);
-        writer.WriteAttributeString(ClassAttributeName, locationInfo.ClassName!);
-        writer.WriteAttributeString(MethodAttributeName, locationInfo.MethodName);
-        writer.WriteAttributeString(FileAttributeName, locationInfo.FileName!);
-        writer.WriteAttributeString(LineAttributeName, locationInfo.LineNumber);
+        writer.WriteAttributeStringSafe(ClassAttributeName, locationInfo.ClassName, InvalidCharReplacement);
+        writer.WriteAttributeStringSafe(MethodAttributeName, locationInfo.MethodName, InvalidCharReplacement);
+        writer.WriteAttributeStringSafe(FileAttributeName, locationInfo.FileName, InvalidCharReplacement);
+        writer.WriteAttributeStringSafe(LineAttributeName, locationInfo.LineNumber, InvalidCharReplacement);
         writer.WriteEndElement();
       }
     }
