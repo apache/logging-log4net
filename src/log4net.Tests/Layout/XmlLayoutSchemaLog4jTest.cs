@@ -18,12 +18,11 @@
 #endregion
 
 using System;
-
 using log4net.Config;
+using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender;
-
 using NUnit.Framework;
 
 namespace log4net.Tests.Layout
@@ -61,6 +60,56 @@ namespace log4net.Tests.Layout
         {
           log.Error($"Error {foo}", ex);
         }
+      }
+    }
+    
+    /// <summary>
+    /// Tests the serialization of invalid characters in the Properties dictionary
+    /// </summary>
+    [Test]
+    public void InvalidCharacterTest()
+    {
+      StringAppender stringAppender = new() { Layout = new XmlLayoutSchemaLog4J() };
+
+      ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      BasicConfigurator.Configure(repository, stringAppender);
+      ILog log = LogManager.GetLogger(repository.Name, "TestLogger");
+      
+      Log();
+
+      string logEventXml = stringAppender.GetString();
+      Assert.That(logEventXml, Does.Contain("us?er"));
+      Assert.That(logEventXml, Does.Contain("A?B"));
+      Assert.That(logEventXml, Does.Contain("Log?ger"));
+      Assert.That(logEventXml, Does.Contain("Thread?Name"));
+      Assert.That(logEventXml, Does.Contain("Do?main"));
+      Assert.That(logEventXml, Does.Contain("Ident?ity"));
+      Assert.That(logEventXml, Does.Contain("User?Name"));
+      Assert.That(logEventXml, Does.Contain("Mess?age"));
+      Assert.That(logEventXml, Does.Contain("oh?my"));
+
+      void Log()
+      {
+        // Build a LoggingEvent with an XML invalid character in a property value
+        LoggingEventData data = new()
+        {
+          LoggerName = "Log\u0001ger",
+          Level = Level.Info,
+          TimeStampUtc = DateTime.UtcNow,
+          ThreadName = "Thread\u0001Name",
+          Domain = "Do\u0001main",
+          Identity = "Ident\u0001ity",
+          UserName = "User\u0001Name",
+          Message = "Mess\u0001age",
+          ExceptionString = "oh\u0001my",
+          Properties = new()
+        };
+
+        // Value contains U+0001 which is illegal in XML 1.0
+        data.Properties["us\u0001er"] = "A\u0001B";
+
+        // Log the event
+        log.Logger.Log(new(null, repository, data));
       }
     }
   }

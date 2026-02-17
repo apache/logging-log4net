@@ -47,8 +47,7 @@ public class XmlLayoutSchemaLog4J : XmlLayoutBase
   /// Constructs an XMLLayoutSchemaLog4j
   /// </summary>
   public XmlLayoutSchemaLog4J()
-  {
-  }
+  { }
 
   /// <summary>
   /// Constructs an XMLLayoutSchemaLog4j.
@@ -67,9 +66,9 @@ public class XmlLayoutSchemaLog4J : XmlLayoutBase
   /// appender as well.
   /// </para>
   /// </remarks>
-  public XmlLayoutSchemaLog4J(bool locationInfo) : base(locationInfo)
-  {
-  }
+  public XmlLayoutSchemaLog4J(bool locationInfo)
+    : base(locationInfo)
+  { }
 
   /// <summary>
   /// The version of the log4j schema to use.
@@ -137,8 +136,7 @@ method="run" file="Generator.java" line="94"/>
     }
 
     // translate appdomain name
-    if (loggingEvent.LookupProperty("log4japp") is null
-        && loggingEvent.Domain?.Length > 0)
+    if (loggingEvent.LookupProperty("log4japp") is null && loggingEvent.Domain?.Length > 0)
     {
       loggingEvent.GetProperties()["log4japp"] = loggingEvent.Domain;
     }
@@ -159,7 +157,7 @@ method="run" file="Generator.java" line="94"/>
 
     // Write the start element
     writer.EnsureNotNull().WriteStartElement("log4j:event", "log4j", "event", "log4net");
-    writer.WriteAttributeString("logger", loggingEvent.LoggerName);
+    writer.WriteAttributeStringSafe("logger", loggingEvent.LoggerName, InvalidCharReplacement);
 
     // Calculate the timestamp as the number of milliseconds since january 1970
     // 
@@ -168,18 +166,18 @@ method="run" file="Generator.java" line="94"/>
     // caused by daylight savings time transitions.
     TimeSpan timeSince1970 = loggingEvent.TimeStampUtc - _sDate1970;
 
-    writer.WriteAttributeString("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds));
+    writer.WriteAttributeStringSafe("timestamp", XmlConvert.ToString((long)timeSince1970.TotalMilliseconds), InvalidCharReplacement);
     if (loggingEvent.Level is not null)
     {
-      writer.WriteAttributeString("level", loggingEvent.Level.DisplayName);
+      writer.WriteAttributeStringSafe("level", loggingEvent.Level.DisplayName, InvalidCharReplacement);
     }
-    writer.WriteAttributeString("thread", loggingEvent.ThreadName);
+    writer.WriteAttributeStringSafe("thread", loggingEvent.ThreadName, InvalidCharReplacement);
 
     // Append the message text
     if (loggingEvent.RenderedMessage is not null)
     {
       writer.WriteStartElement("log4j:message", "log4j", "message", "log4net");
-      Transform.WriteEscapedXmlString(writer, loggingEvent.RenderedMessage, InvalidCharReplacement);
+      writer.WriteEscapedXmlString(loggingEvent.RenderedMessage, InvalidCharReplacement);
       writer.WriteEndElement();
     }
 
@@ -190,7 +188,7 @@ method="run" file="Generator.java" line="94"/>
       {
         // Append the NDC text
         writer.WriteStartElement("log4j:NDC", "log4j", "NDC", "log4net");
-        Transform.WriteEscapedXmlString(writer, valueStr!, InvalidCharReplacement);
+        writer.WriteEscapedXmlString(valueStr!, InvalidCharReplacement);
         writer.WriteEndElement();
       }
     }
@@ -203,13 +201,13 @@ method="run" file="Generator.java" line="94"/>
       foreach (KeyValuePair<string, object?> entry in properties)
       {
         writer.WriteStartElement("log4j:data", "log4j", "data", "log4net");
-        writer.WriteAttributeString("name", entry.Key);
+        writer.WriteAttributeStringSafe("name", entry.Key, InvalidCharReplacement);
 
         // Use an ObjectRenderer to convert the object to a string
         string? valueStr = loggingEvent.Repository?.RendererMap.FindAndRender(entry.Value);
         if (!string.IsNullOrEmpty(valueStr))
         {
-          writer.WriteAttributeString("value", valueStr);
+          writer.WriteAttributeStringSafe("value", valueStr, InvalidCharReplacement);
         }
 
         writer.WriteEndElement();
@@ -222,7 +220,7 @@ method="run" file="Generator.java" line="94"/>
     {
       // Append the stack trace line
       writer.WriteStartElement("log4j:throwable", "log4j", "throwable", "log4net");
-      Transform.WriteEscapedXmlString(writer, exceptionStr!, InvalidCharReplacement);
+      writer.WriteEscapedXmlString(exceptionStr!, InvalidCharReplacement);
       writer.WriteEndElement();
     }
 
@@ -231,10 +229,10 @@ method="run" file="Generator.java" line="94"/>
       if (loggingEvent.LocationInformation is LocationInfo locationInfo)
       {
         writer.WriteStartElement("log4j:locationInfo", "log4j", "locationInfo", "log4net");
-        writer.WriteAttributeString("class", locationInfo.ClassName);
-        writer.WriteAttributeString("method", locationInfo.MethodName);
-        writer.WriteAttributeString("file", locationInfo.FileName);
-        writer.WriteAttributeString("line", locationInfo.LineNumber);
+        writer.WriteAttributeStringSafe("class", locationInfo.ClassName, InvalidCharReplacement);
+        writer.WriteAttributeStringSafe("method", locationInfo.MethodName, InvalidCharReplacement);
+        writer.WriteAttributeStringSafe("file", locationInfo.FileName, InvalidCharReplacement);
+        writer.WriteAttributeStringSafe("line", locationInfo.LineNumber, InvalidCharReplacement);
         writer.WriteEndElement();
       }
     }
