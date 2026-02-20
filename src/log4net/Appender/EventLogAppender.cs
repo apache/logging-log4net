@@ -42,8 +42,8 @@ namespace log4net.Appender;
 /// on the <see cref="LoggingEvent"/>.
 /// </para>
 /// <para>
-/// The <c>Category</c> of the event log entry can be
-/// set using the <c>Category</c> property (<see cref="LoggingEvent.Properties"/>)
+/// The <see cref="Category"/> of the event log entry can be
+/// set using the <see cref="Category"/> property (<see cref="LoggingEvent.Properties"/>)
 /// on the <see cref="LoggingEvent"/>.
 /// </para>
 /// <para>
@@ -174,7 +174,7 @@ public class EventLogAppender : AppenderSkeleton
   public SecurityContext? SecurityContext { get; set; }
 
   /// <summary>
-  /// Gets or sets the <c>EventId</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+  /// Gets or sets the <see cref="EventId"/> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
   /// </summary>
   /// <remarks>
   /// <para>
@@ -188,12 +188,12 @@ public class EventLogAppender : AppenderSkeleton
 
 
   /// <summary>
-  /// Gets or sets the <c>Category</c> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
+  /// Gets or sets the <see cref="Category"/> to use unless one is explicitly specified via the <c>LoggingEvent</c>'s properties.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The <c>Category</c> of the event log entry will normally be
-  /// set using the <c>Category</c> property (<see cref="LoggingEvent.Properties"/>)
+  /// The <see cref="Category"/> of the event log entry will normally be
+  /// set using the <see cref="Category"/> property (<see cref="LoggingEvent.Properties"/>)
   /// on the <see cref="LoggingEvent"/>.
   /// This property provides the fallback value which defaults to 0.
   /// </para>
@@ -287,7 +287,7 @@ public class EventLogAppender : AppenderSkeleton
   /// </summary>
   private static void CreateEventSource(string source, string logName, string machineName)
   {
-    var eventSourceCreationData = new EventSourceCreationData(source, logName)
+    EventSourceCreationData eventSourceCreationData = new(source, logName)
     {
       MachineName = machineName
     };
@@ -402,7 +402,7 @@ public class EventLogAppender : AppenderSkeleton
   /// <summary>
   /// This appender requires a <see cref="Layout"/> to be set.
   /// </summary>
-  /// <value><c>true</c></value>
+  /// <value><see langword="true"/></value>
   protected override bool RequiresLayout => true;
 
   /// <summary>

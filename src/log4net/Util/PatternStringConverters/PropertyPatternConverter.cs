@@ -51,11 +51,11 @@ internal sealed class PropertyPatternConverter : PatternConverter
   /// <remarks>
   /// <para>
   /// Writes out the value of a named property. The property name
-  /// should be set in the <see cref="log4net.Util.PatternConverter.Option"/>
+  /// should be set in the <see cref="PatternConverter.Option"/>
   /// property.
   /// </para>
   /// <para>
-  /// If the <see cref="log4net.Util.PatternConverter.Option"/> is set to <c>null</c>
+  /// If the <see cref="PatternConverter.Option"/> is set to <see langword="null"/>
   /// then all the properties are written as key value pairs.
   /// </para>
   /// </remarks>

@@ -38,10 +38,10 @@ public interface ITriggeringEventEvaluator
   /// Test if this event triggers the action
   /// </summary>
   /// <param name="loggingEvent">The event to check</param>
-  /// <returns><c>true</c> if this event triggers the action, otherwise <c>false</c></returns>
+  /// <returns><see langword="true"/> if this event triggers the action, otherwise <see langword="false"/></returns>
   /// <remarks>
   /// <para>
-  /// Return <c>true</c> if this event triggers the action
+  /// Return <see langword="true"/> if this event triggers the action
   /// </para>
   /// </remarks>
   bool IsTriggeringEvent(LoggingEvent loggingEvent);

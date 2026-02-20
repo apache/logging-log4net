@@ -28,7 +28,7 @@ namespace log4net.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-/// This mapping is held separately for each <see cref="log4net.Repository.ILoggerRepository"/>.
+/// This mapping is held separately for each <see cref="Repository.ILoggerRepository"/>.
 /// The level name is case-insensitive.
 /// </para>
 /// </remarks>
@@ -57,7 +57,7 @@ public sealed class LevelMap
   /// Looks up a <see cref="Level"/> by name
   /// </summary>
   /// <param name="name">The name of the Level to look up.</param>
-  /// <returns>A Level from the map with the name specified, or <c>null</c> if none is found.</returns>
+  /// <returns>A Level from the map with the name specified, or <see langword="null"/> if none is found.</returns>
   public Level? this[string name]
   {
     get

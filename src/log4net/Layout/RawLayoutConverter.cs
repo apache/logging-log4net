@@ -40,7 +40,7 @@ public class RawLayoutConverter : IConvertFrom
   /// Can the sourceType be converted to an <see cref="IRawLayout"/>
   /// </summary>
   /// <param name="sourceType">the source to be to be converted</param>
-  /// <returns><c>true</c> if the source type can be converted to <see cref="IRawLayout"/></returns>
+  /// <returns><see langword="true"/> if the source type can be converted to <see cref="IRawLayout"/></returns>
   /// <remarks>
   /// <para>
   /// Test if the <paramref name="sourceType"/> can be converted to a

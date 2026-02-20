@@ -51,7 +51,7 @@ public static class MDC
   /// Gets the context value identified by the <paramref name="key" /> parameter.
   /// </summary>
   /// <param name="key">The key to lookup in the MDC.</param>
-  /// <returns>The string value held for the key, or a <c>null</c> reference if no corresponding value is found.</returns>
+  /// <returns>The string value held for the key, or a <see langword="null"/> reference if no corresponding value is found.</returns>
   /// <remarks>
   /// <note>
   /// <para>
@@ -61,7 +61,7 @@ public static class MDC
   /// </note>
   /// <para>
   /// If the <paramref name="key" /> parameter does not look up to a
-  /// previously defined context then <c>null</c> will be returned.
+  /// previously defined context then <see langword="null"/> will be returned.
   /// </para>
   /// </remarks>
   /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
@@ -87,7 +87,7 @@ public static class MDC
   /// <para>
   /// If a value is already defined for the <paramref name="key" />
   /// specified then the value will be replaced. If the <paramref name="value" /> 
-  /// is specified as <c>null</c> then the key value mapping will be removed.
+  /// is specified as <see langword="null"/> then the key value mapping will be removed.
   /// </para>
   /// </remarks>
   /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/

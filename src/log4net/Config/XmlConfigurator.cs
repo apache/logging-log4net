@@ -241,7 +241,7 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// the log4net configuration data.
   /// </para>
   /// <para>
-  /// The <see cref="System.Net.WebRequest"/> must support the URI scheme specified.
+  /// The <see cref="WebRequest"/> must support the URI scheme specified.
   /// </para>
   /// </remarks>
   public static ICollection Configure(Uri configUri)
@@ -454,7 +454,7 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// the configuration data.
   /// </para>
   /// <para>
-  /// The <see cref="System.Net.WebRequest"/> must support the URI scheme specified.
+  /// The <see cref="WebRequest"/> must support the URI scheme specified.
   /// </para>
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, Uri configUri)

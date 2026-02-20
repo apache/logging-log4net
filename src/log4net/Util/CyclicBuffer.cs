@@ -66,11 +66,11 @@ public class CyclicBuffer
   /// Appends a <paramref name="loggingEvent"/> to the buffer.
   /// </summary>
   /// <param name="loggingEvent">The event to append to the buffer.</param>
-  /// <returns>The event discarded from the buffer, if the buffer is full, otherwise <c>null</c>.</returns>
+  /// <returns>The event discarded from the buffer, if the buffer is full, otherwise <see langword="null"/>.</returns>
   /// <remarks>
   /// <para>
   /// Append an event to the buffer. If the buffer still contains free space then
-  /// <c>null</c> is returned. If the buffer is full then an event will be dropped
+  /// <see langword="null"/> is returned. If the buffer is full then an event will be dropped
   /// to make space for the new event, the dropped event is returned.
   /// </para>
   /// </remarks>
@@ -258,7 +258,7 @@ public class CyclicBuffer
   /// <remarks>
   /// <para>
   /// If <paramref name="i"/> is outside the range 0 to the number of events
-  /// currently in the buffer, then <c>null</c> is returned.
+  /// currently in the buffer, then <see langword="null"/> is returned.
   /// </para>
   /// </remarks>
   public LoggingEvent? this[int i]

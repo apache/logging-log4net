@@ -26,13 +26,13 @@ namespace log4net.Core;
 /// <para>
 /// Interface that indicates that the object requires fixing before it
 /// can be taken outside the context of the appender's 
-/// <see cref="log4net.Appender.IAppender.DoAppend"/> method.
+/// <see cref="Appender.IAppender.DoAppend"/> method.
 /// </para>
 /// <para>
 /// When objects that implement this interface are stored 
-/// in the context properties maps <see cref="log4net.GlobalContext"/>
-/// <see cref="log4net.GlobalContext.Properties"/> and <see cref="log4net.ThreadContext"/>
-/// <see cref="log4net.ThreadContext.Properties"/> are fixed 
+/// in the context properties maps <see cref="GlobalContext"/>
+/// <see cref="GlobalContext.Properties"/> and <see cref="ThreadContext"/>
+/// <see cref="ThreadContext.Properties"/> are fixed 
 /// (see <see cref="LoggingEvent.Fix"/>) the <see cref="GetFixedObject"/>
 /// method will be called.
 /// </para>

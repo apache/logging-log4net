@@ -32,20 +32,20 @@ namespace log4net.Core;
 /// Each <see cref="LoggingEvent"/> has an associated <see cref="Level"/>.
 /// </para>
 /// <para>
-/// Levels have a numeric <see cref="Level.Value"/> that defines the relative 
-/// ordering between levels. Two Levels with the same <see cref="Level.Value"/> 
+/// Levels have a numeric <see cref="Value"/> that defines the relative 
+/// ordering between levels. Two Levels with the same <see cref="Value"/> 
 /// are deemed to be equivalent.
 /// </para>
 /// <para>
-/// The levels that are recognized by log4net are set for each <see cref="log4net.Repository.ILoggerRepository"/>
+/// The levels that are recognized by log4net are set for each <see cref="Repository.ILoggerRepository"/>
 /// and each repository can have different levels defined. The levels are stored
-/// in the <see cref="log4net.Repository.ILoggerRepository.LevelMap"/> on the repository. Levels are
-/// looked up by name from the <see cref="log4net.Repository.ILoggerRepository.LevelMap"/>.
+/// in the <see cref="Repository.ILoggerRepository.LevelMap"/> on the repository. Levels are
+/// looked up by name from the <see cref="Repository.ILoggerRepository.LevelMap"/>.
 /// </para>
 /// <para>
-/// When logging at level INFO the actual level used is not <see cref="Level.Info"/> but
+/// When logging at level INFO the actual level used is not <see cref="Info"/> but
 /// the value of <c>LoggerRepository.LevelMap["INFO"]</c>. The default value for this is
-/// <see cref="Level.Info"/>, but this can be changed by reconfiguring the level map.
+/// <see cref="Info"/>, but this can be changed by reconfiguring the level map.
 /// </para>
 /// <para>
 /// Each level has a <see cref="DisplayName"/> in addition to its <see cref="Name"/>. The 

@@ -24,13 +24,13 @@ using System.IO;
 namespace log4net.Util.PatternStringConverters;
 
 /// <summary>
-/// Write an <see cref="System.Environment.SpecialFolder" /> folder path to the output
+/// Write an <see cref="Environment.SpecialFolder" /> folder path to the output
 /// </summary>
 /// <remarks>
 /// <para>
-/// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
-/// the name of the variable to output. <see cref="log4net.Util.PatternConverter.Option"/>
-/// should be a value in the <see cref="System.Environment.SpecialFolder" /> enumeration.
+/// The value of the <see cref="PatternConverter.Option"/> determines 
+/// the name of the variable to output. <see cref="PatternConverter.Option"/>
+/// should be a value in the <see cref="Environment.SpecialFolder" /> enumeration.
 /// </para>
 /// </remarks>
 /// <author>Ron Grabowski</author>
@@ -46,7 +46,7 @@ internal sealed class EnvironmentFolderPathPatternConverter : PatternConverter
   /// <para>
   /// Writes the special path environment folder path to the output <paramref name="writer"/>.
   /// The name of the special path environment folder path to output must be set
-  /// using the <see cref="log4net.Util.PatternConverter.Option"/>
+  /// using the <see cref="PatternConverter.Option"/>
   /// property.
   /// </para>
   /// </remarks>

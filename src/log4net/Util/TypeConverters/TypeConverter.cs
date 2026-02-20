@@ -37,7 +37,7 @@ internal sealed class TypeConverter : IConvertFrom
   /// </summary>
   /// <param name="sourceType">the type to convert</param>
   /// <returns>
-  /// <c>True</c> if the <paramref name="sourceType"/> is
+  /// <see langword="true"/> if the <paramref name="sourceType"/> is
   /// the <see cref="string"/> type.
   /// </returns>
   public bool CanConvertFrom(Type sourceType) => sourceType == typeof(string);

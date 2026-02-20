@@ -63,7 +63,7 @@ public sealed class CompositeProperties
   /// </para>
   /// <para>
   /// If none of the collections contain the specified key then
-  /// <c>null</c> is returned.
+  /// <see langword="null"/> is returned.
   /// </para>
   /// </remarks>
   public object? this[string key]

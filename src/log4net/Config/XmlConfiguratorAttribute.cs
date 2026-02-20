@@ -63,7 +63,7 @@ namespace log4net.Config;
 /// Log4net will only look for assembly level configuration attributes once.
 /// When using the log4net assembly level attributes to control the configuration 
 /// of log4net you must ensure that the first call to any of the 
-/// <see cref="log4net.Core.LoggerManager"/> methods is made from the assembly with the configuration
+/// <see cref="Core.LoggerManager"/> methods is made from the assembly with the configuration
 /// attributes. 
 /// </para>
 /// <para>
@@ -134,11 +134,11 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
   /// Gets or sets a value indicating whether to watch the configuration file.
   /// </summary>
   /// <value>
-  /// <c>true</c> if the configuration should be watched, <c>false</c> otherwise.
+  /// <see langword="true"/> if the configuration should be watched, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>
-  /// If this flag is specified and set to <c>true</c> then the framework
+  /// If this flag is specified and set to <see langword="true"/> then the framework
   /// will watch the configuration file and will reload the config each time 
   /// the file is modified.
   /// </para>
@@ -170,7 +170,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
   /// <exception cref="ArgumentOutOfRangeException">The <paramref name="targetRepository" /> does not extend <see cref="Hierarchy"/>.</exception>
   public override void Configure(Assembly sourceAssembly, ILoggerRepository targetRepository)
   {
-    var configurationMessages = new List<LogLog>();
+    List<LogLog> configurationMessages = new();
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -344,7 +344,7 @@ public sealed class XmlConfiguratorAttribute : ConfiguratorAttribute
 
         if (systemConfigFilePath is not null)
         {
-          var builder = new UriBuilder(new Uri(systemConfigFilePath));
+          UriBuilder builder = new(new Uri(systemConfigFilePath));
 
           // Remove the current extension from the systemConfigFileUri path
           string path = builder.Path;

@@ -254,7 +254,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     // appender. This frees us from needing to synchronize again.
     try
     {
-      using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+      using StringWriter writer = new(System.Globalization.CultureInfo.InvariantCulture);
 
       if (Layout?.Header is string header)
       {
@@ -314,7 +314,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
       smtpClient.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
     }
 
-    using var mailMessage = new MailMessage();
+    using MailMessage mailMessage = new();
     mailMessage.Body = messageBody;
     mailMessage.BodyEncoding = BodyEncoding;
     mailMessage.From = new MailAddress(From.EnsureNotNull());

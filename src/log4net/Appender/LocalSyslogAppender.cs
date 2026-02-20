@@ -66,7 +66,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// <remarks>
   /// <para>
   /// The log4net Level maps to a syslog severity using the
-  /// <see cref="LocalSyslogAppender.AddMapping"/> method and the <see cref="LevelSeverity"/>
+  /// <see cref="AddMapping"/> method and the <see cref="LevelSeverity"/>
   /// class. The severity is set on <see cref="LevelSeverity.Severity"/>.
   /// </para>
   /// </remarks>

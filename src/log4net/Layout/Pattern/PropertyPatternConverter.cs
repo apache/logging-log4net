@@ -34,7 +34,7 @@ namespace log4net.Layout.Pattern;
 /// property.
 /// </para>
 /// <para>
-/// If the <see cref="Util.PatternConverter.Option"/> is set to <c>null</c>
+/// If the <see cref="Util.PatternConverter.Option"/> is set to <see langword="null"/>
 /// then all the properties are written as key value pairs.
 /// </para>
 /// </remarks>
@@ -54,7 +54,7 @@ internal sealed class PropertyPatternConverter : PatternLayoutConverter
   /// property.
   /// </para>
   /// <para>
-  /// If the <see cref="Util.PatternConverter.Option"/> is set to <c>null</c>
+  /// If the <see cref="Util.PatternConverter.Option"/> is set to <see langword="null"/>
   /// then all the properties are written as key value pairs.
   /// </para>
   /// </remarks>

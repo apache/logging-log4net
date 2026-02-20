@@ -176,7 +176,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// <remarks>
   /// <para>
   /// Check if the named logger exists in the repository. If so return
-  /// its reference, otherwise returns <c>null</c>.
+  /// its reference, otherwise returns <see langword="null"/>.
   /// </para>
   /// </remarks>
   public abstract ILogger? Exists(string name);
@@ -272,7 +272,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// This method should not normally be used to log.
   /// The <see cref="ILog"/> interface should be used 
   /// for routine logging. This interface can be obtained
-  /// using the <see cref="log4net.LogManager.GetLogger(string)"/> method.
+  /// using the <see cref="LogManager.GetLogger(string)"/> method.
   /// </para>
   /// <para>
   /// The <c>logEvent</c> is delivered to the appropriate logger and
@@ -470,11 +470,11 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   }
 
   /// <summary>
-  /// Flushes all configured Appenders that implement <see cref="log4net.Appender.IFlushable"/>.
+  /// Flushes all configured Appenders that implement <see cref="IFlushable"/>.
   /// </summary>
   /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asynchronous appenders to be flushed,
   /// or <see cref="Timeout.Infinite"/> to wait indefinitely.</param>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   public bool Flush(int millisecondsTimeout)
   {
     if (millisecondsTimeout < -1)

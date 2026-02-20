@@ -31,7 +31,7 @@ namespace log4net.Util.TypeConverters;
 /// </para>
 /// <para>
 /// To associate a type converter with a target type apply a
-/// <c>TypeConverterAttribute</c> to the target type. Specify the
+/// <see cref="TypeConverterAttribute"/> to the target type. Specify the
 /// type of the type converter on the attribute.
 /// </para>
 /// </remarks>

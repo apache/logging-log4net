@@ -103,7 +103,7 @@ public abstract class LayoutSkeleton : ILayout, IOptionHandler
   /// </remarks>
   public string Format(LoggingEvent loggingEvent)
   {
-    using var writer = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+    using StringWriter writer = new(System.Globalization.CultureInfo.InvariantCulture);
     Format(writer, loggingEvent);
     return writer.ToString();
   }
@@ -151,17 +151,17 @@ public abstract class LayoutSkeleton : ILayout, IOptionHandler
   /// <summary>
   /// Flag indicating if this layout handles exceptions.
   /// </summary>
-  /// <value><c>false</c> if this layout handles exceptions</value>
+  /// <value><see langword="false"/> if this layout handles exceptions</value>
   /// <remarks>
   /// <para>
   /// If this layout handles the exception object contained within
   /// <see cref="LoggingEvent"/>, then the layout should return
-  /// <c>false</c>. Otherwise, if the layout ignores the exception
-  /// object, then the layout should return <c>true</c>.
+  /// <see langword="false"/>. Otherwise, if the layout ignores the exception
+  /// object, then the layout should return <see langword="true"/>.
   /// </para>
   /// <para>
   /// Set this value to override the default setting. The default
-  /// value is <c>true</c>, this layout does not handle the exception.
+  /// value is <see langword="true"/>, this layout does not handle the exception.
   /// </para>
   /// </remarks>
   public virtual bool IgnoresException { get; set; } = true;

@@ -91,7 +91,7 @@ public static class ConverterRegistry
   /// <param name="sourceType">The type being converted from.</param>
   /// <param name="destinationType">The type being converted to.</param>
   /// <returns>
-  /// The type converter instance to use for type conversions or <c>null</c> 
+  /// The type converter instance to use for type conversions or <see langword="null"/> 
   /// if no type converter is found.
   /// </returns>
   public static IConvertTo? GetConvertTo(Type sourceType, Type destinationType)
@@ -121,7 +121,7 @@ public static class ConverterRegistry
   /// </summary>
   /// <param name="destinationType">The type being converted to.</param>
   /// <returns>
-  /// The type converter instance to use for type conversions or <c>null</c> 
+  /// The type converter instance to use for type conversions or <see langword="null"/> 
   /// if no type converter is found.
   /// </returns>
   public static IConvertFrom? GetConvertFrom(Type destinationType)
@@ -150,7 +150,7 @@ public static class ConverterRegistry
   /// </summary>
   /// <param name="destinationType">The type being converted to.</param>
   /// <returns>
-  /// The type converter instance to use for type conversions or <c>null</c> 
+  /// The type converter instance to use for type conversions or <see langword="null"/> 
   /// if no type converter is found.
   /// </returns>
   private static object? GetConverterFromAttribute(Type destinationType)
@@ -177,7 +177,7 @@ public static class ConverterRegistry
   /// </summary>
   /// <param name="converterType">The type of the type converter.</param>
   /// <returns>
-  /// The type converter instance to use for type conversions or <c>null</c> 
+  /// The type converter instance to use for type conversions or <see langword="null"/> 
   /// if no type converter is found.
   /// </returns>
   /// <remarks>

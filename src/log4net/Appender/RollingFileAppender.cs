@@ -1238,7 +1238,7 @@ public partial class RollingFileAppender : FileAppender
   /// If <c>countDirection</c> &lt; 0, then files
   /// {<c>File.1</c>, ..., <c>File.curSizeRollBackups -1</c>}
   /// are renamed to {<c>File.2</c>, ...,
-  /// <c>File.curSizeRollBackups</c>}. Moreover, <c>File</c> is
+  /// <c>File.curSizeRollBackups</c>}. Moreover, <see langword="file"/> is
   /// renamed <c>File.1</c> and closed.
   /// </para>
   /// <para>
@@ -1246,10 +1246,10 @@ public partial class RollingFileAppender : FileAppender
   /// </para>
   /// <para>
   /// If <c>maxSizeRollBackups</c> is equal to zero, then the
-  /// <c>File</c> is truncated with no backup files created.
+  /// <see langword="file"/> is truncated with no backup files created.
   /// </para>
   /// <para>
-  /// If <c>maxSizeRollBackups</c> &lt; 0, then <c>File</c> is
+  /// If <c>maxSizeRollBackups</c> &lt; 0, then <see langword="file"/> is
   /// renamed if needed and no files are deleted.
   /// </para>
   /// </remarks>
@@ -1292,10 +1292,10 @@ public partial class RollingFileAppender : FileAppender
   /// </para>
   /// <para>
   /// If <c>maxSizeRollBackups</c> is equal to zero, then the
-  /// <c>File</c> is truncated with no backup files created.
+  /// <see langword="file"/> is truncated with no backup files created.
   /// </para>
   /// <para>
-  /// If <c>maxSizeRollBackups</c> &lt; 0, then <c>File</c> is
+  /// If <c>maxSizeRollBackups</c> &lt; 0, then <see langword="file"/> is
   /// renamed if needed and no files are deleted.
   /// </para>
   /// <para>

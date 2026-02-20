@@ -44,8 +44,8 @@ namespace log4net.Appender;
 /// <para>
 /// Records are written into the database either using a prepared
 /// statement or a stored procedure. The <see cref="CommandType"/> property
-/// is set to <see cref="System.Data.CommandType.Text"/> (<c>System.Data.CommandType.Text</c>) to specify a prepared statement
-/// or to <see cref="System.Data.CommandType.StoredProcedure"/> (<c>System.Data.CommandType.StoredProcedure</c>) to specify a stored
+/// is set to <see cref="CommandType.Text"/> (<c>System.Data.CommandType.Text</c>) to specify a prepared statement
+/// or to <see cref="CommandType.StoredProcedure"/> (<c>System.Data.CommandType.StoredProcedure</c>) to specify a stored
 /// procedure.
 /// </para>
 /// <para>
@@ -254,14 +254,14 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </value>
   /// <remarks>
   /// <para>
-  /// This value may be either <see cref="System.Data.CommandType.Text"/> (<c>System.Data.CommandType.Text</c>) to specify
+  /// This value may be either <see cref="CommandType.Text"/> (<c>System.Data.CommandType.Text</c>) to specify
   /// that the <see cref="CommandText"/> is a prepared statement to execute, 
-  /// or <see cref="System.Data.CommandType.StoredProcedure"/> (<c>System.Data.CommandType.StoredProcedure</c>) to specify that the
+  /// or <see cref="CommandType.StoredProcedure"/> (<c>System.Data.CommandType.StoredProcedure</c>) to specify that the
   /// <see cref="CommandText"/> property is the name of a stored procedure
   /// to execute.
   /// </para>
   /// <para>
-  /// The default value is <see cref="System.Data.CommandType.Text"/> (<c>System.Data.CommandType.Text</c>).
+  /// The default value is <see cref="CommandType.Text"/> (<c>System.Data.CommandType.Text</c>).
   /// </para>
   /// </remarks>
   public CommandType CommandType { get; set; }
@@ -270,8 +270,8 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// Should transactions be used to insert logging events in the database.
   /// </summary>
   /// <value>
-  /// <c>true</c> if transactions should be used to insert logging events in
-  /// the database, otherwise <c>false</c>. The default value is <c>true</c>.
+  /// <see langword="true"/> if transactions should be used to insert logging events in
+  /// the database, otherwise <see langword="false"/>. The default value is <see langword="true"/>.
   /// </value>
   /// <remarks>
   /// <para>
@@ -306,8 +306,8 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// Should this appender try to reconnect to the database on error.
   /// </summary>
   /// <value>
-  /// <c>true</c> if the appender should try to reconnect to the database after an
-  /// error has occurred, otherwise <c>false</c>. The default value is <c>false</c>, 
+  /// <see langword="true"/> if the appender should try to reconnect to the database after an
+  /// error has occurred, otherwise <see langword="false"/>. The default value is <see langword="false"/>, 
   /// i.e. not to try to reconnect.
   /// </value>
   /// <remarks>
@@ -317,7 +317,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </para>
   /// <para>
   /// To force the appender to attempt to reconnect to the database set this
-  /// property to <c>true</c>.
+  /// property to <see langword="true"/>.
   /// </para>
   /// <note>
   /// When the appender attempts to connect to the database there may be a
@@ -458,7 +458,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// <param name="events">The array of events to insert into the database.</param>
   /// <remarks>
   /// <para>
-  /// The transaction argument can be <c>null</c> if the appender has been
+  /// The transaction argument can be <see langword="null"/> if the appender has been
   /// configured not to use transactions. See <see cref="UseTransactions"/>
   /// property for more information.
   /// </para>
@@ -550,7 +550,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// more control over the format of the database statement.
   /// </remarks>
   /// <returns>
-  /// Text that can be passed to a <see cref="System.Data.IDbCommand"/>.
+  /// Text that can be passed to a <see cref="IDbCommand"/>.
   /// </returns>
   protected virtual string GetLogStatement(LoggingEvent logEvent)
   {
@@ -742,7 +742,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
 /// <remarks>
 /// <para>
 /// This class provides the basic database parameter properties
-/// as defined by the <see cref="System.Data.IDbDataParameter"/> interface.
+/// as defined by the <see cref="IDbDataParameter"/> interface.
 /// </para>
 /// <para>This type can be subclassed to provide database specific
 /// functionality. The two methods that are called externally are

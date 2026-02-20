@@ -42,7 +42,7 @@ public class RawPropertyLayout : IRawLayout
   /// <para>
   /// Looks up and returns the object value of the property
   /// named <see cref="Key"/>. If there is no property defined
-  /// with than name then <c>null</c> will be returned.
+  /// with than name then <see langword="null"/> will be returned.
   /// </para>
   /// </remarks>
   public virtual object? Format(LoggingEvent loggingEvent) 

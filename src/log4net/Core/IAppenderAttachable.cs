@@ -56,7 +56,7 @@ public interface IAppenderAttachable
   /// Gets a collection of attached appenders.
   /// If there are no attached appenders the
   /// implementation should return an empty 
-  /// collection rather than <c>null</c>.
+  /// collection rather than <see langword="null"/>.
   /// </para>
   /// </remarks>
   AppenderCollection Appenders { get; }
@@ -66,13 +66,13 @@ public interface IAppenderAttachable
   /// </summary>
   /// <param name="name">The name of the appender to get.</param>
   /// <returns>
-  /// The appender with the name specified, or <c>null</c> if no appender with the
+  /// The appender with the name specified, or <see langword="null"/> if no appender with the
   /// specified name is found.
   /// </returns>
   /// <remarks>
   /// <para>
   /// Returns an attached appender with the <paramref name="name"/> specified.
-  /// If no appender with the specified name is found <c>null</c> will be
+  /// If no appender with the specified name is found <see langword="null"/> will be
   /// returned.
   /// </para>
   /// </remarks>

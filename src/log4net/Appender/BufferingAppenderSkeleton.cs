@@ -56,7 +56,7 @@ namespace log4net.Appender;
 /// The buffering appender can be configured in a <see cref="Lossy"/> mode. 
 /// By default the appender is NOT lossy. When the buffer is full all 
 /// the buffered events are sent with <see cref="SendBuffer(LoggingEvent[])"/>.
-/// If the <see cref="Lossy"/> property is set to <c>true</c> then the 
+/// If the <see cref="Lossy"/> property is set to <see langword="true"/> then the 
 /// buffer will not be sent when it is full, and new events arriving 
 /// in the appender will overwrite the oldest event in the buffer. 
 /// In lossy mode the buffer will only be sent when the <see cref="Evaluator"/>
@@ -87,7 +87,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// Initializes a new instance of the <see cref="BufferingAppenderSkeleton" /> class.
   /// </summary>
   /// <param name="eventMustBeFixed">the events passed through this appender must be
-  /// fixed by the time that they arrive in the derived class' <c>SendBuffer</c> method.</param>
+  /// fixed by the time that they arrive in the derived class' <see cref="SendBuffer"/> method.</param>
   /// <remarks>
   /// <para>
   /// Protected constructor to allow subclassing.
@@ -107,7 +107,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// Gets or sets a value that indicates whether the appender is lossy.
   /// </summary>
   /// <value>
-  /// <c>true</c> if the appender is lossy, otherwise <c>false</c>. The default is <c>false</c>.
+  /// <see langword="true"/> if the appender is lossy, otherwise <see langword="false"/>. The default is <see langword="false"/>.
   /// </value>
   /// <remarks>
   /// <para>
@@ -115,10 +115,10 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// delivering them. A triggering event causes the whole buffer
   /// to be sent to the remote sink. If the buffer overruns before
   /// a triggering event then logging events could be lost. Set
-  /// <see cref="Lossy"/> to <c>false</c> to prevent logging events 
+  /// <see cref="Lossy"/> to <see langword="false"/> to prevent logging events 
   /// from being lost.
   /// </para>
-  /// <para>If <see cref="Lossy"/> is set to <c>true</c> then an
+  /// <para>If <see cref="Lossy"/> is set to <see langword="true"/> then an
   /// <see cref="Evaluator"/> must be specified.</para>
   /// </remarks>
   public bool Lossy { get; set; }
@@ -162,7 +162,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// appender. If the evaluator triggers then the current buffer will 
   /// immediately be sent (see <see cref="SendBuffer(LoggingEvent[])"/>).
   /// </para>
-  /// <para>If <see cref="Lossy"/> is set to <c>true</c> then an
+  /// <para>If <see cref="Lossy"/> is set to <see langword="true"/> then an
   /// <see cref="Evaluator"/> must be specified.</para>
   /// </remarks>
   public ITriggeringEventEvaluator? Evaluator { get; set; }
@@ -202,7 +202,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// Flushes any buffered log data.
   /// </summary>
   /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   public override bool Flush(int millisecondsTimeout)
   {
     Flush();
@@ -226,21 +226,21 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// <summary>
   /// Flush the currently buffered events
   /// </summary>
-  /// <param name="flushLossyBuffer">set to <c>true</c> to flush the buffer of lossy events</param>
+  /// <param name="flushLossyBuffer">set to <see langword="true"/> to flush the buffer of lossy events</param>
   /// <remarks>
   /// <para>
   /// Flushes events that have been buffered. If <paramref name="flushLossyBuffer" /> is
-  /// <c>false</c> then events will only be flushed if this buffer is non-lossy mode.
+  /// <see langword="false"/> then events will only be flushed if this buffer is non-lossy mode.
   /// </para>
   /// <para>
   /// If the appender is buffering in <see cref="Lossy"/> mode then the contents
-  /// of the buffer will only be flushed if <paramref name="flushLossyBuffer" /> is <c>true</c>.
+  /// of the buffer will only be flushed if <paramref name="flushLossyBuffer" /> is <see langword="true"/>.
   /// In this case the contents of the buffer will be tested against the 
   /// <see cref="LossyEvaluator"/> and if triggering will be output. All other buffered
   /// events will be discarded.
   /// </para>
   /// <para>
-  /// If <paramref name="flushLossyBuffer" /> is <c>true</c> then the buffer will always
+  /// If <paramref name="flushLossyBuffer" /> is <see langword="true"/> then the buffer will always
   /// be emptied by calling this method.
   /// </para>
   /// </remarks>
@@ -262,7 +262,7 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
             {
               // Test the contents of the buffer against the lossy evaluator
               LoggingEvent[] bufferedEvents = _cyclicBuffer.PopAll();
-              var filteredEvents = new List<LoggingEvent>(bufferedEvents.Length);
+              List<LoggingEvent> filteredEvents = new(bufferedEvents.Length);
 
               foreach (LoggingEvent loggingEvent in bufferedEvents)
               {

@@ -88,10 +88,10 @@ public interface ILoggerRepository
   Level Threshold { get; set; }
 
   /// <summary>
-  /// Gets the named logger, or <c>null</c>.
+  /// Gets the named logger, or <see langword="null"/>.
   /// </summary>
   /// <param name="name">The name of the logger to look up.</param>
-  /// <returns>The logger if found, or <c>null</c>.</returns>
+  /// <returns>The logger if found, or <see langword="null"/>.</returns>
   ILogger? Exists(string name);
 
   /// <summary>
@@ -155,7 +155,7 @@ public interface ILoggerRepository
   /// This method should not normally be used to log.
   /// The <see cref="ILog"/> interface should be used 
   /// for routine logging. This interface can be obtained
-  /// using the <see cref="log4net.LogManager.GetLogger(string)"/> method.
+  /// using the <see cref="LogManager.GetLogger(string)"/> method.
   /// </para>
   /// <para>
   /// The <c>logEvent</c> is delivered to the appropriate logger and

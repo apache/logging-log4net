@@ -26,12 +26,12 @@ namespace log4net.Util;
 /// </summary>
 /// <remarks>
 /// <para>
-/// <c>ReaderWriterLock</c> is used to synchronize access to a resource. 
+/// <see cref="ReaderWriterLock"/> is used to synchronize access to a resource. 
 /// At any given time, it allows either concurrent read access for 
 /// multiple threads, or write access for a single thread. In a 
 /// situation where a resource is changed infrequently, a 
-/// <c>ReaderWriterLock</c> provides better throughput than a simple 
-/// one-at-a-time lock, such as <see cref="System.Threading.Monitor"/>.
+/// <see cref="ReaderWriterLock"/> provides better throughput than a simple 
+/// one-at-a-time lock, such as <see cref="Monitor"/>.
 /// </para>
 /// <para>
 /// If a platform does not support a <c>System.Threading.ReaderWriterLock</c> 

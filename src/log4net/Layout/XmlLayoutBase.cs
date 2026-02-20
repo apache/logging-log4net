@@ -61,7 +61,7 @@ public abstract class XmlLayoutBase : LayoutSkeleton
   /// <para>
   /// The <paramref name="locationInfo" /> parameter determines whether 
   /// location information will be output by the layout. If 
-  /// <paramref name="locationInfo" /> is set to <c>true</c>, then the 
+  /// <paramref name="locationInfo" /> is set to <see langword="true"/>, then the 
   /// file name and line number of the statement at the origin of the log 
   /// statement will be output. 
   /// </para>
@@ -82,12 +82,12 @@ public abstract class XmlLayoutBase : LayoutSkeleton
   /// the XML events.
   /// </summary>
   /// <value>
-  /// <c>true</c> if location information should be included in the XML 
-  /// events; otherwise, <c>false</c>.
+  /// <see langword="true"/> if location information should be included in the XML 
+  /// events; otherwise, <see langword="false"/>.
   /// </value>
   /// <remarks>
   /// <para>
-  /// If <see cref="LocationInfo" /> is set to <c>true</c>, then the file 
+  /// If <see cref="LocationInfo" /> is set to <see langword="true"/>, then the file 
   /// name and line number of the statement at the origin of the log 
   /// statement will be output. 
   /// </para>

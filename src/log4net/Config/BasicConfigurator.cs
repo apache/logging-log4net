@@ -43,8 +43,8 @@ namespace log4net.Config;
 /// events will be delivered to that appender.
 /// </para>
 /// <para>
-/// Appenders can also implement the <see cref="log4net.Core.IOptionHandler"/> interface. Therefore
-/// they would require that the <see cref="log4net.Core.IOptionHandler.ActivateOptions()"/> method
+/// Appenders can also implement the <see cref="Core.IOptionHandler"/> interface. Therefore
+/// they would require that the <see cref="Core.IOptionHandler.ActivateOptions()"/> method
 /// be called after the appenders properties have been configured.
 /// </para>
 /// </remarks>

@@ -55,7 +55,7 @@ public interface ILoggerFactory
   /// new named <see cref="Logger"/> instances.
   /// </para>
   /// <para>
-  /// If the <paramref name="name"/> is <c>null</c> then the root logger
+  /// If the <paramref name="name"/> is <see langword="null"/> then the root logger
   /// must be returned.
   /// </para>
   /// </remarks>

@@ -77,7 +77,7 @@ public interface ILog : ILoggerWrapper
   /// <see cref="Level.Debug"/> level. If this logger is
   /// <c>DEBUG</c> enabled, then it converts the message object
   /// (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -229,7 +229,7 @@ public interface ILog : ILoggerWrapper
   /// <see cref="Level.Info"/> level. If this logger is
   /// <c>INFO</c> enabled, then it converts the message object
   /// (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of the 
   /// additivity flag.
@@ -382,7 +382,7 @@ public interface ILog : ILoggerWrapper
   /// <see cref="Level.Warn"/> level. If this logger is
   /// <c>WARN</c> enabled, then it converts the message object
   /// (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of the 
   /// additivity flag.
@@ -536,7 +536,7 @@ public interface ILog : ILoggerWrapper
   /// <see cref="Level.Error"/> level. If this logger is
   /// <c>ERROR</c> enabled, then it converts the message object
   /// (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of the 
   /// additivity flag.
@@ -688,7 +688,7 @@ public interface ILog : ILoggerWrapper
   /// <see cref="Level.Fatal"/> level. If this logger is
   /// <c>FATAL</c> enabled, then it converts the message object
   /// (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of the 
   /// additivity flag.
@@ -834,7 +834,7 @@ public interface ILog : ILoggerWrapper
   /// Checks if this logger is enabled for the <see cref="Level.Debug"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Debug"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Debug"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>
@@ -905,55 +905,55 @@ public interface ILog : ILoggerWrapper
   /// Checks if this logger is enabled for the <see cref="Level.Info"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Info"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Info"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
-  /// For more information see <see cref="ILog.IsDebugEnabled"/>.
+  /// For more information see <see cref="IsDebugEnabled"/>.
   /// </remarks>
   /// <seealso cref="Info(object)"/>
   /// <seealso cref="InfoFormat(IFormatProvider, string, object[])"/>
-  /// <seealso cref="ILog.IsDebugEnabled"/>
+  /// <seealso cref="IsDebugEnabled"/>
   bool IsInfoEnabled { get; }
 
   /// <summary>
   /// Checks if this logger is enabled for the <see cref="Level.Warn"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Warn"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Warn"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
-  /// For more information see <see cref="ILog.IsDebugEnabled"/>.
+  /// For more information see <see cref="IsDebugEnabled"/>.
   /// </remarks>
   /// <seealso cref="Warn(object)"/>
   /// <seealso cref="WarnFormat(IFormatProvider, string, object[])"/>
-  /// <seealso cref="ILog.IsDebugEnabled"/>
+  /// <seealso cref="IsDebugEnabled"/>
   bool IsWarnEnabled { get; }
 
   /// <summary>
   /// Checks if this logger is enabled for the <see cref="Level.Error"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Error"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Error"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
-  /// For more information see <see cref="ILog.IsDebugEnabled"/>.
+  /// For more information see <see cref="IsDebugEnabled"/>.
   /// </remarks>
   /// <seealso cref="Error(object)"/>
   /// <seealso cref="ErrorFormat(IFormatProvider, string, object[])"/>
-  /// <seealso cref="ILog.IsDebugEnabled"/>
+  /// <seealso cref="IsDebugEnabled"/>
   bool IsErrorEnabled { get; }
 
   /// <summary>
   /// Checks if this logger is enabled for the <see cref="Level.Fatal"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Fatal"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Fatal"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
-  /// For more information see <see cref="ILog.IsDebugEnabled"/>.
+  /// For more information see <see cref="IsDebugEnabled"/>.
   /// </remarks>
   /// <seealso cref="Fatal(object)"/>
   /// <seealso cref="FatalFormat(IFormatProvider, string, object[])"/>
-  /// <seealso cref="ILog.IsDebugEnabled"/>
+  /// <seealso cref="IsDebugEnabled"/>
   bool IsFatalEnabled { get; }
 }

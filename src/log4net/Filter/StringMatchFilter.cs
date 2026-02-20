@@ -73,7 +73,7 @@ public class StringMatchFilter : FilterSkeleton
   /// logging event, otherwise it will <see cref="FilterDecision.Neutral"/> the event.
   /// </para>
   /// <para>
-  /// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
+  /// The default is <see langword="true"/> i.e. to <see cref="FilterDecision.Accept"/> the event.
   /// </para>
   /// </remarks>
   public bool AcceptOnMatch { get; set; } = true;

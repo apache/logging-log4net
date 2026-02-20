@@ -300,11 +300,11 @@ public static class SystemInfo
   public static DateTime ProcessStartTimeUtc { get; } = DateTime.UtcNow;
 
   /// <summary>
-  /// Text to output when a <c>null</c> is encountered.
+  /// Text to output when a <see langword="null"/> is encountered.
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Use this value to indicate a <c>null</c> has been encountered while
+  /// Use this value to indicate a <see langword="null"/> has been encountered while
   /// outputting a string representation of an item.
   /// </para>
   /// <para>
@@ -432,9 +432,9 @@ public static class SystemInfo
   /// </summary>
   /// <param name="relativeType">A sibling type to use to load the type.</param>
   /// <param name="typeName">The name of the type to load.</param>
-  /// <param name="throwOnError">Flag set to <c>true</c> to throw an exception if the type cannot be loaded.</param>
-  /// <param name="ignoreCase"><c>true</c> to ignore the case of the type name; otherwise, <c>false</c></param>
-  /// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
+  /// <param name="throwOnError">Flag set to <see langword="true"/> to throw an exception if the type cannot be loaded.</param>
+  /// <param name="ignoreCase"><see langword="true"/> to ignore the case of the type name; otherwise, <see langword="false"/></param>
+  /// <returns>The type loaded or <see langword="null"/> if it could not be loaded.</returns>
   /// <remarks>
   /// <para>
   /// If the type name is fully qualified, i.e. if contains an assembly name in 
@@ -454,9 +454,9 @@ public static class SystemInfo
   /// Loads the type specified in the type string.
   /// </summary>
   /// <param name="typeName">The name of the type to load.</param>
-  /// <param name="throwOnError">Flag set to <c>true</c> to throw an exception if the type cannot be loaded.</param>
-  /// <param name="ignoreCase"><c>true</c> to ignore the case of the type name; otherwise, <c>false</c></param>
-  /// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>    
+  /// <param name="throwOnError">Flag set to <see langword="true"/> to throw an exception if the type cannot be loaded.</param>
+  /// <param name="ignoreCase"><see langword="true"/> to ignore the case of the type name; otherwise, <see langword="false"/></param>
+  /// <returns>The type loaded or <see langword="null"/> if it could not be loaded.</returns>    
   /// <remarks>
   /// <para>
   /// If the type name is fully qualified, i.e. if contains an assembly name in 
@@ -477,9 +477,9 @@ public static class SystemInfo
   /// </summary>
   /// <param name="relativeAssembly">An assembly to load the type from.</param>
   /// <param name="typeName">The name of the type to load.</param>
-  /// <param name="throwOnError">Flag set to <c>true</c> to throw an exception if the type cannot be loaded.</param>
-  /// <param name="ignoreCase"><c>true</c> to ignore the case of the type name; otherwise, <c>false</c></param>
-  /// <returns>The type loaded or <c>null</c> if it could not be loaded.</returns>
+  /// <param name="throwOnError">Flag set to <see langword="true"/> to throw an exception if the type cannot be loaded.</param>
+  /// <param name="ignoreCase"><see langword="true"/> to ignore the case of the type name; otherwise, <see langword="false"/></param>
+  /// <returns>The type loaded or <see langword="null"/> if it could not be loaded.</returns>
   /// <remarks>
   /// <para>
   /// If the type name is fully qualified, i.e. if contains an assembly name in 
@@ -577,11 +577,11 @@ public static class SystemInfo
   /// </summary>
   /// <param name="s">the string to parse</param>
   /// <param name="val">out param where the parsed value is placed</param>
-  /// <returns><c>true</c> if the string was parsed into an integer</returns>
+  /// <returns><see langword="true"/> if the string was parsed into an integer</returns>
   /// <remarks>
   /// <para>
   /// Attempts to parse the string into an integer. If the string cannot
-  /// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+  /// be parsed then this method returns <see langword="false"/>. The method does not throw an exception.
   /// </para>
   /// </remarks>
   public static bool TryParse(string s, out int val)
@@ -609,11 +609,11 @@ public static class SystemInfo
   /// </summary>
   /// <param name="s">the string to parse</param>
   /// <param name="val">out param where the parsed value is placed</param>
-  /// <returns><c>true</c> if the string was parsed into an integer</returns>
+  /// <returns><see langword="true"/> if the string was parsed into an integer</returns>
   /// <remarks>
   /// <para>
   /// Attempts to parse the string into an integer. If the string cannot
-  /// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+  /// be parsed then this method returns <see langword="false"/>. The method does not throw an exception.
   /// </para>
   /// </remarks>
   public static bool TryParse(string s, out long val)
@@ -641,11 +641,11 @@ public static class SystemInfo
   /// </summary>
   /// <param name="s">the string to parse</param>
   /// <param name="val">out param where the parsed value is placed</param>
-  /// <returns><c>true</c> if the string was parsed into an integer</returns>
+  /// <returns><see langword="true"/> if the string was parsed into an integer</returns>
   /// <remarks>
   /// <para>
   /// Attempts to parse the string into an integer. If the string cannot
-  /// be parsed then this method returns <c>false</c>. The method does not throw an exception.
+  /// be parsed then this method returns <see langword="false"/>. The method does not throw an exception.
   /// </para>
   /// </remarks>
   public static bool TryParse(string s, out short val)
@@ -672,7 +672,7 @@ public static class SystemInfo
   /// Lookup an application setting
   /// </summary>
   /// <param name="key">the application settings key to lookup</param>
-  /// <returns>the value for the key, or <c>null</c></returns>
+  /// <returns>the value for the key, or <see langword="null"/></returns>
   public static string? GetAppSetting(string key)
   {
     if (IsAndroid)
@@ -750,13 +750,13 @@ public static class SystemInfo
   /// </summary>
   /// <remarks>
   /// If the platform permits, culture information is ignored completely (ordinal comparison).
-  /// The aim of this method is to provide a fast comparison that deals with <c>null</c> and ignores different casing.
+  /// The aim of this method is to provide a fast comparison that deals with <see langword="null"/> and ignores different casing.
   /// It is not supposed to deal with various, culture-specific habits.
   /// Use it to compare against pure ASCII constants, like keywords etc.
   /// </remarks>
   /// <param name="a">The one string.</param>
   /// <param name="b">The other string.</param>
-  /// <returns><c>true</c> if the strings are equal, <c>false</c> otherwise.</returns>
+  /// <returns><see langword="true"/> if the strings are equal, <see langword="false"/> otherwise.</returns>
   public static bool EqualsIgnoringCase(string? a, string? b)
     => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
 

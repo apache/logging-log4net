@@ -47,17 +47,17 @@ public abstract class PatternLayoutConverter : PatternConverter
   /// <summary>
   /// Flag indicating if this converter handles the logging event exception
   /// </summary>
-  /// <value><c>false</c> if this converter handles the logging event exception</value>
+  /// <value><see langword="false"/> if this converter handles the logging event exception</value>
   /// <remarks>
   /// <para>
   /// If this converter handles the exception object contained within
   /// <see cref="LoggingEvent"/>, then this property should be set to
-  /// <c>false</c>. Otherwise, if the layout ignores the exception
-  /// object, then the property should be set to <c>true</c>.
+  /// <see langword="false"/>. Otherwise, if the layout ignores the exception
+  /// object, then the property should be set to <see langword="true"/>.
   /// </para>
   /// <para>
   /// Set this value to override a this default setting. The default
-  /// value is <c>true</c>, this converter does not handle the exception.
+  /// value is <see langword="true"/>, this converter does not handle the exception.
   /// </para>
   /// </remarks>
   public virtual bool IgnoresException { get; set; } = true;

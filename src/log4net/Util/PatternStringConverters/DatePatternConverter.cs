@@ -34,7 +34,7 @@ namespace log4net.Util.PatternStringConverters;
 /// the current date and time to the writer as a string.
 /// </para>
 /// <para>
-/// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
+/// The value of the <see cref="PatternConverter.Option"/> determines 
 /// the formatting of the date. The following values are allowed:
 /// <list type="definition">
 ///    <listheader>

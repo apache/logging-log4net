@@ -39,7 +39,7 @@ internal sealed class DefaultLoggerFactory : ILoggerFactory
   /// Create a new <see cref="Logger" /> instance with the specified name.
   /// </summary>
   /// <param name="repository">The <see cref="ILoggerRepository" /> that will own the <see cref="Logger" />.</param>
-  /// <param name="name">The name of the <see cref="Logger" />. If <c>null</c>, the root logger is returned.</param>
+  /// <param name="name">The name of the <see cref="Logger" />. If <see langword="null"/>, the root logger is returned.</param>
   /// <returns>The <see cref="Logger" /> instance for the specified name.</returns>
   /// <remarks>
   /// <para>

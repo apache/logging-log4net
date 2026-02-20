@@ -51,7 +51,7 @@ internal sealed class UdpConnection : IUdpConnection
   /// Creates a new <see cref="UdpClient"/> instance configured with the specified local port and remote address.
   /// </summary>
   /// <returns>A <see cref="UdpClient"/> instance configured with the specified parameters.</returns>
-  internal static UdpClient CreateClient(int localPort, System.Net.IPAddress remoteAddress)
+  internal static UdpClient CreateClient(int localPort, IPAddress remoteAddress)
     => localPort == 0
       ? new (remoteAddress.AddressFamily)
       : new (localPort, remoteAddress.AddressFamily);

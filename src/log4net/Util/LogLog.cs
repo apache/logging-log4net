@@ -121,12 +121,12 @@ public sealed class LogLog
   /// <para>
   /// The <c>log4net.Internal.Debug</c> application setting
   /// controls internal debugging. This setting should be set
-  /// to <c>true</c> to enable debugging.
+  /// to <see langword="true"/> to enable debugging.
   /// </para>
   /// <para>
   /// The <c>log4net.Internal.Quiet</c> application setting
   /// suppresses all internal logging including error messages. 
-  /// This setting should be set to <c>true</c> to enable message
+  /// This setting should be set to <see langword="true"/> to enable message
   /// suppression.
   /// </para>
   /// </remarks>
@@ -153,12 +153,12 @@ public sealed class LogLog
   /// is enabled or disabled.
   /// </summary>
   /// <value>
-  /// <c>true</c> if log4net internal logging is enabled, otherwise 
-  /// <c>false</c>.
+  /// <see langword="true"/> if log4net internal logging is enabled, otherwise 
+  /// <see langword="false"/>.
   /// </value>
   /// <remarks>
   /// <para>
-  /// When set to <c>true</c>, internal debug level logging will be 
+  /// When set to <see langword="true"/>, internal debug level logging will be 
   /// displayed.
   /// </para>
   /// <para>
@@ -167,7 +167,7 @@ public sealed class LogLog
   /// file.
   /// </para>
   /// <para>
-  /// The default value is <c>false</c>, i.e. debugging is
+  /// The default value is <see langword="false"/>, i.e. debugging is
   /// disabled.
   /// </para>
   /// </remarks>
@@ -191,12 +191,12 @@ public sealed class LogLog
   /// from internal logging, not even for errors. 
   /// </summary>
   /// <value>
-  /// <c>true</c> if log4net should generate no output at all from internal 
-  /// logging, otherwise <c>false</c>.
+  /// <see langword="true"/> if log4net should generate no output at all from internal 
+  /// logging, otherwise <see langword="false"/>.
   /// </value>
   /// <remarks>
   /// <para>
-  /// When set to <c>true</c> will cause internal logging at all levels to be 
+  /// When set to <see langword="true"/> will cause internal logging at all levels to be 
   /// suppressed. This means that no warning or error reports will be logged. 
   /// This option overrides the <see cref="InternalDebugging"/> setting and 
   /// disables all debug also.
@@ -205,7 +205,7 @@ public sealed class LogLog
   /// <c>log4net.Internal.Quiet</c> in the application configuration file.
   /// </para>
   /// <para>
-  /// The default value is <c>false</c>, i.e. internal logging is not
+  /// The default value is <see langword="false"/>, i.e. internal logging is not
   /// disabled.
   /// </para>
   /// </remarks>
@@ -259,7 +259,7 @@ public sealed class LogLog
   /// Test if LogLog.Debug is enabled for output.
   /// </summary>
   /// <value>
-  /// <c>true</c> if Debug is enabled
+  /// <see langword="true"/> if Debug is enabled
   /// </value>
   /// <remarks>
   /// <para>
@@ -327,7 +327,7 @@ public sealed class LogLog
   /// Test if LogLog.Warn is enabled for output.
   /// </summary>
   /// <value>
-  /// <c>true</c> if Warn is enabled
+  /// <see langword="true"/> if Warn is enabled
   /// </value>
   public static bool IsWarnEnabled => !QuietMode;
 
@@ -390,7 +390,7 @@ public sealed class LogLog
   /// Test if LogLog.Error is enabled for output.
   /// </summary>
   /// <value>
-  /// <c>true</c> if Error is enabled
+  /// <see langword="true"/> if Error is enabled
   /// </value>
   /// <remarks>
   /// <para>

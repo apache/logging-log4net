@@ -41,7 +41,7 @@ public abstract class LoggerWrapperImpl(ILogger logger) : ILoggerWrapper
   /// </value>
   /// <remarks>
   /// <para>
-  /// The <c>Logger</c> object may not be the same object as this object 
+  /// The <see cref="Logger"/> object may not be the same object as this object 
   /// because of logger decorators.
   /// </para>
   /// <para>

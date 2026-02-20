@@ -63,7 +63,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation.  If this logger is <c>INFO</c> enabled, then it converts 
   /// the message object (retrieved by invocation of the provided callback) to a 
-  /// string by invoking the appropriate <see cref="log4net.ObjectRenderer.IObjectRenderer"/>.
+  /// string by invoking the appropriate <see cref="ObjectRenderer.IObjectRenderer"/>.
   /// It then proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -134,7 +134,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation. If this logger is <c>INFO</c> enabled, then it converts 
   /// the message object (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -383,7 +383,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation.  If this logger is <c>INFO</c> enabled, then it converts 
   /// the message object (retrieved by invocation of the provided callback) to a 
-  /// string by invoking the appropriate <see cref="log4net.ObjectRenderer.IObjectRenderer"/>.
+  /// string by invoking the appropriate <see cref="ObjectRenderer.IObjectRenderer"/>.
   /// It then proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -454,7 +454,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation. If this logger is <c>INFO</c> enabled, then it converts 
   /// the message object (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -703,7 +703,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation.  If this logger is <c>WARN</c> enabled, then it converts 
   /// the message object (retrieved by invocation of the provided callback) to a 
-  /// string by invoking the appropriate <see cref="log4net.ObjectRenderer.IObjectRenderer"/>.
+  /// string by invoking the appropriate <see cref="ObjectRenderer.IObjectRenderer"/>.
   /// It then proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -774,7 +774,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation. If this logger is <c>WARN</c> enabled, then it converts 
   /// the message object (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -1023,7 +1023,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation.  If this logger is <c>ERROR</c> enabled, then it converts 
   /// the message object (retrieved by invocation of the provided callback) to a 
-  /// string by invoking the appropriate <see cref="log4net.ObjectRenderer.IObjectRenderer"/>.
+  /// string by invoking the appropriate <see cref="ObjectRenderer.IObjectRenderer"/>.
   /// It then proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -1094,7 +1094,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation. If this logger is <c>ERROR</c> enabled, then it converts 
   /// the message object (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -1343,7 +1343,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation.  If this logger is <c>FATAL</c> enabled, then it converts 
   /// the message object (retrieved by invocation of the provided callback) to a 
-  /// string by invoking the appropriate <see cref="log4net.ObjectRenderer.IObjectRenderer"/>.
+  /// string by invoking the appropriate <see cref="ObjectRenderer.IObjectRenderer"/>.
   /// It then proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.
@@ -1414,7 +1414,7 @@ public static class LogExtensions
   /// This check happens always and does not depend on the <seealso cref="ILog"/>
   /// implementation. If this logger is <c>FATAL</c> enabled, then it converts 
   /// the message object (passed as parameter) to a string by invoking the appropriate
-  /// <see cref="log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+  /// <see cref="ObjectRenderer.IObjectRenderer"/>. It then 
   /// proceeds to call all the registered appenders in this logger 
   /// and also higher in the hierarchy depending on the value of 
   /// the additivity flag.

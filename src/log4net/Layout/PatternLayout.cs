@@ -39,7 +39,7 @@ namespace log4net.Layout;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The goal of this class is to <see cref="PatternLayout.Format(TextWriter,LoggingEvent)"/> a 
+/// The goal of this class is to <see cref="Format(TextWriter,LoggingEvent)"/> a 
 /// <see cref="LoggingEvent"/> as a string. The results
 /// depend on the <i>conversion pattern</i>.
 /// </para>
@@ -174,7 +174,7 @@ namespace log4net.Layout;
 ///       between braces. For example, <b>%date{HH:mm:ss,fff}</b> or
 ///       <b>%date{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
 ///       given then ISO8601 format is
-///       assumed (<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>).
+///       assumed (<see cref="DateFormatter.Iso8601DateFormatter"/>).
 ///       </para>
 ///       <para>
 ///       The date format specifier admits the same syntax as the
@@ -184,9 +184,9 @@ namespace log4net.Layout;
 ///       For better results it is recommended to use the log4net date
 ///       formatters. These can be specified using one of the strings
 ///       "ABSOLUTE", "DATE" and "ISO8601" for specifying 
-///       <see cref="log4net.DateFormatter.AbsoluteTimeDateFormatter"/>, 
-///       <see cref="log4net.DateFormatter.DateTimeDateFormatter"/> and respectively 
-///       <see cref="log4net.DateFormatter.Iso8601DateFormatter"/>. For example, 
+///       <see cref="DateFormatter.AbsoluteTimeDateFormatter"/>, 
+///       <see cref="DateFormatter.DateTimeDateFormatter"/> and respectively 
+///       <see cref="DateFormatter.Iso8601DateFormatter"/>. For example, 
 ///       <b>%date{ISO8601}</b> or <b>%date{ABSOLUTE}</b>.
 ///       </para>
 ///       <para>
@@ -571,7 +571,7 @@ namespace log4net.Layout;
 ///       between braces. For example, <b>%utcdate{HH:mm:ss,fff}</b> or
 ///       <b>%utcdate{dd MMM yyyy HH:mm:ss,fff}</b>.  If no date format specifier is 
 ///       given then ISO8601 format is
-///       assumed (<see cref="log4net.DateFormatter.Iso8601DateFormatter"/>).
+///       assumed (<see cref="DateFormatter.Iso8601DateFormatter"/>).
 ///       </para>
 ///       <para>
 ///       The date format specifier admits the same syntax as the
@@ -581,9 +581,9 @@ namespace log4net.Layout;
 ///       For better results it is recommended to use the log4net date
 ///       formatters. These can be specified using one of the strings
 ///       "ABSOLUTE", "DATE" and "ISO8601" for specifying 
-///       <see cref="log4net.DateFormatter.AbsoluteTimeDateFormatter"/>, 
-///       <see cref="log4net.DateFormatter.DateTimeDateFormatter"/> and respectively 
-///       <see cref="log4net.DateFormatter.Iso8601DateFormatter"/>. For example, 
+///       <see cref="DateFormatter.AbsoluteTimeDateFormatter"/>, 
+///       <see cref="DateFormatter.DateTimeDateFormatter"/> and respectively 
+///       <see cref="DateFormatter.Iso8601DateFormatter"/>. For example, 
 ///       <b>%utcdate{ISO8601}</b> or <b>%utcdate{ABSOLUTE}</b>.
 ///       </para>
 ///       <para>

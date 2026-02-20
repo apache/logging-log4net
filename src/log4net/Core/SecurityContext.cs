@@ -39,7 +39,7 @@ public abstract class SecurityContext
   /// </summary>
   /// <param name="state">State supplied by the caller</param>
   /// <returns>An <see cref="IDisposable"/> instance that will
-  /// revoke the impersonation of this SecurityContext, or <c>null</c></returns>
+  /// revoke the impersonation of this SecurityContext, or <see langword="null"/></returns>
   /// <remarks>
   /// <para>
   /// Impersonate this security context. Further calls on the current

@@ -94,7 +94,7 @@ public sealed class NativeError
   /// native Win32 <c>FormatMessage</c> function.
   /// </para>
   /// </remarks>
-  public static NativeError GetError(int number) => new NativeError(number, GetErrorMessage(number));
+  public static NativeError GetError(int number) => new(number, GetErrorMessage(number));
 
   /// <summary>
   /// Retrieves the message corresponding with a Win32 message identifier.

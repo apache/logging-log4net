@@ -27,7 +27,7 @@ namespace log4net.Util.TypeConverters;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Supports conversion from string to <c>bool</c> type.
+/// Supports conversion from string to <see langword="bool"/> type.
 /// </para>
 /// </remarks>
 /// <seealso cref="ConverterRegistry"/>
@@ -43,7 +43,7 @@ internal sealed class BooleanConverter : IConvertFrom
   /// </summary>
   /// <param name="sourceType">the type to convert</param>
   /// <returns>
-  /// <c>True</c> if the <paramref name="sourceType"/> is
+  /// <see langword="true"/> if the <paramref name="sourceType"/> is
   /// the <see cref="string"/> type.
   /// </returns>
   public bool CanConvertFrom(Type sourceType) => sourceType == typeof(string);

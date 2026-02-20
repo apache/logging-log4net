@@ -113,7 +113,7 @@ public class LocationInfo : ILog4NetSerializable
         {
           // take into account the frames we skip above
           int adjustedFrameCount = st.FrameCount - frameIndex;
-          var stackFramesList = new List<StackFrameItem>(adjustedFrameCount);
+          List<StackFrameItem> stackFramesList = new(adjustedFrameCount);
           StackFrames = new StackFrameItem[adjustedFrameCount];
           for (int i = frameIndex; i < st.FrameCount; i++)
           {
@@ -144,7 +144,7 @@ public class LocationInfo : ILog4NetSerializable
           }
         }
       }
-      catch (System.Security.SecurityException)
+      catch (SecurityException)
       {
         // This security exception will occur if the caller does not have 
         // some undefined set of SecurityPermission flags.

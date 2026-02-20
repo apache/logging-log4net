@@ -175,14 +175,14 @@ public static class LoggerManager
   /// <param name="repository">The repository to lookup in.</param>
   /// <param name="name">The fully qualified logger name to look for.</param>
   /// <returns>
-  /// The logger found, or <c>null</c> if the named logger does not exist in the
+  /// The logger found, or <see langword="null"/> if the named logger does not exist in the
   /// specified repository.
   /// </returns>
   /// <remarks>
   /// <para>
   /// If the named logger exists (in the specified repository) then it
   /// returns a reference to the logger, otherwise it returns
-  /// <c>null</c>.
+  /// <see langword="null"/>.
   /// </para>
   /// </remarks>
   public static ILogger? Exists(string repository, string name)
@@ -194,14 +194,14 @@ public static class LoggerManager
   /// <param name="repositoryAssembly">The assembly to use to look up the repository.</param>
   /// <param name="name">The fully qualified logger name to look for.</param>
   /// <returns>
-  /// The logger found, or <c>null</c> if the named logger does not exist in the
+  /// The logger found, or <see langword="null"/> if the named logger does not exist in the
   /// specified assembly's repository.
   /// </returns>
   /// <remarks>
   /// <para>
   /// If the named logger exists (in the specified assembly's repository) then it
   /// returns a reference to the logger, otherwise it returns
-  /// <c>null</c>.
+  /// <see langword="null"/>.
   /// </para>
   /// </remarks>
   public static ILogger? Exists(Assembly repositoryAssembly, string name)
@@ -406,8 +406,8 @@ public static class LoggerManager
   /// <para>
   /// Resets all values contained in the repository instance to their
   /// defaults.  This removes all appenders from all loggers, sets
-  /// the level of all non-root loggers to <c>null</c>,
-  /// sets their additivity flag to <c>true</c> and sets the level
+  /// the level of all non-root loggers to <see langword="null"/>,
+  /// sets their additivity flag to <see langword="true"/> and sets the level
   /// of the root logger to <see cref="Level.Debug"/>. Moreover,
   /// message disabling is set its default "off" value.
   /// </para>    
@@ -423,8 +423,8 @@ public static class LoggerManager
   /// <para>
   /// Resets all values contained in the repository instance to their
   /// defaults.  This removes all appenders from all loggers, sets
-  /// the level of all non-root loggers to <c>null</c>,
-  /// sets their additivity flag to <c>true</c> and sets the level
+  /// the level of all non-root loggers to <see langword="null"/>,
+  /// sets their additivity flag to <see langword="true"/> and sets the level
   /// of the root logger to <see cref="Level.Debug"/>. Moreover,
   /// message disabling is set its default "off" value.
   /// </para>    
@@ -440,7 +440,7 @@ public static class LoggerManager
   /// <remarks>
   /// <para>
   /// Creates the default type of <see cref="ILoggerRepository"/> which is a
-  /// <see cref="log4net.Repository.Hierarchy.Hierarchy"/> object.
+  /// <see cref="Repository.Hierarchy.Hierarchy"/> object.
   /// </para>
   /// <para>
   /// The <paramref name="repository"/> name must be unique. Repositories cannot be redefined.

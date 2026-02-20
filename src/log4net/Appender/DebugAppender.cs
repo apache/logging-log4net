@@ -48,7 +48,7 @@ public class DebugAppender : AppenderSkeleton
   /// </summary>
   /// <remarks>
   /// <para>The default behavior is to flush at the end of each 
-  /// write. If the option is set to<c>false</c>, then the underlying 
+  /// write. If the option is set to<see langword="false"/>, then the underlying 
   /// stream can defer writing to physical medium to a later time. 
   /// </para>
   /// <para>
@@ -67,7 +67,7 @@ public class DebugAppender : AppenderSkeleton
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern which will use the logger name of the current 
+  /// Defaults to a <see cref="PatternLayout"/> with %logger as the pattern which will use the logger name of the current 
   /// <see cref="LoggingEvent"/> as the category parameter.
   /// </para>
   /// </remarks>
@@ -77,7 +77,7 @@ public class DebugAppender : AppenderSkeleton
   /// Flushes any buffered log data.
   /// </summary>
   /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   public override bool Flush(int millisecondsTimeout)
   {
     // Nothing to do if ImmediateFlush is true
@@ -99,7 +99,7 @@ public class DebugAppender : AppenderSkeleton
   /// <remarks>
   /// <para>
   /// Writes the logging event to the <see cref="System.Diagnostics.Debug"/> system.
-  /// If <see cref="ImmediateFlush"/> is <c>true</c> then the <see cref="System.Diagnostics.Debug.Flush"/>
+  /// If <see cref="ImmediateFlush"/> is <see langword="true"/> then the <see cref="System.Diagnostics.Debug.Flush"/>
   /// is called.
   /// </para>
   /// </remarks> 

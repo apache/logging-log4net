@@ -32,9 +32,9 @@ namespace log4net;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The <c>LogicalThreadContext</c> provides a location for <see cref="CallContext"/> specific debugging 
+/// The <see cref="LogicalThreadContext"/> provides a location for <see cref="CallContext"/> specific debugging 
 /// information to be stored.
-/// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
+/// The <see cref="LogicalThreadContext"/> properties override any <see cref="ThreadContext"/> or <see cref="GlobalContext"/>
 /// properties with the same name.
 /// </para>
 /// <para>
@@ -87,7 +87,7 @@ public static class LogicalThreadContext
   /// </summary>
   /// <remarks>
   /// <para>
-  /// The <c>LogicalThreadContext</c> properties override any <see cref="ThreadContext"/> 
+  /// The <see cref="LogicalThreadContext"/> properties override any <see cref="ThreadContext"/> 
   /// or <see cref="GlobalContext"/> properties with the same name.
   /// </para>
   /// </remarks>

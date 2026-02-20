@@ -258,7 +258,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// Parses an appender element.
   /// </summary>
   /// <param name="appenderElement">The appender element.</param>
-  /// <returns>The appender instance or <c>null</c> when parsing failed.</returns>
+  /// <returns>The appender instance or <see langword="null"/> when parsing failed.</returns>
   /// <remarks>
   /// <para>
   /// Parse an XML element that represents an appender and return
@@ -777,7 +777,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// Test if an element has no attributes or child elements
   /// </summary>
   /// <param name="element">the element to inspect</param>
-  /// <returns><c>true</c> if the element has any attributes or child elements, <c>false</c> otherwise</returns>
+  /// <returns><see langword="true"/> if the element has any attributes or child elements, <see langword="false"/> otherwise</returns>
   private static bool HasAttributesOrElements(XmlElement element)
     => element.ChildNodes.OfType<XmlNode>().Any(node => node.NodeType is XmlNodeType.Attribute or XmlNodeType.Element);
 
@@ -785,7 +785,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// Test if a <see cref="Type"/> is constructible with <c>Activator.CreateInstance</c>.
   /// </summary>
   /// <param name="type">the type to inspect</param>
-  /// <returns><c>true</c> if the type is creatable using a default constructor, <c>false</c> otherwise</returns>
+  /// <returns><see langword="true"/> if the type is creatable using a default constructor, <see langword="false"/> otherwise</returns>
   private static bool IsTypeConstructible(Type type)
   {
     return type.IsClass && !type.IsAbstract
@@ -844,7 +844,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// <returns>
   /// <para>
   /// An object of type <paramref name="type"/> with value <paramref name="value"/> or 
-  /// <c>null</c> when the conversion could not be performed.
+  /// <see langword="null"/> when the conversion could not be performed.
   /// </para>
   /// </returns>
   protected object? ConvertStringTo(Type type, string value)
@@ -871,7 +871,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// <param name="element">The XML element that contains the definition of the object.</param>
   /// <param name="defaultTargetType">The object type to use if not explicitly specified.</param>
   /// <param name="typeConstraint">The type that the returned object must be or must inherit from.</param>
-  /// <returns>The object or <c>null</c></returns>
+  /// <returns>The object or <see langword="null"/></returns>
   /// <remarks>
   /// <para>
   /// Parse an XML element and create an object instance based on the configuration

@@ -22,7 +22,7 @@ using System;
 namespace log4net.Util;
 
 /// <summary>
-/// Implementation of Stacks collection for the <see cref="log4net.ThreadContext"/>
+/// Implementation of Stacks collection for the <see cref="ThreadContext"/>
 /// </summary>
 /// <author>Nicko Cadell</author>
 public sealed class ThreadContextStacks

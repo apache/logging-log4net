@@ -34,7 +34,7 @@ namespace log4net.Filter;
 /// of the <see cref="LevelToMatch"/> option and the <see cref="Level"/> of the 
 /// <see cref="LoggingEvent"/>, then the <see cref="Decide"/> method returns <see cref="FilterDecision.Accept"/> in 
 /// case the <see cref="AcceptOnMatch"/> option value is set
-/// to <c>true</c>, if it is <c>false</c> then 
+/// to <see langword="true"/>, if it is <see langword="false"/> then 
 /// <see cref="FilterDecision.Deny"/> is returned. If the <see cref="Level"/> does not match then
 /// the result will be <see cref="FilterDecision.Neutral"/>.
 /// </para>
@@ -54,7 +54,7 @@ public class LevelMatchFilter : FilterSkeleton
   /// logging event, otherwise it will <see cref="FilterDecision.Deny"/> the event.
   /// </para>
   /// <para>
-  /// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
+  /// The default is <see langword="true"/> i.e. to <see cref="FilterDecision.Accept"/> the event.
   /// </para>
   /// </remarks>
   public bool AcceptOnMatch { get; set; } = true;

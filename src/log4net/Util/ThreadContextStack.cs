@@ -26,11 +26,11 @@ using log4net.Core;
 namespace log4net.Util;
 
 /// <summary>
-/// Implementation of Stack for the <see cref="log4net.ThreadContext"/>
+/// Implementation of Stack for the <see cref="ThreadContext"/>
 /// </summary>
 /// <remarks>
 /// <para>
-/// Implementation of Stack for the <see cref="log4net.ThreadContext"/>
+/// Implementation of Stack for the <see cref="ThreadContext"/>
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
@@ -117,11 +117,11 @@ public sealed class ThreadContextStack : IFixingRequired
   /// <para>
   /// Pushes a new context onto this stack. An <see cref="IDisposable"/>
   /// is returned that can be used to clean up this stack. This
-  /// can be easily combined with the <c>using</c> keyword to scope the
+  /// can be easily combined with the <see langword="using"/> keyword to scope the
   /// context.
   /// </para>
   /// </remarks>
-  /// <example>Simple example of using the <c>Push</c> method with the <c>using</c> keyword.
+  /// <example>Simple example of using the <see cref="Push"/> method with the <see langword="using"/> keyword.
   /// <code lang="C#">
   /// using(log4net.ThreadContext.Stacks["NDC"].Push("Stack_Message"))
   /// {
@@ -258,7 +258,7 @@ public sealed class ThreadContextStack : IFixingRequired
   }
 
   /// <summary>
-  /// Struct returned from the <see cref="ThreadContextStack.Push"/> method.
+  /// Struct returned from the <see cref="Push"/> method.
   /// </summary>
   /// <remarks>
   /// <para>

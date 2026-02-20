@@ -26,15 +26,15 @@ namespace log4net;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The <c>ThreadContext</c> provides a location for thread specific debugging 
+/// The <see cref="ThreadContext"/> provides a location for thread specific debugging 
 /// information to be stored.
-/// The <c>ThreadContext</c> properties override any <see cref="GlobalContext"/>
+/// The <see cref="ThreadContext"/> properties override any <see cref="GlobalContext"/>
 /// properties with the same name.
 /// </para>
 /// <para>
 /// The thread context has a properties map and a stack.
 /// The properties and stack can 
-/// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
+/// be included in the output of log messages. The <see cref="Layout.PatternLayout"/>
 /// supports selecting and outputting these properties.
 /// </para>
 /// <para>
@@ -74,7 +74,7 @@ public static class ThreadContext
   /// </value>
   /// <remarks>
   /// <para>
-  /// The <c>ThreadContext</c> properties override any <see cref="GlobalContext"/>
+  /// The <see cref="ThreadContext"/> properties override any <see cref="GlobalContext"/>
   /// properties with the same name.
   /// </para>
   /// </remarks>

@@ -26,7 +26,7 @@ namespace log4net.Util;
 /// Utility class that represents a format string.
 /// </summary>
 /// <author>Nicko Cadell</author>
-/// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
+/// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information.</param>
 /// <param name="format">A <see cref="string"/> containing zero or more format items.</param>
 /// <param name="args">An <see cref="object"/> array containing zero or more objects to format.</param>
 public sealed class SystemStringFormat(IFormatProvider? provider, string format, params object?[]? args)
@@ -53,7 +53,7 @@ public sealed class SystemStringFormat(IFormatProvider? provider, string format,
   /// of the value of a corresponding <see cref="object"/> instance in a specified array.
   /// A specified parameter supplies culture-specific formatting information.
   /// </summary>
-  /// <param name="provider">An <see cref="System.IFormatProvider"/> that supplies culture-specific formatting information.</param>
+  /// <param name="provider">An <see cref="IFormatProvider"/> that supplies culture-specific formatting information.</param>
   /// <param name="format">A <see cref="string"/> containing zero or more format items.</param>
   /// <param name="args">An <see cref="object"/> array containing zero or more objects to format.</param>
   /// <returns>
@@ -99,7 +99,7 @@ public sealed class SystemStringFormat(IFormatProvider? provider, string format,
   {
     try
     {
-      var buf = new StringBuilder("<log4net.Error>", 100);
+      StringBuilder buf = new("<log4net.Error>", 100);
       buf.Append("Exception during StringFormat: ").Append(formatException.Message);
       buf.Append(" <format>").Append(format).Append("</format>");
       buf.Append("<args>");

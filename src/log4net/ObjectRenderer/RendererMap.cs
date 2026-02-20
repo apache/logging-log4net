@@ -31,7 +31,7 @@ namespace log4net.ObjectRenderer;
 /// <remarks>
 /// <para>
 /// The <see cref="FindAndRender(object)"/> method is used to render an
-/// <c>object</c> using the appropriate renderers defined in this map,
+/// <see langword="object"/> using the appropriate renderers defined in this map,
 /// using a default renderer if no custom renderer is defined for a type.
 /// </para>
 /// </remarks>
@@ -189,7 +189,7 @@ public class RendererMap
   /// Recursively searches interfaces.
   /// </summary>
   /// <param name="type">The type for which to look up the renderer.</param>
-  /// <returns>The renderer for the specified type, or <c>null</c> if not found.</returns>
+  /// <returns>The renderer for the specified type, or <see langword="null"/> if not found.</returns>
   private IObjectRenderer? SearchTypeAndInterfaces(Type type)
   {
     if (_map.TryGetValue(type, out IObjectRenderer? r))

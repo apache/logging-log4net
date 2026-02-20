@@ -44,7 +44,7 @@ public sealed class PluginMap(ILoggerRepository repository)
   /// <param name="name">The name of the <see cref="IPlugin" /> to lookup.</param>
   /// <returns>
   /// The <see cref="IPlugin" /> from the map with the name specified, or 
-  /// <c>null</c> if no plugin is found.
+  /// <see langword="null"/> if no plugin is found.
   /// </returns>
   public IPlugin? this[string name]
   {

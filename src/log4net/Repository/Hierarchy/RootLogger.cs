@@ -33,7 +33,7 @@ namespace log4net.Repository.Hierarchy;
 /// that it provides several guarantees.
 /// </para>
 /// <para>
-/// First, it cannot be assigned a <c>null</c>
+/// First, it cannot be assigned a <see langword="null"/>
 /// level. Second, since the root logger cannot have a parent, the
 /// <see cref="EffectiveLevel"/> property always returns the value of the
 /// level field without walking the hierarchy.
@@ -69,7 +69,7 @@ public class RootLogger : Logger
   /// <remarks>
   /// <para>
   /// Because the root logger cannot have a parent and its level
-  /// must not be <c>null</c> this property just returns the
+  /// must not be <see langword="null"/> this property just returns the
   /// value of <see cref="Logger.Level"/>.
   /// </para>
   /// </remarks>
@@ -83,7 +83,7 @@ public class RootLogger : Logger
   /// </value>
   /// <remarks>
   /// <para>
-  /// Setting the level of the root logger to a <c>null</c> reference
+  /// Setting the level of the root logger to a <see langword="null"/> reference
   /// may have catastrophic results. We prevent this here.
   /// </para>
   /// </remarks>

@@ -29,7 +29,7 @@ public interface IFlushable
   /// </summary>
   /// <remarks>
   /// Appenders that implement the <see cref="Flush"/> method must do so in a thread-safe manner: it can be called concurrently with
-  /// the <see cref="log4net.Appender.IAppender.DoAppend"/> method.
+  /// the <see cref="IAppender.DoAppend"/> method.
   /// <para>
   /// Typically this is done by locking on the Appender instance, e.g.:
   /// <code>
@@ -51,6 +51,6 @@ public interface IFlushable
   /// </para>
   /// </remarks>
   /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   bool Flush(int millisecondsTimeout);
 }

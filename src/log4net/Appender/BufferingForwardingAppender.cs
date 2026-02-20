@@ -138,7 +138,7 @@ public class BufferingForwardingAppender : BufferingAppenderSkeleton, IAppenderA
   /// </summary>
   /// <param name="name">The name of the appender to lookup.</param>
   /// <returns>
-  /// The appender with the specified name, or <c>null</c>.
+  /// The appender with the specified name, or <see langword="null"/>.
   /// </returns>
   public virtual IAppender? GetAppender(string? name)
   {

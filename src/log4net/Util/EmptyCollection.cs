@@ -87,7 +87,7 @@ public sealed class EmptyCollection : ICollection
   /// </value>
   /// <remarks>
   /// <para>
-  /// For the <see cref="EmptyCollection"/> this property is always <c>true</c>.
+  /// For the <see cref="EmptyCollection"/> this property is always <see langword="true"/>.
   /// </para>
   /// </remarks>
   public bool IsSynchronized => true;

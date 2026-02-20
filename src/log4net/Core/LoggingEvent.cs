@@ -944,7 +944,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// </para>
   /// <para>
   /// The <see cref="Fix"/> property must be set during the
-  /// <see cref="log4net.Appender.IAppender.DoAppend"/> method call if this event 
+  /// <see cref="Appender.IAppender.DoAppend"/> method call if this event 
   /// is to be used outside that method.
   /// </para>
   /// </remarks>
