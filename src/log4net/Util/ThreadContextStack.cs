@@ -26,11 +26,11 @@ using log4net.Core;
 namespace log4net.Util;
 
 /// <summary>
-/// Implementation of Stack for the <see cref="log4net.ThreadContext"/>
+/// Implementation of Stack for the <see cref="ThreadContext"/>
 /// </summary>
 /// <remarks>
 /// <para>
-/// Implementation of Stack for the <see cref="log4net.ThreadContext"/>
+/// Implementation of Stack for the <see cref="ThreadContext"/>
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
@@ -258,7 +258,7 @@ public sealed class ThreadContextStack : IFixingRequired
   }
 
   /// <summary>
-  /// Struct returned from the <see cref="ThreadContextStack.Push"/> method.
+  /// Struct returned from the <see cref="Push"/> method.
   /// </summary>
   /// <remarks>
   /// <para>

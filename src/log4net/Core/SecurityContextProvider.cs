@@ -33,7 +33,7 @@ namespace log4net.Core;
 /// will request one from this <see cref="SecurityContextProvider"/>.
 /// </para>
 /// <para>
-/// By default the <see cref="SecurityContextProvider.DefaultProvider"/> is
+/// By default the <see cref="DefaultProvider"/> is
 /// an instance of <see cref="SecurityContextProvider"/> which returns only
 /// <see cref="NullSecurityContext"/> objects. This is a reasonable default
 /// where the privileges required are not know by the system.
@@ -43,7 +43,7 @@ namespace log4net.Core;
 /// and overriding the <see cref="CreateSecurityContext"/> method to return
 /// the desired <see cref="SecurityContext"/> objects. The default provider
 /// can be replaced by programmatically setting the value of the 
-/// <see cref="SecurityContextProvider.DefaultProvider"/> property.
+/// <see cref="DefaultProvider"/> property.
 /// </para>
 /// <para>
 /// An alternative is to use the <c>log4net.Config.SecurityContextProviderAttribute</c>

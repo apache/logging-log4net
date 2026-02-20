@@ -47,7 +47,7 @@ internal sealed class AspNetCachePatternConverter : AspNetPatternLayoutConverter
   /// <remarks>
   /// <para>
   /// Writes out the value of a named property. The property name
-  /// should be set in the <see cref="log4net.Util.PatternConverter.Option"/>
+  /// should be set in the <see cref="PatternConverter.Option"/>
   /// property. If no property has been set, all key value pairs from the Cache will
   /// be written to the output.
   /// </para>

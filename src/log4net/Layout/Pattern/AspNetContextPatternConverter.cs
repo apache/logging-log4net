@@ -46,7 +46,7 @@ internal sealed class AspNetContextPatternConverter : AspNetPatternLayoutConvert
   /// <remarks>
   /// <para>
   /// Writes out the value of a named property. The property name
-  /// should be set in the <see cref="log4net.Util.PatternConverter.Option"/>
+  /// should be set in the <see cref="Util.PatternConverter.Option"/>
   /// property.
   /// </para>
   /// </remarks>

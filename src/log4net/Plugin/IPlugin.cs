@@ -27,8 +27,8 @@ namespace log4net.Plugin;
 /// <remarks>
 /// <para>
 /// Plugins define additional behavior that can be associated
-/// with a <see cref="log4net.Repository.ILoggerRepository"/>.
-/// The <see cref="PluginMap"/> held by the <see cref="log4net.Repository.ILoggerRepository.PluginMap"/>
+/// with a <see cref="ILoggerRepository"/>.
+/// The <see cref="PluginMap"/> held by the <see cref="ILoggerRepository.PluginMap"/>
 /// property is used to store the plugins for a repository.
 /// </para>
 /// <para>

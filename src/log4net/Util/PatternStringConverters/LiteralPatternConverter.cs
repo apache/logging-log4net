@@ -28,7 +28,7 @@ namespace log4net.Util.PatternStringConverters;
 /// <remarks>
 /// <para>
 /// Writes the literal string value specified in the 
-/// <see cref="log4net.Util.PatternConverter.Option"/> property to 
+/// <see cref="PatternConverter.Option"/> property to 
 /// the output.
 /// </para>
 /// </remarks>
@@ -75,7 +75,7 @@ internal class LiteralPatternConverter : PatternConverter
   /// because we have a literal instead.
   /// </para>
   /// <para>
-  /// Writes the value of <see cref="log4net.Util.PatternConverter.Option"/>
+  /// Writes the value of <see cref="PatternConverter.Option"/>
   /// to the output <paramref name="writer"/>.
   /// </para>
   /// </remarks>

@@ -47,7 +47,7 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
   /// </summary>
   /// <remarks>
   /// <para>
-  /// See the <see cref="WindowsSecurityContext.Credentials"/> property for
+  /// See the <see cref="Credentials"/> property for
   /// details.
   /// </para>
   /// </remarks>
@@ -219,7 +219,7 @@ public class WindowsSecurityContext : Core.SecurityContext, IOptionHandler
   /// token is used to initialize the WindowsIdentity.
   /// </para>
   /// </remarks>
-  [System.Security.SecuritySafeCritical]
+  [SecuritySafeCritical]
   [System.Security.Permissions.SecurityPermission(System.Security.Permissions.SecurityAction.Demand, UnmanagedCode = true)]
   private static WindowsIdentity LogonUser(string userName, string domainName, string password)
   {

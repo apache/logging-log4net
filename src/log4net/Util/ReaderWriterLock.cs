@@ -31,7 +31,7 @@ namespace log4net.Util;
 /// multiple threads, or write access for a single thread. In a 
 /// situation where a resource is changed infrequently, a 
 /// <see cref="ReaderWriterLock"/> provides better throughput than a simple 
-/// one-at-a-time lock, such as <see cref="System.Threading.Monitor"/>.
+/// one-at-a-time lock, such as <see cref="Monitor"/>.
 /// </para>
 /// <para>
 /// If a platform does not support a <c>System.Threading.ReaderWriterLock</c> 

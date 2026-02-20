@@ -31,7 +31,7 @@ namespace log4net.Layout;
 /// <remarks>
 /// <para>
 /// This Layout should only be used with appenders that utilize multiple
-/// layouts (e.g. <see cref="log4net.Appender.AdoNetAppender"/>).
+/// layouts (e.g. <see cref="Appender.AdoNetAppender"/>).
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>

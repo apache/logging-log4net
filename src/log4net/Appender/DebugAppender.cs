@@ -67,7 +67,7 @@ public class DebugAppender : AppenderSkeleton
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Defaults to a <see cref="Layout.PatternLayout"/> with %logger as the pattern which will use the logger name of the current 
+  /// Defaults to a <see cref="PatternLayout"/> with %logger as the pattern which will use the logger name of the current 
   /// <see cref="LoggingEvent"/> as the category parameter.
   /// </para>
   /// </remarks>

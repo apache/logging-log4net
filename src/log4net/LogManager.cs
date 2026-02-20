@@ -203,7 +203,7 @@ public static class LogManager
     => WrapLogger(LoggerManager.GetLogger(repositoryAssembly, name))!;
 
   /// <summary>
-  /// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+  /// Shorthand for <see cref="GetLogger(string)"/>.
   /// </summary>
   /// <remarks>
   /// Get the logger for the fully qualified name of the type specified.
@@ -214,7 +214,7 @@ public static class LogManager
     => GetLogger(Assembly.GetCallingAssembly(), type.EnsureNotNull().FullName!);
 
   /// <summary>
-  /// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+  /// Shorthand for <see cref="GetLogger(string)"/>.
   /// </summary>
   /// <remarks>
   /// Gets the logger for the fully qualified name of the type specified.
@@ -226,7 +226,7 @@ public static class LogManager
     => WrapLogger(LoggerManager.GetLogger(repository, type))!;
 
   /// <summary>
-  /// Shorthand for <see cref="LogManager.GetLogger(string)"/>.
+  /// Shorthand for <see cref="GetLogger(string)"/>.
   /// </summary>
   /// <remarks>
   /// Gets the logger for the fully qualified name of the type specified.
@@ -435,7 +435,7 @@ public static class LogManager
   /// <remarks>
   /// <para>
   /// Creates the default type of <see cref="ILoggerRepository"/> which is a
-  /// <see cref="log4net.Repository.Hierarchy.Hierarchy"/> object.
+  /// <see cref="Repository.Hierarchy.Hierarchy"/> object.
   /// </para>
   /// <para>
   /// The <paramref name="repository"/> name must be unique. Repositories cannot be redefined.

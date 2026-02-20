@@ -28,7 +28,7 @@ namespace log4net.Repository;
 /// </para>
 /// <para>
 /// A <see cref="ILoggerRepository"/> should implement this interface to support
-/// configuration by the <see cref="log4net.Config.XmlConfigurator"/>.
+/// configuration by the <see cref="Config.XmlConfigurator"/>.
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>

@@ -343,15 +343,15 @@ public class TextWriterAppender : AppenderSkeleton
   }
 
   /// <summary>
-  /// Gets or sets the <see cref="log4net.Util.QuietTextWriter"/> where logging events
+  /// Gets or sets the <see cref="QuietTextWriter"/> where logging events
   /// will be written to. 
   /// </summary>
   /// <value>
-  /// The <see cref="log4net.Util.QuietTextWriter"/> where logging events are written.
+  /// The <see cref="QuietTextWriter"/> where logging events are written.
   /// </value>
   /// <remarks>
   /// <para>
-  /// This is the <see cref="log4net.Util.QuietTextWriter"/> where logging events
+  /// This is the <see cref="QuietTextWriter"/> where logging events
   /// will be written to. 
   /// </para>
   /// </remarks>

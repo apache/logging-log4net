@@ -20,7 +20,7 @@
 namespace log4net.Util;
 
 /// <summary>
-/// Implementation of Properties collection for the <see cref="log4net.GlobalContext"/>
+/// Implementation of Properties collection for the <see cref="GlobalContext"/>
 /// </summary>
 /// <remarks>
 /// <para>

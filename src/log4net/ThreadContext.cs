@@ -34,7 +34,7 @@ namespace log4net;
 /// <para>
 /// The thread context has a properties map and a stack.
 /// The properties and stack can 
-/// be included in the output of log messages. The <see cref="log4net.Layout.PatternLayout"/>
+/// be included in the output of log messages. The <see cref="Layout.PatternLayout"/>
 /// supports selecting and outputting these properties.
 /// </para>
 /// <para>

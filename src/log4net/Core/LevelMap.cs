@@ -28,7 +28,7 @@ namespace log4net.Core;
 /// </summary>
 /// <remarks>
 /// <para>
-/// This mapping is held separately for each <see cref="log4net.Repository.ILoggerRepository"/>.
+/// This mapping is held separately for each <see cref="Repository.ILoggerRepository"/>.
 /// The level name is case-insensitive.
 /// </para>
 /// </remarks>

@@ -440,7 +440,7 @@ public static class LoggerManager
   /// <remarks>
   /// <para>
   /// Creates the default type of <see cref="ILoggerRepository"/> which is a
-  /// <see cref="log4net.Repository.Hierarchy.Hierarchy"/> object.
+  /// <see cref="Repository.Hierarchy.Hierarchy"/> object.
   /// </para>
   /// <para>
   /// The <paramref name="repository"/> name must be unique. Repositories cannot be redefined.

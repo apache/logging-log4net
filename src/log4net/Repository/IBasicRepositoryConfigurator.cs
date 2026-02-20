@@ -25,11 +25,11 @@ namespace log4net.Repository;
 /// <remarks>
 /// <para>
 /// Interface used by basic configurator to configure a <see cref="ILoggerRepository"/>
-/// with a default <see cref="log4net.Appender.IAppender"/>.
+/// with a default <see cref="Appender.IAppender"/>.
 /// </para>
 /// <para>
 /// A <see cref="ILoggerRepository"/> should implement this interface to support
-/// configuration by the <see cref="log4net.Config.BasicConfigurator"/>.
+/// configuration by the <see cref="Config.BasicConfigurator"/>.
 /// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>

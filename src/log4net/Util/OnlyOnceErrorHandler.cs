@@ -191,7 +191,7 @@ public class OnlyOnceErrorHandler : IErrorHandler
   /// The error code from the first error that triggered this error handler.
   /// </summary>
   /// <remarks>
-  /// Defaults to <see cref="log4net.Core.ErrorCode.GenericFailure"/>
+  /// Defaults to <see cref="ErrorCode.GenericFailure"/>
   /// </remarks>
   public ErrorCode ErrorCode { get; private set; } = ErrorCode.GenericFailure;
 

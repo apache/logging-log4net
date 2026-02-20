@@ -181,7 +181,7 @@ public class ColoredConsoleAppender : AppenderSkeleton
   public void AddMapping(LevelColors mapping) => _levelMapping.Add(mapping);
 
   /// <summary>
-  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
+  /// This method is called by the <see cref="AppenderSkeleton.DoAppend(LoggingEvent)"/> method.
   /// </summary>
   /// <param name="loggingEvent">The event to log.</param>
   /// <remarks>

@@ -28,7 +28,7 @@ using CallContext = System.Threading.AsyncLocal<log4net.Util.PropertiesDictionar
 namespace log4net.Util;
 
 /// <summary>
-/// Implementation of Properties collection for the <see cref="log4net.LogicalThreadContext"/>
+/// Implementation of Properties collection for the <see cref="LogicalThreadContext"/>
 /// </summary>
 /// <remarks>
 /// <para>
@@ -37,7 +37,7 @@ namespace log4net.Util;
 /// </para>
 /// <para>
 /// This class stores its properties in a slot on the <see cref="CallContext"/> named
-/// <see cref="log4net.Util.LogicalThreadContextProperties"/> for .net4x,
+/// <see cref="LogicalThreadContextProperties"/> for .net4x,
 /// otherwise System.Threading.AsyncLocal
 /// </para>
 /// </remarks>

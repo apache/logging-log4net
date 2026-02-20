@@ -28,7 +28,7 @@ namespace log4net.Util.PatternStringConverters;
 /// <remarks>
 /// <para>
 /// Write an environment variable to the output writer.
-/// The value of the <see cref="log4net.Util.PatternConverter.Option"/> determines 
+/// The value of the <see cref="PatternConverter.Option"/> determines 
 /// the name of the variable to output.
 /// </para>
 /// </remarks>
@@ -44,7 +44,7 @@ public sealed class EnvironmentPatternConverter : PatternConverter
   /// <para>
   /// Writes the environment variable to the output <paramref name="writer"/>.
   /// The name of the environment variable to output must be set
-  /// using the <see cref="log4net.Util.PatternConverter.Option"/>
+  /// using the <see cref="PatternConverter.Option"/>
   /// property.
   /// </para>
   /// </remarks>

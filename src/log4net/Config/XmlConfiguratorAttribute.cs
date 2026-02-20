@@ -63,7 +63,7 @@ namespace log4net.Config;
 /// Log4net will only look for assembly level configuration attributes once.
 /// When using the log4net assembly level attributes to control the configuration 
 /// of log4net you must ensure that the first call to any of the 
-/// <see cref="log4net.Core.LoggerManager"/> methods is made from the assembly with the configuration
+/// <see cref="Core.LoggerManager"/> methods is made from the assembly with the configuration
 /// attributes. 
 /// </para>
 /// <para>

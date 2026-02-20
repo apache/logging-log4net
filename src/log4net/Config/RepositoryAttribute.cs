@@ -30,7 +30,7 @@ namespace log4net.Config;
 /// on the assembly controls
 /// the configuration of the repository. The <see cref="Name"/> property specifies the name
 /// of the repository that this assembly is a part of. The <see cref="RepositoryType"/>
-/// specifies the type of the <see cref="log4net.Repository.ILoggerRepository"/> object 
+/// specifies the type of the <see cref="Repository.ILoggerRepository"/> object 
 /// to create for the assembly. If this attribute is not specified or a <see cref="Name"/> 
 /// is not specified then the assembly will be part of the default shared logging repository.
 /// </para>
@@ -93,7 +93,7 @@ public sealed class RepositoryAttribute : Attribute
   /// <remarks>
   /// <para>
   /// The type of the repository to create for the assembly.
-  /// The type must implement the <see cref="log4net.Repository.ILoggerRepository"/>
+  /// The type must implement the <see cref="Repository.ILoggerRepository"/>
   /// interface.
   /// </para>
   /// <para>

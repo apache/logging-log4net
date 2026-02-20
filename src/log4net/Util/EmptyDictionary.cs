@@ -74,7 +74,7 @@ public sealed class EmptyDictionary : IDictionary
   /// As the collection is empty no values are copied into the array.
   /// </para>
   /// </remarks>
-  public void CopyTo(System.Array array, int index)
+  public void CopyTo(Array array, int index)
   {
     // copy nothing
   }

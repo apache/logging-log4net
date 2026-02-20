@@ -272,7 +272,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   /// This method should not normally be used to log.
   /// The <see cref="ILog"/> interface should be used 
   /// for routine logging. This interface can be obtained
-  /// using the <see cref="log4net.LogManager.GetLogger(string)"/> method.
+  /// using the <see cref="LogManager.GetLogger(string)"/> method.
   /// </para>
   /// <para>
   /// The <c>logEvent</c> is delivered to the appropriate logger and
@@ -470,7 +470,7 @@ public abstract class LoggerRepositorySkeleton : ILoggerRepository, IFlushable
   }
 
   /// <summary>
-  /// Flushes all configured Appenders that implement <see cref="log4net.Appender.IFlushable"/>.
+  /// Flushes all configured Appenders that implement <see cref="IFlushable"/>.
   /// </summary>
   /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asynchronous appenders to be flushed,
   /// or <see cref="Timeout.Infinite"/> to wait indefinitely.</param>

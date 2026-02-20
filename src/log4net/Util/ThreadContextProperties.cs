@@ -22,7 +22,7 @@ using System;
 namespace log4net.Util;
 
 /// <summary>
-/// Implementation of Properties collection for the <see cref="log4net.ThreadContext"/>
+/// Implementation of Properties collection for the <see cref="ThreadContext"/>
 /// </summary>
 /// <remarks>
 /// <para>

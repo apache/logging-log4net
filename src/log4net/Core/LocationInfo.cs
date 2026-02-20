@@ -144,7 +144,7 @@ public class LocationInfo : ILog4NetSerializable
           }
         }
       }
-      catch (System.Security.SecurityException)
+      catch (SecurityException)
       {
         // This security exception will occur if the caller does not have 
         // some undefined set of SecurityPermission flags.

@@ -27,8 +27,8 @@ namespace log4net.Filter;
 /// <remarks>
 /// <para>
 /// Users should extend this class to implement customized logging
-/// event filtering. Note that <see cref="log4net.Repository.Hierarchy.Logger"/> and 
-/// <see cref="log4net.Appender.AppenderSkeleton"/>, the parent class of all standard
+/// event filtering. Note that <see cref="Repository.Hierarchy.Logger"/> and 
+/// <see cref="Appender.AppenderSkeleton"/>, the parent class of all standard
 /// appenders, have built-in filtering rules. It is suggested that you
 /// first use and understand the built-in rules before rushing to write
 /// your own custom filters.

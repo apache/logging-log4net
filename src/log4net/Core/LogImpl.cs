@@ -1175,7 +1175,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// the other hand, if the <c>log</c> is debug enabled, you
   /// will incur the cost of evaluating whether the logger is debug
   /// enabled twice. Once in <see cref="IsDebugEnabled"/> and once in
-  /// the <see cref="Debug"/>.  This is an insignificant overhead
+  /// the <see cref="Debug(object?)"/>.  This is an insignificant overhead
   /// since evaluating a logger takes about 1% of the time it
   /// takes to actually log.
   /// </para>

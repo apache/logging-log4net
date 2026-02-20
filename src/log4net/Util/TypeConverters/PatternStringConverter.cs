@@ -89,7 +89,7 @@ internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   /// <see langword="true"/> if the <paramref name="sourceType"/> is
   /// the <see cref="string"/> type.
   /// </returns>
-  public bool CanConvertFrom(System.Type sourceType) => sourceType == typeof(string);
+  public bool CanConvertFrom(Type sourceType) => sourceType == typeof(string);
 
   /// <summary>
   /// Overrides the ConvertFrom method of IConvertFrom.
