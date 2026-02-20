@@ -26,9 +26,9 @@ namespace log4net;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The <c>ThreadContext</c> provides a location for thread specific debugging 
+/// The <see cref="ThreadContext"/> provides a location for thread specific debugging 
 /// information to be stored.
-/// The <c>ThreadContext</c> properties override any <see cref="GlobalContext"/>
+/// The <see cref="ThreadContext"/> properties override any <see cref="GlobalContext"/>
 /// properties with the same name.
 /// </para>
 /// <para>
@@ -74,7 +74,7 @@ public static class ThreadContext
   /// </value>
   /// <remarks>
   /// <para>
-  /// The <c>ThreadContext</c> properties override any <see cref="GlobalContext"/>
+  /// The <see cref="ThreadContext"/> properties override any <see cref="GlobalContext"/>
   /// properties with the same name.
   /// </para>
   /// </remarks>

@@ -68,9 +68,9 @@ public class ExceptionEvaluator : ITriggeringEventEvaluator
   /// Is this <paramref name="loggingEvent"/> the triggering event?
   /// </summary>
   /// <param name="loggingEvent">The event to check</param>
-  /// <returns>This method returns <c>true</c>, if the logging event Exception 
+  /// <returns>This method returns <see langword="true"/>, if the logging event Exception 
   /// Type is <see cref="ExceptionType"/>. 
-  /// Otherwise it returns <c>false</c></returns>
+  /// Otherwise it returns <see langword="false"/></returns>
   /// <remarks>
   /// <para>
   /// This evaluator will trigger if the Exception Type of the event

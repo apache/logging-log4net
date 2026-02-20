@@ -55,7 +55,7 @@ internal sealed class PropertyPatternConverter : PatternConverter
   /// property.
   /// </para>
   /// <para>
-  /// If the <see cref="log4net.Util.PatternConverter.Option"/> is set to <c>null</c>
+  /// If the <see cref="log4net.Util.PatternConverter.Option"/> is set to <see langword="null"/>
   /// then all the properties are written as key value pairs.
   /// </para>
   /// </remarks>

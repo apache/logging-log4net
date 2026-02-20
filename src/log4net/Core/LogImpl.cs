@@ -1142,8 +1142,8 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <c>DEBUG</c> events,
-  /// <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <c>DEBUG</c> events,
+  /// <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>
@@ -1174,8 +1174,8 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// construction if debugging is disabled for <c>log</c>. On
   /// the other hand, if the <c>log</c> is debug enabled, you
   /// will incur the cost of evaluating whether the logger is debug
-  /// enabled twice. Once in <c>IsDebugEnabled</c> and once in
-  /// the <c>Debug</c>.  This is an insignificant overhead
+  /// enabled twice. Once in <see cref="IsDebugEnabled"/> and once in
+  /// the <see cref="Debug"/>.  This is an insignificant overhead
   /// since evaluating a logger takes about 1% of the time it
   /// takes to actually log.
   /// </para>
@@ -1186,8 +1186,8 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// Checks if this logger is enabled for the <c>INFO</c> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <c>INFO</c> events,
-  /// <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <c>INFO</c> events,
+  /// <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>
@@ -1202,8 +1202,8 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// Checks if this logger is enabled for the <c>WARN</c> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <c>WARN</c> events,
-  /// <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <c>WARN</c> events,
+  /// <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>
@@ -1218,8 +1218,8 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// Checks if this logger is enabled for the <c>ERROR</c> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <c>ERROR</c> events,
-  /// <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <c>ERROR</c> events,
+  /// <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>
@@ -1233,8 +1233,8 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// Checks if this logger is enabled for the <c>FATAL</c> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <c>FATAL</c> events,
-  /// <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <c>FATAL</c> events,
+  /// <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>

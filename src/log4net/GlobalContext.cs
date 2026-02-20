@@ -26,7 +26,7 @@ namespace log4net;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The <c>GlobalContext</c> provides a location for global debugging 
+/// The <see cref="GlobalContext"/> provides a location for global debugging 
 /// information to be stored.
 /// </para>
 /// <para>

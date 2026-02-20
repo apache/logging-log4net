@@ -270,8 +270,8 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// Should transactions be used to insert logging events in the database.
   /// </summary>
   /// <value>
-  /// <c>true</c> if transactions should be used to insert logging events in
-  /// the database, otherwise <c>false</c>. The default value is <c>true</c>.
+  /// <see langword="true"/> if transactions should be used to insert logging events in
+  /// the database, otherwise <see langword="false"/>. The default value is <see langword="true"/>.
   /// </value>
   /// <remarks>
   /// <para>
@@ -306,8 +306,8 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// Should this appender try to reconnect to the database on error.
   /// </summary>
   /// <value>
-  /// <c>true</c> if the appender should try to reconnect to the database after an
-  /// error has occurred, otherwise <c>false</c>. The default value is <c>false</c>, 
+  /// <see langword="true"/> if the appender should try to reconnect to the database after an
+  /// error has occurred, otherwise <see langword="false"/>. The default value is <see langword="false"/>, 
   /// i.e. not to try to reconnect.
   /// </value>
   /// <remarks>
@@ -317,7 +317,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </para>
   /// <para>
   /// To force the appender to attempt to reconnect to the database set this
-  /// property to <c>true</c>.
+  /// property to <see langword="true"/>.
   /// </para>
   /// <note>
   /// When the appender attempts to connect to the database there may be a
@@ -458,7 +458,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// <param name="events">The array of events to insert into the database.</param>
   /// <remarks>
   /// <para>
-  /// The transaction argument can be <c>null</c> if the appender has been
+  /// The transaction argument can be <see langword="null"/> if the appender has been
   /// configured not to use transactions. See <see cref="UseTransactions"/>
   /// property for more information.
   /// </para>

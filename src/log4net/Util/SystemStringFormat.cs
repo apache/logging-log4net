@@ -99,7 +99,7 @@ public sealed class SystemStringFormat(IFormatProvider? provider, string format,
   {
     try
     {
-      var buf = new StringBuilder("<log4net.Error>", 100);
+      StringBuilder buf = new("<log4net.Error>", 100);
       buf.Append("Exception during StringFormat: ").Append(formatException.Message);
       buf.Append(" <format>").Append(format).Append("</format>");
       buf.Append("<args>");

@@ -47,8 +47,8 @@ public static class OptionConverter
   /// <returns>The <see cref="bool" /> value of <paramref name="argValue" />.</returns>
   /// <remarks>
   /// <para>
-  /// If <paramref name="argValue"/> is "true", then <c>true</c> is returned. 
-  /// If <paramref name="argValue"/> is "false", then <c>false</c> is returned. 
+  /// If <paramref name="argValue"/> is "true", then <see langword="true"/> is returned. 
+  /// If <paramref name="argValue"/> is "false", then <see langword="false"/> is returned. 
   /// Otherwise, <paramref name="defaultValue"/> is returned.
   /// </para>
   /// </remarks>
@@ -131,7 +131,7 @@ public static class OptionConverter
   /// <param name="target">The target type to convert to.</param>
   /// <param name="txt">The string to convert to an object.</param>
   /// <returns>
-  /// The object converted from a string or <c>null</c> when the 
+  /// The object converted from a string or <see langword="null"/> when the 
   /// conversion failed.
   /// </returns>
   /// <remarks>
@@ -179,7 +179,7 @@ public static class OptionConverter
   /// </summary>
   /// <param name="sourceType">The type to convert from.</param>
   /// <param name="targetType">The type to convert to.</param>
-  /// <returns><c>true</c> if there is a conversion from the source type to the target type.</returns>
+  /// <returns><see langword="true"/> if there is a conversion from the source type to the target type.</returns>
   /// <remarks>
   /// Checks if there is an appropriate type conversion from the source type to the target type.
   /// <para>
@@ -384,7 +384,7 @@ public static class OptionConverter
   /// </summary>
   /// <param name="enumType">The type to convert to.</param>
   /// <param name="value">The enum string value.</param>
-  /// <param name="ignoreCase">If <c>true</c>, ignore case; otherwise, regard case.</param>
+  /// <param name="ignoreCase">If <see langword="true"/>, ignore case; otherwise, regard case.</param>
   /// <returns>An object of type <paramref name="enumType" /> whose value is represented by <paramref name="value" />.</returns>
   private static object ParseEnum(Type enumType, string value, bool ignoreCase) 
     => Enum.Parse(enumType, value, ignoreCase);

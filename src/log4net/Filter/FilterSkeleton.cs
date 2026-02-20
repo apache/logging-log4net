@@ -105,7 +105,7 @@ public abstract class FilterSkeleton : IFilter
   /// the chain.
   /// </para>
   /// <para>
-  /// This method is marked <c>abstract</c> and must be implemented
+  /// This method is marked <see langword="abstract"/> and must be implemented
   /// in a subclass.
   /// </para>
   /// </remarks>

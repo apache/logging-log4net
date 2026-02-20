@@ -170,12 +170,12 @@ public sealed class PropertiesDictionary : ReadOnlyPropertiesDictionary, ILog4Ne
   /// See <see cref="IDictionary.IsReadOnly"/>
   /// </summary>
   /// <value>
-  /// <c>false</c>
+  /// <see langword="false"/>
   /// </value>
   /// <remarks>
   /// <para>
   /// This collection is modifiable. This property always
-  /// returns <c>false</c>.
+  /// returns <see langword="false"/>.
   /// </para>
   /// </remarks>
   bool IDictionary.IsReadOnly => false;

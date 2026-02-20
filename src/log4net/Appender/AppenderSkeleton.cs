@@ -59,7 +59,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </summary>
   /// <remarks>
   /// <para>
-  /// If this appender has not been closed then the <c>Finalize</c> method
+  /// If this appender has not been closed then the <see cref="Finalize"/> method
   /// will call <see cref="Close"/>.
   /// </para>
   /// </remarks>
@@ -236,7 +236,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   ///    <item>
   ///      <description>
   ///      Calls <see cref="PreAppendCheck()"/> and checks that 
-  ///      it returns <c>true</c>.</description>
+  ///      it returns <see langword="true"/>.</description>
   ///    </item>
   /// </list>
   /// </para>
@@ -318,7 +318,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   ///    <item>
   ///      <description>
   ///      Calls <see cref="PreAppendCheck()"/> and checks that 
-  ///      it returns <c>true</c>.</description>
+  ///      it returns <see langword="true"/>.</description>
   ///    </item>
   /// </list>
   /// </para>
@@ -383,7 +383,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// Test if the logging event should we output by this appender
   /// </summary>
   /// <param name="loggingEvent">the event to test</param>
-  /// <returns><c>true</c> if the event should be output, <c>false</c> if the event should be ignored</returns>
+  /// <returns><see langword="true"/> if the event should be output, <see langword="false"/> if the event should be ignored</returns>
   /// <remarks>
   /// <para>
   /// This method checks the logging event against the threshold level set
@@ -482,8 +482,8 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </summary>
   /// <param name="level"><see cref="Level"/> to test against.</param>
   /// <returns>
-  /// <c>true</c> if the <paramref name="level"/> meets the <see cref="Threshold"/> 
-  /// requirements of this appender. A null level always maps to <c>true</c>,
+  /// <see langword="true"/> if the <paramref name="level"/> meets the <see cref="Threshold"/> 
+  /// requirements of this appender. A null level always maps to <see langword="true"/>,
   /// the equivalent of <see cref="Level.All"/>.
   /// </returns>
   protected virtual bool IsAsSevereAsThreshold(Level? level) => level is null || level >= Threshold;
@@ -587,7 +587,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// this base class if it is overridden.
   /// </para>
   /// </remarks>
-  /// <returns><c>true</c> if the call to <see cref="Append(LoggingEvent)"/> should proceed.</returns>
+  /// <returns><see langword="true"/> if the call to <see cref="Append(LoggingEvent)"/> should proceed.</returns>
   protected virtual bool PreAppendCheck()
   {
     if ((Layout is null) && RequiresLayout)
@@ -698,14 +698,14 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <para>
   /// In the rather exceptional case, where the appender 
   /// implementation admits a layout but can also work without it, 
-  /// then the appender should return <c>true</c>.
+  /// then the appender should return <see langword="true"/>.
   /// </para>
   /// <para>
-  /// This default implementation always returns <c>false</c>.
+  /// This default implementation always returns <see langword="false"/>.
   /// </para>
   /// </remarks>
   /// <returns>
-  /// <c>true</c> if the appender requires a layout object, otherwise <c>false</c>.
+  /// <see langword="true"/> if the appender requires a layout object, otherwise <see langword="false"/>.
   /// </returns>
   protected virtual bool RequiresLayout => false;
 
@@ -715,7 +715,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <remarks>
   /// This implementation doesn't flush anything and always returns true
   /// </remarks>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   public virtual bool Flush(int millisecondsTimeout) => true;
 
   /// <summary>

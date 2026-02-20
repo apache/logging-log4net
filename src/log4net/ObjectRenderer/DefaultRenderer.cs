@@ -66,7 +66,7 @@ public sealed class DefaultRenderer : IObjectRenderer
   ///      <description>Rendered String</description>
   ///    </listheader>
   ///    <item>
-  ///      <term><c>null</c></term>
+  ///      <term><see langword="null"/></term>
   ///      <description>
   ///      <para>"(null)"</para>
   ///      </description>

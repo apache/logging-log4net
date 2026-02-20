@@ -74,12 +74,12 @@ public sealed class NullDictionaryEnumerator : IDictionaryEnumerator
   /// <summary>
   /// Test if the enumerator can advance, if so advance.
   /// </summary>
-  /// <returns><c>false</c> as the <see cref="NullDictionaryEnumerator" /> cannot advance.</returns>
+  /// <returns><see langword="false"/> as the <see cref="NullDictionaryEnumerator" /> cannot advance.</returns>
   /// <remarks>
   /// <para>
   /// As the enumerator is over an empty collection its <see cref="Current"/>
   /// value cannot be moved over a valid position, therefore <see cref="MoveNext"/>
-  /// will always return <c>false</c>.
+  /// will always return <see langword="false"/>.
   /// </para>
   /// </remarks>
   public bool MoveNext() => false;

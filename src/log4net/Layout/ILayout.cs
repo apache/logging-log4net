@@ -105,13 +105,13 @@ public interface ILayout
   /// <summary>
   /// Flag indicating if this layout handle exceptions
   /// </summary>
-  /// <value><c>false</c> if this layout handles exceptions</value>
+  /// <value><see langword="false"/> if this layout handles exceptions</value>
   /// <remarks>
   /// <para>
   /// If this layout handles the exception object contained within
   /// <see cref="LoggingEvent"/>, then the layout should return
-  /// <c>false</c>. Otherwise, if the layout ignores the exception
-  /// object, then the layout should return <c>true</c>.
+  /// <see langword="false"/>. Otherwise, if the layout ignores the exception
+  /// object, then the layout should return <see langword="true"/>.
   /// </para>
   /// </remarks>
   bool IgnoresException { get; }

@@ -148,7 +148,7 @@ public interface IRepositorySelector
   /// Test if a named repository exists
   /// </summary>
   /// <param name="repositoryName">the named repository to check</param>
-  /// <returns><c>true</c> if the repository exists</returns>
+  /// <returns><see langword="true"/> if the repository exists</returns>
   /// <remarks>
   /// <para>
   /// Test if a named repository exists. Use <see cref="CreateRepository(Assembly, Type)"/>

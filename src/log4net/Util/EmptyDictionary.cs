@@ -165,10 +165,10 @@ public sealed class EmptyDictionary : IDictionary
   /// with the specified key.
   /// </summary>
   /// <param name="key">The key to locate in the <see cref="EmptyDictionary" />.</param>
-  /// <returns><c>false</c></returns>
+  /// <returns><see langword="false"/></returns>
   /// <remarks>
   /// <para>
-  /// As the collection is empty the <see cref="Contains"/> method always returns <c>false</c>.
+  /// As the collection is empty the <see cref="Contains"/> method always returns <see langword="false"/>.
   /// </para>
   /// </remarks>
   public bool Contains(object key) => false;
@@ -203,10 +203,10 @@ public sealed class EmptyDictionary : IDictionary
   /// <summary>
   /// Gets a value indicating whether the <see cref="EmptyDictionary" /> has a fixed size.
   /// </summary>
-  /// <value><c>true</c></value>
+  /// <value><see langword="true"/></value>
   /// <remarks>
   /// <para>
-  /// As the collection is empty <see cref="IsFixedSize"/> always returns <c>true</c>.
+  /// As the collection is empty <see cref="IsFixedSize"/> always returns <see langword="true"/>.
   /// </para>
   /// </remarks>
   public bool IsFixedSize => true;
@@ -214,10 +214,10 @@ public sealed class EmptyDictionary : IDictionary
   /// <summary>
   /// Gets a value indicating whether the <see cref="EmptyDictionary" /> is read-only.
   /// </summary>
-  /// <value><c>true</c></value>
+  /// <value><see langword="true"/></value>
   /// <remarks>
   /// <para>
-  /// As the collection is empty <see cref="IsReadOnly"/> always returns <c>true</c>.
+  /// As the collection is empty <see cref="IsReadOnly"/> always returns <see langword="true"/>.
   /// </para>
   /// </remarks>
   public bool IsReadOnly => true;
@@ -248,11 +248,11 @@ public sealed class EmptyDictionary : IDictionary
   /// Gets or sets the element with the specified key.
   /// </summary>
   /// <param name="key">The key of the element to get or set.</param>
-  /// <value><c>null</c></value>
+  /// <value><see langword="null"/></value>
   /// <remarks>
   /// <para>
   /// As the collection is empty no values can be looked up or stored. 
-  /// If the index getter is called then <c>null</c> is returned.
+  /// If the index getter is called then <see langword="null"/> is returned.
   /// A <see cref="InvalidOperationException"/> is thrown if the setter is called.
   /// </para>
   /// </remarks>

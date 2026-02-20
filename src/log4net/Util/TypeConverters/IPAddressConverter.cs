@@ -45,7 +45,7 @@ internal sealed class IpAddressConverter : IConvertFrom
   /// <returns>true if the conversion is possible</returns>
   /// <remarks>
   /// <para>
-  /// Returns <c>true</c> if the <paramref name="sourceType"/> is
+  /// Returns <see langword="true"/> if the <paramref name="sourceType"/> is
   /// the <see cref="string"/> type.
   /// </para>
   /// </remarks>

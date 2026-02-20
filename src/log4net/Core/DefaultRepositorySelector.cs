@@ -117,7 +117,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <returns>The <see cref="ILoggerRepository"/> for the specified repository.</returns>
   /// <remarks>
   /// <para>
-  /// Returns the named repository. If <paramref name="repositoryName"/> is <c>null</c>
+  /// Returns the named repository. If <paramref name="repositoryName"/> is <see langword="null"/>
   /// a <see cref="ArgumentNullException"/> is thrown. If the repository 
   /// does not exist a <see cref="LogException"/> is thrown.
   /// </para>
@@ -184,7 +184,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <param name="repositoryAssembly">the assembly to use to create the repository to associate with the <see cref="ILoggerRepository"/>.</param>
   /// <param name="repositoryType">The type of repository to create, must implement <see cref="ILoggerRepository"/>.</param>
   /// <param name="repositoryName">The name to assign to the created repository</param>
-  /// <param name="readAssemblyAttributes">Set to <c>true</c> to read and apply the assembly attributes</param>
+  /// <param name="readAssemblyAttributes">Set to <see langword="true"/> to read and apply the assembly attributes</param>
   /// <returns>The repository created.</returns>
   /// <remarks>
   /// <para>
@@ -372,7 +372,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// Test if a named repository exists
   /// </summary>
   /// <param name="repositoryName">the named repository to check</param>
-  /// <returns><c>true</c> if the repository exists</returns>
+  /// <returns><see langword="true"/> if the repository exists</returns>
   /// <remarks>
   /// <para>
   /// Test if a named repository exists. Use <see cref="CreateRepository(string, Type)"/>

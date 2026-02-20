@@ -71,9 +71,9 @@ public class LevelEvaluator(Level threshold) : ITriggeringEventEvaluator
   /// Is this <paramref name="loggingEvent"/> the triggering event?
   /// </summary>
   /// <param name="loggingEvent">The event to check</param>
-  /// <returns>This method returns <c>true</c>, if the event level
+  /// <returns>This method returns <see langword="true"/>, if the event level
   /// is equal or higher than the <see cref="Threshold"/>. 
-  /// Otherwise it returns <c>false</c></returns>
+  /// Otherwise it returns <see langword="false"/></returns>
   public bool IsTriggeringEvent(LoggingEvent loggingEvent)
     => loggingEvent.EnsureNotNull().Level is null || loggingEvent.Level >= Threshold;
 }

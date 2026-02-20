@@ -131,11 +131,11 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// <para>
   /// Pushes a new context onto this stack. An <see cref="IDisposable"/>
   /// is returned that can be used to clean up this stack. This
-  /// can be easily combined with the <c>using</c> keyword to scope the
+  /// can be easily combined with the <see langword="using"/> keyword to scope the
   /// context.
   /// </para>
   /// </remarks>
-  /// <example>Simple example of using the <c>Push</c> method with the <c>using</c> keyword.
+  /// <example>Simple example of using the <see cref="Push"/> method with the <see langword="using"/> keyword.
   /// <code lang="C#">
   /// using(log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))
   /// {

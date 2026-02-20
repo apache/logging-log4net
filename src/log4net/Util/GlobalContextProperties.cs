@@ -40,7 +40,7 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
   /// </summary>
   /// <remarks>
   /// <para>
-  /// This variable is declared <c>volatile</c> to prevent the compiler and JIT from
+  /// This variable is declared <see langword="volatile"/> to prevent the compiler and JIT from
   /// reordering reads and writes of this thread performed on different threads.
   /// </para>
   /// </remarks>
@@ -83,7 +83,7 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
     {
       lock (_syncRoot)
       {
-        var mutableProps = new PropertiesDictionary(_readOnlyProperties)
+        PropertiesDictionary mutableProps = new(_readOnlyProperties)
         {
           [key] = value
         };
@@ -108,7 +108,7 @@ public sealed class GlobalContextProperties : ContextPropertiesBase
     {
       if (_readOnlyProperties.Contains(key))
       {
-        var mutableProps = new PropertiesDictionary(_readOnlyProperties);
+        PropertiesDictionary mutableProps = new(_readOnlyProperties);
         mutableProps.Remove(key);
         _readOnlyProperties = new ReadOnlyPropertiesDictionary(mutableProps);
       }

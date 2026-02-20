@@ -82,7 +82,7 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
       PropertiesDictionary props = GetProperties(true)!;
       // Reason for cloning the dictionary below: object instances set on the CallContext
       // need to be immutable to correctly flow through async/await
-      var immutableProps = new PropertiesDictionary(props)
+      PropertiesDictionary immutableProps = new(props)
       {
         [key] = value
       };

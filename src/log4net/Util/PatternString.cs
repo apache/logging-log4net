@@ -37,7 +37,7 @@ namespace log4net.Util;
 /// <para>
 /// This class functions similarly to the <see cref="log4net.Layout.PatternLayout"/>
 /// in that it accepts a pattern and renders it to a string. Unlike the 
-/// <see cref="log4net.Layout.PatternLayout"/> however the <c>PatternString</c>
+/// <see cref="log4net.Layout.PatternLayout"/> however the <see cref="PatternString"/>
 /// does not render the properties of a specific <see cref="LoggingEvent"/> but
 /// of the process in general.
 /// </para>

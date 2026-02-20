@@ -45,8 +45,8 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
     ///  Advances the enumerator to the next element in the collection.
     /// </summary>
     /// <returns>
-    ///  <c>true</c> if the enumerator was successfully advanced to the next element; 
-    ///  <c>false</c> if the enumerator has passed the end of the collection.
+    ///  <see langword="true"/> if the enumerator was successfully advanced to the next element; 
+    ///  <see langword="false"/> if the enumerator has passed the end of the collection.
     /// </returns>
     /// <exception cref="InvalidOperationException">
     ///  The collection was modified after the enumerator was created.
@@ -66,35 +66,35 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   private int _version;
 
   /// <summary>
-  ///  Creates a read-only wrapper for a <c>PluginCollection</c> instance.
+  ///  Creates a read-only wrapper for a <see cref="PluginCollection"/> instance.
   /// </summary>
   /// <param name="list">list to create a readonly wrapper arround</param>
   /// <returns>
-  /// A <c>PluginCollection</c> wrapper that is read-only.
+  /// A <see cref="PluginCollection"/> wrapper that is read-only.
   /// </returns>
   public static PluginCollection ReadOnly(PluginCollection list)
     => new ReadOnlyPluginCollection(list.EnsureNotNull());
 
   /// <summary>
-  ///  Initializes a new instance of the <c>PluginCollection</c> class
+  ///  Initializes a new instance of the <see cref="PluginCollection"/> class
   ///  that is empty and has the default initial capacity.
   /// </summary>
   public PluginCollection() => _array = new IPlugin[DefaultCapacity];
 
   /// <summary>
-  /// Initializes a new instance of the <c>PluginCollection</c> class
+  /// Initializes a new instance of the <see cref="PluginCollection"/> class
   /// that has the specified initial capacity.
   /// </summary>
   /// <param name="capacity">
-  /// The number of elements that the new <c>PluginCollection</c> is initially capable of storing.
+  /// The number of elements that the new <see cref="PluginCollection"/> is initially capable of storing.
   /// </param>
   public PluginCollection(int capacity) => _array = new IPlugin[capacity];
 
   /// <summary>
-  /// Initializes a new instance of the <c>PluginCollection</c> class
-  /// that contains elements copied from the specified <c>PluginCollection</c>.
+  /// Initializes a new instance of the <see cref="PluginCollection"/> class
+  /// that contains elements copied from the specified <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="collection">The <c>PluginCollection</c> whose elements are copied to the new collection.</param>
+  /// <param name="collection">The <see cref="PluginCollection"/> whose elements are copied to the new collection.</param>
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
   public PluginCollection(PluginCollection collection)
   {
@@ -103,7 +103,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Initializes a new instance of the <c>PluginCollection</c> class
+  /// Initializes a new instance of the <see cref="PluginCollection"/> class
   /// that contains elements copied from the specified <see cref="IPlugin"/> array.
   /// </summary>
   /// <param name="array">The <see cref="IPlugin"/> array whose elements are copied to the new list.</param>
@@ -115,7 +115,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Initializes a new instance of the <c>PluginCollection</c> class
+  /// Initializes a new instance of the <see cref="PluginCollection"/> class
   /// that contains elements copied from the specified <see cref="IPlugin"/> collection.
   /// </summary>
   /// <param name="collection">The <see cref="IPlugin"/> collection whose elements are copied to the new list.</param>
@@ -127,7 +127,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Initializes a new instance of the <c>PluginCollection</c> class
+  /// Initializes a new instance of the <see cref="PluginCollection"/> class
   /// that contains elements copied from the specified <see cref="IPlugin"/> collection.
   /// </summary>
   /// <param name="collection">The <see cref="IPlugin"/> collection whose elements are copied to the new list.</param>
@@ -158,19 +158,19 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   protected internal PluginCollection(Tag _) => _array = Array.Empty<IPlugin>();
 
   /// <summary>
-  /// Gets the number of elements actually contained in the <c>PluginCollection</c>.
+  /// Gets the number of elements actually contained in the <see cref="PluginCollection"/>.
   /// </summary>
   public virtual int Count => _count;
 
   /// <summary>
-  /// Copies the entire <c>PluginCollection</c> to a one-dimensional
+  /// Copies the entire <see cref="PluginCollection"/> to a one-dimensional
   /// <see cref="IPlugin"/> array.
   /// </summary>
   /// <param name="array">The one-dimensional <see cref="IPlugin"/> array to copy to.</param>
   public virtual void CopyTo(IPlugin[] array) => CopyTo(array, 0);
 
   /// <summary>
-  /// Copies the entire <c>PluginCollection</c> to a one-dimensional
+  /// Copies the entire <see cref="PluginCollection"/> to a one-dimensional
   /// <see cref="IPlugin"/> array, starting at the specified index of the target array.
   /// </summary>
   /// <param name="array">The one-dimensional <see cref="IPlugin"/> array to copy to.</param>
@@ -224,9 +224,9 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds a <see cref="IPlugin"/> to the end of the <c>PluginCollection</c>.
+  /// Adds a <see cref="IPlugin"/> to the end of the <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="item">The <see cref="IPlugin"/> to be added to the end of the <c>PluginCollection</c>.</param>
+  /// <param name="item">The <see cref="IPlugin"/> to be added to the end of the <see cref="PluginCollection"/>.</param>
   /// <returns>The index at which the value has been added.</returns>
   public virtual int Add(IPlugin item)
   {
@@ -242,7 +242,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Removes all elements from the <c>PluginCollection</c>.
+  /// Removes all elements from the <see cref="PluginCollection"/>.
   /// </summary>
   public virtual void Clear()
   {
@@ -257,7 +257,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <returns>A new <see cref="PluginCollection"/> with a shallow copy of the collection data.</returns>
   public virtual object Clone()
   {
-    var newCol = new PluginCollection(_count);
+    PluginCollection newCol = new(_count);
     Array.Copy(_array, 0, newCol._array, 0, _count);
     newCol._count = _count;
     newCol._version = _version;
@@ -266,10 +266,10 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Determines whether a given <see cref="IPlugin"/> is in the <c>PluginCollection</c>.
+  /// Determines whether a given <see cref="IPlugin"/> is in the <see cref="PluginCollection"/>.
   /// </summary>
   /// <param name="item">The <see cref="IPlugin"/> to check for.</param>
-  /// <returns><c>true</c> if <paramref name="item"/> is found in the <c>PluginCollection</c>; otherwise, <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="PluginCollection"/>; otherwise, <see langword="false"/>.</returns>
   public virtual bool Contains(IPlugin item)
   {
     for (int i = 0; i != _count; ++i)
@@ -284,12 +284,12 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
 
   /// <summary>
   /// Returns the zero-based index of the first occurrence of a <see cref="IPlugin"/>
-  /// in the <c>PluginCollection</c>.
+  /// in the <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="item">The <see cref="IPlugin"/> to locate in the <c>PluginCollection</c>.</param>
+  /// <param name="item">The <see cref="IPlugin"/> to locate in the <see cref="PluginCollection"/>.</param>
   /// <returns>
   /// The zero-based index of the first occurrence of <paramref name="item"/> 
-  /// in the entire <c>PluginCollection</c>, if found; otherwise, -1.
+  /// in the entire <see cref="PluginCollection"/>, if found; otherwise, -1.
   /// </returns>
   public virtual int IndexOf(IPlugin item)
   {
@@ -304,7 +304,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Inserts an element into the <c>PluginCollection</c> at the specified index.
+  /// Inserts an element into the <see cref="PluginCollection"/> at the specified index.
   /// </summary>
   /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
   /// <param name="item">The <see cref="IPlugin"/> to insert.</param>
@@ -333,11 +333,11 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Removes the first occurrence of a specific <see cref="IPlugin"/> from the <c>PluginCollection</c>.
+  /// Removes the first occurrence of a specific <see cref="IPlugin"/> from the <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="item">The <see cref="IPlugin"/> to remove from the <c>PluginCollection</c>.</param>
+  /// <param name="item">The <see cref="IPlugin"/> to remove from the <see cref="PluginCollection"/>.</param>
   /// <exception cref="ArgumentException">
-  /// The specified <see cref="IPlugin"/> was not found in the <c>PluginCollection</c>.
+  /// The specified <see cref="IPlugin"/> was not found in the <see cref="PluginCollection"/>.
   /// </exception>
   public virtual void Remove(IPlugin item)
   {
@@ -351,7 +351,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Removes the element at the specified index of the <c>PluginCollection</c>.
+  /// Removes the element at the specified index of the <see cref="PluginCollection"/>.
   /// </summary>
   /// <param name="index">The zero-based index of the element to remove.</param>
   /// <exception cref="ArgumentOutOfRangeException">
@@ -381,26 +381,26 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   /// <summary>
   /// Gets a value indicating whether the collection has a fixed size.
   /// </summary>
-  /// <value><c>true</c> if the collection has a fixed size; otherwise, <c>false</c>. The default is <c>false</c>.</value>
+  /// <value><see langword="true"/> if the collection has a fixed size; otherwise, <see langword="false"/>. The default is <see langword="false"/>.</value>
   public virtual bool IsFixedSize => false;
 
   /// <summary>
   /// Gets a value indicating whether the IList is read-only.
   /// </summary>
-  /// <value><c>true</c> if the collection is read-only; otherwise, <c>false</c>. The default is <c>false</c>.</value>
+  /// <value><see langword="true"/> if the collection is read-only; otherwise, <see langword="false"/>. The default is <see langword="false"/>.</value>
   public virtual bool IsReadOnly => false;
 
   /// <summary>
-  /// Returns an enumerator that can iterate through the <c>PluginCollection</c>.
+  /// Returns an enumerator that can iterate through the <see cref="PluginCollection"/>.
   /// </summary>
-  /// <returns>An <see cref="Enumerator"/> for the entire <c>PluginCollection</c>.</returns>
+  /// <returns>An <see cref="Enumerator"/> for the entire <see cref="PluginCollection"/>.</returns>
   public virtual IPluginCollectionEnumerator GetEnumerator() => new Enumerator(this);
 
   /// <summary>
-  /// Gets or sets the number of elements the <c>PluginCollection</c> can contain.
+  /// Gets or sets the number of elements the <see cref="PluginCollection"/> can contain.
   /// </summary>
   /// <value>
-  /// The number of elements the <c>PluginCollection</c> can contain.
+  /// The number of elements the <see cref="PluginCollection"/> can contain.
   /// </value>
   public virtual int Capacity
   {
@@ -429,10 +429,10 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds the elements of another <c>PluginCollection</c> to the current <c>PluginCollection</c>.
+  /// Adds the elements of another <see cref="PluginCollection"/> to the current <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="collection">The <c>PluginCollection</c> whose elements should be added to the end of the current <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  /// <param name="collection">The <see cref="PluginCollection"/> whose elements should be added to the end of the current <see cref="PluginCollection"/>.</param>
+  /// <returns>The new <see cref="Count"/> of the <see cref="PluginCollection"/>.</returns>
   public virtual int AddRange(PluginCollection collection)
   {
     if (_count + collection.EnsureNotNull().Count >= _array.Length)
@@ -448,10 +448,10 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds the elements of a <see cref="IPlugin"/> array to the current <c>PluginCollection</c>.
+  /// Adds the elements of a <see cref="IPlugin"/> array to the current <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="array">The <see cref="IPlugin"/> array whose elements should be added to the end of the <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  /// <param name="array">The <see cref="IPlugin"/> array whose elements should be added to the end of the <see cref="PluginCollection"/>.</param>
+  /// <returns>The new <see cref="Count"/> of the <see cref="PluginCollection"/>.</returns>
   public virtual int AddRange(IPlugin[] array)
   {
     if (_count + array.EnsureNotNull().Length >= _array.Length)
@@ -467,10 +467,10 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds the elements of a <see cref="IPlugin"/> collection to the current <c>PluginCollection</c>.
+  /// Adds the elements of a <see cref="IPlugin"/> collection to the current <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <see cref="PluginCollection"/>.</param>
+  /// <returns>The new <see cref="Count"/> of the <see cref="PluginCollection"/>.</returns>
   public virtual int AddRange(ICollection collection)
   {
     if (_count + collection.EnsureNotNull().Count >= _array.Length)
@@ -487,10 +487,10 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds the elements of a <see cref="IPlugin"/> collection to the current <c>PluginCollection</c>.
+  /// Adds the elements of a <see cref="IPlugin"/> collection to the current <see cref="PluginCollection"/>.
   /// </summary>
-  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <c>PluginCollection</c>.</param>
-  /// <returns>The new <see cref="Count"/> of the <c>PluginCollection</c>.</returns>
+  /// <param name="collection">The <see cref="IPlugin"/> collection whose elements should be added to the end of the <see cref="PluginCollection"/>.</param>
+  /// <returns>The new <see cref="Count"/> of the <see cref="PluginCollection"/>.</returns>
   public virtual int AddRange(ICollection<IPlugin> collection)
   {
     if (_count + collection.EnsureNotNull().Count >= _array.Length)
@@ -576,7 +576,7 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
     private readonly int _version;
 
     /// <summary>
-    /// Initializes a new instance of the <c>Enumerator</c> class.
+    /// Initializes a new instance of the <see cref="Enumerator"/> class.
     /// </summary>
     /// <param name="tc"></param>
     internal Enumerator(PluginCollection tc)
@@ -595,8 +595,8 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
     /// Advances the enumerator to the next element in the collection.
     /// </summary>
     /// <returns>
-    /// <c>true</c> if the enumerator was successfully advanced to the next element; 
-    /// <c>false</c> if the enumerator has passed the end of the collection.
+    /// <see langword="true"/> if the enumerator was successfully advanced to the next element; 
+    /// <see langword="false"/> if the enumerator has passed the end of the collection.
     /// </returns>
     /// <exception cref="InvalidOperationException">
     /// The collection was modified after the enumerator was created.

@@ -66,11 +66,11 @@ public static class LogManager
   /// <remarks>
   /// <para>
   /// If the named logger exists (in the default repository) then it
-  /// returns a reference to the logger, otherwise it returns <c>null</c>.
+  /// returns a reference to the logger, otherwise it returns <see langword="null"/>.
   /// </para>
   /// </remarks>
   /// <param name="name">The fully qualified logger name to look for.</param>
-  /// <returns>The logger found, or <c>null</c> if no logger could be found.</returns>
+  /// <returns>The logger found, or <see langword="null"/> if no logger could be found.</returns>
   public static ILog? Exists(string name) => Exists(Assembly.GetCallingAssembly(), name);
 
   /// <overloads>Get the currently defined loggers.</overloads>
@@ -110,13 +110,13 @@ public static class LogManager
   /// <para>
   /// If the named logger exists (in the specified repository) then it
   /// returns a reference to the logger, otherwise it returns
-  /// <c>null</c>.
+  /// <see langword="null"/>.
   /// </para>
   /// </remarks>
   /// <param name="repository">The repository to lookup in.</param>
   /// <param name="name">The fully qualified logger name to look for.</param>
   /// <returns>
-  /// The logger found, or <c>null</c> if the logger doesn't exist in the specified 
+  /// The logger found, or <see langword="null"/> if the logger doesn't exist in the specified 
   /// repository.
   /// </returns>
   public static ILog? Exists(string repository, string name) => WrapLogger(LoggerManager.Exists(repository, name));
@@ -128,13 +128,13 @@ public static class LogManager
   /// <para>
   /// If the named logger exists (in the repository for the specified assembly) then it
   /// returns a reference to the logger, otherwise it returns
-  /// <c>null</c>.
+  /// <see langword="null"/>.
   /// </para>
   /// </remarks>
   /// <param name="repositoryAssembly">The assembly to use to look up the repository.</param>
   /// <param name="name">The fully qualified logger name to look for.</param>
   /// <returns>
-  /// The logger, or <c>null</c> if the logger doesn't exist in the specified
+  /// The logger, or <see langword="null"/> if the logger doesn't exist in the specified
   /// assembly's repository.
   /// </returns>
   public static ILog? Exists(Assembly repositoryAssembly, string name) => WrapLogger(LoggerManager.Exists(repositoryAssembly, name));
@@ -333,8 +333,8 @@ public static class LogManager
   /// <para>
   /// Resets all values contained in the repository instance to their
   /// defaults.  This removes all appenders from all loggers, sets
-  /// the level of all non-root loggers to <c>null</c>,
-  /// sets their additivity flag to <c>true</c> and sets the level
+  /// the level of all non-root loggers to <see langword="null"/>,
+  /// sets their additivity flag to <see langword="true"/> and sets the level
   /// of the root logger to <see cref="Level.Debug"/>. Moreover,
   /// message disabling is set to its default "off" value.
   /// </para>    
@@ -348,8 +348,8 @@ public static class LogManager
   /// <para>
   /// Reset all values contained in the repository instance to their
   /// defaults.  This removes all appenders from all loggers, sets
-  /// the level of all non-root loggers to <c>null</c>,
-  /// sets their additivity flag to <c>true</c> and sets the level
+  /// the level of all non-root loggers to <see langword="null"/>,
+  /// sets their additivity flag to <see langword="true"/> and sets the level
   /// of the root logger to <see cref="Level.Debug"/>. Moreover,
   /// message disabling is set to its default "off" value.
   /// </para>    
@@ -364,8 +364,8 @@ public static class LogManager
   /// <para>
   /// Reset all values contained in the repository instance to their
   /// defaults.  This removes all appenders from all loggers, sets
-  /// the level of all non-root loggers to <c>null</c>,
-  /// sets their additivity flag to <c>true</c> and sets the level
+  /// the level of all non-root loggers to <see langword="null"/>,
+  /// sets their additivity flag to <see langword="true"/> and sets the level
   /// of the root logger to <see cref="Level.Debug"/>. Moreover,
   /// message disabling is set to its default "off" value.
   /// </para>    
@@ -496,7 +496,7 @@ public static class LogManager
   /// Flushes logging events buffered in all configured appenders in the default repository.
   /// </summary>
   /// <param name="millisecondsTimeout">The maximum time in milliseconds to wait for logging events from asynchronous appenders to be flushed.</param>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   public static bool Flush(int millisecondsTimeout)
   {
     if (LoggerManager.GetRepository(Assembly.GetCallingAssembly()) is not IFlushable flushableRepository)
@@ -522,7 +522,7 @@ public static class LogManager
   /// <returns>The wrapper objects for the loggers specified.</returns>
   private static ILog[] WrapLoggers(ILogger[] loggers)
   {
-    var results = new ILog[loggers.Length];
+    ILog[] results = new ILog[loggers.Length];
     for (int i = 0; i < loggers.Length; i++)
     {
       results[i] = WrapLogger(loggers[i]);

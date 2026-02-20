@@ -84,9 +84,9 @@ public class TimeEvaluator(int interval) : ITriggeringEventEvaluator
   /// Is this <paramref name="loggingEvent"/> the triggering event?
   /// </summary>
   /// <param name="loggingEvent">The event to check</param>
-  /// <returns>This method returns <c>true</c>, if the specified time period 
+  /// <returns>This method returns <see langword="true"/>, if the specified time period 
   /// <see cref="Interval"/> has passed since last check.. 
-  /// Otherwise it returns <c>false</c></returns>
+  /// Otherwise it returns <see langword="false"/></returns>
   /// <remarks>
   /// <para>
   /// This evaluator will trigger if the specified time period 

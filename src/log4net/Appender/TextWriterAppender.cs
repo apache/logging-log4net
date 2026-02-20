@@ -54,7 +54,7 @@ public class TextWriterAppender : AppenderSkeleton
   /// append operation.
   /// </para>
   /// <para>
-  /// If this option is set to <c>false</c>, then the underlying 
+  /// If this option is set to <see langword="false"/>, then the underlying 
   /// stream can defer persisting the logging event to a later 
   /// time.
   /// </para>
@@ -110,7 +110,7 @@ public class TextWriterAppender : AppenderSkeleton
   /// layout has been set. 
   /// </para>
   /// </remarks>
-  /// <returns><c>false</c> if any of the preconditions fail.</returns>
+  /// <returns><see langword="false"/> if any of the preconditions fail.</returns>
   protected override bool PreAppendCheck()
   {
     if (!base.PreAppendCheck())
@@ -372,7 +372,7 @@ public class TextWriterAppender : AppenderSkeleton
   /// Flushes any buffered log data.
   /// </summary>
   /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   public override bool Flush(int millisecondsTimeout)
   {
     // Nothing to do if ImmediateFlush is true

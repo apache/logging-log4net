@@ -834,7 +834,7 @@ public interface ILog : ILoggerWrapper
   /// Checks if this logger is enabled for the <see cref="Level.Debug"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Debug"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Debug"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// <para>
@@ -905,7 +905,7 @@ public interface ILog : ILoggerWrapper
   /// Checks if this logger is enabled for the <see cref="Level.Info"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Info"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Info"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.
@@ -919,7 +919,7 @@ public interface ILog : ILoggerWrapper
   /// Checks if this logger is enabled for the <see cref="Level.Warn"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Warn"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Warn"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.
@@ -933,7 +933,7 @@ public interface ILog : ILoggerWrapper
   /// Checks if this logger is enabled for the <see cref="Level.Error"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Error"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Error"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.
@@ -947,7 +947,7 @@ public interface ILog : ILoggerWrapper
   /// Checks if this logger is enabled for the <see cref="Level.Fatal"/> level.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this logger is enabled for <see cref="Level.Fatal"/> events, <c>false</c> otherwise.
+  /// <see langword="true"/> if this logger is enabled for <see cref="Level.Fatal"/> events, <see langword="false"/> otherwise.
   /// </value>
   /// <remarks>
   /// For more information see <see cref="ILog.IsDebugEnabled"/>.

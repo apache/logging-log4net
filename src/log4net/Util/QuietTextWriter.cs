@@ -72,7 +72,7 @@ public class QuietTextWriter : TextWriterAdapter
   /// Gets a value indicating whether this writer is closed.
   /// </summary>
   /// <value>
-  /// <c>true</c> if this writer is closed, otherwise <c>false</c>.
+  /// <see langword="true"/> if this writer is closed, otherwise <see langword="false"/>.
   /// </value>
   /// <remarks>
   /// <para>

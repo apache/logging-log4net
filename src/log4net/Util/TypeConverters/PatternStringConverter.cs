@@ -49,7 +49,7 @@ internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   /// <returns>true if the conversion is possible</returns>
   /// <remarks>
   /// <para>
-  /// Returns <c>true</c> if the <paramref name="targetType"/> is
+  /// Returns <see langword="true"/> if the <paramref name="targetType"/> is
   /// assignable from a <see cref="string"/> type.
   /// </para>
   /// </remarks>
@@ -86,7 +86,7 @@ internal sealed class PatternStringConverter : IConvertTo, IConvertFrom
   /// </summary>
   /// <param name="sourceType">the type to convert</param>
   /// <returns>
-  /// <c>True</c> if the <paramref name="sourceType"/> is
+  /// <see langword="true"/> if the <paramref name="sourceType"/> is
   /// the <see cref="string"/> type.
   /// </returns>
   public bool CanConvertFrom(System.Type sourceType) => sourceType == typeof(string);

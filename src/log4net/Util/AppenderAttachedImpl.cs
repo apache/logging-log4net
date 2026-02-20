@@ -185,7 +185,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// Gets all attached appenders.
   /// </summary>
   /// <returns>
-  /// A collection of attached appenders, or <c>null</c> if there
+  /// A collection of attached appenders, or <see langword="null"/> if there
   /// are no attached appenders.
   /// </returns>
   /// <remarks>
@@ -211,7 +211,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
   /// </summary>
   /// <param name="name">The name of the appender to get.</param>
   /// <returns>
-  /// The appender with the name specified, or <c>null</c> if no appender with the
+  /// The appender with the name specified, or <see langword="null"/> if no appender with the
   /// specified name is found.
   /// </returns>
   /// <remarks>

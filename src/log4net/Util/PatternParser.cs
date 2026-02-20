@@ -32,7 +32,7 @@ namespace log4net.Util;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The <c>PatternParser</c> processes a pattern string and
+/// The <see cref="PatternParser"/> processes a pattern string and
 /// returns a chain of <see cref="PatternConverter"/> objects.
 /// </para>
 /// </remarks>
@@ -157,7 +157,7 @@ public sealed class PatternParser
           ProcessLiteral(pattern.Substring(offset, i - offset));
           offset = i + 1;
 
-          var formattingInfo = new FormattingInfo();
+          FormattingInfo formattingInfo = new();
 
           // Process formatting options
 

@@ -51,7 +51,7 @@ public interface ILogger
   /// the stack boundary into the logging system for this call.</param>
   /// <param name="level">The level of the message to be logged.</param>
   /// <param name="message">The message object to log.</param>
-  /// <param name="exception">the exception to log, including its stack trace. Pass <c>null</c> to not log an exception.</param>
+  /// <param name="exception">the exception to log, including its stack trace. Pass <see langword="null"/> to not log an exception.</param>
   /// <remarks>
   /// <para>
   /// This generic form is intended to be used by wrappers.
@@ -76,7 +76,7 @@ public interface ILogger
   /// </summary>
   /// <param name="level">The level to check.</param>
   /// <returns>
-  /// <c>true</c> if this logger is enabled for <c>level</c>, otherwise <c>false</c>.
+  /// <see langword="true"/> if this logger is enabled for <c>level</c>, otherwise <see langword="false"/>.
   /// </returns>
   bool IsEnabledFor(Level? level);
 

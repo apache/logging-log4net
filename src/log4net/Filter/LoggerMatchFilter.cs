@@ -34,8 +34,8 @@ namespace log4net.Filter;
 /// <see cref="LoggingEvent.LoggerName"/> of the <see cref="LoggingEvent"/> starts 
 /// with the value of the <see cref="LoggerToMatch"/> option, then the 
 /// <see cref="Decide"/> method returns <see cref="FilterDecision.Accept"/> in 
-/// case the <see cref="AcceptOnMatch"/> option value is set to <c>true</c>, 
-/// if it is <c>false</c> then <see cref="FilterDecision.Deny"/> is returned.
+/// case the <see cref="AcceptOnMatch"/> option value is set to <see langword="true"/>, 
+/// if it is <see langword="false"/> then <see cref="FilterDecision.Deny"/> is returned.
 /// </para>
 /// </remarks>
 /// <author>Daniel Cazzulino</author>
@@ -52,7 +52,7 @@ public class LoggerMatchFilter : FilterSkeleton
   /// logging event, otherwise it will <see cref="FilterDecision.Deny"/> the event.
   /// </para>
   /// <para>
-  /// The default is <c>true</c> i.e. to <see cref="FilterDecision.Accept"/> the event.
+  /// The default is <see langword="true"/> i.e. to <see cref="FilterDecision.Accept"/> the event.
   /// </para>
   /// </remarks>
   public bool AcceptOnMatch { get; set; } = true;

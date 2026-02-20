@@ -51,6 +51,6 @@ public interface IFlushable
   /// </para>
   /// </remarks>
   /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-  /// <returns><c>True</c> if all logging events were flushed successfully, else <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   bool Flush(int millisecondsTimeout);
 }

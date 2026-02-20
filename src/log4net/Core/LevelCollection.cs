@@ -44,8 +44,8 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     /// Advances the enumerator to the next element in the collection.
     /// </summary>
     /// <returns>
-    /// <c>true</c> if the enumerator was successfully advanced to the next element; 
-    /// <c>false</c> if the enumerator has passed the end of the collection.
+    /// <see langword="true"/> if the enumerator was successfully advanced to the next element; 
+    /// <see langword="false"/> if the enumerator has passed the end of the collection.
     /// </returns>
     /// <exception cref="InvalidOperationException">
     /// The collection was modified after the enumerator was created.
@@ -64,35 +64,35 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   private int _version;
 
   /// <summary>
-  /// Creates a read-only wrapper for a <c>LevelCollection</c> instance.
+  /// Creates a read-only wrapper for a <see cref="LevelCollection"/> instance.
   /// </summary>
   /// <param name="list">list to create a readonly wrapper arround</param>
   /// <returns>
-  /// A <c>LevelCollection</c> wrapper that is read-only.
+  /// A <see cref="LevelCollection"/> wrapper that is read-only.
   /// </returns>
   public static LevelCollection ReadOnly(LevelCollection list)
     => new ReadOnlyLevelCollection(list.EnsureNotNull());
 
   /// <summary>
-  /// Initializes a new instance of the <c>LevelCollection</c> class
+  /// Initializes a new instance of the <see cref="LevelCollection"/> class
   /// that is empty and has the default initial capacity.
   /// </summary>
   public LevelCollection() => _array = new Level[DefaultCapacity];
 
   /// <summary>
-  /// Initializes a new instance of the <c>LevelCollection</c> class
+  /// Initializes a new instance of the <see cref="LevelCollection"/> class
   /// that has the specified initial capacity.
   /// </summary>
   /// <param name="capacity">
-  /// The number of elements that the new <c>LevelCollection</c> is initially capable of storing.
+  /// The number of elements that the new <see cref="LevelCollection"/> is initially capable of storing.
   /// </param>
   public LevelCollection(int capacity) => _array = new Level[capacity];
 
   /// <summary>
-  /// Initializes a new instance of the <c>LevelCollection</c> class
-  /// that contains elements copied from the specified <c>LevelCollection</c>.
+  /// Initializes a new instance of the <see cref="LevelCollection"/> class
+  /// that contains elements copied from the specified <see cref="LevelCollection"/>.
   /// </summary>
-  /// <param name="collection">The <c>LevelCollection</c> whose elements are copied to the new collection.</param>
+  /// <param name="collection">The <see cref="LevelCollection"/> whose elements are copied to the new collection.</param>
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2214:Do not call overridable methods in constructors")]
   public LevelCollection(LevelCollection collection)
   {
@@ -101,7 +101,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Initializes a new instance of the <c>LevelCollection</c> class
+  /// Initializes a new instance of the <see cref="LevelCollection"/> class
   /// that contains elements copied from the specified <see cref="Level"/> array.
   /// </summary>
   /// <param name="array">The <see cref="Level"/> array whose elements are copied to the new list.</param>
@@ -113,7 +113,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Initializes a new instance of the <c>LevelCollection</c> class
+  /// Initializes a new instance of the <see cref="LevelCollection"/> class
   /// that contains elements copied from the specified <see cref="Level"/> collection.
   /// </summary>
   /// <param name="collection">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
@@ -125,7 +125,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Initializes a new instance of the <c>LevelCollection</c> class
+  /// Initializes a new instance of the <see cref="LevelCollection"/> class
   /// that contains elements copied from the specified <see cref="Level"/> collection.
   /// </summary>
   /// <param name="collection">The <see cref="Level"/> collection whose elements are copied to the new list.</param>
@@ -154,19 +154,19 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   protected internal LevelCollection(Tag _) => _array = Array.Empty<Level>();
 
   /// <summary>
-  /// Gets the number of elements actually contained in the <c>LevelCollection</c>.
+  /// Gets the number of elements actually contained in the <see cref="LevelCollection"/>.
   /// </summary>
   public virtual int Count { get; private set; }
 
   /// <summary>
-  /// Copies the entire <c>LevelCollection</c> to a one-dimensional
+  /// Copies the entire <see cref="LevelCollection"/> to a one-dimensional
   /// <see cref="Level"/> array.
   /// </summary>
   /// <param name="array">The one-dimensional <see cref="Level"/> array to copy to.</param>
   public virtual void CopyTo(Level[] array) => CopyTo(array, 0);
 
   /// <summary>
-  /// Copies the entire <c>LevelCollection</c> to a one-dimensional
+  /// Copies the entire <see cref="LevelCollection"/> to a one-dimensional
   /// <see cref="Level"/> array, starting at the specified index of the target array.
   /// </summary>
   /// <param name="array">The one-dimensional <see cref="Level"/> array to copy to.</param>
@@ -217,9 +217,9 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds a <see cref="Level"/> to the end of the <c>LevelCollection</c>.
+  /// Adds a <see cref="Level"/> to the end of the <see cref="LevelCollection"/>.
   /// </summary>
-  /// <param name="item">The <see cref="Level"/> to be added to the end of the <c>LevelCollection</c>.</param>
+  /// <param name="item">The <see cref="Level"/> to be added to the end of the <see cref="LevelCollection"/>.</param>
   /// <returns>The index at which the value has been added.</returns>
   public virtual int Add(Level item)
   {
@@ -235,7 +235,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Removes all elements from the <c>LevelCollection</c>.
+  /// Removes all elements from the <see cref="LevelCollection"/>.
   /// </summary>
   public virtual void Clear()
   {
@@ -250,7 +250,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   /// <returns>A new <see cref="LevelCollection"/> with a shallow copy of the collection data.</returns>
   public virtual object Clone()
   {
-    var newCol = new LevelCollection(Count);
+    LevelCollection newCol = new(Count);
     Array.Copy(_array, 0, newCol._array, 0, Count);
     newCol.Count = Count;
     newCol._version = _version;
@@ -259,10 +259,10 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Determines whether a given <see cref="Level"/> is in the <c>LevelCollection</c>.
+  /// Determines whether a given <see cref="Level"/> is in the <see cref="LevelCollection"/>.
   /// </summary>
   /// <param name="item">The <see cref="Level"/> to check for.</param>
-  /// <returns><c>true</c> if <paramref name="item"/> is found in the <c>LevelCollection</c>; otherwise, <c>false</c>.</returns>
+  /// <returns><see langword="true"/> if <paramref name="item"/> is found in the <see cref="LevelCollection"/>; otherwise, <see langword="false"/>.</returns>
   public virtual bool Contains(Level item)
   {
     for (int i = 0; i != Count; ++i)
@@ -277,12 +277,12 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
 
   /// <summary>
   /// Returns the zero-based index of the first occurrence of a <see cref="Level"/>
-  /// in the <c>LevelCollection</c>.
+  /// in the <see cref="LevelCollection"/>.
   /// </summary>
-  /// <param name="item">The <see cref="Level"/> to locate in the <c>LevelCollection</c>.</param>
+  /// <param name="item">The <see cref="Level"/> to locate in the <see cref="LevelCollection"/>.</param>
   /// <returns>
   /// The zero-based index of the first occurrence of <paramref name="item"/> 
-  /// in the entire <c>LevelCollection</c>, if found; otherwise, -1.
+  /// in the entire <see cref="LevelCollection"/>, if found; otherwise, -1.
   ///  </returns>
   public virtual int IndexOf(Level item)
   {
@@ -297,7 +297,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Inserts an element into the <c>LevelCollection</c> at the specified index.
+  /// Inserts an element into the <see cref="LevelCollection"/> at the specified index.
   /// </summary>
   /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
   /// <param name="item">The <see cref="Level"/> to insert.</param>
@@ -326,11 +326,11 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Removes the first occurrence of a specific <see cref="Level"/> from the <c>LevelCollection</c>.
+  /// Removes the first occurrence of a specific <see cref="Level"/> from the <see cref="LevelCollection"/>.
   /// </summary>
-  /// <param name="item">The <see cref="Level"/> to remove from the <c>LevelCollection</c>.</param>
+  /// <param name="item">The <see cref="Level"/> to remove from the <see cref="LevelCollection"/>.</param>
   /// <exception cref="ArgumentException">
-  /// The specified <see cref="Level"/> was not found in the <c>LevelCollection</c>.
+  /// The specified <see cref="Level"/> was not found in the <see cref="LevelCollection"/>.
   /// </exception>
   public virtual void Remove(Level item)
   {
@@ -345,7 +345,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Removes the element at the specified index of the <c>LevelCollection</c>.
+  /// Removes the element at the specified index of the <see cref="LevelCollection"/>.
   /// </summary>
   /// <param name="index">The zero-based index of the element to remove.</param>
   /// <exception cref="ArgumentOutOfRangeException">
@@ -385,13 +385,13 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   public virtual bool IsReadOnly => false;
 
   /// <summary>
-  /// Returns an enumerator that can iterate through the <c>LevelCollection</c>.
+  /// Returns an enumerator that can iterate through the <see cref="LevelCollection"/>.
   /// </summary>
-  /// <returns>An <see cref="Enumerator"/> for the entire <c>LevelCollection</c>.</returns>
+  /// <returns>An <see cref="Enumerator"/> for the entire <see cref="LevelCollection"/>.</returns>
   public virtual ILevelCollectionEnumerator GetEnumerator() => new Enumerator(this);
 
   /// <summary>
-  /// Gets or sets the number of elements the <c>LevelCollection</c> can contain.
+  /// Gets or sets the number of elements the <see cref="LevelCollection"/> can contain.
   /// </summary>
   public virtual int Capacity
   {
@@ -420,10 +420,10 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds the elements of another <c>LevelCollection</c> to the current <c>LevelCollection</c>.
+  /// Adds the elements of another <see cref="LevelCollection"/> to the current <see cref="LevelCollection"/>.
   /// </summary>
-  /// <param name="collection">The <c>LevelCollection</c> whose elements should be added to the end of the current <c>LevelCollection</c>.</param>
-  /// <returns>The new <see cref="Count"/> of the <c>LevelCollection</c>.</returns>
+  /// <param name="collection">The <see cref="LevelCollection"/> whose elements should be added to the end of the current <see cref="LevelCollection"/>.</param>
+  /// <returns>The new <see cref="Count"/> of the <see cref="LevelCollection"/>.</returns>
   public virtual int AddRange(LevelCollection collection)
   {
     if (Count + collection.EnsureNotNull().Count >= _array.Length)
@@ -439,10 +439,10 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds the elements of a <see cref="Level"/> array to the current <c>LevelCollection</c>.
+  /// Adds the elements of a <see cref="Level"/> array to the current <see cref="LevelCollection"/>.
   /// </summary>
-  /// <param name="array">The <see cref="Level"/> array whose elements should be added to the end of the <c>LevelCollection</c>.</param>
-  /// <returns>The new <see cref="Count"/> of the <c>LevelCollection</c>.</returns>
+  /// <param name="array">The <see cref="Level"/> array whose elements should be added to the end of the <see cref="LevelCollection"/>.</param>
+  /// <returns>The new <see cref="Count"/> of the <see cref="LevelCollection"/>.</returns>
   public virtual int AddRange(Level[] array)
   {
     if (Count + array.EnsureNotNull().Length >= _array.Length)
@@ -458,10 +458,10 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
   }
 
   /// <summary>
-  /// Adds the elements of a <see cref="Level"/> collection to the current <c>LevelCollection</c>.
+  /// Adds the elements of a <see cref="Level"/> collection to the current <see cref="LevelCollection"/>.
   /// </summary>
-  /// <param name="collection">The <see cref="Level"/> collection whose elements should be added to the end of the <c>LevelCollection</c>.</param>
-  /// <returns>The new <see cref="Count"/> of the <c>LevelCollection</c>.</returns>
+  /// <param name="collection">The <see cref="Level"/> collection whose elements should be added to the end of the <see cref="LevelCollection"/>.</param>
+  /// <returns>The new <see cref="Count"/> of the <see cref="LevelCollection"/>.</returns>
   public virtual int AddRange(ICollection collection)
   {
     if (Count + collection.EnsureNotNull().Count >= _array.Length)
@@ -547,7 +547,7 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     private readonly int _version;
 
     /// <summary>
-    /// Initializes a new instance of the <c>Enumerator</c> class.
+    /// Initializes a new instance of the <see cref="Enumerator"/> class.
     /// </summary>
     /// <param name="tc"></param>
     internal Enumerator(LevelCollection tc)
@@ -566,8 +566,8 @@ public class LevelCollection : ICollection, IList, IEnumerable, ICloneable
     /// Advances the enumerator to the next element in the collection.
     /// </summary>
     /// <returns>
-    /// <c>true</c> if the enumerator was successfully advanced to the next element; 
-    /// <c>false</c> if the enumerator has passed the end of the collection.
+    /// <see langword="true"/> if the enumerator was successfully advanced to the next element; 
+    /// <see langword="false"/> if the enumerator has passed the end of the collection.
     /// </returns>
     /// <exception cref="InvalidOperationException">
     /// The collection was modified after the enumerator was created.
