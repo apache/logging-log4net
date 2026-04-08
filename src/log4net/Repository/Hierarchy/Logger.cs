@@ -594,4 +594,37 @@ public abstract class Logger(string name) : IAppenderAttachable, ILogger
 
     CallAppenders(logEvent);
   }
-}
+
+  /// <summary>
+    /// Atomically replaces all appenders with the provided collection.
+      /// </summary>
+        /// <param name="appenders">The new set of appenders to attach.</param>
+          /// <remarks>
+            /// <para>
+              /// This method removes the existing appenders and attaches all new
+                /// appenders inside a single writer lock, minimizing the window
+                  /// during which the logger has no appenders. This reduces silent log
+                    /// event loss during reconfiguration.
+                      /// </para>
+                        /// </remarks>
+                          public virtual void ReplaceAppenders(IEnumerable<IAppender> appenders)
+                            {
+                                _appenderLock.AcquireWriterLock();
+                                    try
+                                        {
+                                              _appenderAttachedImpl?.RemoveAllAppenders();
+                                                    _appenderAttachedImpl = null;
+
+                                                          foreach (IAppender appender in appenders)
+                                                                {
+                                                                        _appenderAttachedImpl ??= new();
+                                                                                _appenderAttachedImpl.AddAppender(appender);
+                                                                                      }
+                                                                                          }
+                                                                                              finally
+                                                                                                  {
+                                                                                                        _appenderLock.ReleaseWriterLock();
+                                                                                                            }
+                                                                                                              }
+                                                                                                              
+                            }
