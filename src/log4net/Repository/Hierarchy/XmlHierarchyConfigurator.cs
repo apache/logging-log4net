@@ -389,42 +389,57 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// <para>
   /// Parse the child elements of a &lt;logger&gt; element.
   /// </para>
+  /// <para>
+  /// Appenders are collected from XML first, then applied atomically via
+  /// <see cref="Logger.ReplaceAppenders"/>, minimizing the window during
+  /// which the logger has no appenders and silent log event loss can occur.
+  /// </para>
   /// </remarks>
   protected void ParseChildrenOfLoggerElement(XmlElement catElement, Logger log, bool isRoot)
   {
-    // Remove all existing appenders from log. They will be
-    // reconstructed if need be.
-    log.EnsureNotNull().RemoveAllAppenders();
+    log.EnsureNotNull();
+    catElement.EnsureNotNull();
 
-    foreach (XmlNode currentNode in catElement.EnsureNotNull().ChildNodes)
+    // Phase 1: resolve all new appenders from XML *before* touching the
+    // live logger. This avoids the window where the logger has no appenders.
+    var newAppenders = new List<IAppender>();
+
+    foreach (XmlNode currentNode in catElement.ChildNodes)
     {
-      if (currentNode.NodeType == XmlNodeType.Element)
+      if (currentNode.NodeType != XmlNodeType.Element)
       {
-        XmlElement currentElement = (XmlElement)currentNode;
+        continue;
+      }
 
-        if (currentElement.LocalName == AppenderRefTag)
+      XmlElement currentElement = (XmlElement)currentNode;
+
+      if (currentElement.LocalName == AppenderRefTag)
+      {
+        string refName = currentElement.GetAttribute(RefAttr);
+        if (FindAppenderByReference(currentElement) is IAppender appender)
         {
-          string refName = currentElement.GetAttribute(RefAttr);
-          if (FindAppenderByReference(currentElement) is IAppender appender)
-          {
-            LogLog.Debug(_declaringType, $"Adding appender named [{refName}] to logger [{log.Name}].");
-            log.AddAppender(appender);
-          }
-          else
-          {
-            LogLog.Error(_declaringType, $"Appender named [{refName}] not found.");
-          }
-        }
-        else if (currentElement.LocalName is LevelTag or PriorityTag)
-        {
-          ParseLevel(currentElement, log, isRoot);
+          LogLog.Debug(_declaringType, $"Resolved appender [{refName}] for logger [{log.Name}].");
+          newAppenders.Add(appender);
         }
         else
         {
-          SetParameter(currentElement, log);
+          LogLog.Error(_declaringType, $"Appender named [{refName}] not found.");
         }
       }
+      else if (currentElement.LocalName is LevelTag or PriorityTag)
+      {
+        ParseLevel(currentElement, log, isRoot);
+      }
+      else
+      {
+        SetParameter(currentElement, log);
+      }
     }
+
+    // Phase 2: atomic swap — replace all appenders in one writer lock so
+    // the logger is never in a zero-appender state for longer than it takes
+    // to acquire and release the lock (microseconds, not milliseconds).
+    log.ReplaceAppenders(newAppenders);
 
     if (log is IOptionHandler optionHandler)
     {
