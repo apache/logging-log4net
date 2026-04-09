@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Threading;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
