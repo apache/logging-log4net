@@ -610,7 +610,10 @@ public abstract class Logger(string name) : IAppenderAttachable, ILogger
   /// </remarks>
   public virtual void ReplaceAppenders(IEnumerable<IAppender> appenders)
   {
-    appenders.EnsureNotNull();
+    if (appenders == null)
+    {
+      throw new ArgumentNullException(nameof(appenders));
+    }
 
     _appenderLock.AcquireWriterLock();
     try
