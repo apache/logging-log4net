@@ -283,7 +283,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   {
     Root.Level = LevelMap.LookupWithDefault(Level.Debug);
     Threshold = LevelMap.LookupWithDefault(Level.All);
-    
+
     Shutdown(); // nested locks are OK  
 
     foreach (Logger logger in GetCurrentLoggers().OfType<Logger>())

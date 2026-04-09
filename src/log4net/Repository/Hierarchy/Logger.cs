@@ -610,18 +610,13 @@ public abstract class Logger(string name) : IAppenderAttachable, ILogger
   /// </remarks>
   public virtual void ReplaceAppenders(IEnumerable<IAppender> appenders)
   {
-    if (appenders == null)
-    {
-      throw new ArgumentNullException(nameof(appenders));
-    }
-
     _appenderLock.AcquireWriterLock();
     try
     {
       _appenderAttachedImpl?.RemoveAllAppenders();
       _appenderAttachedImpl = null;
 
-      foreach (IAppender appender in appenders)
+      foreach (IAppender appender in appenders.EnsureNotNull())
       {
         _appenderAttachedImpl ??= new();
         _appenderAttachedImpl.AddAppender(appender);

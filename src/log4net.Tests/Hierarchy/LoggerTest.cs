@@ -360,4 +360,47 @@ public sealed class LoggerTest
     Assert.That(log.GetAppender("testAppender1"), Is.Null);
     Assert.That(log.GetAppender("testAppender2"), Is.SameAs(a2));
   }
+
+  /// <summary>
+  /// Tests that ReplaceAppenders never leaves the logger in an appender-free state
+  /// that could cause silent log event loss during reconfiguration.
+  /// A reader thread continuously checks that the appender count never drops to zero
+  /// while the writer thread calls ReplaceAppenders.
+  /// </summary>
+  [Test]
+  public void TestReplaceAppendersIsAtomic()
+  {
+    Logger log = (Logger)LogManager.GetLogger("ReplaceAppendersAtomicTest").Logger;
+    CountingAppender initial = new() { Name = "initial" };
+    log.AddAppender(initial);
+
+    bool sawZeroAppenders = false;
+    bool stop = false;
+
+    // Reader thread: continuously observe the appender count
+    Thread reader = new(() =>
+    {
+      while (!stop)
+      {
+        if (log.Appenders.Count == 0)
+        {
+          sawZeroAppenders = true;
+        }
+      }
+    });
+    reader.Start();
+
+    // Writer thread: perform many rapid replacements
+    for (int i = 0; i < 1000; i++)
+    {
+      CountingAppender next = new() { Name = $"appender{i}" };
+      log.ReplaceAppenders(new IAppender[] { next });
+    }
+
+    stop = true;
+    reader.Join();
+
+    Assert.That(sawZeroAppenders, Is.False,
+      "ReplaceAppenders must never leave the logger with zero appenders (atomicity violation)");
+  }
 }
