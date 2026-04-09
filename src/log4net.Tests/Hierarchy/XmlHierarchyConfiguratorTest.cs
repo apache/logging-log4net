@@ -23,6 +23,7 @@ using System.Xml;
 using NUnit.Framework;
 
 using log4net.Repository.Hierarchy;
+using HierarchyClass = log4net.Repository.Hierarchy.Hierarchy;
 
 namespace log4net.Tests.Hierarchy;
 
@@ -72,7 +73,7 @@ public class XmlHierarchyConfiguratorTest
   [Test]
   public void TestEmittedNoAppenderWarningReset()
   {
-    var hierarchy = new Hierarchy();
+    var hierarchy = new HierarchyClass();
     hierarchy.EmittedNoAppenderWarning = true;
     Assert.That(hierarchy.EmittedNoAppenderWarning, Is.True);
 
