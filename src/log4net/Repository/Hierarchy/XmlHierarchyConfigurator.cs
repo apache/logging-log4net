@@ -146,6 +146,9 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
       LogLog.Debug(_declaringType, "Configuration reset before reading config.");
     }
 
+    // A configuration is about to happen, so we can emit the warning again
+    hierarchy.EmittedNoAppenderWarning = false;
+
     /* Building Appender objects, placing them in a local namespace
        for future reference */
 
@@ -402,7 +405,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
 
     // Phase 1: resolve all new appenders from XML *before* touching the
     // live logger. This avoids the window where the logger has no appenders.
-    var newAppenders = new List<IAppender>();
+    List<IAppender> newAppenders = new();
 
     foreach (XmlNode currentNode in catElement.ChildNodes)
     {

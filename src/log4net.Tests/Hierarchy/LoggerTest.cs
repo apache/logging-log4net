@@ -342,4 +342,22 @@ public sealed class LoggerTest
     Logger a1 = (Logger)h.GetLogger("a");
     Assert.That(a1, Is.SameAs(a0));
   }
+
+  /// <summary>
+  /// Tests the ReplaceAppenders method to ensure it replaces existing appenders
+  /// </summary>
+  [Test]
+  public void TestReplaceAppenders()
+  {
+    Logger log = (Logger)LogManager.GetLogger("ReplaceAppendersTest").Logger;
+    CountingAppender a1 = new() { Name = "testAppender1" };
+    log.AddAppender(a1);
+    Assert.That(log.Appenders, Has.Count.EqualTo(1));
+
+    CountingAppender a2 = new() { Name = "testAppender2" };
+    log.ReplaceAppenders(new IAppender[] { a2 });
+    Assert.That(log.Appenders, Has.Count.EqualTo(1));
+    Assert.That(log.GetAppender("testAppender1"), Is.Null);
+    Assert.That(log.GetAppender("testAppender2"), Is.SameAs(a2));
+  }
 }

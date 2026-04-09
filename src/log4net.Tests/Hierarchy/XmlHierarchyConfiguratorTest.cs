@@ -68,4 +68,20 @@ public class XmlHierarchyConfiguratorTest
       SetParameter(element, target);
     }
   }
+
+  [Test]
+  public void TestEmittedNoAppenderWarningReset()
+  {
+    var hierarchy = new Hierarchy();
+    hierarchy.EmittedNoAppenderWarning = true;
+    Assert.That(hierarchy.EmittedNoAppenderWarning, Is.True);
+
+    XmlDocument doc = new();
+    doc.LoadXml("<log4net></log4net>");
+    
+    XmlHierarchyConfigurator config = new(hierarchy);
+    config.Configure(doc["log4net"]);
+
+    Assert.That(hierarchy.EmittedNoAppenderWarning, Is.False);
+  }
 }

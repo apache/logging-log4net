@@ -283,10 +283,6 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   {
     Root.Level = LevelMap.LookupWithDefault(Level.Debug);
     Threshold = LevelMap.LookupWithDefault(Level.All);
-    // Reset the warning flag so diagnostics can fire during the next
-    // reconfiguration cycle. Without this, the "no appender" warning is
-    // silenced permanently after the first configuration.
-    EmittedNoAppenderWarning = false;
     
     Shutdown(); // nested locks are OK  
 
