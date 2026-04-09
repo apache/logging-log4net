@@ -627,4 +627,4 @@ public abstract class Logger(string name) : IAppenderAttachable, ILogger
       _appenderLock.ReleaseWriterLock();
     }
   }
-                            }
+}
