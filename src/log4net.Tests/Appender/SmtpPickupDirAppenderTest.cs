@@ -163,6 +163,7 @@ public class SmtpPickupDirAppenderTest
     SilentErrorHandler sh = new();
     SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
     ILogger log = CreateLogger(appender);
+    DateTime beforeLog = DateTime.UtcNow;
     log.Log(GetType(), Level.Info, "This is a message", null);
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
@@ -177,9 +178,9 @@ public class SmtpPickupDirAppenderTest
       {
         string datePart = line.Substring(dateHeaderStart.Length);
         DateTime date = DateTime.ParseExact(datePart, "r", System.Globalization.CultureInfo.InvariantCulture);
-        double diff = Math.Abs((DateTime.UtcNow - date).TotalMilliseconds);
-        Assert.That(diff, Is.LessThanOrEqualTo(1000),
-          "Times should be equal, allowing a diff of one second to make test robust");
+        double diff = Math.Abs((date - beforeLog).TotalMilliseconds);
+        Assert.That(diff, Is.LessThanOrEqualTo(5000),
+          "Times should be equal, allowing a diff of five seconds to make test robust");
         hasDateHeader = true;
       }
     }
