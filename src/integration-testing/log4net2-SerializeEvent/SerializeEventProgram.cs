@@ -22,7 +22,7 @@ var log4Net2Event = new LoggingEvent(new LoggingEventData
 {
   // Deliberate use of obsolete local timestamp.
 #pragma warning disable CS0618 // Type or member is obsolete
-  TimeStamp = localTimestamp,
+  // TimeStamp = localTimestamp,
 #pragma warning restore CS0618 // Type or member is obsolete
 
   LoggerName = "aLogger",

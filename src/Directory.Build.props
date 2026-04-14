@@ -14,6 +14,7 @@
     <SatelliteResourceLanguages>en;en-US</SatelliteResourceLanguages>
   </PropertyGroup>
   <PropertyGroup Label="Package Versions">
+    <Log4NetPackageVersion>3.3.0</Log4NetPackageVersion>
     <SystemConfigurationConfigurationManagerPackageVersion>4.5.0</SystemConfigurationConfigurationManagerPackageVersion>
     <MicrosoftSourceLinkGitHubPackageVersion>8.0.0</MicrosoftSourceLinkGitHubPackageVersion>
     <!-- Analyzer packages -->
