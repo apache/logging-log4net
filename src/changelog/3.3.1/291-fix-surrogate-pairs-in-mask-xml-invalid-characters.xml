@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="290" link="https://github.com/apache/logging-log4net/issues/290"/>
+  <issue id="291" link="https://github.com/apache/logging-log4net/pull/291"/>
+  <description format="asciidoc">
+    fix silent corruption of supplementary Unicode characters (U+10000–U+10FFFF) in `MaskXmlInvalidCharacters`:
+    valid UTF-16 surrogate pairs are now preserved instead of being replaced with the mask string
+    (reported by @N0tre3l, fixed by @freeandnil in https://github.com/apache/logging-log4net/pull/291[#291])
+  </description>
+</entry>

@@ -17,8 +17,9 @@
 //
 #endregion
 
-using System.Xml;
+using System;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace log4net.Util;
 
@@ -110,9 +111,15 @@ public static class Transform
   /// This method replaces any illegal characters in the input string
   /// with the mask string specified.
   /// </para>
+  /// <para>
+  /// Supplementary characters (U+10000–U+10FFFF) encoded as valid UTF-16 surrogate
+  /// pairs are preserved; only lone surrogates and other illegal code units are masked.
+  /// </para>
   /// </remarks>
-  public static string MaskXmlInvalidCharacters(string textData, string mask) 
-    => _invalidchars.Replace(textData, mask);
+  public static string MaskXmlInvalidCharacters(string textData, string mask)
+    => _invalidChars.Replace(textData, m =>
+        // A valid surrogate pair represents a legal supplementary character — preserve it.
+        m.Value.Length == 2 ? m.Value : mask);
 
   /// <summary>
   /// Count the number of times that the substring occurs in the text
@@ -127,29 +134,38 @@ public static class Transform
   /// </remarks>
   private static int CountSubstrings(string text, string substring)
   {
+    if (text.Length == 0 || substring.Length == 0)
+    {
+      return 0;
+    }
+
+    // Use the char overload for single-character substrings — avoids string
+    // comparison overhead; all current callers pass single ASCII characters.
+    if (substring.Length == 1)
+    {
+      int charCount = 0;
+      char target = substring[0];
+      foreach (char c in text)
+      {
+        if (c == target)
+        {
+          charCount++;
+        }
+      }
+      return charCount;
+    }
+
     int count = 0;
     int offset = 0;
-    int length = text.Length;
     int substringLength = substring.Length;
-
-    if (length == 0)
+    while (offset < text.Length)
     {
-      return 0;
-    }
-    if (substringLength == 0)
-    {
-      return 0;
-    }
-
-    while (offset < length)
-    {
-      int index = text.IndexOf(substring, offset);
-
+      // Ordinal avoids culture-sensitive comparison for these ASCII-only tokens.
+      int index = text.IndexOf(substring, offset, StringComparison.Ordinal);
       if (index == -1)
       {
         break;
       }
-
       count++;
       offset = index + substringLength;
     }
@@ -160,7 +176,12 @@ public static class Transform
   private const string CdataUnescapableToken = "]]";
 
   /// <summary>
-  /// Characters illegal in XML 1.0
+  /// Matches either a valid UTF-16 surrogate pair (preserved) or a single character
+  /// that is illegal in XML 1.0 (replaced). The surrogate-pair alternative must come
+  /// first so the engine consumes both code units together before the single-char
+  /// alternative can match them individually.
   /// </summary>
-  private static readonly Regex _invalidchars = new(@"[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]", RegexOptions.Compiled);
+  private static readonly Regex _invalidChars = new(
+    @"[\uD800-\uDBFF][\uDC00-\uDFFF]|[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD]",
+    RegexOptions.Compiled);
 }
