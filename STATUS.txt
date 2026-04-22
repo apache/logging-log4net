@@ -19,6 +19,7 @@ Active Committers
 =================
 * Davyd McColl (davydm)
 * Jan Friedrich (freeandnil)
+* Grzegorz Dziadkiewicz (gdziadkiewicz)
 
 Former Committers
 ================
