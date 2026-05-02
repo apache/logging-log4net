@@ -698,7 +698,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
         case Logger nodeLogger:
           parentFound = true;
           log.Parent = nodeLogger;
-          break; // no need to update the ancestors of the closest ancestor
+          return; // no need to update the ancestors of the closest ancestor
         case ProvisionNode nodeProvisionNode:
           nodeProvisionNode.Add(log);
           break;

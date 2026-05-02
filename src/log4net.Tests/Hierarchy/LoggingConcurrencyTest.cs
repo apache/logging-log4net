@@ -188,14 +188,14 @@ public class LoggingConcurrencyTest
         childLogger.Log(Level.Info, "Message from child while parent registers", null);
       });
 
-      Assert.That(factory.SecondChildCreated.Wait(TimeSpan.FromSeconds(5)), Is.True,
-        "The second child logger was not created.");
       Assert.That(childLogTask.Wait(TimeSpan.FromMilliseconds(100)), Is.False,
         "The child logger was returned before its parent logger was ready.");
 
       allowParentAssignment.Set();
 
       Assert.That(parentTask.Wait(TimeSpan.FromSeconds(5)), Is.True);
+      Assert.That(factory.SecondChildCreated.Wait(TimeSpan.FromSeconds(5)), Is.True,
+        "The second child logger was not created.");
       Assert.That(childLogTask.Wait(TimeSpan.FromSeconds(5)), Is.True);
       parentTask.GetAwaiter().GetResult();
       childLogTask.GetAwaiter().GetResult();
