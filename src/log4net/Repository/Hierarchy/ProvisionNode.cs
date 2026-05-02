@@ -23,6 +23,10 @@ using System.Collections.Generic;
 
 namespace log4net.Repository.Hierarchy;
 
+internal interface IHierarchyNode
+{
+}
+
 /// <summary>
 /// Provision nodes are used where no logger instance has been specified
 /// </summary>
@@ -38,7 +42,7 @@ namespace log4net.Repository.Hierarchy;
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-internal sealed class ProvisionNode
+internal sealed class ProvisionNode : IHierarchyNode
 {
   private readonly List<Logger> _loggers;
 

@@ -88,7 +88,7 @@ public class LoggerCreationEventArgs(Logger log) : EventArgs
 public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFactory)
   : LoggerRepositorySkeleton(properties), IBasicRepositoryConfigurator, IXmlRepositoryConfigurator
 {
-  private readonly ConcurrentDictionary<LoggerKey, object> _loggers = new(LoggerKey.ComparerInstance);
+  private readonly ConcurrentDictionary<LoggerKey, IHierarchyNode> _loggers = new(LoggerKey.ComparerInstance);
   private ILoggerFactory _defaultFactory = loggerFactory.EnsureNotNull();
   private Logger? _rootLogger;
 
@@ -108,7 +108,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// <summary>
   /// Default constructor
   /// </summary>
-  public Hierarchy() 
+  public Hierarchy()
     : this(new DefaultLoggerFactory())
   { }
 
@@ -116,7 +116,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// Construct with properties
   /// </summary>
   /// <param name="properties">The properties to pass to this repository.</param>
-  public Hierarchy(PropertiesDictionary properties) 
+  public Hierarchy(PropertiesDictionary properties)
     : this(properties, new DefaultLoggerFactory())
   { }
 
@@ -179,7 +179,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// </remarks>
   public override ILogger? Exists(string name)
   {
-    _loggers.TryGetValue(new(name.EnsureNotNull()), out object? o);
+    _loggers.TryGetValue(new(name.EnsureNotNull()), out IHierarchyNode? o);
     return o as Logger;
   }
 
@@ -526,33 +526,74 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
       $"GetLogger failed, because possibly too many threads are messing with creating the logger {name}!");
   }
 
+  //TODO 2 Introduce additional local functions to reduce duplication
+  //TODO 3 Add xml comment here
   private Logger? TryCreateLogger(LoggerKey key, ILoggerFactory factory)
   {
-    if (!_loggers.TryGetValue(key, out object? node))
+    if (_loggers.TryGetValue(key, out IHierarchyNode? node))
     {
-      Logger newLogger = CreateLogger(key.Name);
-      node = _loggers.GetOrAdd(key, newLogger);
-      if (node == newLogger)
+      switch (node)
       {
-        RegisterLogger(newLogger);
+        // Fast path - logger already exists and is fully registered
+        case Logger logger:
+          return logger;
+        // Need to create a new logger and register it, but there is already a provision node for it
+        case ProvisionNode provisionNode:
+          // Locking to stop the changes while we try to replace the provisions node with a logger
+          lock (_loggers)
+          {
+            // We need to check again if the logger has been created while we were waiting for the lock,
+            // because it is possible that another thread created the logger and replaced the provision node with a logger
+            if (!_loggers.TryGetValue(key, out IHierarchyNode node2))
+            {
+              // This should never happen, but if it does, we can just create the logger and register it
+              Logger newLogger = CreateLogger(key.Name);
+              RegisterLogger(newLogger);     
+              _loggers[key] = newLogger;
+              return newLogger;
+            }
+            // It is still a provision node, so we can create the logger and replace it
+            else if (node2 is ProvisionNode)
+            {
+              Logger newLogger = CreateLogger(key.Name);
+              UpdateChildren(provisionNode, newLogger);
+              RegisterLogger(newLogger);
+              _loggers[key] = newLogger;
+              return newLogger;
+            }
+            // Someone else created it while we were waiting for the lock, so we can just return it
+            return node2 as Logger;
+          }
       }
     }
-
-    if (node is Logger logger)
+    else
     {
-      return logger;
-    }
-
-    if (node is ProvisionNode provisionNode)
-    {
-      Logger newLogger = CreateLogger(key.Name);
-      if (_loggers.TryUpdate(key, newLogger, node))
+      // Slow path - need to create the logger and register it, no provision node a moment ago, locking to stop the changes
+      lock (_loggers)
       {
-        UpdateChildren(provisionNode, newLogger);
-        RegisterLogger(newLogger);
-        return newLogger;
+        // We won the race to create the logger
+        if (!_loggers.TryGetValue(key, out node))
+        {
+          Logger newLogger = CreateLogger(key.Name);
+          RegisterLogger(newLogger);               // wire up parents FIRST
+          _loggers[key] = newLogger;               // THEN publish
+          return newLogger;
+        }
+        // Someone else created it while we were waiting for the lock, so we can just return it
+        else if (node is Logger existingLogger)
+        {
+          return existingLogger;
+        }
+        // Someone else created a provision node while we were waiting for the lock, so we can just create the logger and register it
+        else if (node is ProvisionNode provisionNode)
+        {
+          Logger newLogger = CreateLogger(key.Name);
+          UpdateChildren(provisionNode, newLogger);
+          RegisterLogger(newLogger);
+          _loggers[key] = newLogger;
+          return newLogger;
+        }
       }
-      return null;
     }
 
     // It should be impossible to arrive here but let's keep the compiler happy.
@@ -568,6 +609,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
     void RegisterLogger(Logger logger)
     {
       UpdateParents(logger);
+      // TODO 1 Move outside the _loggers locks
       OnLoggerCreationEvent(logger);
     }
   }
@@ -628,31 +670,26 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
       string substr = name.Substring(0, i);
 
       LoggerKey key = new(substr);
-      _loggers.TryGetValue(key, out object? node);
+      _loggers.TryGetValue(key, out IHierarchyNode? node);
 
-      // Create a provision node for a future parent.
-      if (node is null)
+      switch (node)
       {
-        _loggers[key] = new ProvisionNode(log);
-      }
-      else
-      {
-        if (node is Logger nodeLogger)
-        {
+        // Create a provision node for a future parent.
+        case null:
+          _loggers[key] = new ProvisionNode(log);
+          break;
+        case Logger nodeLogger:
           parentFound = true;
           log.Parent = nodeLogger;
           break; // no need to update the ancestors of the closest ancestor
-        }
-
-        if (node is ProvisionNode nodeProvisionNode)
-        {
+        case ProvisionNode nodeProvisionNode:
           nodeProvisionNode.Add(log);
-        }
-        else
-        {
+          break;
+        default:
           LogLog.Error(_declaringType, $"Unexpected object type [{node.GetType()}] in loggers.", new LogException());
-        }
+          break;
       }
+
       if (i == 0)
       {
         // logger name starts with a dot and we've hit the start
