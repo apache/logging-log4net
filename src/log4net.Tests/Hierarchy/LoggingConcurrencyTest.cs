@@ -71,7 +71,7 @@ public class LoggingConcurrencyTest
     const int loggerCount = 20;
     const int repetitions = 20;
 
-    for (var run = 0; run < repetitions; run++)
+    for (int run = 0; run < repetitions; run++)
     {
       _memoryAppender.Clear();
 

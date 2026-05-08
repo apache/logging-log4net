@@ -595,7 +595,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
 
     if (fireLoggerCreationEvent)
     {
-      OnLoggerCreationEvent((Logger)_loggers[key]!);
+      OnLoggerCreationEvent(result.EnsureNotNull());
     }
 
     return result ?? throw new LogException("TryCreateLogger failed, because a node is neither a Logger nor a ProvisionNode!");
