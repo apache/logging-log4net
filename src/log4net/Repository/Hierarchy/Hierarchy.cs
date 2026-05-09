@@ -88,7 +88,7 @@ public class LoggerCreationEventArgs(Logger log) : EventArgs
 public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFactory)
   : LoggerRepositorySkeleton(properties), IBasicRepositoryConfigurator, IXmlRepositoryConfigurator
 {
-  private readonly ConcurrentDictionary<LoggerKey, object> _loggers = new(LoggerKey.ComparerInstance);
+  private readonly ConcurrentDictionary<LoggerKey, IHierarchyNode> _loggers = new(LoggerKey.ComparerInstance);
   private ILoggerFactory _defaultFactory = loggerFactory.EnsureNotNull();
   private Logger? _rootLogger;
 
@@ -108,7 +108,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// <summary>
   /// Default constructor
   /// </summary>
-  public Hierarchy() 
+  public Hierarchy()
     : this(new DefaultLoggerFactory())
   { }
 
@@ -116,7 +116,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// Construct with properties
   /// </summary>
   /// <param name="properties">The properties to pass to this repository.</param>
-  public Hierarchy(PropertiesDictionary properties) 
+  public Hierarchy(PropertiesDictionary properties)
     : this(properties, new DefaultLoggerFactory())
   { }
 
@@ -179,7 +179,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// </remarks>
   public override ILogger? Exists(string name)
   {
-    _loggers.TryGetValue(new(name.EnsureNotNull()), out object? o);
+    _loggers.TryGetValue(new(name.EnsureNotNull()), out IHierarchyNode? o);
     return o as Logger;
   }
 
@@ -526,37 +526,79 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
       $"GetLogger failed, because possibly too many threads are messing with creating the logger {name}!");
   }
 
+  /// <summary>
+  /// Attempts to create or retrieve a logger with the specified key.
+  /// </summary>
+  /// <param name="key">The logger key.</param>
+  /// <param name="factory">The factory to create the logger instance.</param>
+  /// <returns>The logger if successful; otherwise null to indicate retry is needed.</returns>
   private Logger? TryCreateLogger(LoggerKey key, ILoggerFactory factory)
   {
-    if (!_loggers.TryGetValue(key, out object? node))
+    Logger? result = null;
+    bool fireLoggerCreationEvent = false;
+
+    if (_loggers.TryGetValue(key, out IHierarchyNode? node))
     {
-      Logger newLogger = CreateLogger(key.Name);
-      node = _loggers.GetOrAdd(key, newLogger);
-      if (node == newLogger)
+      switch (node)
       {
-        RegisterLogger(newLogger);
+        // Fast path - logger already exists and is fully registered
+        case Logger existingLogger:
+          return existingLogger;
+        // Need to create a new logger and register it, but there is already a provision node for it
+        case ProvisionNode provisionNode:
+          // Locking to stop the changes while we try to replace the provision node with a logger
+          lock (_loggers)
+          {
+            // We need to check again if the logger has been created while we were waiting for the lock,
+            // because it is possible that another thread created the logger and replaced the provision node with a logger
+            if (!_loggers.TryGetValue(key, out IHierarchyNode nodeRechecked))
+            {
+              // This should never happen, but if it does, we can just create the logger and register it
+              CreateAndRegisterLogger();
+            }
+            // Someone else created it while we were waiting for the lock, so we can just return it
+            else if (nodeRechecked is Logger existingLogger)
+            {
+              return existingLogger;
+            }
+            // It is still a provision node, so we can create the logger and replace it
+            else if (nodeRechecked is ProvisionNode)
+            {
+              CreateAndReplaceProvisionNode(provisionNode);
+            }
+          }
+          break;
+      }
+    }
+    else
+    {
+      // Slow path - need to create the logger and register it, no provision node a moment ago, locking to stop the changes
+      lock (_loggers)
+      {
+        // We won the race to create the logger
+        if (!_loggers.TryGetValue(key, out node))
+        {
+          CreateAndRegisterLogger();
+        }
+        // Someone else created it while we were waiting for the lock, so we can just return it
+        else if (node is Logger existingLogger)
+        {
+          return existingLogger;
+        }
+        // Someone else created a provision node while we were waiting for the lock, so we can just create the logger and register it
+        else if (node is ProvisionNode provisionNode)
+        {
+          CreateAndReplaceProvisionNode(provisionNode);
+        }
       }
     }
 
-    if (node is Logger logger)
+    if (fireLoggerCreationEvent)
     {
-      return logger;
+      OnLoggerCreationEvent(result.EnsureNotNull());
     }
 
-    if (node is ProvisionNode provisionNode)
-    {
-      Logger newLogger = CreateLogger(key.Name);
-      if (_loggers.TryUpdate(key, newLogger, node))
-      {
-        UpdateChildren(provisionNode, newLogger);
-        RegisterLogger(newLogger);
-        return newLogger;
-      }
-      return null;
-    }
-
-    // It should be impossible to arrive here but let's keep the compiler happy.
-    throw new LogException("TryCreateLogger failed, because a node is neither a Logger nor a ProvisionNode!");
+    return result ?? throw new LogException("TryCreateLogger failed, because a node is neither a Logger nor a ProvisionNode!");
 
     Logger CreateLogger(string name)
     {
@@ -568,7 +610,24 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
     void RegisterLogger(Logger logger)
     {
       UpdateParents(logger);
-      OnLoggerCreationEvent(logger);
+      fireLoggerCreationEvent = true;
+    }
+
+    void CreateAndRegisterLogger()
+    {
+      Logger newLogger = CreateLogger(key.Name);
+      RegisterLogger(newLogger);
+      _loggers[key] = newLogger;
+      result = newLogger;
+    }
+
+    void CreateAndReplaceProvisionNode(ProvisionNode provisionNode)
+    {
+      Logger newLogger = CreateLogger(key.Name);
+      UpdateChildren(provisionNode, newLogger);
+      RegisterLogger(newLogger);
+      _loggers[key] = newLogger;
+      result = newLogger;
     }
   }
 
@@ -590,6 +649,10 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// <para>
   /// This method loops through all the <i>potential</i> parents of
   /// <paramref name="log"/>. There 3 possible cases:
+  /// </para>
+  /// <para>
+  /// <b>Threading:</b> This method must always be called while holding a lock on <c>_loggers</c>
+  /// to ensure consistent hierarchy state across concurrent logger creation.
   /// </para>
   /// <list type="number">
   ///    <item>
@@ -628,31 +691,26 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
       string substr = name.Substring(0, i);
 
       LoggerKey key = new(substr);
-      _loggers.TryGetValue(key, out object? node);
+      _loggers.TryGetValue(key, out IHierarchyNode? node);
 
-      // Create a provision node for a future parent.
-      if (node is null)
+      switch (node)
       {
-        _loggers[key] = new ProvisionNode(log);
-      }
-      else
-      {
-        if (node is Logger nodeLogger)
-        {
+        // Create a provision node for a future parent.
+        case null:
+          _loggers[key] = new ProvisionNode(log);
+          break;
+        case Logger nodeLogger:
           parentFound = true;
           log.Parent = nodeLogger;
-          break; // no need to update the ancestors of the closest ancestor
-        }
-
-        if (node is ProvisionNode nodeProvisionNode)
-        {
+          return; // no need to update the ancestors of the closest ancestor
+        case ProvisionNode nodeProvisionNode:
           nodeProvisionNode.Add(log);
-        }
-        else
-        {
+          break;
+        default:
           LogLog.Error(_declaringType, $"Unexpected object type [{node.GetType()}] in loggers.", new LogException());
-        }
+          break;
       }
+
       if (i == 0)
       {
         // logger name starts with a dot and we've hit the start

@@ -52,7 +52,7 @@ namespace log4net.Repository.Hierarchy;
 /// <author>Gert Driesen</author>
 /// <author>Aspi Havewala</author>
 /// <author>Douglas de la Torre</author>
-public abstract class Logger(string name) : IAppenderAttachable, ILogger
+public abstract class Logger(string name) : IHierarchyNode, IAppenderAttachable, ILogger
 {
   /// <summary>
   /// The fully qualified type of the Logger class.

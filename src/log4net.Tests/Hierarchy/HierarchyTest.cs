@@ -23,6 +23,7 @@ using System;
 using System.Threading.Tasks;
 using System.Xml;
 using log4net.Config;
+using log4net.Core;
 using log4net.Repository;
 using log4net.Tests.Appender;
 using NUnit.Framework;
@@ -220,5 +221,44 @@ public class HierarchyTest
     XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
 
     Parallel.For(0, 100, i => Assert.That(rep.GetLogger($"A.{i}").Name, Is.EqualTo($"A.{i}")));
+  }
+
+  [Test]
+  public void GetCurrentLoggers_EmptyHierarchy_ReturnsEmptyArray()
+  {
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    Assert.That(rep.GetCurrentLoggers(), Is.Empty);
+  }
+
+  [Test]
+  public void GetCurrentLoggers_ReturnsCreatedLoggers()
+  {
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    rep.GetLogger("Foo");
+    rep.GetLogger("Bar");
+
+    string[] names = Array.ConvertAll(rep.GetCurrentLoggers(), l => l.Name);
+    Assert.That(names, Is.EquivalentTo(new[] { "Foo", "Bar" }));
+  }
+
+  [Test]
+  public void GetCurrentLoggers_DoesNotIncludeRoot()
+  {
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    rep.GetLogger("Foo");
+
+    Assert.That(rep.GetCurrentLoggers(), Has.None.Property(nameof(ILogger.Name)).EqualTo("root"));
+  }
+
+  [Test]
+  public void GetCurrentLoggers_DoesNotIncludeProvisionNodes()
+  {
+    // Creating "A.B.C" before "A" and "A.B" causes provision nodes to be inserted for the ancestors.
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    rep.GetLogger("A.B.C");
+
+    string[] names = Array.ConvertAll(rep.GetCurrentLoggers(), l => l.Name);
+    Assert.That(names, Is.EquivalentTo(new[] { "A.B.C" }));
   }
 }
