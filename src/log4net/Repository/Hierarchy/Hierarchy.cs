@@ -650,6 +650,10 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
   /// This method loops through all the <i>potential</i> parents of
   /// <paramref name="log"/>. There 3 possible cases:
   /// </para>
+  /// <para>
+  /// <b>Threading:</b> This method must always be called while holding a lock on <c>_loggers</c>
+  /// to ensure consistent hierarchy state across concurrent logger creation.
+  /// </para>
   /// <list type="number">
   ///    <item>
   ///      <term>No entry for the potential parent of <paramref name="log"/> exists</term>

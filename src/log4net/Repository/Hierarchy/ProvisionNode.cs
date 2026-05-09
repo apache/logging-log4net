@@ -23,9 +23,12 @@ using System.Collections.Generic;
 
 namespace log4net.Repository.Hierarchy;
 
+#pragma warning disable CA1040 //Avoid empty interfaces
+//Used intentionally as a marker interface for pattern matching.
 internal interface IHierarchyNode
 {
 }
+#pragma warning restore CA1040
 
 /// <summary>
 /// Provision nodes are used where no logger instance has been specified
