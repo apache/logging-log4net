@@ -546,7 +546,7 @@ public class Hierarchy(PropertiesDictionary properties, ILoggerFactory loggerFac
           return existingLogger;
         // Need to create a new logger and register it, but there is already a provision node for it
         case ProvisionNode provisionNode:
-          // Locking to stop the changes while we try to replace the provisions node with a logger
+          // Locking to stop the changes while we try to replace the provision node with a logger
           lock (_loggers)
           {
             // We need to check again if the logger has been created while we were waiting for the lock,
