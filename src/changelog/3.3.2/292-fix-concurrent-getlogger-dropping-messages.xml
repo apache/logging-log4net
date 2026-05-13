@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="292" link="https://github.com/apache/logging-log4net/issues/292"/>
+  <issue id="294" link="https://github.com/apache/logging-log4net/pull/294"/>
+  <description format="asciidoc">
+    fix dropped log messages during concurrent `GetLogger` calls (reported by @omtslug, fixed by
+ @gdziadkiewicz in https://github.com/apache/logging-log4net/pull/294[#294])
+  </description>
+</entry>
