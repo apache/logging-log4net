@@ -27,6 +27,6 @@
     <QuackersTestLoggerPackageVersion>1.0.25</QuackersTestLoggerPackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)\log4net.globalconfig" />
+    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)log4net.globalconfig" />
   </ItemGroup>
 </Project>
