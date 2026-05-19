@@ -86,7 +86,7 @@ We follow risk-based time frames aligned with ASF security response guidelines:
 
 Time frames begin from the date the vulnerability is confirmed and a fix is determined to be feasible. Complex issues requiring architectural changes may exceed these targets; affected reporters will be notified with an updated timeline.
 
-Third-party dependencies follow the same schedule. A confirmed vulnerability in a dependency triggers an assessment within **7 business days** to determine whether log4net is affected, followed by remediation within the applicable time frame above.
+log4net has minimal third-party dependencies: on .NET Framework 4.6.2, `System.Configuration` and `System.Web` are inbox framework components; on all other targets, `System.Configuration.ConfigurationManager` is the sole NuGet dependency. A vulnerability in any of these is best addressed by updating the framework. log4net will update its `System.Configuration.ConfigurationManager` reference in the next planned release.
 
 These are targets, not commitments. Apache log4net is maintained
 by volunteers on a best-effort basis. The Apache License 2.0 under
