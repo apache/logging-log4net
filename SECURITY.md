@@ -88,6 +88,13 @@ Time frames begin from the date the vulnerability is confirmed and a fix is dete
 
 Third-party dependencies follow the same schedule. A confirmed vulnerability in a dependency triggers an assessment within **7 business days** to determine whether log4net is affected, followed by remediation within the applicable time frame above.
 
+These are targets, not commitments. Apache log4net is maintained
+by volunteers on a best-effort basis. The Apache License 2.0 under
+which this software is distributed explicitly disclaims all warranties,
+including implied warranties of fitness and timeliness of fixes.
+If your use case requires guaranteed response times, consider a
+[commercial support provider](https://logging.apache.org/support.html#commercial).
+
 ---
 
 ## Dependency management
