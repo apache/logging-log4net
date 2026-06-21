@@ -456,14 +456,17 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   public virtual void AddFilter(IFilter filter)
   {
     filter.EnsureNotNull();
-    if (FilterHead is null)
+    lock (LockObj)
     {
-      FilterHead = _tailFilter = filter;
-    }
-    else
-    {
-      _tailFilter!.Next = filter;
-      _tailFilter = filter;
+      if (FilterHead is null)
+      {
+        FilterHead = _tailFilter = filter;
+      }
+      else
+      {
+        _tailFilter!.Next = filter;
+        _tailFilter = filter;
+      }
     }
   }
 
@@ -475,7 +478,13 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// Clears the filter list for this appender.
   /// </para>
   /// </remarks>
-  public virtual void ClearFilters() => FilterHead = _tailFilter = null;
+  public virtual void ClearFilters()
+  {
+    lock (LockObj)
+    {
+      FilterHead = _tailFilter = null;
+    }
+  }
 
   /// <summary>
   /// Checks if the message level is below this appender's threshold.
