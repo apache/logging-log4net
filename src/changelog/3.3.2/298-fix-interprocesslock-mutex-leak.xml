@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="f57d7b3-002" link="https://github.com/apache/tooling-agents/blob/main/ASVS/reports/logging-log4net/f57d7b3/issues.md#issue-finding-002---interprocesslock-mutex-not-released-when-underlying-file-stream-is-null"/>
+  <issue id="298" link="https://github.com/apache/logging-log4net/pull/298"/>
+  <description format="asciidoc">
+    fix mutex leak in `InterProcessLock.AcquireLock` when the underlying file stream is null (CWE-772)
+  </description>
+</entry>
