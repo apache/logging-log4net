@@ -65,12 +65,20 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   ~AppenderSkeleton()
   {
-    // An appender might be closed then garbage collected. 
+    // An appender might be closed then garbage collected.
     // There is no point in closing twice.
-    if (!_isClosed)
+    if (_isClosed)
     {
-      LogLog.Debug(_declaringType, $"Finalizing appender named [{Name}].");
+      return;
+    }
+    LogLog.Debug(_declaringType, $"Finalizing appender named [{Name}].");
+    try
+    {
       Close();
+    }
+    catch (Exception ex) when (!ex.IsFatal())
+    {
+      LogLog.Warn(_declaringType, $"Exception during finalization of {GetType().FullName} [{Name}].", ex);
     }
   }
 
@@ -198,8 +206,14 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     {
       if (!_isClosed)
       {
-        OnClose();
-        _isClosed = true;
+        try
+        {
+          OnClose();
+        }
+        finally
+        {
+          _isClosed = true;
+        }
       }
     }
   }
