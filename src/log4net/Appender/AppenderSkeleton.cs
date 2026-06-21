@@ -119,6 +119,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     {
       lock (LockObj)
       {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (value is null)
         {
           // We do not throw exception here since the cause is probably a
@@ -262,7 +263,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   public void DoAppend(LoggingEvent loggingEvent)
   {
     // This lock is absolutely critical for correct formatting
-    // of the message in a multi-threaded environment.  Without
+    // of the message in a multithreaded environment.  Without
     // this, the message may be broken up into elements from
     // multiple thread contexts (like get the wrong thread ID).
 
@@ -346,7 +347,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     loggingEvents.EnsureNotNull();
 
     // This lock is absolutely critical for correct formatting
-    // of the message in a multi-threaded environment.  Without
+    // of the message in a multithreaded environment.  Without
     // this, the message may be broken up into elements from
     // multiple thread contexts (like get the wrong thread ID).
     lock (LockObj)
