@@ -237,3 +237,7 @@ dotnetfx35.exe
 local-tasks/*.generated.js
 /.flattened-pom.xml
 validate
+/graphify-out
+/.claude
+CLAUDE.md
+issues.md
