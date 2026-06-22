@@ -29,6 +29,8 @@ using log4net.Util;
 using log4net.Core;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace log4net.Tests.Appender;
 
@@ -150,5 +152,35 @@ public sealed class FileAppenderTest
     logger.Log(GetType(), Level.Info, nameof(FilenameWithGlobalContextPatternStringTest), null);
     logs.Refresh();
     Assert.That(logs.GetFiles().Any(file => file.Name.StartsWith("file_custom_log_issue_193")));
+  }
+
+  /// <summary>
+  /// Verifies that <see cref="FileAppender.InterProcessLock"/> releases the mutex
+  /// when the underlying file stream is null.
+  /// </summary>
+  [Test]
+  public void InterProcessLock_AcquireLock_ReleasesMutexWhenStreamIsNull()
+  {
+    string tempFile = Path.GetTempFileName();
+    FileAppender appender = new() { File = "log4net_ipl_test" };
+    FileAppender.InterProcessLock lockingModel = new() { CurrentAppender = appender };
+    lockingModel.ActivateOptions();
+    lockingModel.OpenFile(tempFile, false, Encoding.UTF8);
+    lockingModel.CloseFile(); // sets _stream to null; mutex remains alive
+    try
+    {
+      Stream? stream = lockingModel.AcquireLock();
+      Assert.That(stream, Is.Null);
+
+      // if the mutex was released, a second thread can acquire the lock without blocking
+      Task task = Task.Run(lockingModel.AcquireLock);
+      Assert.That(task.Wait(TimeSpan.FromSeconds(2)), Is.True,
+        "Mutex was not released by AcquireLock when stream is null");
+    }
+    finally
+    {
+      lockingModel.OnClose();
+      File.Delete(tempFile);
+    }
   }
 }

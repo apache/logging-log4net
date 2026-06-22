@@ -65,12 +65,20 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   ~AppenderSkeleton()
   {
-    // An appender might be closed then garbage collected. 
+    // An appender might be closed then garbage collected.
     // There is no point in closing twice.
-    if (!_isClosed)
+    if (_isClosed)
     {
-      LogLog.Debug(_declaringType, $"Finalizing appender named [{Name}].");
+      return;
+    }
+    LogLog.Debug(_declaringType, $"Finalizing appender named [{Name}].");
+    try
+    {
       Close();
+    }
+    catch (Exception ex) when (!ex.IsFatal())
+    {
+      LogLog.Warn(_declaringType, $"Exception during finalization of {GetType().FullName} [{Name}].", ex);
     }
   }
 
@@ -111,6 +119,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     {
       lock (LockObj)
       {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (value is null)
         {
           // We do not throw exception here since the cause is probably a
@@ -198,8 +207,14 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     {
       if (!_isClosed)
       {
-        OnClose();
-        _isClosed = true;
+        try
+        {
+          OnClose();
+        }
+        finally
+        {
+          _isClosed = true;
+        }
       }
     }
   }
@@ -248,7 +263,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   public void DoAppend(LoggingEvent loggingEvent)
   {
     // This lock is absolutely critical for correct formatting
-    // of the message in a multi-threaded environment.  Without
+    // of the message in a multithreaded environment.  Without
     // this, the message may be broken up into elements from
     // multiple thread contexts (like get the wrong thread ID).
 
@@ -332,7 +347,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
     loggingEvents.EnsureNotNull();
 
     // This lock is absolutely critical for correct formatting
-    // of the message in a multi-threaded environment.  Without
+    // of the message in a multithreaded environment.  Without
     // this, the message may be broken up into elements from
     // multiple thread contexts (like get the wrong thread ID).
     lock (LockObj)
@@ -456,14 +471,17 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   public virtual void AddFilter(IFilter filter)
   {
     filter.EnsureNotNull();
-    if (FilterHead is null)
+    lock (LockObj)
     {
-      FilterHead = _tailFilter = filter;
-    }
-    else
-    {
-      _tailFilter!.Next = filter;
-      _tailFilter = filter;
+      if (FilterHead is null)
+      {
+        FilterHead = _tailFilter = filter;
+      }
+      else
+      {
+        _tailFilter!.Next = filter;
+        _tailFilter = filter;
+      }
     }
   }
 
@@ -475,7 +493,13 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// Clears the filter list for this appender.
   /// </para>
   /// </remarks>
-  public virtual void ClearFilters() => FilterHead = _tailFilter = null;
+  public virtual void ClearFilters()
+  {
+    lock (LockObj)
+    {
+      FilterHead = _tailFilter = null;
+    }
+  }
 
   /// <summary>
   /// Checks if the message level is below this appender's threshold.

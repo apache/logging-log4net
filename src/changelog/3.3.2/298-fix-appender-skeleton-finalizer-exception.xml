@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="f57d7b3-003" link="https://github.com/apache/tooling-agents/blob/main/ASVS/reports/logging-log4net/f57d7b3/issues.md#issue-finding-003---finalizer-path-lacks-exception-protection-risking-process-termination"/>
+  <issue id="298" link="https://github.com/apache/logging-log4net/pull/298"/>
+  <description format="asciidoc">
+    fix unhandled exception in `AppenderSkeleton` finalizer that could terminate the process when `OnClose()` throws (CWE-755)
+  </description>
+</entry>

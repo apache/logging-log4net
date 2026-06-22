@@ -657,6 +657,9 @@ public class FileAppender : TextWriterAppender
         else
         {
           // this can happen when the file appender cannot open a file for writing
+          _recursiveWatch--;
+          _mutex.ReleaseMutex();
+          return null;
         }
       }
       else
