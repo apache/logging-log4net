@@ -78,7 +78,7 @@ public class SmtpAppenderTest
     PatternLayout layout = new() { ConversionPattern = "%m%n", Header = header, Footer = footer };
     layout.ActivateOptions();
 
-    return new SmtpAppender(() => _transport)
+    return new(() => _transport)
     {
       Layout = layout,
       ErrorHandler = _errorHandler,
