@@ -338,13 +338,17 @@ public class TelnetAppender : AppenderSkeleton
         int currentActiveConnectionsCount = _clients.Count;
         if (currentActiveConnectionsCount < MaxConnections)
         {
+          // Register the client before sending the welcome message, otherwise a client
+          // that logs as soon as it has received the welcome message can race with
+          // AddClient and see HasConnections == false.
+          AddClient(client);
           try
           {
             client.Send($"TelnetAppender v1.0 ({currentActiveConnectionsCount + 1} active connections)\r\n\r\n");
-            AddClient(client);
           }
           catch (Exception e) when (!e.IsFatal())
           {
+            RemoveClient(client);
             client.Dispose();
           }
         }

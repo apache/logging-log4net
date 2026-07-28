@@ -18,7 +18,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Xml;
 using log4net.Appender;
@@ -43,13 +46,24 @@ public sealed class TelnetAppenderTest
   /// https://github.com/apache/logging-log4net/issues/194
   /// https://stackoverflow.com/questions/79053363/log4net-telnetappender-doesnt-work-after-migrate-to-log4net-3
   /// </remarks>
+  /// <summary>
+  /// Maximum time to wait for a message to arrive at the client.
+  /// </summary>
+  private static readonly TimeSpan _receiveTimeout = TimeSpan.FromSeconds(30);
+
+  private const string WelcomeMessage = "TelnetAppender";
+
   [Test]
   public void TelnetTest()
   {
-    List<string> received = [];
+    // The received data is a TCP byte stream - the server writes are not necessarily
+    // mapped 1:1 to the client reads, so the test asserts on the accumulated text
+    // instead of counting the individual reads.
+    StringBuilder received = new();
+    object receivedSyncRoot = new();
 
     XmlDocument log4NetConfig = new();
-    int port = 9090;
+    int port = FindFreeTcpPort();
     log4NetConfig.LoadXml(
       $"""
       <log4net>
@@ -68,38 +82,70 @@ public sealed class TelnetAppenderTest
     string logId = Guid.NewGuid().ToString();
     ILoggerRepository repository = LogManager.CreateRepository(logId);
     XmlConfigurator.Configure(repository, log4NetConfig["log4net"]!);
-    using (SimpleTelnetClient telnetClient = new(Received, port))
+    try
     {
-      TestContext.Out.WriteLine("test: starting client ...");
-      telnetClient.Run(TestContext.Out.WriteLine);
-      WaitForReceived(1); // wait for welcome message
-      ILogger logger = repository.GetLogger("Telnet");
-      TestContext.Out.WriteLine("test: logging to client ...");
-      logger.Log(typeof(TelnetAppenderTest), Level.Info, logId, null);
-      TestContext.Out.WriteLine("test: waiting for message of client ...");
-      WaitForReceived(2); // wait for log message
-      TestContext.Out.WriteLine("test: canceling client ...");
-    }
-    repository.Shutdown();
-    Assert.That(received, Has.Count.EqualTo(2));
-    Assert.That(received[1], Does.Contain(logId));
-
-    void Received(string message) => received.Add(message);
-
-    void WaitForReceived(int count)
-    {
-      int retries = 1;
-      while (received.Count < count)
+      using (SimpleTelnetClient telnetClient = new(Received, port))
       {
-        retries++;
-        TestContext.Out.WriteLine($"receiver: waiting for message {count} of client - retry {retries} failed");
-        if (retries > 500)
-        {
-          Assert.Fail("Timeout waiting for received messages");
-        }
-        Thread.Sleep(10);
+        TestContext.Out.WriteLine("test: starting client ...");
+        telnetClient.Run(TestContext.Out.WriteLine);
+        WaitForReceived("welcome message", WelcomeMessage);
+        ILogger logger = repository.GetLogger("Telnet");
+        TestContext.Out.WriteLine("test: logging to client ...");
+        logger.Log(typeof(TelnetAppenderTest), Level.Info, logId, null);
+        TestContext.Out.WriteLine("test: waiting for message of client ...");
+        WaitForReceived("log message", logId);
+        TestContext.Out.WriteLine("test: canceling client ...");
       }
-      TestContext.Out.WriteLine($"receiver: waiting for message {count} of client - retry {retries} succeeded");
     }
+    finally
+    {
+      repository.Shutdown();
+    }
+    Assert.That(ReceivedText(), Does.StartWith(WelcomeMessage).And.Contain(logId));
+
+    void Received(string message)
+    {
+      lock (receivedSyncRoot)
+      {
+        received.Append(message);
+      }
+    }
+
+    string ReceivedText()
+    {
+      lock (receivedSyncRoot)
+      {
+        return received.ToString();
+      }
+    }
+
+    void WaitForReceived(string what, string expected)
+    {
+      Stopwatch stopwatch = Stopwatch.StartNew();
+      while (ReceivedText().IndexOf(expected, StringComparison.Ordinal) < 0)
+      {
+        if (stopwatch.Elapsed > _receiveTimeout)
+        {
+          Assert.Fail($"Timeout waiting for {what} - received so far: '{ReceivedText()}'");
+        }
+        Thread.Sleep(20);
+      }
+      TestContext.Out.WriteLine($"receiver: received {what} after {stopwatch.ElapsedMilliseconds} ms");
+    }
+  }
+
+  /// <summary>
+  /// Asks the OS for a currently unused TCP port - a fixed port would collide with
+  /// other tests or processes on the build machine.
+  /// </summary>
+  private static int FindFreeTcpPort()
+  {
+    using Socket socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+    socket.Bind(new IPEndPoint(IPAddress.Any, 0));
+    if (socket.LocalEndPoint is IPEndPoint endPoint)
+    {
+      return endPoint.Port;
+    }
+    throw new InvalidOperationException("Could not determine a free TCP port");
   }
 }
