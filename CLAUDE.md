@@ -58,6 +58,8 @@ almost always be doing.
 - Use the internal `log4net.Util.Log4NetAssert` extensions rather than hand-rolled checks:
   `EnsureNotNull()`, `EnsureNotNullOrEmpty()`, `EnsureIs<T>()`. They carry
   `[CallerArgumentExpression(nameof(value))]`, so no argument name is passed at the call site.
+  This includes constructor and property assignments — write `_x = x.EnsureNotNull();`,
+  not `_x = x ?? throw new ArgumentNullException(nameof(x));`.
 - Appenders never let exceptions escape to the caller. The house pattern is
   `catch (Exception e) when (!e.IsFatal()) { ErrorHandler.Error("...", e); }`.
 
