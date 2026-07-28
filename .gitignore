@@ -252,3 +252,5 @@ validate
 /graphify-out/graph.html
 /graphify-out/.graphify_root
 /graphify-out/.graphify_python
+/graphify-out/*.sig
+/graphify-out/20*

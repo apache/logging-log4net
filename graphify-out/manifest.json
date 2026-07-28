@@ -1,9 +1,4 @@
 {
-  ".claude/settings.json": {
-    "mtime": 1785142205.462816,
-    "ast_hash": "4c372e7034eee9cf52096bf8c8efc782",
-    "semantic_hash": "4c372e7034eee9cf52096bf8c8efc782"
-  },
   "examples/Appenders/SampleAppendersApp/Appender/AsyncAppender.cs": {
     "mtime": 1729759731.739354,
     "ast_hash": "f80a605dfe5adcae74039fd6f49c5cf2",
@@ -325,24 +320,24 @@
     "semantic_hash": "bf0ec302edba6c5f849a40a704f13083"
   },
   "package.json": {
-    "mtime": 1777473251.9565077,
-    "ast_hash": "d4a5c6ce24468e795cd8e1b8343e69bd",
-    "semantic_hash": "d4a5c6ce24468e795cd8e1b8343e69bd"
+    "mtime": 1785248325.7580414,
+    "ast_hash": "3d24436c4e34cb8e9ba472cd537f2927",
+    "semantic_hash": ""
   },
   "pom.xml": {
-    "mtime": 1777473251.9580126,
-    "ast_hash": "6d9fd85ed3ec606e719dfdab6fcc8373",
-    "semantic_hash": "6d9fd85ed3ec606e719dfdab6fcc8373"
+    "mtime": 1785153721.332651,
+    "ast_hash": "4d3d7c3c88694eca9720e7dd14864c5a",
+    "semantic_hash": ""
   },
   "scripts/build-preview.ps1": {
-    "mtime": 1777473251.9600244,
-    "ast_hash": "ebf5a5cfc2d32a8323a6a9bd437f5d4e",
-    "semantic_hash": "ebf5a5cfc2d32a8323a6a9bd437f5d4e"
+    "mtime": 1785153721.332651,
+    "ast_hash": "a1b6596027a562e59b30d0fa44d1cd73",
+    "semantic_hash": ""
   },
   "scripts/build-release.ps1": {
-    "mtime": 1777473251.9620252,
-    "ast_hash": "0c7ae775ff2a4d075ced3d3fd5ee4b2c",
-    "semantic_hash": "0c7ae775ff2a4d075ced3d3fd5ee4b2c"
+    "mtime": 1785153721.3490343,
+    "ast_hash": "118dfa79102d2b1de8f6feba1dbd6e40",
+    "semantic_hash": ""
   },
   "scripts/install-dotnet-sdk.ps1": {
     "mtime": 1726499020.6619112,
@@ -360,9 +355,9 @@
     "semantic_hash": "1e2b91d9f8dfdfd35a422d056e7bed49"
   },
   "scripts/update-version.ps1": {
-    "mtime": 1776346930.3765032,
-    "ast_hash": "ea7baca07feecd0f2c757c93488369a4",
-    "semantic_hash": "ea7baca07feecd0f2c757c93488369a4"
+    "mtime": 1785248535.6255798,
+    "ast_hash": "0c4dca2b10d8e453aad8470195119688",
+    "semantic_hash": ""
   },
   "scripts/verify-release.ps1": {
     "mtime": 1755627470.6302025,
@@ -500,9 +495,9 @@
     "semantic_hash": "0e71c92ea2901baac7524526856da45a"
   },
   "src/log4net.Tests/Appender/FileAppenderTest.cs": {
-    "mtime": 1730742598.0314915,
-    "ast_hash": "4112f36756e44985c2e03c7ce30e6fe1",
-    "semantic_hash": "4112f36756e44985c2e03c7ce30e6fe1"
+    "mtime": 1785153721.3556707,
+    "ast_hash": "51cb7b9f4ba98bcdce32f9d3141b4c22",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/Internal/SimpleTelnetClient.cs": {
     "mtime": 1747665099.80714,
@@ -775,9 +770,9 @@
     "semantic_hash": "8b89f22bac52ccff53eb38dc5e6dd0b9"
   },
   "src/log4net.sln": {
-    "mtime": 1767686782.373111,
-    "ast_hash": "7cf813a3661ce1e98505918c8c0d7fe7",
-    "semantic_hash": "7cf813a3661ce1e98505918c8c0d7fe7"
+    "mtime": 1785248279.0517604,
+    "ast_hash": "b786aa35e8e5b4ab1dfe7715bfd5ade3",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/AdoNetAppender.cs": {
     "mtime": 1771600187.5291228,
@@ -795,9 +790,9 @@
     "semantic_hash": "ae94f4c812ffdefedddd622034f81df9"
   },
   "src/log4net/Appender/AppenderSkeleton.cs": {
-    "mtime": 1771600187.5801258,
-    "ast_hash": "ef52e00e16118bd6d7e745b5159b3e18",
-    "semantic_hash": "ef52e00e16118bd6d7e745b5159b3e18"
+    "mtime": 1785153721.3556707,
+    "ast_hash": "28c8d4b330142b2d39746faa64c777cc",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/AspNetTraceAppender.cs": {
     "mtime": 1729754866.3281455,
@@ -835,9 +830,9 @@
     "semantic_hash": "1517b2b0aafaee5a9cfa01fdcfaefce4"
   },
   "src/log4net/Appender/FileAppender.cs": {
-    "mtime": 1751291991.5760484,
-    "ast_hash": "f58a4a47bbfd3a46a8618b8ec8d0976d",
-    "semantic_hash": "f58a4a47bbfd3a46a8618b8ec8d0976d"
+    "mtime": 1785153721.3556707,
+    "ast_hash": "a1062051e0e680f1044f3a338318fa7d",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/ForwardingAppender.cs": {
     "mtime": 1771600187.801695,
@@ -1730,9 +1725,9 @@
     "semantic_hash": "28cf89bd4af9d9788f10326831d803ce"
   },
   "src/log4net/Util/Log4NetAssert.cs": {
-    "mtime": 1751534847.097808,
-    "ast_hash": "1eae76940be2036b165ca14b01d0316a",
-    "semantic_hash": "1eae76940be2036b165ca14b01d0316a"
+    "mtime": 1785252165.3022556,
+    "ast_hash": "178451abe77a93af48fa5bb5f5af47bd",
+    "semantic_hash": ""
   },
   "src/log4net/Util/LogLog.cs": {
     "mtime": 1771600188.2687936,
@@ -2000,9 +1995,9 @@
     "semantic_hash": "e1f107330ae81315d58cae81b9522053"
   },
   "src/log4net/log4net.csproj": {
-    "mtime": 1777473251.9730234,
-    "ast_hash": "1fa4a6f3db9edaadeba99e4bacb19dcb",
-    "semantic_hash": "1fa4a6f3db9edaadeba99e4bacb19dcb"
+    "mtime": 1785241360.0277107,
+    "ast_hash": "be7032f0abc7ba098064f47921126254",
+    "semantic_hash": ""
   },
   ".asf.yaml": {
     "mtime": 1779183793.0250793,
@@ -2025,24 +2020,19 @@
     "semantic_hash": "6c28e911ceca9538f26cd1876c55d21b"
   },
   "AGENTS.md": {
-    "mtime": 1780474570.954573,
-    "ast_hash": "d130c7a20fd9d2c9c010e1e4cae50986",
-    "semantic_hash": "d130c7a20fd9d2c9c010e1e4cae50986"
+    "mtime": 1785153642.980867,
+    "ast_hash": "30c8d014a9f1918809db32b3a2da84d1",
+    "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1785142205.452324,
-    "ast_hash": "8a6643a420fdad6bfb583523bc6cef16",
-    "semantic_hash": "8a6643a420fdad6bfb583523bc6cef16"
+    "mtime": 1785252457.4091191,
+    "ast_hash": "93ff523decd91c756d62fbe84146f99a",
+    "semantic_hash": ""
   },
   "README.md": {
     "mtime": 1727089239.2741766,
     "ast_hash": "27666cdbaa37dd64019a0efcd32edf35",
     "semantic_hash": "27666cdbaa37dd64019a0efcd32edf35"
-  },
-  "SECURITY.md": {
-    "mtime": 1780474570.954573,
-    "ast_hash": "0d449d90ce4a5c179fc50a3db3d21adb",
-    "semantic_hash": "0d449d90ce4a5c179fc50a3db3d21adb"
   },
   "STATUS.txt": {
     "mtime": 1777473251.9486632,
@@ -2065,19 +2055,19 @@
     "semantic_hash": "50fa79a09872f36c387aacf29a3cf537"
   },
   "doc/MailTemplate.Announce.txt": {
-    "mtime": 1777473251.9506621,
-    "ast_hash": "67717e2d4f8b31b8657dbf52e0dea18f",
-    "semantic_hash": "67717e2d4f8b31b8657dbf52e0dea18f"
+    "mtime": 1785153721.332651,
+    "ast_hash": "da8aafad2c5ae6be38d7ae1851a6a95f",
+    "semantic_hash": ""
   },
   "doc/MailTemplate.Result.txt": {
-    "mtime": 1777473251.9526658,
-    "ast_hash": "232512e401b6e950203da9e52f111761",
-    "semantic_hash": "232512e401b6e950203da9e52f111761"
+    "mtime": 1785153721.332651,
+    "ast_hash": "e760bece4e2143054f8e9bfaedd9067b",
+    "semantic_hash": ""
   },
   "doc/MailTemplate.txt": {
-    "mtime": 1777473251.953997,
-    "ast_hash": "2a009997ab6b08809e4bdfdd92982bfa",
-    "semantic_hash": "2a009997ab6b08809e4bdfdd92982bfa"
+    "mtime": 1785153721.332651,
+    "ast_hash": "32f82c02882dd6a4e62758c740853ce4",
+    "semantic_hash": ""
   },
   "doc/RELEASING.md": {
     "mtime": 1777473251.9545014,
@@ -2133,5 +2123,45 @@
     "mtime": 1750077942.2385175,
     "ast_hash": "b77158f77f78f2eb4cf6e01d24121138",
     "semantic_hash": "b77158f77f78f2eb4cf6e01d24121138"
+  },
+  "src/log4net.Ext.Mail.Tests/Appender/FakeSmtpTransport.cs": {
+    "mtime": 1785250666.4327004,
+    "ast_hash": "2905c44be63ac18e5f736747ff32fd9d",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail.Tests/Appender/SmtpAppenderTest.cs": {
+    "mtime": 1785250807.6103804,
+    "ast_hash": "76f5aaef91dd162e784e4f963db3e1b2",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail.Tests/log4net.Ext.Mail.Tests.csproj": {
+    "mtime": 1785248369.274042,
+    "ast_hash": "2e0413fe798f8e9864565d03a604ed43",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/Appender/ISmtpTransport.cs": {
+    "mtime": 1785250917.996236,
+    "ast_hash": "291cbac7e9b4795379153ab5cf86cbb4",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/Appender/MailKitSmtpTransport.cs": {
+    "mtime": 1785250912.5493882,
+    "ast_hash": "abde90df64b75e42d472ef1b37d24083",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/Appender/SmtpAppender.cs": {
+    "mtime": 1785252395.5108743,
+    "ast_hash": "5f44a3c6c1eeb94874a51946be474d3b",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/log4net.Ext.Mail.csproj": {
+    "mtime": 1785251301.7838278,
+    "ast_hash": "b1096871335d3c608175a97ebde0be84",
+    "semantic_hash": ""
+  },
+  "src/log4net.Tests/Appender/AppenderSkeletonTest.cs": {
+    "mtime": 1785153721.3556707,
+    "ast_hash": "73a1201d5377f571e83333d9e0e1f9ff",
+    "semantic_hash": ""
   }
 }
