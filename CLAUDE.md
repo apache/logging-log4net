@@ -33,6 +33,9 @@ almost always be doing.
 - **Explicit types, not `var`** — all three `csharp_style_var_*` options are `false`.
   Write `StringWriter writer = new(...)`.
 - Target-typed `new()` and collection expressions (`private static readonly char[] _x = [',', ';'];`).
+  Omit the type wherever the target is known — including `return new(…);` and `=> new(…);`, where
+  the enclosing member's return type supplies it. It cannot be omitted when the target type is an
+  interface or abstract class, as in `Func<ISmtpTransport> f = () => new MailKitSmtpTransport();`.
 - Expression-bodied members whenever the body fits on one line — this includes constructors
   (`resharper_constructor_or_destructor_body = expression_body`).
 - Braces on `if`/`else` bodies even for a single statement.
