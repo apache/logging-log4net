@@ -1,0 +1,482 @@
+#region Apache License
+//
+// Licensed to the Apache Software Foundation (ASF) under one or more
+// contributor license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright ownership.
+// The ASF licenses this file to you under the Apache License, Version 2.0
+// (the "License"); you may not use this file except in compliance with
+// the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+#endregion
+
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
+
+using log4net.Appender;
+using log4net.Core;
+using log4net.Util;
+using MailKit.Security;
+
+using MimeKit;
+using MimeKit.Text;
+
+namespace log4net.Ext.Mail.Appender;
+
+/// <summary>
+/// Send an e-mail when a specific logging event occurs, typically on errors
+/// or fatal errors, using MailKit as the SMTP client.
+/// </summary>
+/// <remarks>
+/// <para>
+/// This appender exposes the same options as <see cref="log4net.Appender.SmtpAppender"/>,
+/// so an existing configuration can be pointed at this type without change. The difference
+/// is the transport: sending is delegated to an <see cref="ISmtpTransport"/>, which by
+/// default wraps <see cref="MailKit.Net.Smtp.SmtpClient"/> instead of the obsolete
+/// <see cref="System.Net.Mail.SmtpClient"/>.
+/// </para>
+/// <para>
+/// The number of logging events delivered in this e-mail depend on
+/// the value of <see cref="BufferingAppenderSkeleton.BufferSize"/> option. The
+/// <see cref="SmtpAppender"/> keeps only the last
+/// <see cref="BufferingAppenderSkeleton.BufferSize"/> logging events in its
+/// cyclic buffer. This keeps memory requirements at a reasonable level while
+/// still delivering useful application context.
+/// </para>
+/// <para>
+/// Authentication is supported by setting the <see cref="Authentication"/> property to
+/// either <see cref="SmtpAuthentication.Basic"/> or <see cref="SmtpAuthentication.Ntlm"/>.
+/// If using <see cref="SmtpAuthentication.Basic"/> authentication then the <see cref="Username"/>
+/// and <see cref="Password"/> properties must also be set.
+/// </para>
+/// <para>
+/// To set the SMTP server port use the <see cref="Port"/> property. The default port is 25.
+/// </para>
+/// <para>
+/// Unlike <see cref="System.Net.Mail.SmtpClient"/>, MailKit has no notion of a machine-wide
+/// default SMTP server, so <see cref="SmtpHost"/> is required.
+/// </para>
+/// </remarks>
+/// <param name="transportFactory">
+/// Called once per e-mail to create the transport used to send it. Intended for tests and
+/// for hosts that need to configure the MailKit client themselves.
+/// </param>
+public class SmtpAppender(Func<ISmtpTransport> transportFactory) : BufferingAppenderSkeleton
+{
+  private readonly Func<ISmtpTransport> _transportFactory = transportFactory ?? throw new ArgumentNullException(nameof(transportFactory));
+
+  /// <summary>
+  /// Default constructor. Sends through <see cref="MailKitSmtpTransport"/>.
+  /// </summary>
+  public SmtpAppender()
+    : this(static () => new MailKitSmtpTransport())
+  { }
+
+  /// <summary>
+  /// Gets or sets a comma-delimited list of recipient e-mail addresses.
+  /// </summary>
+  public string? To
+  {
+    get;
+    set => field = MaybeTrimSeparators(value);
+  }
+
+  /// <summary>
+  /// Gets or sets a comma-delimited list of recipient e-mail addresses
+  /// that will be carbon copied.
+  /// </summary>
+  public string? Cc
+  {
+    get;
+    set => field = MaybeTrimSeparators(value);
+  }
+
+  /// <summary>
+  /// Gets or sets a comma-delimited list of recipient e-mail addresses
+  /// that will be blind carbon copied.
+  /// </summary>
+  /// <value>
+  /// A comma-delimited list of e-mail addresses.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// Semicolons are also accepted as separators, for backward compatibility.
+  /// </para>
+  /// </remarks>
+  public string? Bcc
+  {
+    get;
+    set => field = MaybeTrimSeparators(value);
+  }
+
+  /// <summary>
+  /// Gets or sets the e-mail address of the sender.
+  /// </summary>
+  /// <value>
+  /// The e-mail address of the sender.
+  /// </value>
+  public string? From { get; set; }
+
+  /// <summary>
+  /// Gets or sets the subject line of the e-mail message.
+  /// </summary>
+  /// <value>
+  /// The subject line of the e-mail message.
+  /// </value>
+  public string? Subject { get; set; }
+
+  /// <summary>
+  /// Gets or sets the name of the SMTP relay mail server to use to send
+  /// the e-mail messages.
+  /// </summary>
+  /// <value>
+  /// The name of the e-mail relay server.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// This option is required. MailKit, unlike <see cref="System.Net.Mail.SmtpClient"/>,
+  /// has no machine-wide default SMTP server to fall back on.
+  /// </para>
+  /// </remarks>
+  public string? SmtpHost { get; set; }
+
+  /// <summary>
+  /// The mode to use to authentication with the SMTP server
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// Valid Authentication mode values are: <see cref="SmtpAuthentication.None"/>,
+  /// <see cref="SmtpAuthentication.Basic"/>, and <see cref="SmtpAuthentication.Ntlm"/>.
+  /// The default value is <see cref="SmtpAuthentication.None"/>. When using
+  /// <see cref="SmtpAuthentication.Basic"/> you must specify the <see cref="Username"/>
+  /// and <see cref="Password"/> to use to authenticate.
+  /// </para>
+  /// <para>
+  /// <see cref="SmtpAuthentication.Ntlm"/> authenticates with the NTLM SASL mechanism.
+  /// Note that MailKit cannot reuse the Windows logon session of the current thread or
+  /// process the way <see cref="System.Net.Mail.SmtpClient"/> could, so
+  /// <see cref="Username"/> and <see cref="Password"/> must be supplied for NTLM as well.
+  /// </para>
+  /// </remarks>
+  public SmtpAuthentication Authentication { get; set; } = SmtpAuthentication.None;
+
+  /// <summary>
+  /// The username to use to authenticate with the SMTP server
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// A <see cref="Username"/> and <see cref="Password"/> must be specified when
+  /// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>
+  /// or <see cref="SmtpAuthentication.Ntlm"/>, otherwise the username will be ignored.
+  /// </para>
+  /// </remarks>
+  public string? Username { get; set; }
+
+  /// <summary>
+  /// The password to use to authenticate with the SMTP server
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// A <see cref="Username"/> and <see cref="Password"/> must be specified when
+  /// <see cref="Authentication"/> is set to <see cref="SmtpAuthentication.Basic"/>
+  /// or <see cref="SmtpAuthentication.Ntlm"/>, otherwise the password will be ignored.
+  /// </para>
+  /// </remarks>
+  public string? Password { get; set; }
+
+  /// <summary>
+  /// The port on which the SMTP server is listening
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// The port on which the SMTP server is listening. The default
+  /// port is <c>25</c>.
+  /// </para>
+  /// </remarks>
+  public int Port { get; set; } = 25;
+
+  /// <summary>
+  /// Gets or sets the priority of the e-mail message
+  /// </summary>
+  /// <value>
+  /// One of the <see cref="MailPriority"/> values.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// Sets the priority of the e-mails generated by this
+  /// appender. The default priority is <see cref="MailPriority.Normal"/>.
+  /// </para>
+  /// <para>
+  /// If you are using this appender to report errors then
+  /// you may want to set the priority to <see cref="MailPriority.High"/>.
+  /// </para>
+  /// <para>
+  /// The value is mapped onto the MIME <c>Priority</c> header:
+  /// <see cref="MailPriority.Low"/> becomes <see cref="MessagePriority.NonUrgent"/>,
+  /// <see cref="MailPriority.Normal"/> becomes <see cref="MessagePriority.Normal"/> and
+  /// <see cref="MailPriority.High"/> becomes <see cref="MessagePriority.Urgent"/>.
+  /// </para>
+  /// </remarks>
+  public MailPriority Priority { get; set; } = MailPriority.Normal;
+
+  /// <summary>
+  /// Enable or disable use of SSL/TLS when sending e-mail message
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// When <see langword="true"/>, <see cref="SecureSocketOptions.Auto"/> is used, which
+  /// negotiates implicit TLS or <c>STARTTLS</c> depending on the <see cref="Port"/> and
+  /// what the server advertises. When <see langword="false"/> the connection is not
+  /// encrypted at all (<see cref="SecureSocketOptions.None"/>), matching the behaviour of
+  /// <see cref="System.Net.Mail.SmtpClient.EnableSsl"/>.
+  /// </para>
+  /// <para>
+  /// Use <see cref="SecureSocketOptions"/> directly via a custom
+  /// <see cref="ISmtpTransport"/> if you need finer control.
+  /// </para>
+  /// </remarks>
+  public bool EnableSsl { get; set; }
+
+  /// <summary>
+  /// Gets or sets the reply-to e-mail address.
+  /// </summary>
+  public string? ReplyTo { get; set; }
+
+  /// <summary>
+  /// Gets or sets the subject encoding to be used.
+  /// </summary>
+  /// <remarks>
+  /// The default encoding is <see cref="Encoding.UTF8"/>.
+  /// </remarks>
+  public Encoding SubjectEncoding { get; set; } = Encoding.UTF8;
+
+  /// <summary>
+  /// Gets or sets the body encoding to be used.
+  /// </summary>
+  /// <remarks>
+  /// The default encoding is <see cref="Encoding.UTF8"/>.
+  /// </remarks>
+  public Encoding BodyEncoding { get; set; } = Encoding.UTF8;
+
+  /// <summary>
+  /// Sends the contents of the cyclic buffer as an e-mail message.
+  /// </summary>
+  /// <param name="events">The logging events to send.</param>
+  protected override void SendBuffer(LoggingEvent[] events)
+  {
+    events.EnsureNotNull();
+    // Note: this code already owns the monitor for this
+    // appender. This frees us from needing to synchronize again.
+    try
+    {
+      using StringWriter writer = new(System.Globalization.CultureInfo.InvariantCulture);
+
+      if (Layout?.Header is string header)
+      {
+        writer.Write(header);
+      }
+
+      for (int i = 0; i < events.Length; i++)
+      {
+        // Render the event and append the text to the buffer
+        RenderLoggingEvent(writer, events[i]);
+      }
+
+      if (Layout?.Footer is string footer)
+      {
+        writer.Write(footer);
+      }
+
+      SendEmail(writer.ToString());
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
+    }
+  }
+
+  /// <summary>
+  /// This appender requires a <see cref="AppenderSkeleton.Layout"/> to be set.
+  /// </summary>
+  protected override bool RequiresLayout => true;
+
+  /// <summary>
+  /// Send the email message
+  /// </summary>
+  /// <param name="messageBody">the body text to include in the mail</param>
+  protected virtual void SendEmail(string messageBody)
+  {
+    using MimeMessage message = CreateMessage(messageBody);
+    using ISmtpTransport transport = _transportFactory().EnsureNotNull();
+
+    transport.Connect(
+        SmtpHost.EnsureNotNullOrEmpty(),
+        Port,
+        EnableSsl ? SecureSocketOptions.Auto : SecureSocketOptions.None);
+    try
+    {
+      switch (Authentication)
+      {
+        case SmtpAuthentication.Basic:
+          transport.Authenticate(new NetworkCredential(Username, Password));
+          break;
+        case SmtpAuthentication.Ntlm:
+          transport.Authenticate(new SaslMechanismNtlm(new NetworkCredential(Username, Password)));
+          break;
+        case SmtpAuthentication.None:
+        default:
+          break;
+      }
+
+      transport.Send(message);
+    }
+    finally
+    {
+      transport.Disconnect(true);
+    }
+  }
+
+  /// <summary>
+  /// Builds the <see cref="MimeMessage"/> for the given body text from the configured options.
+  /// </summary>
+  /// <param name="messageBody">the body text to include in the mail</param>
+  /// <returns>the message to send</returns>
+  protected virtual MimeMessage CreateMessage(string messageBody)
+  {
+    MimeMessage message = new();
+    message.From.AddRange(ParseAddresses(From.EnsureNotNullOrEmpty()));
+    message.To.AddRange(ParseAddresses(To.EnsureNotNullOrEmpty()));
+    if (!string.IsNullOrEmpty(Cc))
+    {
+      message.Cc.AddRange(ParseAddresses(Cc!));
+    }
+    if (!string.IsNullOrEmpty(Bcc))
+    {
+      message.Bcc.AddRange(ParseAddresses(Bcc!));
+    }
+    if (!string.IsNullOrEmpty(ReplyTo))
+    {
+      message.ReplyTo.AddRange(ParseAddresses(ReplyTo!));
+    }
+
+    if (Subject is not null)
+    {
+      // Set through the header collection so that the configured encoding is honoured.
+      message.Headers.Replace(HeaderId.Subject, SubjectEncoding, Subject);
+    }
+
+    message.Priority = Priority switch
+    {
+      MailPriority.Low => MessagePriority.NonUrgent,
+      MailPriority.High => MessagePriority.Urgent,
+      _ => MessagePriority.Normal,
+    };
+
+    TextPart body = new(TextFormat.Plain);
+    body.SetText(BodyEncoding, messageBody);
+    message.Body = body;
+
+    return message;
+  }
+
+  /// <summary>
+  /// Values for the <see cref="Authentication"/> property.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// SMTP authentication modes.
+  /// </para>
+  /// </remarks>
+  public enum SmtpAuthentication
+  {
+    /// <summary>
+    /// No authentication
+    /// </summary>
+    None,
+
+    /// <summary>
+    /// Basic authentication.
+    /// </summary>
+    /// <remarks>
+    /// Requires a username and password to be supplied
+    /// </remarks>
+    Basic,
+
+    /// <summary>
+    /// NTLM authentication.
+    /// </summary>
+    /// <remarks>
+    /// Requires a username and password to be supplied; MailKit cannot reuse the
+    /// Windows logon session of the current thread or process.
+    /// </remarks>
+    Ntlm
+  }
+
+  // Allow semicolon delimiters for backward compatibility.
+  private static readonly char[] _addressDelimiters = [',', ';'];
+
+  /// <summary>
+  /// Trims leading and trailing commas or semicolons
+  /// </summary>
+  private static string? MaybeTrimSeparators(string? s) => s?.Trim(_addressDelimiters);
+
+  /// <summary>
+  /// Parses a comma- or semicolon-delimited list of addresses.
+  /// </summary>
+  /// <remarks>
+  /// RFC 5322 only allows commas, which is what <see cref="InternetAddressList.Parse(string)"/>
+  /// accepts, so semicolon-delimited lists are retried after normalization.
+  /// </remarks>
+  private static InternetAddressList ParseAddresses(string addresses)
+    => InternetAddressList.TryParse(addresses, out InternetAddressList? list)
+      ? list
+      : InternetAddressList.Parse(ReplaceUnquotedSemicolons(addresses));
+
+  /// <summary>
+  /// Replaces every semicolon that is not inside a quoted string with a comma.
+  /// </summary>
+  private static string ReplaceUnquotedSemicolons(string addresses)
+  {
+    StringBuilder result = new(addresses.Length);
+    bool inQuotes = false;
+    bool escaped = false;
+    foreach (char character in addresses)
+    {
+      if (escaped)
+      {
+        escaped = false;
+        result.Append(character);
+        continue;
+      }
+
+      switch (character)
+      {
+        case '\\' when inQuotes:
+          escaped = true;
+          result.Append(character);
+          break;
+        case '"':
+          inQuotes = !inQuotes;
+          result.Append(character);
+          break;
+        case ';' when !inQuotes:
+          result.Append(',');
+          break;
+        default:
+          result.Append(character);
+          break;
+      }
+    }
+    return result.ToString();
+  }
+}

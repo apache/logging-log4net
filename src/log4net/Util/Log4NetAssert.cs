@@ -42,7 +42,7 @@ internal static class Log4NetAssert
   /// <returns>Value (when not null)</returns>
   /// <exception cref="ArgumentNullException" />
   public static T EnsureNotNull<T>([NotNull][ValidatedNotNull] this T? value,
-    [CallerArgumentExpression("value")] string name = "",
+    [CallerArgumentExpression(nameof(value))] string name = "",
     string? errorMessage = null)
     where T : class
   {
@@ -53,6 +53,31 @@ internal static class Log4NetAssert
 
     return value;
   }
+
+  /// <summary>
+  /// Ensures that <paramref name="value"/> is not <see langword="null"/> or empty and returns the validated value
+  /// </summary>
+  /// <param name="value">Value to validate</param>
+  /// <param name="name">Name of the value</param>
+  /// <param name="errorMessage">Error message (optional)</param>
+  /// <returns>Value (when not null)</returns>
+  /// <exception cref="ArgumentNullException" />
+  public static string EnsureNotNullOrEmpty(
+    [NotNull][ValidatedNotNull] this string? value,
+    [CallerArgumentExpression(nameof(value))] string name = "",
+    string? errorMessage = null)
+  {
+    // Not string.IsNullOrEmpty: its [NotNullWhen(false)] annotation is absent from the
+    // netstandard2.0 reference assembly, so it would not satisfy [NotNull].
+    if (value is string { Length: > 0})
+    {
+      return value;
+    }
+    throw ArgumentNull(name, NotNullOrEmptyMessage(errorMessage, name));
+  }
+
+  private static string NotNullOrEmptyMessage(string? existingMessage, string name)
+     => existingMessage ?? string.Format("'{0}' cannot be null or empty.", name);
 
   /// <summary>
   /// Ensures that <paramref name="value"/> is not null and an instance of <typeparamref name="T"/>
@@ -67,7 +92,7 @@ internal static class Log4NetAssert
   /// <exception cref="InvalidCastException" />
   public static T EnsureIs<T>(
     [NotNull][ValidatedNotNull] this object? value,
-    [CallerArgumentExpression("value")] string name = "",
+    [CallerArgumentExpression(nameof(value))] string name = "",
     string? errorMessage = null)
   {
     if (value is T result)
