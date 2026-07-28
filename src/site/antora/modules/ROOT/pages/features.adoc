@@ -103,6 +103,7 @@ The RollingFileAppender can be configured to log to multiple files based upon da
 
 |xref:manual/configuration/appenders/smtpappender.adoc[]
 |Sends logging events to an email address.
+The MailKit based appender from the `log4net.Ext.Mail` package is recommended; the built-in variant relies on the deprecated `System.Net.Mail.SmtpClient`.
 
 |xref:manual/configuration/appenders/smtppickupdirappender.adoc[]
 |Sends logging events to an email address but writes the emails to a configurable directory rather than sending them directly via SMTP.
