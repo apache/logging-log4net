@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <NoWarn>NETSDK1138;CS1701</NoWarn>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin\$(Configuration)</OutputPath>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU</Platforms>
+    <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
+    <!-- suppress analyzer mismatch warning -->
+    <NoWarn>CS8032</NoWarn>
+    <VSTestLogger>quackers</VSTestLogger>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\log4net\Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" Link="Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" />
+    <Compile Include="..\log4net\Diagnostics\CodeAnalysis\IsExternalInit.cs" Link="Diagnostics\CodeAnalysis\IsExternalInit.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\log4net.Ext.Mail\log4net.Ext.Mail.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
+    <PackageReference Include="NUnit.Analyzers" Version="$(NUnitAnalyzersPackageVersion)" />
+    <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
+    <PackageReference Include="Quackers.TestLogger" Version="$(QuackersTestLoggerPackageVersion)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkPackageVersion)" />
+  </ItemGroup>
+</Project>
