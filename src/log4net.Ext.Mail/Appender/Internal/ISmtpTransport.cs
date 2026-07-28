@@ -22,7 +22,7 @@ using System.Net;
 using MailKit.Security;
 using MimeKit;
 
-namespace log4net.Ext.Mail.Appender;
+namespace log4net.Ext.Mail.Appender.Internal;
 
 /// <summary>
 /// The slice of the MailKit SMTP client API used by <see cref="SmtpAppender"/>.
@@ -38,7 +38,7 @@ namespace log4net.Ext.Mail.Appender;
 /// <see cref="MailKit.Net.Smtp.SmtpClient"/> needs no translation logic.
 /// </para>
 /// </remarks>
-public interface ISmtpTransport : IDisposable
+internal interface ISmtpTransport : IDisposable
 {
   /// <summary>
   /// Gets a value indicating whether the transport is connected to a server.

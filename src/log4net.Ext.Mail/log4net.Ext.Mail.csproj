@@ -52,6 +52,9 @@
     <PathMap>$(MSBuildProjectDirectory)\=$(MSBuildProjectDirectory.Replace($(MSBuildThisFileDirectory),"D:\Git\apache\logging-log4net"))\</PathMap>
   </PropertyGroup>
   <PropertyGroup />
+  <ItemGroup>
+    <InternalsVisibleTo Include="log4net.Ext.Mail.Tests" />
+  </ItemGroup>
   <ItemGroup Label="Shared sources from log4net">
     <!-- Log4NetAssert and the attributes it uses are internal to log4net, so they are
          compiled into this assembly rather than referenced. -->

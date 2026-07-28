@@ -25,6 +25,7 @@ using System.Text;
 
 using log4net.Appender;
 using log4net.Core;
+using log4net.Ext.Mail.Appender.Internal;
 using log4net.Util;
 using MailKit.Security;
 
@@ -41,9 +42,8 @@ namespace log4net.Ext.Mail.Appender;
 /// <para>
 /// This appender exposes the same options as <see cref="log4net.Appender.SmtpAppender"/>,
 /// so an existing configuration can be pointed at this type without change. The difference
-/// is the transport: sending is delegated to an <see cref="ISmtpTransport"/>, which by
-/// default wraps <see cref="MailKit.Net.Smtp.SmtpClient"/> instead of the obsolete
-/// <see cref="System.Net.Mail.SmtpClient"/>.
+/// is the transport: it sends through <see cref="MailKit.Net.Smtp.SmtpClient"/> instead of
+/// the obsolete <see cref="System.Net.Mail.SmtpClient"/>.
 /// </para>
 /// <para>
 /// The number of logging events delivered in this e-mail depend on
@@ -67,13 +67,9 @@ namespace log4net.Ext.Mail.Appender;
 /// default SMTP server, so <see cref="SmtpHost"/> is required.
 /// </para>
 /// </remarks>
-/// <param name="transportFactory">
-/// Called once per e-mail to create the transport used to send it. Intended for tests and
-/// for hosts that need to configure the MailKit client themselves.
-/// </param>
-public class SmtpAppender(Func<ISmtpTransport> transportFactory) : BufferingAppenderSkeleton
+public class SmtpAppender : BufferingAppenderSkeleton
 {
-  private readonly Func<ISmtpTransport> _transportFactory = transportFactory ?? throw new ArgumentNullException(nameof(transportFactory));
+  private readonly Func<ISmtpTransport> _transportFactory;
 
   /// <summary>
   /// Default constructor. Sends through <see cref="MailKitSmtpTransport"/>.
@@ -81,6 +77,15 @@ public class SmtpAppender(Func<ISmtpTransport> transportFactory) : BufferingAppe
   public SmtpAppender()
     : this(static () => new MailKitSmtpTransport())
   { }
+
+  /// <summary>
+  /// Creates an appender that obtains its transport from <paramref name="transportFactory"/>.
+  /// </summary>
+  /// <param name="transportFactory">
+  /// Called once per e-mail to create the transport used to send it.
+  /// </param>
+  internal SmtpAppender(Func<ISmtpTransport> transportFactory)
+    => _transportFactory = transportFactory.EnsureNotNull();
 
   /// <summary>
   /// Gets or sets a comma-delimited list of recipient e-mail addresses.

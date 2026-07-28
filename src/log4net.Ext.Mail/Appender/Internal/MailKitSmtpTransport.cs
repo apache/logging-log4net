@@ -22,13 +22,13 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-namespace log4net.Ext.Mail.Appender;
+namespace log4net.Ext.Mail.Appender.Internal;
 
 /// <summary>
 /// The default <see cref="ISmtpTransport"/> implementation, backed by
 /// <see cref="MailKit.Net.Smtp.SmtpClient"/>.
 /// </summary>
-public sealed class MailKitSmtpTransport : ISmtpTransport
+internal sealed class MailKitSmtpTransport : ISmtpTransport
 {
   private readonly SmtpClient _client = new();
 
