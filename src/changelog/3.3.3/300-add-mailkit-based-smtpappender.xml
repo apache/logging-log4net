@@ -5,7 +5,8 @@
        type="added">
   <issue id="300" link="https://github.com/apache/logging-log4net/issues/300"/>
   <issue id="302" link="https://github.com/apache/logging-log4net/pull/302"/>
-  <description format="asciidoc">Add a MailKit based `SmtpAppender` in the new `log4net.Ext.Mail` assembly,
-  because Microsoft no longer recommends `System.Net.Mail.SmtpClient` for new development
+  <description format="asciidoc">Add a MailKit based `SmtpAppender` in the new `log4net.Ext.Mail` assembly
+  and mark `log4net.Appender.SmtpAppender` as obsolete, because Microsoft no longer recommends
+  `System.Net.Mail.SmtpClient` for new development
   (requested by @DietzeC, implemented by @FreeAndNil in https://github.com/apache/logging-log4net/pull/302[#302])</description>
 </entry>

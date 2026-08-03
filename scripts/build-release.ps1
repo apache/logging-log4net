@@ -22,7 +22,7 @@ function Write-HashAndSignature
 "cleaning $PSScriptRoot/../build/ ..." 
 Remove-Item $PSScriptRoot/../build/ -Force -Recurse -ErrorAction SilentlyContinue
 'building ...'
-dotnet test -c Release "-p:GeneratePackages=true;PackageVersion=$Version" $PSScriptRoot/../src/log4net/log4net.csproj
+dotnet test -c Release "-p:GeneratePackages=true;PackageVersion=$Version" $PSScriptRoot/../src/log4net.sln
 'compressing source ...'
 pushd $PSScriptRoot/..
 git archive --format=zip --output $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip master
@@ -37,6 +37,8 @@ popd
 'signing ...'
 Move-Item $PSScriptRoot/../build/artifacts/log4net.$Version.nupkg $PSScriptRoot/../build/artifacts/apache-log4net.$Version.nupkg
 Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net.$Version.nupkg
+Move-Item $PSScriptRoot/../build/artifacts/log4net.Ext.Mail.$Version.nupkg $PSScriptRoot/../build/artifacts/apache-log4net.Ext.Mail.$Version.nupkg
+Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net.Ext.Mail.$Version.nupkg
 Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip
 Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net-binaries-$Version.zip
 Write-HashAndSignature $PSScriptRoot/../build/artifacts/verify-release.ps1

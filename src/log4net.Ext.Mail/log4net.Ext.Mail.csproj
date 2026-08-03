@@ -47,7 +47,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)'=='Release' ">
     <AssemblyConfiguration>Retail</AssemblyConfiguration>
-    <DefineConstants>TRACE;STRONG;$(DefineConstants)</DefineConstants>
+    <!--
+      Unlike log4net, this assembly is deliberately not strong named: it is a satellite package
+      with no COM or GAC scenario, and signing it later would be a breaking change for consumers.
+      Hence no SignAssembly/AssemblyOriginatorKeyFile here, and no STRONG constant either - it
+      is not referenced by any source file in this project.
+    -->
+    <DefineConstants>TRACE;$(DefineConstants)</DefineConstants>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PathMap>$(MSBuildProjectDirectory)\=$(MSBuildProjectDirectory.Replace($(MSBuildThisFileDirectory),"D:\Git\apache\logging-log4net"))\</PathMap>
   </PropertyGroup>

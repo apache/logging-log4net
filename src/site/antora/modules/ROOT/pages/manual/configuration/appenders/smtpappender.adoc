@@ -31,7 +31,7 @@ There are two implementations to choose from:
 |`log4net.Ext.Mail`
 |https://github.com/jstedfast/MailKit[MailKit]
 
-|`log4net.Appender.SmtpAppender` (legacy)
+|`log4net.Appender.SmtpAppender` (deprecated)
 |`log4net`
 |`System.Net.Mail.SmtpClient`
 |===
@@ -235,11 +235,13 @@ MailKit cannot reuse the Windows logon session of the current thread or process,
 * Semicolon-delimited recipient lists in `to`, `cc` and `bcc` are parsed correctly.
 
 [#legacy-smtpappender]
-== Built-in SmtpAppender (legacy)
+== Built-in SmtpAppender (deprecated)
 
 [NOTE]
 ====
-This appender is still shipped and still works, but it is not recommended for new configurations.
+This appender is still shipped and still works, but it is marked `[Obsolete]`, so referencing
+`log4net.Appender.SmtpAppender` from code produces a compiler warning.
+Configuring it from XML keeps working without any warning.
 See the note at the xref:#smtpappender[top of this page].
 ====
 
