@@ -78,14 +78,14 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
     }
     set
     {
-      // Force the dictionary to be created
-      PropertiesDictionary props = GetProperties(true)!;
       // Reason for cloning the dictionary below: object instances set on the CallContext
-      // need to be immutable to correctly flow through async/await
-      PropertiesDictionary immutableProps = new(props)
-      {
-        [key] = value
-      };
+      // need to be immutable to correctly flow through async/await.
+      // The existing dictionary is read without creating one, because the clone replaces it
+      // anyway - asking for creation would store an empty dictionary just to overwrite it.
+      PropertiesDictionary immutableProps = GetProperties(false) is PropertiesDictionary props
+        ? new(props)
+        : [];
+      immutableProps[key] = value;
       SetLogicalProperties(immutableProps);
     }
   }
@@ -101,7 +101,9 @@ public sealed class LogicalThreadContextProperties : ContextPropertiesBase
   /// </remarks>
   public void Remove(string key)
   {
-    if (GetProperties(false) is PropertiesDictionary dictionary)
+    // Cloning is only worthwhile when the key is actually present - otherwise the clone would
+    // replace the stored dictionary with an equal one.
+    if (GetProperties(false) is PropertiesDictionary dictionary && dictionary.Contains(key))
     {
       PropertiesDictionary immutableProps = new(dictionary);
       immutableProps.Remove(key);

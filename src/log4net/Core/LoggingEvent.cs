@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -701,83 +702,84 @@ public class LoggingEvent : ILog4NetSerializable
   /// </value>
   /// <remarks>
   /// <para>
-  /// On Windows it calls <c>WindowsIdentity.GetCurrent().Name</c> to get the name of
-  /// the current windows user. On other OSes it calls Environment.UserName.
+  /// On Windows this resolves the name from <see cref="WindowsIdentity"/>, on other platforms
+  /// from <see cref="Environment.UserName"/>.
   /// </para>
   /// <para>
-  /// To improve performance, we could cache the string representation of 
-  /// the name, and reuse that as long as the identity stayed constant.  
-  /// Once the identity changed, we would need to re-assign and re-render 
-  /// the string.
+  /// Resolving the name is by far the most expensive part: obtaining the identity costs a few
+  /// hundred nanoseconds, while translating it into a <c>DOMAIN\user</c> string is a local
+  /// security authority lookup costing tens of microseconds. The name is therefore cached, in a
+  /// way that still reports the right user in a process which switches users:
   /// </para>
-  /// <para>
-  /// However, the <c>WindowsIdentity.GetCurrent()</c> call seems to 
-  /// return different objects every time, so the current implementation 
-  /// doesn't do this type of caching.
-  /// </para>
-  /// <para>
-  /// Timing for these operations:
-  /// </para>
-  /// <list type="table">
-  ///   <listheader>
-  ///     <term>Method</term>
-  ///     <description>Results</description>
-  ///   </listheader>
-  ///   <item>
-  ///      <term><c>WindowsIdentity.GetCurrent()</c></term>
-  ///      <description>10000 loops, 00:00:00.2031250 seconds</description>
-  ///   </item>
-  ///   <item>
-  ///      <term><c>WindowsIdentity.GetCurrent().Name</c></term>
-  ///      <description>10000 loops, 00:00:08.0468750 seconds</description>
-  ///   </item>
+  /// <list type="bullet">
+  ///   <item><description>
+  ///     A thread that is not impersonating runs as the process identity, so its name is
+  ///     resolved once per process. Asking whether the thread impersonates, via
+  ///     <see cref="WindowsIdentity.GetCurrent(bool)"/>, is around 300 times cheaper than
+  ///     resolving a name, so this is the fast path for services, console applications and
+  ///     ASP.NET Core.
+  ///   </description></item>
+  ///   <item><description>
+  ///     A thread that is impersonating - classic ASP.NET with
+  ///     <c>&lt;identity impersonate="true"/&gt;</c>, or <c>WindowsIdentity.RunImpersonated</c> -
+  ///     has its name resolved once per distinct user and cached by security identifier, for up
+  ///     to <see cref="MaxCachedUserNames"/> users. Past that bound the name is resolved per
+  ///     event rather than letting the cache grow without limit.
+  ///   </description></item>
   /// </list>
   /// <para>
-  /// This means we could speed things up almost 40 times by caching the 
-  /// value of the <c>WindowsIdentity.GetCurrent().Name</c> property, since 
-  /// this takes (8.04-0.20) = 7.84375 seconds.
+  /// In classic ASP.NET, <see cref="Identity"/> is both cheaper than this property and usually
+  /// what the application actually wants, because it reports the authenticated application user
+  /// rather than the Windows account the request happens to run as.
   /// </para>
   /// </remarks>
   public string UserName =>
       _data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
 
-  private string? TryGetCurrentUserName()
+  private static string? TryGetCurrentUserName()
   {
     try
     {
-      if (_platformDoesNotSupportWindowsIdentity)
+      if (_windowsIdentityUnavailable)
       {
-        // we've already received one PlatformNotSupportedException or null from TryReadWindowsIdentityUserName
-        // and it's highly unlikely that will change
-        return Environment.UserName;
+        // we've already seen a PlatformNotSupportedException, a SecurityException or a
+        // non-Windows platform, and it's highly unlikely that will change
+        return CachedEnvironmentUserName;
       }
-    
-      if (_cachedWindowsIdentityUserName is not null)
+
+      if (!IsWindowsIdentitySupported())
       {
-        return _cachedWindowsIdentityUserName;
+        _windowsIdentityUnavailable = true;
+        return CachedEnvironmentUserName;
       }
-      if (TryReadWindowsIdentityUserName() is string userName)
+
+      using WindowsIdentity? impersonated = WindowsIdentity.GetCurrent(ifImpersonating: true);
+      if (impersonated is null)
       {
-        _cachedWindowsIdentityUserName = userName;
-        return _cachedWindowsIdentityUserName;
+        // Not impersonating, so this thread runs as the process identity. Reading it through
+        // GetCurrent() is only correct here, which is why the field is assigned nowhere else:
+        // seeding it from an impersonating thread would report that user for the whole process.
+        return _processUserName ??= ReadProcessUserName();
       }
-      _platformDoesNotSupportWindowsIdentity = true;
-      return Environment.UserName;
+
+      return ReadImpersonatedUserName(impersonated);
     }
     catch (PlatformNotSupportedException)
     {
-      _platformDoesNotSupportWindowsIdentity = true;
-      return Environment.UserName;
+      _windowsIdentityUnavailable = true;
+      return CachedEnvironmentUserName;
     }
     catch (SecurityException)
     {
-      // This security exception will occur if the caller does not have 
-      // some undefined set of SecurityPermission flags.
+      // This security exception will occur if the caller does not have
+      // some undefined set of SecurityPermission flags. It will keep happening, so remember it
+      // instead of throwing and catching once per logging event.
+      _windowsIdentityUnavailable = true;
       LogLog.Debug(
           _declaringType,
           "Security exception while trying to get current windows identity. Error Ignored."
       );
-      return Environment.UserName;
+      return CachedEnvironmentUserName;
     }
     catch (Exception e) when (!e.IsFatal())
     {
@@ -785,29 +787,53 @@ public class LoggingEvent : ILog4NetSerializable
     }
   }
 
-  private string? _cachedWindowsIdentityUserName;
-  
-  /// <returns>
-  ///  On Windows: UserName in case of success, empty string for unexpected null in identity or Name
-  ///  <para/>
-  ///  On other OSes: null
-  /// </returns>
-  /// <exception cref="PlatformNotSupportedException">Thrown on non-Windows platforms on net462</exception>
-  private static string? TryReadWindowsIdentityUserName()
+  /// <summary>
+  /// <see cref="Environment.UserName"/>, resolved once per process. Only reached when
+  /// <see cref="WindowsIdentity"/> is unusable, where thread level impersonation does not apply.
+  /// </summary>
+  private static string CachedEnvironmentUserName => field ??= Environment.UserName;
+
+  /// <returns><see langword="false"/> on platforms where <see cref="WindowsIdentity"/> cannot be used</returns>
+  private static bool IsWindowsIdentitySupported()
   {
     // According to docs RuntimeInformation.IsOSPlatform is supported from netstandard1.1,
     // but it's erroring in runtime on < net471
 #if NET471_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-    {
-      return null;
-    }
+    return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+#else
+    return true;
 #endif
+  }
+
+  /// <returns>UserName of the process identity, empty string for an unexpected null in identity or Name</returns>
+  /// <exception cref="PlatformNotSupportedException">Thrown on non-Windows platforms on net462</exception>
+  private static string ReadProcessUserName()
+  {
     using WindowsIdentity identity = WindowsIdentity.GetCurrent();
     return identity?.Name ?? string.Empty;
   }
 
-  private static bool _platformDoesNotSupportWindowsIdentity;
+  /// <returns>UserName of <paramref name="identity"/>, resolved once per security identifier</returns>
+  private static string ReadImpersonatedUserName(WindowsIdentity identity)
+  {
+    if (identity.User is not SecurityIdentifier sid)
+    {
+      return identity.Name ?? string.Empty;
+    }
+
+    if (_userNamesBySid.TryGetValue(sid, out string? cached))
+    {
+      return cached;
+    }
+
+    string userName = identity.Name ?? string.Empty;
+    if (_userNamesBySid.Count < MaxCachedUserNames)
+    {
+      _userNamesBySid[sid] = userName;
+    }
+
+    return userName;
+  }
 
   /// <summary>
   /// Gets the identity of the current thread principal.
@@ -1292,6 +1318,25 @@ public class LoggingEvent : ILog4NetSerializable
 
     return _compositeProperties!.Flatten();
   }
+
+  /// <summary>
+  /// Upper bound on <see cref="_userNamesBySid"/>, so that a process impersonating an unbounded
+  /// set of users - an intranet site in front of a large directory - does not accumulate one
+  /// cache entry per visitor.
+  /// </summary>
+  private const int MaxCachedUserNames = 64;
+
+  /// <summary>
+  /// Name of the process identity, resolved once on a thread that is not impersonating.
+  /// </summary>
+  private static string? _processUserName;
+
+  /// <summary>
+  /// Names of impersonated users, keyed by security identifier.
+  /// </summary>
+  private static readonly ConcurrentDictionary<SecurityIdentifier, string> _userNamesBySid = new();
+
+  private static bool _windowsIdentityUnavailable;
 
   /// <summary>
   /// The internal logging event data.
