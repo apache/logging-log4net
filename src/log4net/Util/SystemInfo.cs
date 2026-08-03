@@ -42,6 +42,11 @@ public static class SystemInfo
   internal static bool IsAndroid { get; } = IsAndroidCore();
 
   /// <summary>
+  /// Is the mono runtime used
+  /// </summary>
+  internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") is not null;
+  
+  /// <summary>
   /// Initialize default values for private static fields.
   /// </summary>
   /// <remarks>

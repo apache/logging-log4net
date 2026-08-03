@@ -787,12 +787,6 @@ public class LoggingEvent : ILog4NetSerializable
     }
   }
 
-  /// <summary>
-  /// <see cref="Environment.UserName"/>, resolved once per process. Only reached when
-  /// <see cref="WindowsIdentity"/> is unusable, where thread level impersonation does not apply.
-  /// </summary>
-  private static string CachedEnvironmentUserName => field ??= Environment.UserName;
-
   /// <returns><see langword="false"/> on platforms where <see cref="WindowsIdentity"/> cannot be used</returns>
   private static bool IsWindowsIdentitySupported()
   {
@@ -801,7 +795,7 @@ public class LoggingEvent : ILog4NetSerializable
 #if NET471_OR_GREATER || NETSTANDARD2_0_OR_GREATER
     return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 #else
-    return true;
+    return !SystemInfo.IsMono;
 #endif
   }
 
@@ -1325,6 +1319,14 @@ public class LoggingEvent : ILog4NetSerializable
   /// cache entry per visitor.
   /// </summary>
   private const int MaxCachedUserNames = 64;
+
+  private static string? _cachedEnvironmentUserName;
+
+  /// <summary>
+  /// <see cref="Environment.UserName"/>, resolved once per process. Only reached when
+  /// <see cref="WindowsIdentity"/> is unusable, where thread level impersonation does not apply.
+  /// </summary>
+  private static string CachedEnvironmentUserName => _cachedEnvironmentUserName ??= Environment.UserName;
 
   /// <summary>
   /// Name of the process identity, resolved once on a thread that is not impersonating.
