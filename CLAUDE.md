@@ -42,6 +42,13 @@ almost always be doing.
 - `LangVersion` is `latest`, and current C# features are welcome and in use: primary
   constructors (`csharp_style_prefer_primary_constructors = true`), the `field` keyword in
   property accessors, list patterns, `switch` expressions.
+- **Wrap long string literals with a multi-line raw string (`"""`), never with `+`
+  concatenation.** This includes attribute arguments — see the `[Obsolete(...)]` message on
+  `log4net.Appender.SmtpAppender`. Raw strings have no line-continuation, so each source line
+  break really is a `\n` in the value, but that is fine here: compiler diagnostics render those
+  newlines as spaces, so a wrapped message still reads as one sentence. Raw strings are constant
+  expressions, so they are legal in attributes, and the feature is purely syntactic — it works on
+  `net462`/`netstandard2.0` too.
 - Private fields are `_camelCase`. Private fields and helper methods are commonly placed
   *after* the public surface of the type rather than at the top.
 
@@ -88,3 +95,8 @@ almost always be doing.
   there is no mocking library in any test project. See `ISmtpTransport` / `FakeSmtpTransport`.
 - Verify with `dotnet build src/log4net.sln` and
   `dotnet test src/<project>.Tests/<project>.Tests.csproj`.
+- **When inspecting build output, redirect it to a file and read the whole thing; do not pipe
+  MSBuild through line-oriented tools.** `grep`/`Select-String` cannot match across newlines, and
+  MSBuild's console logger formats differently when piped than when redirected — a multi-line
+  diagnostic message then looks truncated when it is not. Before reporting that the toolchain
+  mangles something, re-check with `dotnet build … > out.txt 2>&1` and inspect `out.txt`.
