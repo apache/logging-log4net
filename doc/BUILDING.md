@@ -32,8 +32,9 @@ TL;DR (!Windows):
   `Microsoft.NETFramework.ReferenceAssemblies` packages that the .NET SDK references
   implicitly. Mono would only be needed to *execute* net4x assemblies.
 - the `log4net.Tests` project skips `net462` on non-Windows platforms: VSTest hosts net4x tests
-  through `TestHostNetFramework/testhost.exe`, a .NET Framework executable, so the run aborts
-  with `TESTRUNABORT` on Linux and macOS. The `net462` tests run only on the Windows job in CI.
+  through `TestHostNetFramework/testhost.exe`, which needs a .NET Framework runtime - Mono, off
+  Windows. The Ubuntu 24.04 and macOS 26 runner images no longer ship Mono, so the run would
+  abort with `TESTRUNABORT`. The `net462` tests run only on the Windows job in CI.
 
 ## The full story
 
