@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <NoWarn>NETSDK1138;CS1701</NoWarn>
     <OutputType>Library</OutputType>
     <OutputPath>bin\$(Configuration)</OutputPath>

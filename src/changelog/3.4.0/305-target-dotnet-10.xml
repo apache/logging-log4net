@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="305" link="https://github.com/apache/logging-log4net/pull/305"/>
+  <description format="asciidoc">
+    build and test with .NET 10: the test and integration-test projects now target `net10.0`
+    instead of `net8.0`, and a .NET 10 SDK is required because the sources use C# 14 language
+    features. The published `log4net` assembly still targets `net462` and `netstandard2.0`, so
+    nothing changes for consumers
+  </description>
+</entry>

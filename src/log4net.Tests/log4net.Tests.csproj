@@ -1,7 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <IsTestProject>true</IsTestProject>
-    <TargetFrameworks>net462;net8.0</TargetFrameworks>
+    <TargetFrameworks>net462;net10.0</TargetFrameworks>
+    <!-- net462 test assemblies can only be executed on Windows: VSTest hosts them through
+         TestHostNetFramework/testhost.exe, which is not part of the Linux/macOS SDK. Building
+         them elsewhere only produces assemblies that cannot be run, so skip the target. -->
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net10.0</TargetFrameworks>
     <NoWarn>NETSDK1138;CS1701</NoWarn>
     <OutputType>Library</OutputType>
     <OutputPath>bin\$(Configuration)</OutputPath>
@@ -31,7 +35,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Runtime.Remoting" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net10.0'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNetTestSdkPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
@@ -39,5 +43,4 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="../MonoForFramework.targets" />
 </Project>

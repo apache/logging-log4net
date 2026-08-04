@@ -47,7 +47,7 @@ jobs:
       - name: Set up dotnet
         uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee   # 4.0.1
         with:
-          dotnet-version: 8
+          dotnet-version: 10
           dotnet-quality: ga
 
       - name: Build
