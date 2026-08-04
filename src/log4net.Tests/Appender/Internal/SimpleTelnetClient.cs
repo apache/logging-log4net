@@ -38,59 +38,78 @@ internal sealed class SimpleTelnetClient(
 {
   private readonly CancellationTokenSource _cancellationTokenSource = new();
   private readonly TcpClient _client = new();
+  private volatile bool _disposing;
 
   /// <summary>
   /// Runs the client (in a task)
   /// </summary>
+  /// <param name="log">Callback for unexpected errors - a passing run stays silent</param>
   internal void Run(Action<string> log) => Task.Run(() =>
   {
     try
     {
-      log("client: starting ...");
       _client.Connect(new IPEndPoint(IPAddress.Loopback, port));
-      log("client: connected");
       // Get a stream object for reading and writing
       using NetworkStream stream = _client.GetStream();
-      log("client: has stream");
 
       int i;
       byte[] bytes = new byte[256];
 
-      // Loop to receive all the data sent by the server
+      // Loop to receive all the data sent by the server. Dispose shuts the socket down,
+      // which ends the stream, so this read returns 0 and the loop exits without throwing.
       while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
       {
-        string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-        log("client: read: " + data);
-        received(data);
+        received(System.Text.Encoding.ASCII.GetString(bytes, 0, i));
         if (_cancellationTokenSource.Token.IsCancellationRequested)
         {
-          log("client: canceled");
           return;
         }
       }
-      log("client: end of stream");
     }
     // The test asserts on the received data, so a failing client must not end up
-    // as an unobserved task exception - log it instead.
+    // as an unobserved task exception - log it instead. Anything thrown once Dispose
+    // has started is teardown noise, so only genuine failures reach the output.
     catch (SocketException e)
     {
-      log("client: error: " + e);
+      Report(e);
     }
     catch (IOException e)
     {
-      log("client: error: " + e);
+      Report(e);
     }
     catch (ObjectDisposedException e)
     {
-      // expected when the client is disposed while reading
-      log("client: disposed: " + e.Message);
+      Report(e);
+    }
+
+    void Report(Exception e)
+    {
+      if (!_disposing)
+      {
+        log("client: error: " + e);
+      }
     }
   }, _cancellationTokenSource.Token);
 
   /// <inheritdoc/>
   public void Dispose()
   {
+    _disposing = true;
     _cancellationTokenSource.Cancel();
+    // Shut the socket down before disposing it: that ends the stream cleanly, so a read
+    // blocked in Run returns 0 instead of failing with a connection abort.
+    try
+    {
+      _client.Client?.Shutdown(SocketShutdown.Both);
+    }
+    catch (SocketException)
+    {
+      // not connected - nothing to shut down
+    }
+    catch (ObjectDisposedException)
+    {
+      // already disposed - nothing to shut down
+    }
     _cancellationTokenSource.Dispose();
     _client.Dispose();
   }
