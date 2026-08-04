@@ -3,9 +3,10 @@ param(
   $Preview = '1'
 )
 'building ...'
-dotnet build -c Release "-p:GeneratePackages=true;PackageVersion=$Version-preview.$Preview" $PSScriptRoot/../src/log4net/log4net.csproj
+dotnet build -c Release "-p:GeneratePackages=true;PackageVersion=$Version-preview.$Preview" $PSScriptRoot/../src/log4net.sln
 'signing ...'
 gpg --armor --output $PSScriptRoot\..\build\artifacts\log4net.$Version-preview.$Preview.nupkg.asc --detach-sig $PSScriptRoot\..\build\artifacts\log4net.$Version-preview.$Preview.nupkg
+gpg --armor --output $PSScriptRoot\..\build\artifacts\log4net.Ext.Mail.$Version-preview.$Preview.nupkg.asc --detach-sig $PSScriptRoot\..\build\artifacts\log4net.Ext.Mail.$Version-preview.$Preview.nupkg
 'create tag?'
 pause
 'creating tag ...'

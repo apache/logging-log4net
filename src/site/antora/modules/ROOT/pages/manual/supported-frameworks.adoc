@@ -63,3 +63,7 @@ The following appenders are supported on the specified frameworks:
 | TraceAppender                 | x | x
 | UdpAppender                   | x | x
 |===
+
+The recommended MailKit based `SmtpAppender` is not part of the `log4net` assembly.
+It ships in the separate `log4net.Ext.Mail` package, which targets .NET Standard 2.0 and is therefore usable from both .NET Framework 4.7.1 and modern .NET applications.
+See xref:manual/configuration/appenders/smtpappender.adoc[] for details.
