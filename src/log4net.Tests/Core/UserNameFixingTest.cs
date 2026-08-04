@@ -57,6 +57,9 @@ public class UserNameFixingTest
     Assert.That(impersonating, Is.True);
   }
 
+  /// <summary>
+  /// The UserName property matches the current Windows identity.
+  /// </summary>
   [Test]
   public void UserNameMatchesTheCurrentWindowsIdentity()
   {
@@ -65,6 +68,9 @@ public class UserNameFixingTest
     Assert.That(CreateEvent().UserName, Is.EqualTo(identity.Name));
   }
 
+  /// <summary>
+  /// The UserName is stable across multiple events (cached, not resolved each time).
+  /// </summary>
   [Test]
   public void UserNameIsStableAcrossEvents()
   {
@@ -73,6 +79,9 @@ public class UserNameFixingTest
     Assert.That(CreateEvent().UserName, Is.EqualTo(first));
   }
 
+  /// <summary>
+  /// While impersonating, the UserName is correctly resolved to the impersonated user's identity.
+  /// </summary>
   [Test]
   public void UserNameIsResolvedWhileImpersonating()
   {
