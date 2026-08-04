@@ -63,7 +63,8 @@ release version 3.2.1:
     - copy all artifacts to the new folder
     - `svn add *`
     - `svn commit`
-14. push the .nupkg to nuget.org
+14. push the .nupkg files to nuget.org
+    - push all `apache-log4net*.nupkg` files from build/artifacts
     - via `dotnet`: `dotnet nuget push <path to package> -s nuget.org -k <your nuget api key>`
     - via `nuget`: `nuget push <path to package> -Source nuget.org -ApiKey <your nuget api key>`
 15. don't forget to make the docs live: in the logging-log4net-site folder:

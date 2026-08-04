@@ -13,6 +13,10 @@ Web site: http://logging.apache.org/log4net
 For the latest documentation see the log4net web site at:
 http://logging.apache.org/log4net
 
+## Extensions
+
+- [log4net.Ext.Mail](https://www.nuget.org/packages/log4net.Ext.Mail) - MailKit-based SMTP appender for sending log events via email (recommended replacement for the deprecated SmtpAppender)
+
 # Contributing
 
 log4net development happens on [Github](https://github.com/apache/logging-log4net)
