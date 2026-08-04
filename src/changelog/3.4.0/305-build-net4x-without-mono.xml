@@ -10,6 +10,8 @@
     the `Microsoft.NETFramework.ReferenceAssemblies` packages that the .NET SDK already references
     implicitly. Mono is still needed to *run* .NET Framework assemblies: CI moved to
     `ubuntu-latest` (Ubuntu 24.04) and `macos-latest` (macOS 26), which no longer ship Mono, so
-    the `net462` tests now run only on the Windows job
+    the `net462` tests now run only on the Windows job and the Mono guards in the test suite were
+    dropped. Support for *running* log4net under Mono is unaffected - the runtime check in
+    `log4net.Util.SystemInfo` is unchanged
   </description>
 </entry>

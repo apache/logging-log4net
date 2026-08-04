@@ -17,9 +17,6 @@
 //
 #endregion
 
-using System;
-using NUnit.Framework;
-
 namespace log4net.Tests;
 
 /// <summary>
@@ -27,22 +24,6 @@ namespace log4net.Tests;
 /// </summary>
 public static class Utils
 {
-  /// <summary>
-  /// Is the mono runtime used
-  /// </summary>
-  internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") is not null;
-
-  /// <summary>
-  /// Skips the current test when run under mono
-  /// </summary>
-  internal static void InconclusiveOnMono()
-  {
-    if (IsMono)
-    {
-      Assert.Inconclusive("mono has a different behaviour");
-    }
-  }
-
   /// <summary>
   /// Sample property key
   /// </summary>
