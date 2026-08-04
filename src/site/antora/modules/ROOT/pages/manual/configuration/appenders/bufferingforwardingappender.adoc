@@ -31,9 +31,11 @@ The following example shows how to configure the `BufferingForwardingAppender` t
   <!--
     The value configures what gets fixed immediately when calling logger.Log().
     The default value is All, which may negatively impact performance enough to warrant changing it to fix less data.
+    Partial is the recommended starting point: it fixes the message, thread name, exception, domain
+    and properties, and leaves out LocationInfo, which has to walk the call stack for every event.
     More information can be found at https://github.com/apache/logging-log4net/blob/master/src/log4net/Core/FixFlags.cs
   -->
-  <fix value="All"/>
+  <fix value="Partial"/>
   <appender-ref ref="ConsoleAppender" />
 </appender>
 ----

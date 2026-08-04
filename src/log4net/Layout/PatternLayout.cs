@@ -556,13 +556,21 @@ namespace log4net.Layout;
 ///        </para>
 ///        <para>
 ///        <b>WARNING</b> Generating caller WindowsIdentity information is
-///        extremely slow. Its use should be avoided unless execution speed
-///        is not an issue.
+///        slow. The name is cached per identity, so a process that does not
+///        impersonate pays for it once, and one that impersonates pays once
+///        per distinct user - but the first event for each user is expensive.
+///        </para>
+///        <para>
+///        In classic ASP.NET with <c>&lt;identity impersonate="true"/&gt;</c> this reports the
+///        Windows account the request runs as. <b>identity</b> is both cheaper and usually what
+///        is wanted there, because it reports the authenticated application user. On ASP.NET Core
+///        there is no impersonation by default, so this reports the application pool identity
+///        rather than the request user.
 ///        </para>
 ///      </description>
 ///    </item>
 ///     <item>
-///      <term>utcdate</term> 
+///      <term>utcdate</term>
 ///      <description>
 ///       <para>
 ///       Used to output the date of the logging event in universal time. 
