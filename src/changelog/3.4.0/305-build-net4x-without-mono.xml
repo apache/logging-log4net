@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="305" link="https://github.com/apache/logging-log4net/pull/305"/>
+  <description format="asciidoc">
+    Mono is no longer required to build the `net462` and `net472` targets on Linux and macOS.
+    `MonoForFramework.targets` and its `FrameworkPathOverride` handling were removed in favour of
+    the `Microsoft.NETFramework.ReferenceAssemblies` packages that the .NET SDK already references
+    implicitly. Mono would only be needed to run .NET Framework assemblies, so the `net462` test
+    target is now skipped off Windows, where VSTest cannot host it
+  </description>
+</entry>
