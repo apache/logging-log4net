@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="305" link="https://github.com/apache/logging-log4net/pull/305"/>
+  <description format="asciidoc">
+    build the container image from `mcr.microsoft.com/dotnet/sdk:10.0-noble` instead of installing
+    a SDK into `ubuntu:20.04` with `dotnet-install.sh`. This moves off an Ubuntu release that left
+    standard support in April 2025 and drops the download step, the Mono packages and the
+    `DOTNET_ROOT` and `PATH` handling
+  </description>
+</entry>
