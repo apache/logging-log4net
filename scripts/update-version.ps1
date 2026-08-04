@@ -52,7 +52,7 @@ Update-TextVersion $PSScriptRoot/../doc/MailTemplate.Result.txt $OldVersion $New
 Update-TextVersion $PSScriptRoot/../doc/MailTemplate.Announce.txt $OldVersion $NewVersion
 Update-TextVersion $PSScriptRoot/build-preview.ps1 $OldVersion $NewVersion
 Update-TextVersion $PSScriptRoot/build-release.ps1 $OldVersion $NewVersion
-Update-XmlVersion $PSScriptRoot/../src/log4net/log4net.csproj $NewVersion '/Project/PropertyGroup/Version'
+Update-XmlVersion $PSScriptRoot/../src/Directory.Build.props $NewVersion '/Project/PropertyGroup/VersionPrefix'
 Update-XmlVersion $PSScriptRoot/../src/Directory.Build.props $OldVersion '/Project/PropertyGroup/Log4NetPackageVersion'
 Update-XmlVersion $PSScriptRoot/../examples/Directory.Build.props $OldVersion '/Project/PropertyGroup/Version'
 Update-TextVersion $PSScriptRoot/../src/site/antora/modules/ROOT/partials/supported-versions.adoc $OldVersion $NewVersion

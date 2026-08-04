@@ -21,6 +21,9 @@
 The `SmtpPickupDirAppender` is configured similarly to the xref:./smtpappender.adoc[].
 The only difference is that rather than specify a SmtpHost parameter a `PickupDir` must be specified.
 
+Because this appender writes the emails to disk and leaves their delivery to another process, it uses no SMTP client at all.
+It is therefore unaffected by the deprecation of `System.Net.Mail.SmtpClient`, and remains a good option when you cannot take on the MailKit dependency that the recommended xref:./smtpappender.adoc#mailkit-smtpappender[MailKit based `SmtpAppender`] requires.
+
 The `PickupDir` parameter is a path that must exist and the code executing the appender must have permission to create new files and write to them in this directory.
 The path is relative to the application's base directory (AppDomain.BaseDirectory).
 

@@ -30,6 +30,12 @@
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
+    <!--
+      The Android SDK derives PackageVersion from ApplicationDisplayVersion, while the
+      TargetFramework-less evaluation defaults it to $(Version) from Directory.Build.props.
+      NuGet requires one value across all target frameworks (NU1105), so pin it here.
+    -->
+    <PackageVersion>$(ApplicationDisplayVersion)</PackageVersion>
 
     <!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
     <WindowsPackageType>None</WindowsPackageType>

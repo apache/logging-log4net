@@ -20,6 +20,7 @@
 */
 
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -43,27 +44,46 @@ internal sealed class SimpleTelnetClient(
   /// </summary>
   internal void Run(Action<string> log) => Task.Run(() =>
   {
-    log("client: starting ...");
-    _client.Connect(new IPEndPoint(IPAddress.Loopback, port));
-    log("client: connected");
-    // Get a stream object for reading and writing
-    using NetworkStream stream = _client.GetStream();
-    log("client: has stream");
-
-    int i;
-    byte[] bytes = new byte[256];
-
-    // Loop to receive all the data sent by the server 
-    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+    try
     {
-      string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-      log("client: read: " + data);
-      received(data);
-      if (_cancellationTokenSource.Token.IsCancellationRequested)
+      log("client: starting ...");
+      _client.Connect(new IPEndPoint(IPAddress.Loopback, port));
+      log("client: connected");
+      // Get a stream object for reading and writing
+      using NetworkStream stream = _client.GetStream();
+      log("client: has stream");
+
+      int i;
+      byte[] bytes = new byte[256];
+
+      // Loop to receive all the data sent by the server
+      while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
       {
-        log("client: canceled");
-        return;
+        string data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+        log("client: read: " + data);
+        received(data);
+        if (_cancellationTokenSource.Token.IsCancellationRequested)
+        {
+          log("client: canceled");
+          return;
+        }
       }
+      log("client: end of stream");
+    }
+    // The test asserts on the received data, so a failing client must not end up
+    // as an unobserved task exception - log it instead.
+    catch (SocketException e)
+    {
+      log("client: error: " + e);
+    }
+    catch (IOException e)
+    {
+      log("client: error: " + e);
+    }
+    catch (ObjectDisposedException e)
+    {
+      // expected when the client is disposed while reading
+      log("client: disposed: " + e.Message);
     }
   }, _cancellationTokenSource.Token);
 

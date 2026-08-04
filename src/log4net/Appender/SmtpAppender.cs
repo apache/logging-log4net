@@ -49,9 +49,19 @@ namespace log4net.Appender;
 /// <para>
 /// To set the SMTP server port use the <see cref="Port"/> property. The default port is 25.
 /// </para>
+/// <para>
+/// This appender is deprecated, because <see cref="System.Net.Mail.SmtpClient"/> is no longer
+/// recommended by Microsoft. Use the MailKit based <c>SmtpAppender</c> from
+/// <c>log4net.Ext.Mail</c> instead.
+/// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
+[Obsolete("""
+  SmtpAppender sends through System.Net.Mail.SmtpClient, which Microsoft no longer recommends.
+  Use the MailKit based SmtpAppender from log4net.Ext.Mail instead, see
+  https://logging.apache.org/log4net/manual/configuration/appenders/smtpappender.html
+  """)]
 public class SmtpAppender : BufferingAppenderSkeleton
 {
   /// <summary>
