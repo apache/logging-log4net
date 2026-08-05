@@ -16,34 +16,19 @@
 
 # MAINTAINER Jan Friedrich
 
-FROM ubuntu:20.04
-ENV DEBIAN_FRONTEND=noninteractive \
-    TZ=Etc/UTC
+# Ubuntu 24.04 (noble) with the .NET 10 SDK already installed - noble is the only Ubuntu
+# variant published for .NET 10. The reference is fully qualified, so it needs no registry
+# configuration and no login, unlike the short name it replaces.
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble
+ENV TZ=Etc/UTC
 
-# Install Mono SDK (compiler, msbuild, runtime, etc.)
-RUN apt-get update && \
-    apt-get install -y gnupg ca-certificates && \
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
-    echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
-    apt-get update && \
-    apt-get install -y mono-complete && \
-    rm -rf /var/lib/apt/lists/*
+# Mono is not required: the net4x targets are compiled against the
+# Microsoft.NETFramework.ReferenceAssemblies packages that the .NET SDK references implicitly.
+# Mono would only be needed to *execute* net4x assemblies, which this image does not do.
 
-# Check Mono version
-RUN mono --version
-
-RUN apt-get update \
-  && apt-get upgrade -y \
-  && apt-get install -y wget \
-  && apt-get install -y tree \
-  && wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh \
-  && chmod +x ./dotnet-install.sh \
-  && ./dotnet-install.sh --channel 8.0
 ENV DOTNET_NOLOGO=true
 ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
-ENV DOTNET_ROOT=/root/.dotnet
-ENV PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools"
-  
+
 ADD . /logging-log4net
 RUN dotnet restore /logging-log4net/src/log4net.sln
 RUN dotnet build -c Release /logging-log4net/src/log4net.sln

@@ -101,7 +101,6 @@ log4net is designed with two distinct goals in mind: speed and flexibility
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkGitHubPackageVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(MicrosoftNetAnalyzersPackageVersion)" PrivateAssets="All" IncludeAssets="All" />
   </ItemGroup>
-  <Import Project="../MonoForFramework.targets" />
   <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
     <!-- "Workaround" for missing '.pdb'-Files from NuGet Packages -->
     <!-- https://github.com/dotnet/sdk/issues/1458#issuecomment-420456386 -->

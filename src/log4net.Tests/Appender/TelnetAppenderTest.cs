@@ -86,15 +86,11 @@ public sealed class TelnetAppenderTest
     {
       using (SimpleTelnetClient telnetClient = new(Received, port))
       {
-        TestContext.Out.WriteLine("test: starting client ...");
         telnetClient.Run(TestContext.Out.WriteLine);
         WaitForReceived("welcome message", WelcomeMessage);
         ILogger logger = repository.GetLogger("Telnet");
-        TestContext.Out.WriteLine("test: logging to client ...");
         logger.Log(typeof(TelnetAppenderTest), Level.Info, logId, null);
-        TestContext.Out.WriteLine("test: waiting for message of client ...");
         WaitForReceived("log message", logId);
-        TestContext.Out.WriteLine("test: canceling client ...");
       }
     }
     finally
@@ -130,7 +126,6 @@ public sealed class TelnetAppenderTest
         }
         Thread.Sleep(20);
       }
-      TestContext.Out.WriteLine($"receiver: received {what} after {stopwatch.ElapsedMilliseconds} ms");
     }
   }
 

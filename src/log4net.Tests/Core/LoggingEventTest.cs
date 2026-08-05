@@ -41,7 +41,6 @@ public sealed class LoggingEventTest
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2301:Do not use insecure deserializer BinaryFormatter")]
   public void SerializeDeserialize_BinaryFormatter()
   {
-    Utils.InconclusiveOnMono();
     DateTime timestamp = _localTime.ToUniversalTime();
     LoggingEvent ev = new(new()
     {
@@ -92,7 +91,6 @@ public sealed class LoggingEventTest
   [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2301:Do not use insecure deserializer BinaryFormatter")]
   public void DeserializeV2()
   {
-    Utils.InconclusiveOnMono();
     const string datPath = @"..\..\..\..\integration-testing\log4net2-SerializeEvent\SerializeV2Event.dat";
     using Stream stream = File.OpenRead(datPath);
     BinaryFormatter formatter = new();

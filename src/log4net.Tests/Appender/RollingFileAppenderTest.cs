@@ -1279,7 +1279,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestLogOutput()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_simple.log";
     SilentErrorHandler sh = new();
     ILogger log = CreateLogger(filename, new FileAppender.ExclusiveLock(), sh);
@@ -1320,7 +1319,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestExclusiveLockRecovers()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_exclusive_lock_recovers.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1344,7 +1342,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestExclusiveLockLocks()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_exclusive_lock_locks.log";
     bool locked = false;
 
@@ -1381,7 +1378,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestMinimalLockFails()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_minimal_lock_fails.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1405,7 +1401,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestMinimalLockRecovers()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_minimal_lock_recovers.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1429,7 +1424,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestMinimalLockUnlocks()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_minimal_lock_unlocks.log";
 
     SilentErrorHandler sh = new();
@@ -1455,7 +1449,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestInterProcessLockFails()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_interprocess_lock_fails.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1479,7 +1472,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestInterProcessLockRecovers()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_interprocess_lock_recovers.log";
 
     FileStream fs = new(filename, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -1503,7 +1495,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestInterProcessLockUnlocks()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_interprocess_lock_unlocks.log";
 
     SilentErrorHandler sh = new();
@@ -1529,7 +1520,6 @@ public class RollingFileAppenderTest
   [Test]
   public void TestInterProcessLockRoll()
   {
-    Utils.InconclusiveOnMono();
     const string filename = "test_interprocess_lock_roll.log";
 
     SilentErrorHandler sh = new();

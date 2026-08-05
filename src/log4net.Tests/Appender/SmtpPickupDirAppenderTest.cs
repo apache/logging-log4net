@@ -159,7 +159,6 @@ public class SmtpPickupDirAppenderTest
   [Test]
   public void TestOutputContainsSentDate()
   {
-    Utils.InconclusiveOnMono();
     SilentErrorHandler sh = new();
     SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
     ILogger log = CreateLogger(appender);
@@ -197,7 +196,6 @@ public class SmtpPickupDirAppenderTest
     Justification = "only .net8")]
   public void TestConfigurableFileExtension()
   {
-    Utils.InconclusiveOnMono();
     const string fileExtension = "eml";
     SilentErrorHandler sh = new();
     SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
@@ -221,7 +219,6 @@ public class SmtpPickupDirAppenderTest
   [Test]
   public void TestDefaultFileNameIsAGuid()
   {
-    Utils.InconclusiveOnMono();
     SilentErrorHandler sh = new();
     SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
     ILogger log = CreateLogger(appender);

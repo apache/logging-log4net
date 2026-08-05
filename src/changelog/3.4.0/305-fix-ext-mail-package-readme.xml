@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="305" link="https://github.com/apache/logging-log4net/pull/305"/>
+  <description format="asciidoc">
+    fix the `log4net.Ext.Mail` package failing to pack with `NU5039` (`The readme file 'README.md'
+    does not exist in the package`), because the `README.md` item was packed without a
+    `PackagePath`
+  </description>
+</entry>

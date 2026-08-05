@@ -70,7 +70,7 @@
     <Compile Include="..\log4net\Util\Log4NetAssert.cs" Link="Util\Log4NetAssert.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" Pack="true" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup Label="Packaging">
     <Content Include="..\..\package-icon.png" PackagePath="package-icon.png">
