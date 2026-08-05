@@ -71,7 +71,8 @@ public static class LogManager
   /// </remarks>
   /// <param name="name">The fully qualified logger name to look for.</param>
   /// <returns>The logger found, or <see langword="null"/> if no logger could be found.</returns>
-  public static ILog? Exists(string name) => Exists(Assembly.GetCallingAssembly(), name);
+  public static ILog? Exists(string name)
+    => Exists(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback, name);
 
   /// <overloads>Get the currently defined loggers.</overloads>
   /// <summary>
@@ -81,7 +82,8 @@ public static class LogManager
   /// <para>The root logger is <b>not</b> included in the returned array.</para>
   /// </remarks>
   /// <returns>All the defined loggers.</returns>
-  public static ILog[] GetCurrentLoggers() => GetCurrentLoggers(Assembly.GetCallingAssembly());
+  public static ILog[] GetCurrentLoggers()
+    => GetCurrentLoggers(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
 
   /// <overloads>Get or create a logger.</overloads>
   /// <summary>
@@ -101,7 +103,8 @@ public static class LogManager
   /// </remarks>
   /// <param name="name">The name of the logger to retrieve.</param>
   /// <returns>The logger with the name specified.</returns>
-  public static ILog GetLogger(string name) => GetLogger(Assembly.GetCallingAssembly(), name);
+  public static ILog GetLogger(string name)
+    => GetLogger(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback, name);
 
   /// <summary>
   /// Returns the named logger if it exists.
@@ -119,7 +122,8 @@ public static class LogManager
   /// The logger found, or <see langword="null"/> if the logger doesn't exist in the specified 
   /// repository.
   /// </returns>
-  public static ILog? Exists(string repository, string name) => WrapLogger(LoggerManager.Exists(repository, name));
+  public static ILog? Exists(string repository, string name) 
+    => WrapLogger(LoggerManager.Exists(repository, name));
 
   /// <summary>
   /// Returns the named logger if it exists.
@@ -137,7 +141,8 @@ public static class LogManager
   /// The logger, or <see langword="null"/> if the logger doesn't exist in the specified
   /// assembly's repository.
   /// </returns>
-  public static ILog? Exists(Assembly repositoryAssembly, string name) => WrapLogger(LoggerManager.Exists(repositoryAssembly, name));
+  public static ILog? Exists(Assembly repositoryAssembly, string name) 
+    => WrapLogger(LoggerManager.Exists(repositoryAssembly, name));
 
   /// <summary>
   /// Returns all the currently defined loggers in the specified repository.
@@ -147,7 +152,8 @@ public static class LogManager
   /// The root logger is <b>not</b> included in the returned array.
   /// </remarks>
   /// <returns>All the defined loggers.</returns>
-  public static ILog[] GetCurrentLoggers(string repository) => WrapLoggers(LoggerManager.GetCurrentLoggers(repository));
+  public static ILog[] GetCurrentLoggers(string repository) 
+    => WrapLoggers(LoggerManager.GetCurrentLoggers(repository));
 
   /// <summary>
   /// Returns all the currently defined loggers in the specified assembly's repository.
@@ -157,7 +163,8 @@ public static class LogManager
   /// The root logger is <b>not</b> included in the returned array.
   /// </remarks>
   /// <returns>All the defined loggers.</returns>
-  public static ILog[] GetCurrentLoggers(Assembly repositoryAssembly) => WrapLoggers(LoggerManager.GetCurrentLoggers(repositoryAssembly));
+  public static ILog[] GetCurrentLoggers(Assembly repositoryAssembly) 
+    => WrapLoggers(LoggerManager.GetCurrentLoggers(repositoryAssembly));
 
   /// <summary>
   /// Retrieves or creates a named logger.
@@ -178,7 +185,8 @@ public static class LogManager
   /// <param name="repository">The repository to lookup in.</param>
   /// <param name="name">The name of the logger to retrieve.</param>
   /// <returns>The logger with the name specified.</returns>
-  public static ILog GetLogger(string repository, string name) => WrapLogger(LoggerManager.GetLogger(repository, name))!;
+  public static ILog GetLogger(string repository, string name) 
+    => WrapLogger(LoggerManager.GetLogger(repository, name))!;
 
   /// <summary>
   /// Retrieves or creates a named logger.
@@ -211,7 +219,10 @@ public static class LogManager
   /// <param name="type">The full name of <paramref name="type"/> will be used as the name of the logger to retrieve.</param>
   /// <returns>The logger with the name specified.</returns>
   public static ILog GetLogger(Type type) 
-    => GetLogger(Assembly.GetCallingAssembly(), type.EnsureNotNull().FullName!);
+    => GetLogger(CallerAssembly.IsSupported 
+        ? Assembly.GetCallingAssembly() 
+        : CallerAssembly.Fallback, 
+        type.EnsureNotNull().FullName!);
 
   /// <summary>
   /// Shorthand for <see cref="GetLogger(string)"/>.
@@ -277,7 +288,8 @@ public static class LogManager
   /// and again to a nested appender.
   /// </para>
   /// </remarks>
-  public static void ShutdownRepository() => ShutdownRepository(Assembly.GetCallingAssembly());
+  public static void ShutdownRepository()
+    => ShutdownRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
 
   /// <summary>
   /// Shuts down the repository for the repository specified.
@@ -299,7 +311,8 @@ public static class LogManager
   /// </para>
   /// </remarks>
   /// <param name="repository">The repository to shut down.</param>
-  public static void ShutdownRepository(string repository) => LoggerManager.ShutdownRepository(repository);
+  public static void ShutdownRepository(string repository) 
+    => LoggerManager.ShutdownRepository(repository);
 
   /// <summary>
   /// Shuts down the repository specified.
@@ -323,7 +336,8 @@ public static class LogManager
   /// </para>
   /// </remarks>
   /// <param name="repositoryAssembly">The assembly to use to look up the repository.</param>
-  public static void ShutdownRepository(Assembly repositoryAssembly) => LoggerManager.ShutdownRepository(repositoryAssembly);
+  public static void ShutdownRepository(Assembly repositoryAssembly) 
+    => LoggerManager.ShutdownRepository(repositoryAssembly);
 
   /// <overloads>Reset the configuration of a repository</overloads>
   /// <summary>
@@ -339,7 +353,8 @@ public static class LogManager
   /// message disabling is set to its default "off" value.
   /// </para>    
   /// </remarks>
-  public static void ResetConfiguration() => ResetConfiguration(Assembly.GetCallingAssembly());
+  public static void ResetConfiguration()
+    => ResetConfiguration(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
 
   /// <summary>
   /// Resets all values contained in this repository instance to their defaults.
@@ -371,7 +386,8 @@ public static class LogManager
   /// </para>    
   /// </remarks>
   /// <param name="repositoryAssembly">The assembly to use to look up the repository to reset.</param>
-  public static void ResetConfiguration(Assembly repositoryAssembly) => LoggerManager.ResetConfiguration(repositoryAssembly);
+  public static void ResetConfiguration(Assembly repositoryAssembly) 
+    => LoggerManager.ResetConfiguration(repositoryAssembly);
 
   /// <overloads>Get a logger repository.</overloads>
   /// <summary>
@@ -384,7 +400,8 @@ public static class LogManager
   /// </para>
   /// </remarks>
   /// <returns>The <see cref="ILoggerRepository"/> instance for the default repository.</returns>
-  public static ILoggerRepository GetRepository() => GetRepository(Assembly.GetCallingAssembly());
+  public static ILoggerRepository GetRepository()
+    => GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
 
   /// <summary>
   /// Returns the default <see cref="ILoggerRepository"/> instance.
@@ -410,7 +427,8 @@ public static class LogManager
   /// </para>
   /// </remarks>
   /// <param name="repositoryAssembly">The assembly to use to look up the repository.</param>
-  public static ILoggerRepository GetRepository(Assembly repositoryAssembly) => LoggerManager.GetRepository(repositoryAssembly);
+  public static ILoggerRepository GetRepository(Assembly repositoryAssembly) 
+    => LoggerManager.GetRepository(repositoryAssembly);
 
   /// <overloads>Create a logger repository.</overloads>
   /// <summary>
@@ -427,7 +445,9 @@ public static class LogManager
   /// the same repository instance.
   /// </para>
   /// </remarks>
-  public static ILoggerRepository CreateRepository(Type repositoryType) => CreateRepository(Assembly.GetCallingAssembly(), repositoryType);
+  public static ILoggerRepository CreateRepository(
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type repositoryType)
+    => CreateRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback, repositoryType);
 
   /// <summary>
   /// Creates a repository with the specified name.
@@ -445,7 +465,8 @@ public static class LogManager
   /// <param name="repository">The name of the repository, this must be unique amongst repositories.</param>
   /// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
   /// <exception cref="LogException">The specified repository already exists.</exception>
-  public static ILoggerRepository CreateRepository(string repository) => LoggerManager.CreateRepository(repository);
+  public static ILoggerRepository CreateRepository(string repository) 
+    => LoggerManager.CreateRepository(repository);
 
   /// <summary>
   /// Creates a repository with the specified name and repository type.
@@ -462,7 +483,9 @@ public static class LogManager
   /// as the <see cref="ILoggerRepository"/> for the repository specified.</param>
   /// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
   /// <exception cref="LogException">The specified repository already exists.</exception>
-  public static ILoggerRepository CreateRepository(string repository, Type repositoryType) => LoggerManager.CreateRepository(repository, repositoryType);
+  public static ILoggerRepository CreateRepository(string repository, 
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type repositoryType) 
+    => LoggerManager.CreateRepository(repository, repositoryType);
 
   /// <summary>
   /// Creates a repository for the specified assembly and repository type.
@@ -479,7 +502,9 @@ public static class LogManager
   /// and has a no arg constructor. An instance of this type will be created to act
   /// as the <see cref="ILoggerRepository"/> for the repository specified.</param>
   /// <returns>The <see cref="ILoggerRepository"/> created for the repository.</returns>
-  public static ILoggerRepository CreateRepository(Assembly repositoryAssembly, Type repositoryType) => LoggerManager.CreateRepository(repositoryAssembly, repositoryType);
+  public static ILoggerRepository CreateRepository(Assembly repositoryAssembly, 
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type repositoryType) 
+    => LoggerManager.CreateRepository(repositoryAssembly, repositoryType);
 
   /// <summary>
   /// Gets the list of currently defined repositories.
@@ -499,7 +524,8 @@ public static class LogManager
   /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
   public static bool Flush(int millisecondsTimeout)
   {
-    if (LoggerManager.GetRepository(Assembly.GetCallingAssembly()) is not IFlushable flushableRepository)
+    Assembly callerAssembly = CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback;
+    if (LoggerManager.GetRepository(callerAssembly) is not IFlushable flushableRepository)
     {
       return false;
     }

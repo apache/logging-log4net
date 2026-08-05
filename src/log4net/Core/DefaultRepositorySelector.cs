@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using log4net.Config;
@@ -71,12 +72,13 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// </remarks>
   /// <exception cref="ArgumentNullException"><paramref name="defaultRepositoryType"/> is <see langword="null" />.</exception>
   /// <exception cref="ArgumentOutOfRangeException"><paramref name="defaultRepositoryType"/> does not implement <see cref="ILoggerRepository"/>.</exception>
-  public DefaultRepositorySelector(Type defaultRepositoryType)
+  public DefaultRepositorySelector([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type defaultRepositoryType)
   {
     // Check that the type is a repository
     if (!typeof(ILoggerRepository).IsAssignableFrom(defaultRepositoryType.EnsureNotNull()))
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", defaultRepositoryType, $"Parameter: defaultRepositoryType, Value: [{defaultRepositoryType}] out of range. Argument must implement the ILoggerRepository interface");
+      throw SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", defaultRepositoryType, 
+        $"Parameter: defaultRepositoryType, Value: [{defaultRepositoryType}] out of range. Argument must implement the ILoggerRepository interface");
     }
 
     this._defaultRepositoryType = defaultRepositoryType;
@@ -175,7 +177,8 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentNullException"><paramref name="assembly"/> is <see langword="null" />.</exception>
-  public ILoggerRepository CreateRepository(Assembly assembly, Type repositoryType) 
+  public ILoggerRepository CreateRepository(Assembly assembly, 
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type repositoryType) 
     => CreateRepository(assembly, repositoryType, DefaultRepositoryName, true);
 
   /// <summary>
@@ -216,7 +219,9 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentNullException"><paramref name="repositoryAssembly"/> is <see langword="null" />.</exception>
-  public ILoggerRepository CreateRepository(Assembly repositoryAssembly, Type? repositoryType, string repositoryName, bool readAssemblyAttributes)
+  public ILoggerRepository CreateRepository(Assembly repositoryAssembly, 
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type? repositoryType, 
+    string repositoryName, bool readAssemblyAttributes)
   {
     repositoryAssembly.EnsureNotNull();
 
@@ -305,7 +310,8 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// </remarks>
   /// <exception cref="ArgumentNullException"><paramref name="repositoryName"/> is <see langword="null" />.</exception>
   /// <exception cref="LogException"><paramref name="repositoryName"/> already exists.</exception>
-  public ILoggerRepository CreateRepository(string repositoryName, Type? repositoryType)
+  public ILoggerRepository CreateRepository(string repositoryName, 
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type? repositoryType)
   {
     repositoryName.EnsureNotNull();
 
@@ -479,7 +485,8 @@ public class DefaultRepositorySelector : IRepositorySelector
   /// <param name="repositoryName">in/out param to hold the repository name to use for the assembly, caller should set this to the default value before calling.</param>
   /// <param name="repositoryType">in/out param to hold the type of the repository to create for the assembly, caller should set this to the default value before calling.</param>
   /// <exception cref="ArgumentNullException"><paramref name="assembly" /> is <see langword="null" />.</exception>
-  private void GetInfoForAssembly(Assembly assembly, ref string repositoryName, ref Type repositoryType)
+  private void GetInfoForAssembly(Assembly assembly, ref string repositoryName,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] ref Type repositoryType)
   {
     assembly.EnsureNotNull();
 
@@ -735,5 +742,7 @@ public class DefaultRepositorySelector : IRepositorySelector
   private readonly Dictionary<string, ILoggerRepository> _name2Repository = new(StringComparer.Ordinal);
   private readonly Dictionary<Assembly, ILoggerRepository> _assembly2Repository = [];
   private readonly Dictionary<string, ILoggerRepository> _alias2Repository = new(StringComparer.Ordinal);
+
+  [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] 
   private readonly Type _defaultRepositoryType;
 }

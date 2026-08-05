@@ -19,6 +19,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -838,14 +839,21 @@ public class FileAppender : TextWriterAppender
   /// <summary>
   /// Default locking model (when no locking model was configured)
   /// </summary>
+  [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
   private static Type _defaultLockingModelType = typeof(ExclusiveLock);
 
   /// <summary>
   /// Specify default locking model
   /// </summary>
   /// <typeparam name="TLockingModel">Type of LockingModel</typeparam>
-  public static void SetDefaultLockingModelType<TLockingModel>()
-    where TLockingModel : LockingModelBase
+  /// <remarks>
+  /// <para>
+  /// The locking model is created with <see cref="Activator.CreateInstance(Type)"/>, so the
+  /// <c>new()</c> constraint is what keeps its constructor alive in a trimmed or Native AOT build.
+  /// </para>
+  /// </remarks>
+  public static void SetDefaultLockingModelType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] TLockingModel>()
+    where TLockingModel : LockingModelBase, new()
     => _defaultLockingModelType = typeof(TLockingModel);
 
   /// <summary>

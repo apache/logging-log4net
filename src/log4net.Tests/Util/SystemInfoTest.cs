@@ -23,6 +23,8 @@ using log4net.Util;
 
 using NUnit.Framework;
 
+using System.Configuration;
+using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -171,4 +173,102 @@ public class SystemInfoTest
   [Platform(Include = "Win,Linux,MacOsX")]
   public void IsAndoid()
     => Assert.That(typeof(SystemInfo).GetProperty("IsAndroid", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null), Is.False);
+
+  /// <summary>
+  /// <see cref="SystemInfo.GetAppSetting"/> falls back to environment variables once the
+  /// configuration system has failed - which is what happens under Native AOT, where
+  /// System.Configuration is trimmed away.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// That failure cannot be provoked on a JIT runtime, so the latch that records it is flipped
+  /// directly, the same way <see cref="IsAndoid"/> reaches a non-public member. The environment
+  /// must stay untouched while the configuration system still works, otherwise a malformed
+  /// <c>app.config</c> would silently change where every setting comes from.
+  /// </para>
+  /// </remarks>
+  [Test]
+  [NonParallelizable]
+  public void GetAppSettingFallsBackToTheEnvironmentOnceConfigurationIsUnavailable()
+  {
+    const string Key = "log4net.Tests.AppSettingFallback";
+    const string Value = "from-the-environment";
+
+    FieldInfo latch = AppSettingsUnavailableLatch();
+    bool originalLatch = (bool)latch.GetValue(null)!;
+    Environment.SetEnvironmentVariable(Key, Value);
+    try
+    {
+      latch.SetValue(null, false);
+      Assert.That(SystemInfo.GetAppSetting(Key), Is.Null);
+
+      latch.SetValue(null, true);
+      Assert.That(SystemInfo.GetAppSetting(Key), Is.EqualTo(Value));
+    }
+    finally
+    {
+      latch.SetValue(null, originalLatch);
+      Environment.SetEnvironmentVariable(Key, null);
+    }
+  }
+
+  /// <summary>
+  /// A key that is missing from the environment as well reads as <see langword="null"/>, so the
+  /// fallback leaves callers with the same "no such setting" answer they get from a working
+  /// configuration system.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void GetAppSettingReturnsNullForAnUnsetEnvironmentVariable()
+  {
+    FieldInfo latch = AppSettingsUnavailableLatch();
+    bool originalLatch = (bool)latch.GetValue(null)!;
+    try
+    {
+      latch.SetValue(null, true);
+      Assert.That(SystemInfo.GetAppSetting("log4net.Tests.NoSuchSettingAnywhere"), Is.Null);
+    }
+    finally
+    {
+      latch.SetValue(null, originalLatch);
+    }
+  }
+
+  /// <summary>
+  /// A configuration file that does not parse is reported, not routed to the environment - the
+  /// behaviour on every runtime that has a working configuration system is unchanged.
+  /// </summary>
+  [Test]
+  public void MalformedConfigurationIsNotTreatedAsAMissingConfigurationSystem()
+    => Assert.That(IsMissingConfigurationSystem(new ConfigurationErrorsException("malformed")), Is.False);
+
+  /// <summary>
+  /// Native AOT surfaces a trimmed configuration system as a <see cref="ConfigurationErrorsException"/>,
+  /// the same type a malformed file produces, so only the inner exception tells them apart.
+  /// </summary>
+  [Test]
+  public void TrimmedConfigurationSystemIsRecognisedThroughTheInnerException()
+    => Assert.That(IsMissingConfigurationSystem(
+        new ConfigurationErrorsException("Configuration system failed to initialize",
+          new MissingMethodException("No parameterless constructor defined for type 'System.Configuration.ClientConfigurationHost'."))),
+      Is.True);
+
+  /// <summary>
+  /// A deployment without the System.Configuration.ConfigurationManager assembly fails on the
+  /// outermost exception rather than an inner one.
+  /// </summary>
+  [Test]
+  public void MissingConfigurationAssemblyIsRecognised()
+    => Assert.That(IsMissingConfigurationSystem(new FileNotFoundException("System.Configuration.ConfigurationManager")), Is.True);
+
+  private static bool IsMissingConfigurationSystem(Exception exception)
+  {
+    MethodInfo method = typeof(SystemInfo).GetMethod("IsMissingConfigurationSystem", BindingFlags.Static | BindingFlags.NonPublic)
+      ?? throw new InvalidOperationException("SystemInfo.IsMissingConfigurationSystem no longer exists - update this test along with it.");
+    return (bool)method.Invoke(null, [exception])!;
+  }
+
+  private static FieldInfo AppSettingsUnavailableLatch()
+    => typeof(SystemInfo).GetField("_configurationSystemUnavailable", BindingFlags.Static | BindingFlags.NonPublic)
+      ?? throw new InvalidOperationException("SystemInfo._configurationSystemUnavailable no longer exists - update this test along with it.");
 }
