@@ -19,6 +19,7 @@
     <VSTestLogger>quackers</VSTestLogger>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\log4net\Util\CallerAssembly.cs" Link="Util\CallerAssembly.cs" />
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" Link="Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" />
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\IsExternalInit.cs" Link="Diagnostics\CodeAnalysis\IsExternalInit.cs" />
   </ItemGroup>

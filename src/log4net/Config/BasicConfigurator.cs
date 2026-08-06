@@ -73,7 +73,8 @@ public static class BasicConfigurator
   /// layout style.
   /// </para>
   /// </remarks>
-  public static ICollection Configure() => Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
+  public static ICollection Configure()
+    => Configure(LogManager.GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback));
 
   /// <summary>
   /// Initializes the log4net system using the specified appenders.
@@ -88,7 +89,7 @@ public static class BasicConfigurator
   {
     List<LogLog> configurationMessages = new();
 
-    ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
+    ILoggerRepository repository = LogManager.GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {

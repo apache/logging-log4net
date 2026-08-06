@@ -21,6 +21,13 @@
 The recommended way to configure log4net is through a configuration file.
 This section explains the structure of a configuration file and how log4net processes it.
 
+[NOTE]
+====
+Configuration files cannot be used in an application published with `PublishAot`, because the types
+they name are removed by the trimmer.
+See xref:manual/native-aot.adoc[] for how to configure log4net in code instead.
+====
+
 [source,csharp]
 ----
 using Animals.Carnivora;

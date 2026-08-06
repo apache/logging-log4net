@@ -22,6 +22,7 @@ using System.Configuration;
 using System.Reflection;
 using System.IO;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace log4net.Util;
 
@@ -475,7 +476,9 @@ public static class SystemInfo
   /// </para>
   /// </remarks>
   public static Type? GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase) 
-    => GetTypeFromString(Assembly.GetCallingAssembly(), typeName, throwOnError, ignoreCase);
+    => GetTypeFromString(CallerAssembly.IsSupported
+        ? Assembly.GetCallingAssembly()
+        : CallerAssembly.Fallback, typeName, throwOnError, ignoreCase);
 
   /// <summary>
   /// Loads the type specified in the type string.
@@ -680,19 +683,89 @@ public static class SystemInfo
   /// <returns>the value for the key, or <see langword="null"/></returns>
   public static string? GetAppSetting(string key)
   {
-    if (IsAndroid)
-      return Environment.GetEnvironmentVariable(key); // Android does not support config files
+    // Android does not support config files, and neither does a runtime that has trimmed the
+    // configuration system away.
+    if (IsAndroid || _configurationSystemUnavailable)
+      return Environment.GetEnvironmentVariable(key);
     try
     {
-      return ConfigurationManager.AppSettings[key];
+      return ReadAppSetting(key);
     }
     catch (Exception e) when (!e.IsFatal())
     {
-      // If an exception is thrown here then it looks like the config file does not parse correctly.
+      if (IsMissingConfigurationSystem(e))
+      {
+        // There is no configuration system to read - Native AOT trims System.Configuration away.
+        // That is a property of the runtime rather than a fault, so it is not reported as an
+        // error, and the environment stands in for the config file as it does on Android.
+        _configurationSystemUnavailable = true;
+        LogLog.Debug(_declaringType,
+          "No configuration system on this runtime. Using environment variables for application settings.", e);
+        return Environment.GetEnvironmentVariable(key);
+      }
+
+      // The config file itself does not parse. Report it and treat the setting as absent, without
+      // falling back to the environment - a broken config file must not silently change where
+      // settings come from.
       LogLog.Error(_declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", e);
     }
     return null;
   }
+
+  /// <summary>
+  /// Determines whether <paramref name="exception"/> means that there is no configuration system
+  /// on this runtime, as opposed to a configuration file that does not parse.
+  /// </summary>
+  /// <param name="exception">the exception thrown while reading an application setting</param>
+  /// <returns><see langword="true"/> if the configuration system itself is unavailable</returns>
+  /// <remarks>
+  /// <para>
+  /// The inner exceptions have to be walked, because Native AOT surfaces this as a
+  /// <see cref="ConfigurationErrorsException"/> - the very type a malformed file produces. What
+  /// distinguishes it is further down the chain: a <see cref="MissingMethodException"/> for
+  /// <c>ClientConfigurationHost</c>, whose constructor the trimmer removed.
+  /// </para>
+  /// <para>
+  /// An unrecognized failure is treated as a configuration file problem, which is the safer way
+  /// round: it is reported rather than silently swallowed.
+  /// </para>
+  /// </remarks>
+  private static bool IsMissingConfigurationSystem(Exception? exception)
+  {
+    for (; exception is not null; exception = exception.InnerException)
+    {
+      if (exception is MissingMethodException or TypeLoadException or FileNotFoundException
+        or PlatformNotSupportedException or NotSupportedException)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// <summary>
+  /// Reads a single application setting.
+  /// </summary>
+  /// <param name="key">the application settings key to lookup</param>
+  /// <returns>the value for the key, or <see langword="null"/></returns>
+  /// <remarks>
+  /// <para>
+  /// Separate from <see cref="GetAppSetting"/>, and never inlined into it, so that the failure to
+  /// resolve <see cref="ConfigurationManager"/> itself is raised on entry to this method - inside
+  /// the caller's try block - rather than on entry to <see cref="GetAppSetting"/>, where nothing
+  /// would catch it and a <see cref="FileNotFoundException"/> would escape the static constructor
+  /// as a <see cref="TypeInitializationException"/>.
+  /// </para>
+  /// <para>
+  /// The package declares a dependency on System.Configuration.ConfigurationManager, so this only
+  /// arises where the assembly is deployed by other means than the package - it costs one method
+  /// to keep those deployments running instead of failing at type initialization.
+  /// </para>
+  /// </remarks>
+  [MethodImpl(MethodImplOptions.NoInlining)]
+  private static string? ReadAppSetting(string key) => ConfigurationManager.AppSettings[key];
+
+  private static bool _configurationSystemUnavailable;
 
   /// <summary>
   /// Convert a path into a fully qualified local file path.

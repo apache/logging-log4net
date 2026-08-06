@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using log4net.Repository;
@@ -127,7 +128,8 @@ public interface IRepositorySelector
   /// this association.
   /// </para>
   /// </remarks>
-  ILoggerRepository CreateRepository(Assembly assembly, Type repositoryType);
+  ILoggerRepository CreateRepository(Assembly assembly,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type repositoryType);
 
   /// <summary>
   /// Creates a new repository with the name specified.
@@ -142,7 +144,8 @@ public interface IRepositorySelector
   /// same name will return the same repository instance.
   /// </para>
   /// </remarks>
-  ILoggerRepository CreateRepository(string repositoryName, Type? repositoryType);
+  ILoggerRepository CreateRepository(string repositoryName,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type? repositoryType);
 
   /// <summary>
   /// Test if a named repository exists

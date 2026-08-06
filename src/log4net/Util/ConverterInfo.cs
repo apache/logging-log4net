@@ -20,6 +20,7 @@
 */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Util;
 
@@ -42,6 +43,7 @@ public sealed class ConverterInfo
   /// <summary>
   /// Gets or sets the type of the converter. The type must extend <see cref="PatternConverter"/>.
   /// </summary>
+  [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] 
   public Type? Type { get; set; }
 
   /// <summary>

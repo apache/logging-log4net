@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Concurrent;
 
 namespace log4net.Util.TypeConverters;
@@ -82,7 +83,8 @@ public static class ConverterRegistry
   /// </summary>
   /// <param name="destinationType">The type being converted to.</param>
   /// <param name="converterType">The type of the type converter to use to convert to the destination type.</param>
-  public static void AddConverter(Type destinationType, Type converterType)
+  public static void AddConverter(Type destinationType,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type converterType)
     => AddConverter(destinationType, CreateConverterInstance(converterType.EnsureNotNull()));
 
   /// <summary>
@@ -187,7 +189,8 @@ public static class ConverterRegistry
   /// and must have a public default (no argument) constructor.
   /// </para>
   /// </remarks>
-  private static object? CreateConverterInstance(Type converterType)
+  private static object? CreateConverterInstance(
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type converterType)
   {
     // Check type is a converter
     if (typeof(IConvertFrom).IsAssignableFrom(converterType) || typeof(IConvertTo).IsAssignableFrom(converterType))

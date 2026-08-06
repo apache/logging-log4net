@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace log4net.Config;
 
@@ -104,5 +105,6 @@ public sealed class RepositoryAttribute : Attribute
   /// repository.
   /// </para>
   /// </remarks>
+  [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] 
   public Type? RepositoryType { get; set; }
 }
