@@ -19,6 +19,7 @@
 
 using System;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.IO;
 using System.Collections;
@@ -155,11 +156,35 @@ public static class SystemInfo
       {
         return _entryAssemblyLocation;
       }
-      return _entryAssemblyLocation = Assembly.GetEntryAssembly()?.Location
+      Assembly entryAssembly = Assembly.GetEntryAssembly()
         ?? throw new InvalidOperationException($"Unable to determine EntryAssembly location: EntryAssembly is null. Try explicitly setting {nameof(SystemInfo)}.{nameof(EntryAssemblyLocation)}");
+      string location = GetAssemblyLocation(entryAssembly);
+      if (location.Length == 0)
+      {
+        // A single file application has no file on disk for the assemblies it embeds, so the
+        // closest thing to the entry assembly's path is the directory it was published to.
+        location = Path.Combine(AppContext.BaseDirectory, $"{entryAssembly.GetName().Name}.dll");
+      }
+      return _entryAssemblyLocation = location;
     }
     set => _entryAssemblyLocation = value;
   }
+
+  /// <summary>
+  /// Reads <see cref="Assembly.Location"/>.
+  /// </summary>
+  /// <param name="assembly">the assembly to locate</param>
+  /// <returns>the path to the assembly, or an empty string when it has none</returns>
+  /// <remarks>
+  /// <para>
+  /// An assembly embedded in a single file application has no path, and
+  /// <see cref="Assembly.Location"/> returns an empty string for it rather than failing. Callers
+  /// handle that here, which is what the suppressed warning asks them to do.
+  /// </para>
+  /// </remarks>
+  [UnconditionalSuppressMessage("SingleFile", "IL3000",
+    Justification = "The empty string returned by a single file application is handled by the callers.")]
+  private static string GetAssemblyLocation(Assembly assembly) => assembly.Location;
 
   /// <summary>
   /// Gets the ID of the current thread.
@@ -369,7 +394,8 @@ public static class SystemInfo
       // This call requires FileIOPermission for access to the path
       // if we don't have permission then we just ignore it and
       // carry on.
-      return myAssembly.Location;
+      string location = GetAssemblyLocation(myAssembly);
+      return location.Length > 0 ? location : "Single File Application";
     }
     catch (NotSupportedException)
     {
