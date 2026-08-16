@@ -765,7 +765,7 @@ public static class SystemInfo
   [MethodImpl(MethodImplOptions.NoInlining)]
   private static string? ReadAppSetting(string key) => ConfigurationManager.AppSettings[key];
 
-  private static bool _configurationSystemUnavailable;
+  private static volatile bool _configurationSystemUnavailable;
 
   /// <summary>
   /// Convert a path into a fully qualified local file path.

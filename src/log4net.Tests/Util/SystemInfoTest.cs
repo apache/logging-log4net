@@ -171,7 +171,7 @@ public class SystemInfoTest
 
   [Test]
   [Platform(Include = "Win,Linux,MacOsX")]
-  public void IsAndoid()
+  public void IsAndroid()
     => Assert.That(typeof(SystemInfo).GetProperty("IsAndroid", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null), Is.False);
 
   /// <summary>
@@ -182,7 +182,7 @@ public class SystemInfoTest
   /// <remarks>
   /// <para>
   /// That failure cannot be provoked on a JIT runtime, so the latch that records it is flipped
-  /// directly, the same way <see cref="IsAndoid"/> reaches a non-public member. The environment
+  /// directly, the same way <see cref="IsAndroid"/> reaches a non-public member. The environment
   /// must stay untouched while the configuration system still works, otherwise a malformed
   /// <c>app.config</c> would silently change where every setting comes from.
   /// </para>

@@ -977,10 +977,17 @@ public class PatternLayout : LayoutSkeleton
   {
     PatternParser patternParser = new(pattern);
 
-    // Add all the builtin patterns
+    // Add all the builtin patterns. The registry entries are copied rather than handed out:
+    // PatternConverters is public, and PatternParser assigns ConverterInfo.Properties to every
+    // converter it creates, so sharing one instance would let a single layout mutate state that
+    // every other layout in the process can see.
     foreach (KeyValuePair<string, ConverterInfo> entry in _sGlobalRulesRegistry)
     {
-      patternParser.PatternConverters[entry.Key] = entry.Value;
+      patternParser.PatternConverters[entry.Key] = new ConverterInfo
+      {
+        Name = entry.Value.Name,
+        Type = entry.Value.Type
+      };
     }
     // Add the instance patterns
     foreach (KeyValuePair<string, ConverterInfo> entry in _instanceRulesRegistry)

@@ -401,10 +401,14 @@ public class PatternString : IOptionHandler
   {
     PatternParser patternParser = new(pattern);
 
-    // Add all the builtin patterns
+    // Add all the builtin patterns - copied, not shared; see PatternLayout.CreatePatternParser
     foreach (KeyValuePair<string, ConverterInfo> entry in _sGlobalRulesRegistry)
     {
-      patternParser.PatternConverters.Add(entry.Key, entry.Value);
+      patternParser.PatternConverters.Add(entry.Key, new ConverterInfo
+      {
+        Name = entry.Value.Name,
+        Type = entry.Value.Type
+      });
     }
     // Add the instance patterns
     foreach (KeyValuePair<string, ConverterInfo> entry in _instanceRulesRegistry)
