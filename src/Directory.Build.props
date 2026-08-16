@@ -9,9 +9,17 @@
     <AnalysisLevel>8</AnalysisLevel>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
+    <!-- Reports code style rules such as IDE0005 (unnecessary usings) on build, not only in the
+         IDE. IDE0005 needs the documentation file, so that is switched on everywhere too. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     <SatelliteResourceLanguages>en;en-US</SatelliteResourceLanguages>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('Tests')) or $(MSBuildProjectDirectory.Contains('integration-testing'))">
+    <!-- Only the shipping libraries have to document their public surface. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Label="Package Versions">
     <VersionPrefix>3.4.0</VersionPrefix>

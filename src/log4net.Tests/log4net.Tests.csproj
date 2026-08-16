@@ -6,7 +6,7 @@
          TestHostNetFramework/testhost.exe, which is not part of the Linux/macOS SDK. Building
          them elsewhere only produces assemblies that cannot be run, so skip the target. -->
     <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net10.0</TargetFrameworks>
-    <NoWarn>NETSDK1138;CS1701</NoWarn>
+    <NoWarn>$(NoWarn);NETSDK1138;CS1701</NoWarn>
     <OutputType>Library</OutputType>
     <OutputPath>bin\$(Configuration)</OutputPath>
     <Configurations>Debug;Release</Configurations>
@@ -15,7 +15,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DefineConstants>TRACE;DEBUG;$(DefineConstants)</DefineConstants>
     <!-- suppress analyzer mismatch warning -->
-    <NoWarn>CS8032</NoWarn>
+    <NoWarn>$(NoWarn);CS8032</NoWarn>
     <VSTestLogger>quackers</VSTestLogger>
   </PropertyGroup>
   <ItemGroup>

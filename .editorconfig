@@ -206,6 +206,9 @@ dotnet_diagnostic.KR1037.severity = none
 dotnet_diagnostic.NUnit2045.severity = none
 # IDE0079: Remove unnecessary suppressions
 dotnet_diagnostic.IDE0079.severity = none
+# IDE0005: Remove unnecessary usings. Shown in the IDE only: enforcing it on build would also need
+# EnforceCodeStyleInBuild and GenerateDocumentationFile, which the test projects do not set.
+dotnet_diagnostic.IDE0005.severity = warning
 
 [*.xml]
 tab_width = 2

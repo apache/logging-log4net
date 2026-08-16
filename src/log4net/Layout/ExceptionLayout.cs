@@ -17,7 +17,6 @@
 //
 #endregion
 
-using System;
 using System.IO;
 
 using log4net.Core;

@@ -19,7 +19,6 @@
 
 #if NET462_OR_GREATER
 using System;
-using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Principal;
 

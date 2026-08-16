@@ -29,7 +29,8 @@ using NUnit.Framework;
 namespace log4net.Tests.Core;
 
 /// <summary>
-/// </remarks>
+/// Tests shutting log4net down.
+/// </summary>
 [TestFixture]
 public class ShutdownTest
 {
