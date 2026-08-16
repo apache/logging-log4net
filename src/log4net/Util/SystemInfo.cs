@@ -62,18 +62,18 @@ public static class SystemInfo
 
     // Look for log4net.NullText in AppSettings
     string? nullTextAppSettingsKey = GetAppSetting("log4net.NullText");
-    if (nullTextAppSettingsKey is not null && nullTextAppSettingsKey.Length > 0)
+    if (!string.IsNullOrEmpty(nullTextAppSettingsKey))
     {
       LogLog.Debug(_declaringType, $"Initializing NullText value to [{nullTextAppSettingsKey}].");
-      nullText = nullTextAppSettingsKey;
+      nullText = nullTextAppSettingsKey!;
     }
 
     // Look for log4net.NotAvailableText in AppSettings
     string? notAvailableTextAppSettingsKey = GetAppSetting("log4net.NotAvailableText");
-    if (notAvailableTextAppSettingsKey is not null && notAvailableTextAppSettingsKey.Length > 0)
+    if (!string.IsNullOrEmpty(notAvailableTextAppSettingsKey))
     {
       LogLog.Debug(_declaringType, $"Initializing NotAvailableText value to [{notAvailableTextAppSettingsKey}].");
-      notAvailableText = notAvailableTextAppSettingsKey;
+      notAvailableText = notAvailableTextAppSettingsKey!;
     }
     NotAvailableText = notAvailableText;
     NullText = nullText;
@@ -732,16 +732,33 @@ public static class SystemInfo
   /// </remarks>
   private static bool IsMissingConfigurationSystem(Exception? exception)
   {
+    // Native AOT is what this exists for, and it identifies itself without any guesswork:
+    // GetCallingAssembly is unsupported there for the same reason the configuration system cannot
+    // initialize, so no configuration file can be read whatever the exception happens to be.
+    if (!CallerAssembly.IsSupported)
+    {
+      return true;
+    }
+
+    // Anywhere else, only a failure that names System.Configuration itself counts. A failure that
+    // names anything else belongs to the application's own configuration and has to keep being
+    // reported as an error rather than silently redirecting every setting to the environment.
     for (; exception is not null; exception = exception.InnerException)
     {
-      if (exception is MissingMethodException or TypeLoadException or FileNotFoundException
-        or PlatformNotSupportedException or NotSupportedException)
+      switch (exception)
       {
-        return true;
+        case FileNotFoundException { FileName: string fileName }
+          when IsConfigurationSystem(fileName):
+        case TypeLoadException { TypeName: string typeName }
+          when IsConfigurationSystem(typeName):
+          return true;
       }
     }
     return false;
   }
+
+  private static bool IsConfigurationSystem(string name)
+    => name.StartsWith("System.Configuration", StringComparison.Ordinal);
 
   /// <summary>
   /// Reads a single application setting.

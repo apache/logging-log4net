@@ -244,22 +244,35 @@ public class SystemInfoTest
 
   /// <summary>
   /// Native AOT surfaces a trimmed configuration system as a <see cref="ConfigurationErrorsException"/>,
-  /// the same type a malformed file produces, so only the inner exception tells them apart.
+  /// the same type a malformed file produces. The two are not told apart by guessing at the inner
+  /// exception: on a runtime that has a configuration system at all, this is reported as an error.
   /// </summary>
   [Test]
-  public void TrimmedConfigurationSystemIsRecognisedThroughTheInnerException()
+  public void TrimmedHostExceptionIsNotGuessedAtOnAJitRuntime()
     => Assert.That(IsMissingConfigurationSystem(
         new ConfigurationErrorsException("Configuration system failed to initialize",
           new MissingMethodException("No parameterless constructor defined for type 'System.Configuration.ClientConfigurationHost'."))),
-      Is.True);
+      Is.False);
 
   /// <summary>
-  /// A deployment without the System.Configuration.ConfigurationManager assembly fails on the
-  /// outermost exception rather than an inner one.
+  /// A deployment without the System.Configuration.ConfigurationManager assembly is recognised by
+  /// the name of the assembly that could not be loaded.
   /// </summary>
   [Test]
   public void MissingConfigurationAssemblyIsRecognised()
-    => Assert.That(IsMissingConfigurationSystem(new FileNotFoundException("System.Configuration.ConfigurationManager")), Is.True);
+    => Assert.That(IsMissingConfigurationSystem(
+      new FileNotFoundException("Could not load file or assembly", "System.Configuration.ConfigurationManager")), Is.True);
+
+  /// <summary>
+  /// The application's own missing assembly is its problem, not evidence that the configuration
+  /// system is gone, so it must keep being reported rather than silently redirecting every setting
+  /// to the environment.
+  /// </summary>
+  [Test]
+  public void MissingApplicationAssemblyIsNotTreatedAsAMissingConfigurationSystem()
+    => Assert.That(IsMissingConfigurationSystem(
+      new ConfigurationErrorsException("An error occurred creating the configuration section handler",
+        new FileNotFoundException("Could not load file or assembly", "Contoso.SectionHandlers"))), Is.False);
 
   private static bool IsMissingConfigurationSystem(Exception exception)
   {
