@@ -114,10 +114,11 @@ public class OnlyOnceErrorHandler : IErrorHandler
     ErrorMessage = message;
     IsEnabled = false;
 
-    if (LogLog.InternalDebugging && !LogLog.QuietMode)
-    {
-      LogLog.Error(_declaringType, "[" + _prefix + "] ErrorCode: " + errorCode.ToString() + ". " + message, e);
-    }
+    // Emit the first error unconditionally so that an appender which silently stopped
+    // delivering events leaves a trace in a default configuration. LogLog.Error already
+    // honors LogLog.QuietMode (log4net.Internal.Quiet) and LogLog.EmitInternalMessages,
+    // which remain the documented ways to silence internal messages.
+    LogLog.Error(_declaringType, "[" + _prefix + "] ErrorCode: " + errorCode.ToString() + ". " + message, e);
   }
 
   /// <summary>
