@@ -89,7 +89,7 @@ public class TextWriterAppender : AppenderSkeleton
     get => QuietWriter;
     set
     {
-      lock (_syncRoot)
+      lock (LockObj)
       {
         Reset();
         if (value is not null)
@@ -204,7 +204,7 @@ public class TextWriterAppender : AppenderSkeleton
   /// </remarks>
   protected override void OnClose()
   {
-    lock (_syncRoot)
+    lock (LockObj)
     {
       Reset();
     }
@@ -222,7 +222,7 @@ public class TextWriterAppender : AppenderSkeleton
     get => base.ErrorHandler;
     set
     {
-      lock (_syncRoot)
+      lock (LockObj)
       {
         if (value is null)
         {
@@ -357,8 +357,6 @@ public class TextWriterAppender : AppenderSkeleton
   /// </remarks>
   protected QuietTextWriter? QuietWriter { get; set; }
 
-  private readonly object _syncRoot = new();
-
   /// <summary>
   /// The fully qualified type of the TextWriterAppender class.
   /// </summary>
@@ -381,10 +379,21 @@ public class TextWriterAppender : AppenderSkeleton
       return true;
     }
 
-    // lock(this) will block any Appends while the buffer is flushed.
-    lock (_syncRoot)
+    // Taking the appender lock blocks any Append while the buffer is flushed. QuietTextWriter is
+    // not thread safe, and Append holds this same lock through DoAppend.
+    lock (LockObj)
     {
-      QuietWriter?.Flush();
+      try
+      {
+        QuietWriter?.Flush();
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        // QuietTextWriter routes failing writes to the ErrorHandler but does not override Flush,
+        // so a failure here would otherwise escape to the caller of Flush.
+        ErrorHandler.Error($"Failed to flush appender [{Name}].", e, ErrorCode.FlushFailure);
+        return false;
+      }
     }
 
     return true;
