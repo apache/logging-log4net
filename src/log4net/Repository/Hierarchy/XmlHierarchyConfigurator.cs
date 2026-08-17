@@ -270,6 +270,9 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// </remarks>
   protected IAppender? ParseAppender(XmlElement appenderElement)
   {
+    // Configuration names the types to load and instantiate. This is by design: configuration is
+    // trusted input, see
+    // https://raw.githubusercontent.com/apache/logging-site/refs/heads/main/src/site/antora/modules/ROOT/pages/_threat-model-common.adoc
     string appenderName = appenderElement.EnsureNotNull().GetAttribute(NameAttr);
     string typeName = appenderElement.GetAttribute(TypeAttr);
 
@@ -564,6 +567,8 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
     MethodInfo? methInfo = null;
 
     // Try to find a writable property
+    // Non-public members are reachable on purpose: configuration is trusted input, see
+    // https://raw.githubusercontent.com/apache/logging-site/refs/heads/main/src/site/antora/modules/ROOT/pages/_threat-model-common.adoc
     PropertyInfo? propInfo = targetType.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
     if (propInfo is not null && propInfo.CanWrite)
     {
