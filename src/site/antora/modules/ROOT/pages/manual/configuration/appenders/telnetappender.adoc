@@ -23,7 +23,7 @@ every connected client, so that a running application's log can be watched over 
 telnet client.
 Unlike every other appender, it does not write to a destination you configure: it accepts
 connections from clients that reach it.
-It is intended for diagnostic use on trusted networks -- see <<telnetappender-trust>>.
+It is intended for diagnostic use on trusted networks; see <<telnetappender-trust>>.
 
 At most 20 clients may be connected at the same time; further connection attempts are answered
 with a message and closed.
@@ -78,7 +78,7 @@ interfaces*.
 There is no option to restrict the listen address, require a credential, or enable TLS.
 
 Any client that can reach the port receives the full rendered log stream, including whatever the
-layout renders -- user names, session identifiers, request parameters, stack traces.
+layout renders: user names, session identifiers, request parameters, stack traces.
 Keeping untrusted parties away from the port is the operator's responsibility, exactly as it is
 for a log file:
 

@@ -35,7 +35,7 @@ Always configure `CommandText` together with `parameter` elements, as every exam
 If `CommandText` is omitted, the appender falls back to a legacy mode in which the rendered
 `Layout` output *is* the SQL statement that gets executed.
 Layouts perform no SQL quoting or escaping and offer no way to add it, so anything that reaches
-a log statement -- a user name, a request parameter, an exception message -- is executed as part
+a log statement (a user name, a request parameter, an exception message) is executed as part
 of the statement, with the privileges of the appender's connection.
 The appender logs an error at startup when it is configured this way.
 ====

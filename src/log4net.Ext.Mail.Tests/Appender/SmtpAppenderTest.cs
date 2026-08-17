@@ -207,15 +207,87 @@ public class SmtpAppenderTest
     Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.None));
   }
 
+  /// <summary>
+  /// SecureSocketOptions.Auto is opportunistic away from port 465, so an attacker who strips
+  /// STARTTLS from the EHLO response downgrades the session to plaintext. Asking for SSL has to
+  /// mean mandatory STARTTLS.
+  /// </summary>
   [Test]
-  public void EnableSslOnNegotiatesTransportSecurity()
+  public void EnableSslOnRequiresStartTls()
   {
     SmtpAppender appender = CreateAppender();
     appender.EnableSsl = true;
 
     Append(appender);
 
-    Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.Auto));
+    Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.StartTls));
+  }
+
+  /// <summary>
+  /// Port 465 is implicit TLS: the session is encrypted before the SMTP greeting, so STARTTLS is
+  /// never offered there and must not be demanded.
+  /// </summary>
+  [Test]
+  public void EnableSslOnPort465UsesImplicitTls()
+  {
+    SmtpAppender appender = CreateAppender();
+    appender.EnableSsl = true;
+    appender.Port = 465;
+
+    Append(appender);
+
+    Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.SslOnConnect));
+  }
+
+  /// <summary>
+  /// A server doing implicit TLS on a port other than 465 cannot be reached with Required, which
+  /// would try to negotiate STARTTLS there.
+  /// </summary>
+  [Test]
+  public void ImplicitTlsUsesSslOnConnectRegardlessOfThePort()
+  {
+    SmtpAppender appender = CreateAppender();
+    appender.TransportSecurity = SmtpTransportSecurity.ImplicitTls;
+    appender.Port = 8465;
+
+    Append(appender);
+
+    Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.SslOnConnect));
+  }
+
+  /// <summary>
+  /// Opportunistic transport security stays available, but only for an operator who asks for it.
+  /// </summary>
+  [Test]
+  public void StartTlsWhenAvailableIsOpportunistic()
+  {
+    SmtpAppender appender = CreateAppender();
+    appender.TransportSecurity = SmtpTransportSecurity.StartTlsWhenAvailable;
+
+    Append(appender);
+
+    Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.StartTlsWhenAvailable));
+  }
+
+  /// <summary>
+  /// EnableSsl and TransportSecurity are the same setting, so they cannot disagree.
+  /// </summary>
+  [Test]
+  public void EnableSslIsAShorthandForTransportSecurity()
+  {
+    SmtpAppender appender = CreateAppender();
+
+    Assert.That(appender.TransportSecurity, Is.EqualTo(SmtpTransportSecurity.None));
+    Assert.That(appender.EnableSsl, Is.False);
+
+    appender.EnableSsl = true;
+    Assert.That(appender.TransportSecurity, Is.EqualTo(SmtpTransportSecurity.Required));
+
+    appender.TransportSecurity = SmtpTransportSecurity.StartTlsWhenAvailable;
+    Assert.That(appender.EnableSsl, Is.True);
+
+    appender.EnableSsl = false;
+    Assert.That(appender.TransportSecurity, Is.EqualTo(SmtpTransportSecurity.None));
   }
 
   [Test]

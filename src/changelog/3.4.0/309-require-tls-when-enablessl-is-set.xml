@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <description format="asciidoc">
+    add a `TransportSecurity` option to the `log4net.Ext.Mail` `SmtpAppender` and make `EnableSsl`
+ a shorthand for it. `EnableSsl` requires transport security, selecting implicit TLS on port 465 and
+ mandatory `STARTTLS` elsewhere, so connecting fails when the server offers no TLS instead of
+ silently continuing in plaintext, as `System.Net.Mail.SmtpClient.EnableSsl` does. Opportunistic
+ `STARTTLS` remains available, but only by asking for it with
+ `TransportSecurity=StartTlsWhenAvailable` (audit 1231d72-f007)
+  </description>
+</entry>

@@ -190,7 +190,12 @@ This example authenticates against a mail server that requires an encrypted conn
 |The port the SMTP server listens on. Defaults to `25`.
 
 |`enableSsl`
-|Whether to secure the connection. Defaults to `false`. See xref:#mailkit-smtpappender-differences[].
+|Whether to require transport security. Defaults to `false`.
+Shorthand for `transportSecurity`: `true` selects `Required`, `false` selects `None`.
+
+|`transportSecurity`
+|How the connection is secured. One of `None` (default), `Required`, `ImplicitTls`, `StartTls` or `StartTlsWhenAvailable`.
+See xref:#mailkit-smtpappender-transport-security[].
 
 |`authentication`
 |One of `None` (default), `Basic` or `Ntlm`. `Basic` and `Ntlm` both require `username` and `password`.
@@ -222,17 +227,64 @@ This example authenticates against a mail server that requires an encrypted conn
 
 `to`, `cc` and `bcc` also accept semicolons as separators, and quoted display names such as `"Doe, John" <john@example.com>`.
 
+[#mailkit-smtpappender-transport-security]
+=== Transport security
+
+`enableSsl` covers the usual cases and behaves as it does in the legacy appender: `true` requires
+transport security, so connecting fails when the server does not offer it rather than continuing
+unencrypted.
+
+`transportSecurity` is the same setting expressed precisely, for servers that need something else.
+The two properties cannot disagree: whichever is assigned last wins.
+
+[cols="Value,Description"]
+|===
+|Value |Description
+
+|`None`
+|The connection is not encrypted. Equivalent to `enableSsl` set to `false`, and the default.
+
+|`Required`
+|Transport security is required and the mechanism follows the port: implicit TLS on port 465,
+`STARTTLS` on every other port. Equivalent to `enableSsl` set to `true`.
+
+|`ImplicitTls`
+|The session is encrypted before the SMTP greeting, whatever the port.
+Use this for a server expecting implicit TLS on a port other than 465, which `Required` would try
+to negotiate with `STARTTLS` instead.
+
+|`StartTls`
+|`STARTTLS` is required, whatever the port.
+
+|`StartTlsWhenAvailable`
+|`STARTTLS` is used when the server advertises it, and the connection continues unencrypted when it
+does not.
+|===
+
+[WARNING]
+====
+`StartTlsWhenAvailable` is opportunistic.
+An attacker able to modify the traffic can remove the server's `STARTTLS` advertisement, and the
+session then proceeds in plaintext, exposing the credentials sent by `authentication` and the log
+content itself.
+Only choose it for a network where that is acceptable, and prefer `Required`.
+====
+
 [#mailkit-smtpappender-differences]
 === Differences from the legacy appender
 
 The options above are named exactly as in the legacy appender, but a few behave differently:
 
 * `smtpHost` is *required*. MailKit has no notion of a machine-wide default SMTP server, so there is nothing to fall back on when the option is omitted.
-* `enableSsl` set to `true` negotiates transport security automatically: implicit TLS on port 465, otherwise `STARTTLS` when the server advertises it.
-Set to `false`, the connection is not encrypted at all.
 * `authentication` set to `Ntlm` requires `username` and `password`.
 MailKit cannot reuse the Windows logon session of the current thread or process, which the legacy appender did.
 * Semicolon-delimited recipient lists in `to`, `cc` and `bcc` are parsed correctly.
+* `transportSecurity` has no counterpart in the legacy appender, which offers only `enableSsl`.
+
+`enableSsl` keeps its meaning, so a migrated configuration secures the connection exactly as before.
+If the legacy appender reached your server with `enableSsl` set to `true`, so does this one.
+The new `transportSecurity` option is only needed for a server that the legacy appender could not
+reach either, such as one expecting implicit TLS on a port other than 465.
 
 [#legacy-smtpappender]
 == Built-in SmtpAppender (deprecated)
