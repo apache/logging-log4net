@@ -96,6 +96,49 @@ public class UserNameFixingTest
   }
 
   /// <summary>
+  /// An event logged while impersonating takes the user name with it when it is fixed, even though
+  /// <see cref="FixFlags.Partial"/> does not ask for it. Fixing is the last point at which the
+  /// identity that logged the event is known: a buffering appender reads the property later, from
+  /// the thread flushing the buffer.
+  /// </summary>
+  [Test]
+  public void UserNameIsCapturedWhenFixingAnImpersonatedEvent()
+  {
+    using WindowsIdentity identity = WindowsIdentity.GetCurrent();
+    string expected = identity.Name;
+
+    LoggingEvent loggingEvent = WindowsIdentity.RunImpersonated(identity.AccessToken, () =>
+    {
+      LoggingEvent impersonatedEvent = CreateEvent();
+      impersonatedEvent.Fix = FixFlags.Partial;
+      return impersonatedEvent;
+    });
+
+    // Read outside the impersonation, as a buffering appender would.
+    Assert.That(loggingEvent.UserName, Is.EqualTo(expected));
+  }
+
+  /// <summary>
+  /// The same holds when nothing at all is fixed, which skips most of FixVolatileData but still
+  /// locks the cache.
+  /// </summary>
+  [Test]
+  public void UserNameIsCapturedWhenFixingNothingOnAnImpersonatedEvent()
+  {
+    using WindowsIdentity identity = WindowsIdentity.GetCurrent();
+    string expected = identity.Name;
+
+    LoggingEvent loggingEvent = WindowsIdentity.RunImpersonated(identity.AccessToken, () =>
+    {
+      LoggingEvent impersonatedEvent = CreateEvent();
+      impersonatedEvent.Fix = FixFlags.None;
+      return impersonatedEvent;
+    });
+
+    Assert.That(loggingEvent.UserName, Is.EqualTo(expected));
+  }
+
+  /// <summary>
   /// The process identity name may only be resolved on a thread that is not impersonating.
   /// Seeding it from an impersonating thread would report that user for every later event in
   /// the process, including events raised on threads that impersonate nobody.
