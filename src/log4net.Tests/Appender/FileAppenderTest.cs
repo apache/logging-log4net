@@ -30,7 +30,9 @@ using log4net.Core;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace log4net.Tests.Appender;
 
@@ -179,6 +181,84 @@ public sealed class FileAppenderTest
     }
     finally
     {
+      lockingModel.OnClose();
+      File.Delete(tempFile);
+    }
+  }
+
+  /// <summary>
+  /// The wait for the inter process lock happens while the appender lock is held, so it has to be
+  /// bounded by default: a lock nobody releases would otherwise suspend all logging for good.
+  /// </summary>
+  [Test]
+  public void LockTimeoutMillisDefaultsToAFiniteValue()
+    => Assert.That(new FileAppender.InterProcessLock().LockTimeoutMillis, Is.EqualTo(10000));
+
+  /// <summary>
+  /// Timeout.Infinite restores waiting indefinitely and 0 gives up at once; any other negative
+  /// value has no meaning and is rejected rather than reinterpreted.
+  /// </summary>
+  [Test]
+  public void LockTimeoutMillisRejectsNegativeValuesExceptInfinite()
+  {
+    FileAppender.InterProcessLock lockingModel = new();
+
+    Assert.That(() => lockingModel.LockTimeoutMillis = -2, Throws.TypeOf<ArgumentOutOfRangeException>());
+
+    lockingModel.LockTimeoutMillis = Timeout.Infinite;
+    Assert.That(lockingModel.LockTimeoutMillis, Is.EqualTo(Timeout.Infinite));
+
+    lockingModel.LockTimeoutMillis = 0;
+    Assert.That(lockingModel.LockTimeoutMillis, Is.EqualTo(0));
+  }
+
+  /// <summary>
+  /// When something else holds the lock and does not let go, the event is dropped rather than the
+  /// logging thread being blocked forever.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AcquireLockGivesUpWhenTheLockIsHeldTooLong()
+  {
+    const string appenderFile = "log4net_lock_timeout_test";
+    string tempFile = Path.GetTempFileName();
+    FileAppender appender = new() { File = appenderFile };
+    FileAppender.InterProcessLock lockingModel = new()
+    {
+      CurrentAppender = appender,
+      LockTimeoutMillis = 200
+    };
+    lockingModel.ActivateOptions();
+    lockingModel.OpenFile(tempFile, false, Encoding.UTF8);
+
+    using ManualResetEventSlim held = new();
+    using ManualResetEventSlim release = new();
+    // A mutex has to be taken and released on one thread, so the holder does both.
+    Task holder = Task.Run(() =>
+    {
+      using Mutex contender = new(false, appenderFile);
+      contender.WaitOne();
+      held.Set();
+      release.Wait();
+      contender.ReleaseMutex();
+    });
+
+    try
+    {
+      Assert.That(held.Wait(TimeSpan.FromSeconds(10)), Is.True, "the contending thread never took the mutex");
+
+      Stream? stream = null;
+      Stopwatch stopwatch = Stopwatch.StartNew();
+      LogLog.ExecuteWithoutEmittingInternalMessages(() => stream = lockingModel.AcquireLock());
+      stopwatch.Stop();
+
+      Assert.That(stream, Is.Null, "the lock was reported as acquired while another thread held it");
+      Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromSeconds(10)));
+    }
+    finally
+    {
+      release.Set();
+      holder.Wait(TimeSpan.FromSeconds(10));
       lockingModel.OnClose();
       File.Delete(tempFile);
     }
