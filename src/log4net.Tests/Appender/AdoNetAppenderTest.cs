@@ -264,6 +264,73 @@ public class AdoNetAppenderTest
     Assert.That(param.Value, Is.Empty);
   }
 
+  /// <summary>
+  /// An event the database rejects must only lose itself. The other events of the flushed
+  /// buffer have already been removed from it and cannot be retried later, so they have to
+  /// be written even though they shared a transaction with the rejected event.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void RejectedEventDoesNotDiscardTheRestOfTheBuffer()
+  {
+    try
+    {
+      Log4NetCommand.ExceptionTrigger = "POISON";
+      Log4NetCommand.ExecutedPayloads.Clear();
+
+      XmlDocument log4NetConfig = new();
+      log4NetConfig.LoadXml(
+        """
+        <log4net>
+        <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+          <bufferSize value="3" />
+          <useTransactions value="true" />
+          <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection" />
+          <connectionString value="data source=[database server]" />
+          <commandText value="INSERT INTO Log ([Message]) VALUES (@message)" />
+          <parameter>
+            <parameterName value="@message" />
+            <dbType value="String" />
+            <size value="4000" />
+            <layout type="log4net.Layout.PatternLayout">
+              <conversionPattern value="%message" />
+            </layout>
+          </parameter>
+        </appender>
+        <root>
+          <level value="ALL" />
+          <appender-ref ref="AdoNetAppender" />
+        </root>
+        </log4net>
+        """);
+
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
+      ILog log = LogManager.GetLogger(rep.Name, "RejectedEventDoesNotDiscardTheRestOfTheBuffer");
+
+      // The appender reports the rejected event through its ErrorHandler; that is expected
+      // here and should not clutter the test output.
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        log.Debug("before");
+        log.Debug("a POISON message");
+        log.Debug("after one");
+        // The fourth event overflows the buffer of 3 and flushes all four events.
+        log.Debug("after two");
+      });
+
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.Member("before"));
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.Member("after one"));
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.Member("after two"));
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.No.Member("a POISON message"));
+    }
+    finally
+    {
+      Log4NetCommand.ExceptionTrigger = null;
+      Log4NetCommand.ExecutedPayloads.Clear();
+    }
+  }
+
   [Test]
   public void NullPropertyXmlConfig()
   {

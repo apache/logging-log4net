@@ -20,6 +20,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace log4net.Tests.Appender.AdoNet;
@@ -42,11 +43,44 @@ internal sealed class Log4NetCommand : IDbCommand
 
   public int ExecuteNonQuery()
   {
+    string? payload = null;
+    foreach (object? parameter in Parameters)
+    {
+      if (parameter is IDataParameter { Value: string value })
+      {
+        payload = value;
+        break;
+      }
+    }
+    payload ??= CommandText;
+
+    if (ExceptionTrigger is not null
+        && payload?.IndexOf(ExceptionTrigger, StringComparison.Ordinal) >= 0)
+    {
+      throw new InvalidOperationException($"Simulated database rejection of [{payload}]");
+    }
+
     ExecuteNonQueryCount++;
+    if (payload is not null)
+    {
+      ExecutedPayloads.Add(payload);
+    }
     return 0;
   }
 
   public int ExecuteNonQueryCount { get; private set; }
+
+  /// <summary>
+  /// When set, <see cref="ExecuteNonQuery"/> throws for every command whose payload
+  /// contains this string, simulating a database that rejects specific content.
+  /// </summary>
+  public static string? ExceptionTrigger { get; set; }
+
+  /// <summary>
+  /// The payload - the first string parameter value, or the command text when there are no
+  /// parameters - of every successful <see cref="ExecuteNonQuery"/> across all instances.
+  /// </summary>
+  public static List<string> ExecutedPayloads { get; } = [];
 
   public IDbDataParameter CreateParameter() => new Log4NetParameter();
 
