@@ -19,7 +19,6 @@
 
 // log4net makes use of static methods which cannot be made com visible
 [assembly: System.Runtime.InteropServices.ComVisible(false)]
-[assembly: System.CLSCompliant(true)]
 // If log4net is strongly named it still allows partially trusted callers
 [assembly: System.Security.AllowPartiallyTrustedCallers]
 

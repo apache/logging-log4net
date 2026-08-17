@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
 
       - name: Set up dotnet
-        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee   # 4.0.1
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68   # 6.0.0
         with:
           dotnet-version: 10
           dotnet-quality: ga

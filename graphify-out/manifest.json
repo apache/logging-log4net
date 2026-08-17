@@ -1,186 +1,186 @@
 {
   "examples/Appenders/SampleAppendersApp/Appender/AsyncAppender.cs": {
-    "mtime": 1729759731.739354,
+    "mtime": 1730148717.6332276,
     "ast_hash": "f80a605dfe5adcae74039fd6f49c5cf2",
     "semantic_hash": "f80a605dfe5adcae74039fd6f49c5cf2"
   },
   "examples/Appenders/SampleAppendersApp/Appender/FireEventAppender.cs": {
-    "mtime": 1729759731.7410924,
+    "mtime": 1730148717.648852,
     "ast_hash": "296b590bb6ad2e886d29138c3adbbc81",
     "semantic_hash": "296b590bb6ad2e886d29138c3adbbc81"
   },
   "examples/Appenders/SampleAppendersApp/Appender/MessageBoxAppender.cs": {
-    "mtime": 1729759731.742835,
+    "mtime": 1730148717.648852,
     "ast_hash": "3ab94a805112f76d7f34750aed561f7f",
     "semantic_hash": "3ab94a805112f76d7f34750aed561f7f"
   },
   "examples/Appenders/SampleAppendersApp/Appender/MessageObjectExpanderAppender.cs": {
-    "mtime": 1729759731.744574,
+    "mtime": 1730148717.648852,
     "ast_hash": "9d02ec83cde2beb78edf24754bb939eb",
     "semantic_hash": "9d02ec83cde2beb78edf24754bb939eb"
   },
   "examples/Appenders/SampleAppendersApp/Appender/PatternFileAppender.cs": {
-    "mtime": 1729759731.7463138,
+    "mtime": 1730148717.6644747,
     "ast_hash": "3dcbc70e6247d56ebe2cf14903e49fa3",
     "semantic_hash": "3dcbc70e6247d56ebe2cf14903e49fa3"
   },
   "examples/Appenders/SampleAppendersApp/Appender/PatternLayoutAdoNetAppender.cs": {
-    "mtime": 1729759731.7480545,
+    "mtime": 1730148717.6644747,
     "ast_hash": "f42f9c17def1ee30e88aef7eb0249801",
     "semantic_hash": "f42f9c17def1ee30e88aef7eb0249801"
   },
   "examples/Appenders/SampleAppendersApp/Appender/PatternLayoutAdoNetAppenderParameter.cs": {
-    "mtime": 1729759731.7497945,
+    "mtime": 1730148717.6644747,
     "ast_hash": "376a0f34fd284db01d80580a4dc6bd86",
     "semantic_hash": "376a0f34fd284db01d80580a4dc6bd86"
   },
   "examples/Appenders/SampleAppendersApp/LoggingExample.cs": {
-    "mtime": 1729759731.7515342,
+    "mtime": 1730148717.6644747,
     "ast_hash": "49414a02a6d1c6c7d76ac8077a4791f8",
     "semantic_hash": "49414a02a6d1c6c7d76ac8077a4791f8"
   },
   "examples/Appenders/SampleAppendersApp/SampleAppendersApp.csproj": {
-    "mtime": 1726482599.8510823,
+    "mtime": 1728845081.9431121,
     "ast_hash": "78e47c7b3262fcda4f23768838046ba7",
     "semantic_hash": "78e47c7b3262fcda4f23768838046ba7"
   },
   "examples/Appenders/WmiAppender/IWmiBoundEvent.cs": {
-    "mtime": 1729759731.7532735,
+    "mtime": 1730148717.680102,
     "ast_hash": "454808e3f52f5f3b0800b204766fd0cb",
     "semantic_hash": "454808e3f52f5f3b0800b204766fd0cb"
   },
   "examples/Appenders/WmiAppender/WmiAppender.cs": {
-    "mtime": 1729759731.755015,
+    "mtime": 1730148717.680102,
     "ast_hash": "dfed22fb783ccc08167de3db7f0295c2",
     "semantic_hash": "dfed22fb783ccc08167de3db7f0295c2"
   },
   "examples/Appenders/WmiAppender/WmiAppender.csproj": {
-    "mtime": 1729759731.7567546,
+    "mtime": 1730148717.680102,
     "ast_hash": "50989f8ce031c6a17ea6ff5a10db1b94",
     "semantic_hash": "50989f8ce031c6a17ea6ff5a10db1b94"
   },
   "examples/Appenders/WmiAppender/WmiInstaller.cs": {
-    "mtime": 1729759731.7567546,
+    "mtime": 1730148717.680102,
     "ast_hash": "901213fa943bd5acc939a23f7cc59b80",
     "semantic_hash": "901213fa943bd5acc939a23f7cc59b80"
   },
   "examples/Appenders/WmiAppender/WmiLayout.cs": {
-    "mtime": 1729759731.758495,
+    "mtime": 1730148717.695727,
     "ast_hash": "995c6d947138df4bf36f8e4b996cf970",
     "semantic_hash": "995c6d947138df4bf36f8e4b996cf970"
   },
   "examples/Appenders/WmiAppender/WmiLoggingEvent.cs": {
-    "mtime": 1729759731.760234,
+    "mtime": 1730148717.695727,
     "ast_hash": "d2c6f3bf60ed73e5c0e14773984d49ed",
     "semantic_hash": "d2c6f3bf60ed73e5c0e14773984d49ed"
   },
   "examples/Extensibility/EventIDLogApp/EventIDLogApp.cs": {
-    "mtime": 1729759731.763715,
+    "mtime": 1730148717.712883,
     "ast_hash": "f76c2dc407abd76f8dabd80baeb71f92",
     "semantic_hash": "f76c2dc407abd76f8dabd80baeb71f92"
   },
   "examples/Extensibility/EventIDLogApp/EventIDLogApp.csproj": {
-    "mtime": 1726482599.8630822,
+    "mtime": 1728845081.965148,
     "ast_hash": "874ccd51e01c47f8ace2af5daeafc431",
     "semantic_hash": "874ccd51e01c47f8ace2af5daeafc431"
   },
   "examples/Extensibility/TraceLogApp/TraceLogApp.cs": {
-    "mtime": 1729759731.7654543,
+    "mtime": 1730148717.712883,
     "ast_hash": "82cf5930746637c470a4291efdab96fd",
     "semantic_hash": "82cf5930746637c470a4291efdab96fd"
   },
   "examples/Extensibility/TraceLogApp/TraceLogApp.csproj": {
-    "mtime": 1726482599.8660822,
+    "mtime": 1728845081.9702835,
     "ast_hash": "715af12c808770417bdbc857722b1612",
     "semantic_hash": "715af12c808770417bdbc857722b1612"
   },
   "examples/Extensions/log4net.Ext.EventID/EventIDLogImpl.cs": {
-    "mtime": 1729759731.767194,
+    "mtime": 1730148717.7214236,
     "ast_hash": "10e1e72d059b247ce27da08d19ae55fa",
     "semantic_hash": "10e1e72d059b247ce27da08d19ae55fa"
   },
   "examples/Extensions/log4net.Ext.EventID/EventIDLogManager.cs": {
-    "mtime": 1729759731.7689347,
+    "mtime": 1730148717.7214236,
     "ast_hash": "40ef495b6129aad5c5f08c002066bbaf",
     "semantic_hash": "40ef495b6129aad5c5f08c002066bbaf"
   },
   "examples/Extensions/log4net.Ext.EventID/IEventIDLog.cs": {
-    "mtime": 1729759731.7706752,
+    "mtime": 1730148717.7274294,
     "ast_hash": "6bb163a09e0f0df8dcddbd8e96e5b8bd",
     "semantic_hash": "6bb163a09e0f0df8dcddbd8e96e5b8bd"
   },
   "examples/Extensions/log4net.Ext.EventID/log4net.Ext.EventID.csproj": {
-    "mtime": 1726482599.872082,
+    "mtime": 1728845081.9765606,
     "ast_hash": "63d3c80419d5e67808b7daa67e16f9fe",
     "semantic_hash": "63d3c80419d5e67808b7daa67e16f9fe"
   },
   "examples/Extensions/log4net.Ext.MarshalByRef/AssemblyInfo.cs": {
-    "mtime": 1726482599.8730822,
+    "mtime": 1728845081.9765606,
     "ast_hash": "29b8788401577563cd6dee524a7527f1",
     "semantic_hash": "29b8788401577563cd6dee524a7527f1"
   },
   "examples/Extensions/log4net.Ext.MarshalByRef/MarshalByRefLogImpl.cs": {
-    "mtime": 1726482599.8740826,
+    "mtime": 1728845081.9775774,
     "ast_hash": "36ee71d74677abb681f679ad8edddf64",
     "semantic_hash": "36ee71d74677abb681f679ad8edddf64"
   },
   "examples/Extensions/log4net.Ext.MarshalByRef/MarshalByRefLogManager.cs": {
-    "mtime": 1726482599.8750818,
+    "mtime": 1728845081.9775774,
     "ast_hash": "233a16ac669e71e3ccf90cbb97a40a3b",
     "semantic_hash": "233a16ac669e71e3ccf90cbb97a40a3b"
   },
   "examples/Extensions/log4net.Ext.MarshalByRef/log4net.Ext.MarshalByRef.csproj": {
-    "mtime": 1726482599.876082,
+    "mtime": 1728845081.978614,
     "ast_hash": "debe3e80320102c1822f71185113d2a1",
     "semantic_hash": "debe3e80320102c1822f71185113d2a1"
   },
   "examples/Extensions/log4net.Ext.Trace/ITraceLog.cs": {
-    "mtime": 1729759731.7724142,
+    "mtime": 1730148717.7274294,
     "ast_hash": "90282cfbea976ed0e8dab090ae3fd15c",
     "semantic_hash": "90282cfbea976ed0e8dab090ae3fd15c"
   },
   "examples/Extensions/log4net.Ext.Trace/TraceLogImpl.cs": {
-    "mtime": 1729759731.7724142,
+    "mtime": 1730148717.7274294,
     "ast_hash": "1fbdd04c2050f7013fafb9c370c3de6d",
     "semantic_hash": "1fbdd04c2050f7013fafb9c370c3de6d"
   },
   "examples/Extensions/log4net.Ext.Trace/TraceLogManager.cs": {
-    "mtime": 1729759731.7741535,
+    "mtime": 1730148717.7274294,
     "ast_hash": "a4d07494a134859c4114d376c83fd41e",
     "semantic_hash": "a4d07494a134859c4114d376c83fd41e"
   },
   "examples/Extensions/log4net.Ext.Trace/log4net.Ext.Trace.csproj": {
-    "mtime": 1726482599.882082,
+    "mtime": 1728845081.984838,
     "ast_hash": "63d3c80419d5e67808b7daa67e16f9fe",
     "semantic_hash": "63d3c80419d5e67808b7daa67e16f9fe"
   },
   "examples/Layouts/SampleLayoutsApp/Layout/ForwardingLayout.cs": {
-    "mtime": 1746713736.686596,
-    "ast_hash": "11d42ba6a66964b3d8ab17145c899eae",
-    "semantic_hash": "11d42ba6a66964b3d8ab17145c899eae"
+    "mtime": 1746634909.1655128,
+    "ast_hash": "05b492bd56915627b8b785e7c7622411",
+    "semantic_hash": ""
   },
   "examples/Layouts/SampleLayoutsApp/Layout/LevelConversionPattern.cs": {
-    "mtime": 1729759731.7793734,
+    "mtime": 1730148717.7430637,
     "ast_hash": "889a75c1c5bb59a87f6bb89ce88771f3",
     "semantic_hash": "889a75c1c5bb59a87f6bb89ce88771f3"
   },
   "examples/Layouts/SampleLayoutsApp/Layout/LevelPatternLayout.cs": {
-    "mtime": 1729759731.7793734,
+    "mtime": 1730148717.7430637,
     "ast_hash": "6d74b5ff6ce7cdc5bfda584bbd1219e3",
     "semantic_hash": "6d74b5ff6ce7cdc5bfda584bbd1219e3"
   },
   "examples/Layouts/SampleLayoutsApp/Layout/LineWrappingLayout.cs": {
-    "mtime": 1729759731.7811134,
+    "mtime": 1730148717.758715,
     "ast_hash": "bb3ea77f346df3b81443d40d32a929e0",
     "semantic_hash": "bb3ea77f346df3b81443d40d32a929e0"
   },
   "examples/Layouts/SampleLayoutsApp/LoggingExample.cs": {
-    "mtime": 1729759731.7828548,
+    "mtime": 1730148717.758715,
     "ast_hash": "6fac6b7d1cc431f4f1c23784ad8b009e",
     "semantic_hash": "6fac6b7d1cc431f4f1c23784ad8b009e"
   },
   "examples/Layouts/SampleLayoutsApp/SampleLayoutsApp.csproj": {
-    "mtime": 1726482599.8930817,
+    "mtime": 1728845081.9869132,
     "ast_hash": "f8805742231be98f6f6585ef1176c4d5",
     "semantic_hash": "f8805742231be98f6f6585ef1176c4d5"
   },
@@ -190,9 +190,9 @@
     "semantic_hash": "439e2e32d0847be2d12bbb4864dd17ab"
   },
   "examples/Maui/App.xaml.cs": {
-    "mtime": 1746713736.688602,
-    "ast_hash": "9b730851f1d1e5acd6538a84be99c808",
-    "semantic_hash": "9b730851f1d1e5acd6538a84be99c808"
+    "mtime": 1746634909.166736,
+    "ast_hash": "72ec6948574b1eb7dda8fcdf49dd1e0d",
+    "semantic_hash": ""
   },
   "examples/Maui/AppShell.xaml": {
     "mtime": 1746713736.6906073,
@@ -200,9 +200,9 @@
     "semantic_hash": "eacd012d559e756b42700485eaaa04b1"
   },
   "examples/Maui/AppShell.xaml.cs": {
-    "mtime": 1746713736.6926136,
-    "ast_hash": "816e4c9fa34163717acc826ada9b742f",
-    "semantic_hash": "816e4c9fa34163717acc826ada9b742f"
+    "mtime": 1746634909.1673913,
+    "ast_hash": "171bab09524ca54b3d72fef1c01b155d",
+    "semantic_hash": ""
   },
   "examples/Maui/MainPage.xaml": {
     "mtime": 1746713736.6926136,
@@ -210,44 +210,44 @@
     "semantic_hash": "bebb41944e3c8bd830fd8822c4899d42"
   },
   "examples/Maui/MainPage.xaml.cs": {
-    "mtime": 1746713736.6946182,
-    "ast_hash": "2587da5a1b9ddb13b10bb04b2ff53b51",
-    "semantic_hash": "2587da5a1b9ddb13b10bb04b2ff53b51"
+    "mtime": 1746634909.1680028,
+    "ast_hash": "e9d2f13f47043e0ecc4003b961d37e1f",
+    "semantic_hash": ""
   },
   "examples/Maui/MauiProgram.cs": {
-    "mtime": 1746713736.6963646,
-    "ast_hash": "e34f86c13f4ad9e6538c504324289031",
-    "semantic_hash": "e34f86c13f4ad9e6538c504324289031"
+    "mtime": 1746634909.1683106,
+    "ast_hash": "90179ad77ed6a54c24079edc653bac79",
+    "semantic_hash": ""
   },
   "examples/Maui/MauiTestApplication.csproj": {
-    "mtime": 1785767602.2369277,
-    "ast_hash": "3ab9b1930e0a5e6adc985a84e3959576",
-    "semantic_hash": "3ab9b1930e0a5e6adc985a84e3959576"
+    "mtime": 1785869401.7002578,
+    "ast_hash": "ed33a05238b831960ac1ed604be4c569",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/Android/MainActivity.cs": {
-    "mtime": 1746713736.7003894,
-    "ast_hash": "15ee172264e2e4d110a14290d1cc1439",
-    "semantic_hash": "15ee172264e2e4d110a14290d1cc1439"
+    "mtime": 1746634909.1694095,
+    "ast_hash": "f00713c858f98f909a2719e32c76bf49",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/Android/MainApplication.cs": {
-    "mtime": 1746713736.7023952,
-    "ast_hash": "998eff18ce2b3c1b108ded16a4a7b411",
-    "semantic_hash": "998eff18ce2b3c1b108ded16a4a7b411"
+    "mtime": 1746634909.16974,
+    "ast_hash": "96a5dd035a8c8a854166bc33b28602bd",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/MacCatalyst/AppDelegate.cs": {
-    "mtime": 1746713736.7044,
-    "ast_hash": "24012020c420115f789ee68fa568dcbb",
-    "semantic_hash": "24012020c420115f789ee68fa568dcbb"
+    "mtime": 1746634909.1706524,
+    "ast_hash": "001fa19261289373f26e7916789aef69",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/MacCatalyst/Program.cs": {
-    "mtime": 1746713736.7084098,
-    "ast_hash": "3101fb6677c3de7643795f1167a98c5a",
-    "semantic_hash": "3101fb6677c3de7643795f1167a98c5a"
+    "mtime": 1746634909.171533,
+    "ast_hash": "b6afc6c84193e5f4e9b325538afa5dc3",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/Tizen/Main.cs": {
-    "mtime": 1746713736.7104154,
-    "ast_hash": "1d31d5c0d792087f257bea44b5767131",
-    "semantic_hash": "1d31d5c0d792087f257bea44b5767131"
+    "mtime": 1746634909.171894,
+    "ast_hash": "14c93630b3c24bffde5814cd3a25d592",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/Windows/App.xaml": {
     "mtime": 1746713736.712161,
@@ -255,29 +255,29 @@
     "semantic_hash": "1af47af23ebc9c1289b8e3528dbba1c0"
   },
   "examples/Maui/Platforms/Windows/App.xaml.cs": {
-    "mtime": 1746713736.7141652,
-    "ast_hash": "37fc8117c70c593a1663d4a151874cad",
-    "semantic_hash": "37fc8117c70c593a1663d4a151874cad"
+    "mtime": 1746634909.1727715,
+    "ast_hash": "f39f8e1531885debe82cdbab6e0128b9",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/iOS/AppDelegate.cs": {
-    "mtime": 1746713736.7181766,
-    "ast_hash": "24012020c420115f789ee68fa568dcbb",
-    "semantic_hash": "24012020c420115f789ee68fa568dcbb"
+    "mtime": 1746634909.173614,
+    "ast_hash": "001fa19261289373f26e7916789aef69",
+    "semantic_hash": ""
   },
   "examples/Maui/Platforms/iOS/Program.cs": {
-    "mtime": 1746713736.7196805,
-    "ast_hash": "3101fb6677c3de7643795f1167a98c5a",
-    "semantic_hash": "3101fb6677c3de7643795f1167a98c5a"
+    "mtime": 1746634909.1741703,
+    "ast_hash": "b6afc6c84193e5f4e9b325538afa5dc3",
+    "semantic_hash": ""
   },
   "examples/Maui/Properties/launchSettings.json": {
-    "mtime": 1746713736.7236905,
-    "ast_hash": "4e57b643958c5bf8b3edc47dc24a9cec",
-    "semantic_hash": "4e57b643958c5bf8b3edc47dc24a9cec"
+    "mtime": 1746634909.174853,
+    "ast_hash": "ddede9919b016a58dc9319cd2da0dd28",
+    "semantic_hash": ""
   },
   "examples/Maui/Resources/Fonts/FluentUI.cs": {
-    "mtime": 1746713736.729705,
-    "ast_hash": "53ffe7a459f89de20a491bbe3591d426",
-    "semantic_hash": "53ffe7a459f89de20a491bbe3591d426"
+    "mtime": 1746634909.1800086,
+    "ast_hash": "0722c7fea67cce63231e33dd19059453",
+    "semantic_hash": ""
   },
   "examples/Maui/Resources/Styles/Colors.xaml": {
     "mtime": 1746713736.7474892,
@@ -290,1848 +290,1908 @@
     "semantic_hash": "8339e053721b1bcfaf44da1e6877e6fa"
   },
   "examples/Performance/NotLogging/NotLogging.cs": {
-    "mtime": 1729759731.786336,
+    "mtime": 1730148717.758715,
     "ast_hash": "4d23b50bff12ac0417cd0c7fee8eda43",
     "semantic_hash": "4d23b50bff12ac0417cd0c7fee8eda43"
   },
   "examples/Performance/NotLogging/NotLogging.csproj": {
-    "mtime": 1726482599.8960812,
+    "mtime": 1728845081.9869132,
     "ast_hash": "ccba2f5d6cc50e16d3f937b03ac98eb2",
     "semantic_hash": "ccba2f5d6cc50e16d3f937b03ac98eb2"
   },
   "examples/Tutorials/ConsoleApp/ConsoleApp.csproj": {
-    "mtime": 1726482599.8990853,
+    "mtime": 1744042678.8164103,
     "ast_hash": "ccba2f5d6cc50e16d3f937b03ac98eb2",
     "semantic_hash": "ccba2f5d6cc50e16d3f937b03ac98eb2"
   },
   "examples/Tutorials/ConsoleApp/LoggingExample.cs": {
-    "mtime": 1729759731.7880745,
+    "mtime": 1730148717.774341,
     "ast_hash": "330cf3f27445f79d23b34be3fb581429",
     "semantic_hash": "330cf3f27445f79d23b34be3fb581429"
   },
   "examples/examples.sln": {
-    "mtime": 1785755884.9477074,
-    "ast_hash": "16a21f5cc7855b599fa8ebc1280bda6b",
-    "semantic_hash": "16a21f5cc7855b599fa8ebc1280bda6b"
+    "mtime": 1746634909.1867778,
+    "ast_hash": "a58c82fbd13cbeeaf3fed489286964b1",
+    "semantic_hash": ""
   },
   "mvnw": {
-    "mtime": 1744621791.8436432,
-    "ast_hash": "bf0ec302edba6c5f849a40a704f13083",
-    "semantic_hash": "bf0ec302edba6c5f849a40a704f13083"
+    "mtime": 1746385885.9295924,
+    "ast_hash": "0fa74c4ce29474019b2a921cedcb886a",
+    "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1785248325.7580414,
-    "ast_hash": "3d24436c4e34cb8e9ba472cd537f2927",
+    "mtime": 1785871354.2941654,
+    "ast_hash": "8ee2915347c1d075210ec5db75617c9c",
     "semantic_hash": ""
   },
   "pom.xml": {
-    "mtime": 1785153721.332651,
-    "ast_hash": "4d3d7c3c88694eca9720e7dd14864c5a",
+    "mtime": 1785871354.2681653,
+    "ast_hash": "12cda1238ffaceac82cd95398e16ee1f",
     "semantic_hash": ""
   },
   "scripts/build-preview.ps1": {
-    "mtime": 1785767602.2369277,
-    "ast_hash": "a1b6596027a562e59b30d0fa44d1cd73",
+    "mtime": 1785961863.0202546,
+    "ast_hash": "8288ce7e981fade76c118b29d61d13a8",
     "semantic_hash": ""
   },
   "scripts/build-release.ps1": {
-    "mtime": 1785767602.2369277,
-    "ast_hash": "118dfa79102d2b1de8f6feba1dbd6e40",
+    "mtime": 1785961863.0202546,
+    "ast_hash": "ff5211abc47c7c549e0b798f7355589a",
     "semantic_hash": ""
   },
   "scripts/install-dotnet-sdk.ps1": {
-    "mtime": 1726499020.6619112,
-    "ast_hash": "5e6efb9aa828d707de19ab142da86a9d",
-    "semantic_hash": "5e6efb9aa828d707de19ab142da86a9d"
+    "mtime": 1744744739.3708887,
+    "ast_hash": "3713d08ee18aa31e9baff744bf3f7258",
+    "semantic_hash": ""
   },
   "scripts/sign-log4net-libraries.ps1": {
-    "mtime": 1755626906.3764086,
-    "ast_hash": "52a158ce9ed4f7c982c91a3750dafdf1",
-    "semantic_hash": "52a158ce9ed4f7c982c91a3750dafdf1"
+    "mtime": 1755629020.0683534,
+    "ast_hash": "7f9323152f0134b2bc1be8ea32b05015",
+    "semantic_hash": ""
   },
   "scripts/sign-log4net-libraries.sh": {
-    "mtime": 1726499020.6649115,
+    "mtime": 1728845082.0163426,
     "ast_hash": "1e2b91d9f8dfdfd35a422d056e7bed49",
     "semantic_hash": "1e2b91d9f8dfdfd35a422d056e7bed49"
   },
   "scripts/update-version.ps1": {
-    "mtime": 1785767602.2369277,
-    "ast_hash": "ea7baca07feecd0f2c757c93488369a4",
+    "mtime": 1785869401.7092578,
+    "ast_hash": "5f1af074568b95d564829b621bf40584",
     "semantic_hash": ""
   },
   "scripts/verify-release.ps1": {
-    "mtime": 1755627470.6302025,
-    "ast_hash": "85cae7822cc72be07b587f1819cb68ff",
-    "semantic_hash": "85cae7822cc72be07b587f1819cb68ff"
+    "mtime": 1755629020.0693533,
+    "ast_hash": "f46a8ed184a4163210d0d1b424f0b17e",
+    "semantic_hash": ""
   },
   "scripts/verify-release.sh": {
-    "mtime": 1756128975.588001,
+    "mtime": 1755895066.2338717,
     "ast_hash": "6d83fdaeefd5cf99cda7be7487fafd90",
     "semantic_hash": "6d83fdaeefd5cf99cda7be7487fafd90"
   },
   "src/global.json": {
-    "mtime": 1775044650.727246,
-    "ast_hash": "517358936134dd50dd4946e2a70f0609",
-    "semantic_hash": "517358936134dd50dd4946e2a70f0609"
+    "mtime": 1772298934.3146048,
+    "ast_hash": "7da8e5fa3b59c09f01a2a39cc055ce6a",
+    "semantic_hash": ""
   },
   "src/integration-testing/log4net-611-lib/DerivedAppender.cs": {
-    "mtime": 1730742598.0254695,
+    "mtime": 1730562914.410529,
     "ast_hash": "19667b3bf6ef51822c7ef3748cd740b1",
     "semantic_hash": "19667b3bf6ef51822c7ef3748cd740b1"
   },
   "src/integration-testing/log4net-611-lib/log4net-611-lib.csproj": {
-    "mtime": 1776346930.3825045,
-    "ast_hash": "52a78e8ac42a8a53dbfdb0b0c85e4c88",
-    "semantic_hash": "52a78e8ac42a8a53dbfdb0b0c85e4c88"
+    "mtime": 1776364520.8002508,
+    "ast_hash": "c0afa51374683e5ff508c008ca14a8cd",
+    "semantic_hash": ""
   },
   "src/integration-testing/log4net-611-main/Program.cs": {
-    "mtime": 1726482599.917598,
+    "mtime": 1728845082.0454817,
     "ast_hash": "59fb1d3b435259d092de2aafa161dee5",
     "semantic_hash": "59fb1d3b435259d092de2aafa161dee5"
   },
   "src/integration-testing/log4net-611-main/log4net-611-main.csproj": {
-    "mtime": 1726482599.9185965,
-    "ast_hash": "302989cb498bf33f167b50e6d28b79d4",
-    "semantic_hash": "302989cb498bf33f167b50e6d28b79d4"
+    "mtime": 1785961863.0222547,
+    "ast_hash": "1007085925b60dedcce36455fd353c21",
+    "semantic_hash": ""
   },
   "src/integration-testing/log4net-672/Program.cs": {
-    "mtime": 1730742598.0274787,
+    "mtime": 1730563402.0419166,
     "ast_hash": "aa8e42c2a4c5c861a0b4286a1b476596",
     "semantic_hash": "aa8e42c2a4c5c861a0b4286a1b476596"
   },
   "src/integration-testing/log4net-672/log4net-672.csproj": {
-    "mtime": 1726482599.9225981,
-    "ast_hash": "81b00e8c672dc2344ecddd345b823798",
-    "semantic_hash": "81b00e8c672dc2344ecddd345b823798"
+    "mtime": 1785961863.0232546,
+    "ast_hash": "13d3711d6816f4c30f768c8a95073ffa",
+    "semantic_hash": ""
   },
   "src/integration-testing/log4net-673/Program.cs": {
-    "mtime": 1730742598.0274787,
+    "mtime": 1730563256.604546,
     "ast_hash": "1bc900007b6e99cbea1206bdb0c2e800",
     "semantic_hash": "1bc900007b6e99cbea1206bdb0c2e800"
   },
   "src/integration-testing/log4net-673/log4net-673.csproj": {
-    "mtime": 1776346930.383505,
-    "ast_hash": "04dac9672d8bf89e7d350bf8afd6d71a",
-    "semantic_hash": "04dac9672d8bf89e7d350bf8afd6d71a"
+    "mtime": 1785961863.0232546,
+    "ast_hash": "c85a30209e8137f6febb4251129cdf0c",
+    "semantic_hash": ""
   },
   "src/integration-testing/log4net-681/Program.cs": {
-    "mtime": 1726482599.9275978,
+    "mtime": 1728845082.0653367,
     "ast_hash": "9cddcaf2311074d41e2372c53f0ab046",
     "semantic_hash": "9cddcaf2311074d41e2372c53f0ab046"
   },
   "src/integration-testing/log4net-681/log4net-681.csproj": {
-    "mtime": 1726482599.929598,
-    "ast_hash": "8580d5c8dc0dc0d04bf57b528afe2f9a",
-    "semantic_hash": "8580d5c8dc0dc0d04bf57b528afe2f9a"
+    "mtime": 1785961863.0232546,
+    "ast_hash": "b14764e01ba20001556d42bc428b9814",
+    "semantic_hash": ""
   },
   "src/integration-testing/log4net2-SerializeEvent/SerializeEventProgram.cs": {
-    "mtime": 1776346930.3845038,
-    "ast_hash": "60b2ccf03b2ecd5bdeec1e710baf8e59",
-    "semantic_hash": "60b2ccf03b2ecd5bdeec1e710baf8e59"
+    "mtime": 1776364520.8002508,
+    "ast_hash": "616a2b27045ca82b9783400bb4e65d0c",
+    "semantic_hash": ""
   },
   "src/integration-testing/log4net2-SerializeEvent/log4net2-SerializeEvent.csproj": {
-    "mtime": 1776346930.3865037,
-    "ast_hash": "49a7c8475d197300d52ea15dd3a24185",
-    "semantic_hash": "49a7c8475d197300d52ea15dd3a24185"
+    "mtime": 1776364520.8002508,
+    "ast_hash": "8b5e74c98fed372cae17f70ea0118b0a",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/AdoNetAppenderTest.cs": {
-    "mtime": 1730742598.0294855,
+    "mtime": 1730562631.7951543,
     "ast_hash": "8b9477b30e4bf0a4b6f1721fd924f201",
     "semantic_hash": "8b9477b30e4bf0a4b6f1721fd924f201"
   },
   "src/log4net.Tests/Appender/AdoNet/Log4NetCommand.cs": {
-    "mtime": 1729754866.2669592,
+    "mtime": 1730148717.774341,
     "ast_hash": "f62058b31c496ee007770a29384f70d2",
     "semantic_hash": "f62058b31c496ee007770a29384f70d2"
   },
   "src/log4net.Tests/Appender/AdoNet/Log4NetConnection.cs": {
-    "mtime": 1729754866.2687006,
+    "mtime": 1730148717.774341,
     "ast_hash": "f87c530f2d174d0696662ed6270105eb",
     "semantic_hash": "f87c530f2d174d0696662ed6270105eb"
   },
   "src/log4net.Tests/Appender/AdoNet/Log4NetParameter.cs": {
-    "mtime": 1729233548.7344768,
+    "mtime": 1729235311.6540632,
     "ast_hash": "d00418f622ac17cebff4eaecc20d57f4",
     "semantic_hash": "d00418f622ac17cebff4eaecc20d57f4"
   },
   "src/log4net.Tests/Appender/AdoNet/Log4NetParameterCollection.cs": {
-    "mtime": 1729754866.2704394,
+    "mtime": 1730148717.774341,
     "ast_hash": "4d7a3b8b6a87fd3153f272937f015152",
     "semantic_hash": "4d7a3b8b6a87fd3153f272937f015152"
   },
   "src/log4net.Tests/Appender/AdoNet/Log4NetTransaction.cs": {
-    "mtime": 1729754866.2721798,
+    "mtime": 1730148717.774341,
     "ast_hash": "ec59330ce406b168b3ec3cc96932a060",
     "semantic_hash": "ec59330ce406b168b3ec3cc96932a060"
   },
   "src/log4net.Tests/Appender/AppenderCollectionTest.cs": {
-    "mtime": 1730742598.0314915,
+    "mtime": 1730562631.7951543,
     "ast_hash": "441189cdbebaef69ae54937c0f714532",
     "semantic_hash": "441189cdbebaef69ae54937c0f714532"
   },
   "src/log4net.Tests/Appender/BufferingAppenderTest.cs": {
-    "mtime": 1729593890.5387464,
+    "mtime": 1729707407.8444762,
     "ast_hash": "ff771c744ea1474ee6123f8715df8858",
     "semantic_hash": "ff771c744ea1474ee6123f8715df8858"
   },
   "src/log4net.Tests/Appender/CountingAppender.cs": {
-    "mtime": 1729754866.2756617,
+    "mtime": 1730148717.774341,
     "ast_hash": "fe8092edacfaf0743f14e984f75950d3",
     "semantic_hash": "fe8092edacfaf0743f14e984f75950d3"
   },
   "src/log4net.Tests/Appender/DebugAppenderTest.cs": {
-    "mtime": 1729593890.5687473,
+    "mtime": 1729707407.8444762,
     "ast_hash": "c34d73aac730cc06491a0e0d9ae8a0a4",
     "semantic_hash": "c34d73aac730cc06491a0e0d9ae8a0a4"
   },
   "src/log4net.Tests/Appender/EventLogAppenderTest.cs": {
-    "mtime": 1729593890.5717518,
+    "mtime": 1729707407.8444762,
     "ast_hash": "fd298aa58927647cbf3433161e8f33df",
     "semantic_hash": "fd298aa58927647cbf3433161e8f33df"
   },
   "src/log4net.Tests/Appender/EventRaisingAppender.cs": {
-    "mtime": 1729754866.2774003,
+    "mtime": 1730148717.774341,
     "ast_hash": "0e71c92ea2901baac7524526856da45a",
     "semantic_hash": "0e71c92ea2901baac7524526856da45a"
   },
   "src/log4net.Tests/Appender/FileAppenderTest.cs": {
-    "mtime": 1785153721.3556707,
-    "ast_hash": "51cb7b9f4ba98bcdce32f9d3141b4c22",
+    "mtime": 1782158963.2064812,
+    "ast_hash": "28fa79f0b7ec1265a2fa695f18565dd1",
     "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/Internal/SimpleTelnetClient.cs": {
-    "mtime": 1785767602.2369277,
-    "ast_hash": "f85630f7524290157cf419e8be373fda",
+    "mtime": 1785961863.0242548,
+    "ast_hash": "4b7c8ae06ae38aec6720d9010263544e",
     "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/Internal/UdpMock.cs": {
-    "mtime": 1750338448.8785892,
-    "ast_hash": "158a56e5c19e2b4ff0fa368588f0c783",
-    "semantic_hash": "158a56e5c19e2b4ff0fa368588f0c783"
+    "mtime": 1754410755.8800251,
+    "ast_hash": "0d852cdcb887df54a6949d8d54a65243",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/MemoryAppenderTest.cs": {
-    "mtime": 1729593890.58526,
+    "mtime": 1729707407.8444762,
     "ast_hash": "3f14fed1f1c4802c5d8dcecb06116a75",
     "semantic_hash": "3f14fed1f1c4802c5d8dcecb06116a75"
   },
   "src/log4net.Tests/Appender/OutputDebugAppenderTest.cs": {
-    "mtime": 1771315256.188068,
-    "ast_hash": "43ca0fe3bc1c018a21dec651547533bf",
-    "semantic_hash": "43ca0fe3bc1c018a21dec651547533bf"
+    "mtime": 1772298934.298604,
+    "ast_hash": "d34005a5ae58c654776042e9f17c45f2",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/RecursiveLoggingTest.cs": {
-    "mtime": 1729593890.5942676,
+    "mtime": 1729707407.8444762,
     "ast_hash": "08d9a839a4927e2fbff22f4e88378359",
     "semantic_hash": "08d9a839a4927e2fbff22f4e88378359"
   },
   "src/log4net.Tests/Appender/RemoteSyslogAppenderTest.cs": {
-    "mtime": 1765210466.4300892,
-    "ast_hash": "1bd820476208c63cdd7d2ae28f7773bb",
-    "semantic_hash": "1bd820476208c63cdd7d2ae28f7773bb"
+    "mtime": 1765229369.5857434,
+    "ast_hash": "4df0a1fabbc618244d22a3818caea580",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/RollingFileAppenderTest.cs": {
-    "mtime": 1745917478.7622468,
-    "ast_hash": "2ebede9897e32bb6566aad82988d2bdf",
-    "semantic_hash": "2ebede9897e32bb6566aad82988d2bdf"
+    "mtime": 1785961863.0252547,
+    "ast_hash": "2bf6a927bed92dbdccfbf306b14db403",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/SmtpPickupDirAppenderTest.cs": {
-    "mtime": 1776346930.3875046,
-    "ast_hash": "9afcfc874ea7d4c3546bdbd7ce76fbd7",
-    "semantic_hash": "9afcfc874ea7d4c3546bdbd7ce76fbd7"
+    "mtime": 1785961863.0252547,
+    "ast_hash": "15b3d61d88854d447206da93a8cfc003",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/StringAppender.cs": {
-    "mtime": 1729233548.7657268,
+    "mtime": 1729235311.7956107,
     "ast_hash": "5d2387846bc9b4b59c2522e456baaf02",
     "semantic_hash": "5d2387846bc9b4b59c2522e456baaf02"
   },
   "src/log4net.Tests/Appender/TelnetAppenderTest.cs": {
-    "mtime": 1785767602.2369277,
-    "ast_hash": "4b4cfbb773531179294f2b9c11b5f60f",
+    "mtime": 1785961863.0252547,
+    "ast_hash": "b497e379fb5a4c4ac556396057b70403",
     "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/TraceAppenderTest.cs": {
-    "mtime": 1730742598.0369883,
+    "mtime": 1730562631.810796,
     "ast_hash": "b02abfccb928905dd1b73af75f7ece11",
     "semantic_hash": "b02abfccb928905dd1b73af75f7ece11"
   },
   "src/log4net.Tests/AssemblyInfo.cs": {
-    "mtime": 1709208329.7894633,
+    "mtime": 1709933492.9190512,
     "ast_hash": "94bff551c80c5360c489d755fef3f9ce",
     "semantic_hash": "94bff551c80c5360c489d755fef3f9ce"
   },
   "src/log4net.Tests/Config/XmlConfiguratorTest.cs": {
-    "mtime": 1738937934.4090657,
+    "mtime": 1739391118.5203085,
     "ast_hash": "5dc5da470e507e08e915b683c1429939",
     "semantic_hash": "5dc5da470e507e08e915b683c1429939"
   },
   "src/log4net.Tests/Context/LogicalThreadContextTest.cs": {
-    "mtime": 1730742598.038995,
+    "mtime": 1730562631.8264155,
     "ast_hash": "2111541b9ee53cffdd9f2a3e98623da5",
     "semantic_hash": "2111541b9ee53cffdd9f2a3e98623da5"
   },
   "src/log4net.Tests/Context/ThreadContextTest.cs": {
-    "mtime": 1729593890.6672676,
+    "mtime": 1729707407.8444762,
     "ast_hash": "b0ffe44d840a215e1ec1cde85701bb10",
     "semantic_hash": "b0ffe44d840a215e1ec1cde85701bb10"
   },
   "src/log4net.Tests/Core/DefaultRepositorySelectorTest.cs": {
-    "mtime": 1729593890.6732774,
+    "mtime": 1729707407.8444762,
     "ast_hash": "67555c4f636df23373ae7a96e1c256c4",
     "semantic_hash": "67555c4f636df23373ae7a96e1c256c4"
   },
   "src/log4net.Tests/Core/EvaluatorTest.cs": {
-    "mtime": 1729754866.2843602,
+    "mtime": 1730148717.774341,
     "ast_hash": "b311fe2f201815c1d685c44f4c497839",
     "semantic_hash": "b311fe2f201815c1d685c44f4c497839"
   },
   "src/log4net.Tests/Core/FixingTest.cs": {
-    "mtime": 1730742598.038995,
+    "mtime": 1730562631.8264155,
     "ast_hash": "d78cc09d0ac69de674d7e8cbeb7fff5c",
     "semantic_hash": "d78cc09d0ac69de674d7e8cbeb7fff5c"
   },
   "src/log4net.Tests/Core/LevelMapTest.cs": {
-    "mtime": 1729593890.68779,
+    "mtime": 1729707407.8444762,
     "ast_hash": "d9e5534c9259acecd2a055979f6dd688",
     "semantic_hash": "d9e5534c9259acecd2a055979f6dd688"
   },
   "src/log4net.Tests/Core/LevelMappingTest.cs": {
-    "mtime": 1730742598.0410016,
+    "mtime": 1730562631.8264155,
     "ast_hash": "026cf8aae44c2c5a496e0bd7a8b7e4d0",
     "semantic_hash": "026cf8aae44c2c5a496e0bd7a8b7e4d0"
   },
   "src/log4net.Tests/Core/LevelTest.cs": {
-    "mtime": 1730742598.0430093,
+    "mtime": 1730562631.8420167,
     "ast_hash": "7b606b3608930d8656ed6616c2f4ee63",
     "semantic_hash": "7b606b3608930d8656ed6616c2f4ee63"
   },
   "src/log4net.Tests/Core/LoggingEventTest.cs": {
-    "mtime": 1730742598.0430093,
-    "ast_hash": "c6d308c56cb37fc7137fc5966ff55d09",
-    "semantic_hash": "c6d308c56cb37fc7137fc5966ff55d09"
+    "mtime": 1785961863.0262547,
+    "ast_hash": "2a2b0c83654aa9c62d58a069c91109b1",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Core/ShutdownTest.cs": {
-    "mtime": 1729593890.6977909,
+    "mtime": 1729707407.8444762,
     "ast_hash": "61a5bd3dfc3c63dc03fceca72dc74fc1",
     "semantic_hash": "61a5bd3dfc3c63dc03fceca72dc74fc1"
   },
   "src/log4net.Tests/Core/StringFormatTest.cs": {
-    "mtime": 1729754866.2913194,
+    "mtime": 1730148717.7899394,
     "ast_hash": "aced3e2cdfc583b523779f75e8fa93d2",
     "semantic_hash": "aced3e2cdfc583b523779f75e8fa93d2"
   },
   "src/log4net.Tests/DateFormatter/AbsoluteTimeDateFormatterTest.cs": {
-    "mtime": 1747910322.151978,
+    "mtime": 1730148717.7899394,
     "ast_hash": "b99d9fd2c36d7ba9331011019e6884cc",
     "semantic_hash": "b99d9fd2c36d7ba9331011019e6884cc"
   },
   "src/log4net.Tests/DateFormatter/DateTimeDateFormatterTest.cs": {
-    "mtime": 1729593890.71479,
+    "mtime": 1729707407.8444762,
     "ast_hash": "b6c9e8f8eb3e9b5f0ea04d91511c1ee4",
     "semantic_hash": "b6c9e8f8eb3e9b5f0ea04d91511c1ee4"
   },
   "src/log4net.Tests/Filter/FilterTest.cs": {
-    "mtime": 1730742598.045016,
+    "mtime": 1730562631.8580992,
     "ast_hash": "788c548f565b324cc7244e16b614a526",
     "semantic_hash": "788c548f565b324cc7244e16b614a526"
   },
   "src/log4net.Tests/Hierarchy/HierarchyTest.cs": {
-    "mtime": 1778670539.4875345,
-    "ast_hash": "9a3f1c1a876ae0472d0c7ba423a1d487",
-    "semantic_hash": "9a3f1c1a876ae0472d0c7ba423a1d487"
+    "mtime": 1779219726.1716964,
+    "ast_hash": "6dbbf83644648f383f3016d321f5ba5f",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Hierarchy/LoggerTest.cs": {
-    "mtime": 1776346930.3895054,
-    "ast_hash": "3692bf74f6cc105e946577db8baab295",
-    "semantic_hash": "3692bf74f6cc105e946577db8baab295"
+    "mtime": 1776190633.894065,
+    "ast_hash": "f5f9a65a699256590d55fd12afd15edf",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Hierarchy/LoggingConcurrencyTest.cs": {
-    "mtime": 1778670539.4885347,
-    "ast_hash": "734e18e4752c9f9fbd0abab93eba3bf0",
-    "semantic_hash": "734e18e4752c9f9fbd0abab93eba3bf0"
+    "mtime": 1779219726.1716964,
+    "ast_hash": "5e6147cea5a0831d21382022b2ece3fd",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Hierarchy/XmlHierarchyConfiguratorTest.cs": {
-    "mtime": 1776346930.3905048,
-    "ast_hash": "3c834667d18623dbc5f527de98e65bac",
-    "semantic_hash": "3c834667d18623dbc5f527de98e65bac"
+    "mtime": 1776190633.894065,
+    "ast_hash": "2d42b47b0609f861fa490a9a0917e828",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Integration/Log4NetIntegrationTests.cs": {
-    "mtime": 1771315256.1913383,
-    "ast_hash": "8e4b88ea13201c8f234e3d686bb35454",
-    "semantic_hash": "8e4b88ea13201c8f234e3d686bb35454"
+    "mtime": 1772298934.2996042,
+    "ast_hash": "f999ef2125e27e00e8c3faea56fe7e01",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Integration/MockDateTime.cs": {
-    "mtime": 1771315256.1922948,
-    "ast_hash": "adeaadc40a15e3c5f9481897169c4502",
-    "semantic_hash": "adeaadc40a15e3c5f9481897169c4502"
+    "mtime": 1772298934.2996042,
+    "ast_hash": "0eec609c119308c77ed1bf0596d69250",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Layout/DynamicPatternLayoutTest.cs": {
-    "mtime": 1739187867.2190833,
+    "mtime": 1739391118.528308,
     "ast_hash": "3d3dfc9e9041d63bb7c2ceb27435e600",
     "semantic_hash": "3d3dfc9e9041d63bb7c2ceb27435e600"
   },
   "src/log4net.Tests/Layout/PatternLayoutTest.cs": {
-    "mtime": 1750076240.485077,
-    "ast_hash": "a20793f900bd20df357640dd4a78876b",
-    "semantic_hash": "a20793f900bd20df357640dd4a78876b"
+    "mtime": 1748283936.1590588,
+    "ast_hash": "22b3d9d4aee4343eb82ba459cb70ac40",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Layout/XmlLayoutSchemaLog4jTest.cs": {
-    "mtime": 1771320978.4407673,
-    "ast_hash": "310daeadb3694545fea8608c8d6f2c4e",
-    "semantic_hash": "310daeadb3694545fea8608c8d6f2c4e"
+    "mtime": 1772298934.2996042,
+    "ast_hash": "80c062a2dc6aa7f65160fbbd4d3a6163",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Layout/XmlLayoutTest.cs": {
-    "mtime": 1771320978.441766,
-    "ast_hash": "bff853554950eb360531304c0c9de1af",
-    "semantic_hash": "bff853554950eb360531304c0c9de1af"
+    "mtime": 1772298934.2996042,
+    "ast_hash": "c294101057b683212219c82230e2c7e6",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/LoggerRepository/ConfigurationMessages.cs": {
-    "mtime": 1730742598.0487692,
+    "mtime": 1730562631.8893642,
     "ast_hash": "eaec9a289cd5bd0ee019b6fe6c892d5a",
     "semantic_hash": "eaec9a289cd5bd0ee019b6fe6c892d5a"
   },
   "src/log4net.Tests/NUnitTestRunnerInitializer.cs": {
-    "mtime": 1729233548.7883592,
+    "mtime": 1729235311.874173,
     "ast_hash": "7d5f8144b7a83e8ef82a1675614010b6",
     "semantic_hash": "7d5f8144b7a83e8ef82a1675614010b6"
   },
   "src/log4net.Tests/NdcTest.cs": {
-    "mtime": 1751534847.091806,
-    "ast_hash": "ca1d72bb1f0847d38f803a523b6df9b8",
-    "semantic_hash": "ca1d72bb1f0847d38f803a523b6df9b8"
+    "mtime": 1754410755.8810253,
+    "ast_hash": "090bfa788353358d829ab7d5f2fe1901",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/ObjectRenderer/DefaultRendererTest.cs": {
-    "mtime": 1729593890.7647898,
+    "mtime": 1729707407.860101,
     "ast_hash": "65204ba9d49b87a4d78a97717f087de2",
     "semantic_hash": "65204ba9d49b87a4d78a97717f087de2"
   },
   "src/log4net.Tests/Signing.cs": {
-    "mtime": 1747667444.2107956,
-    "ast_hash": "c6e650040336cbee14312591ed38fb0e",
-    "semantic_hash": "c6e650040336cbee14312591ed38fb0e"
+    "mtime": 1747854397.0921805,
+    "ast_hash": "9c37f4db0576b74ab6271887fe6e537d",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Util/CyclicBufferTest.cs": {
-    "mtime": 1729593890.7697895,
+    "mtime": 1729707407.860101,
     "ast_hash": "9c7cddbe9cd3346fa7bce3e8b3ae3b4a",
     "semantic_hash": "9c7cddbe9cd3346fa7bce3e8b3ae3b4a"
   },
   "src/log4net.Tests/Util/EncodingWithoutPreambleTest.cs": {
-    "mtime": 1729593890.7717967,
+    "mtime": 1729707407.860101,
     "ast_hash": "1cf6383d74705269412d8be84d9beb6e",
     "semantic_hash": "1cf6383d74705269412d8be84d9beb6e"
   },
   "src/log4net.Tests/Util/EnvironmentPatternConverterTest.cs": {
-    "mtime": 1729754866.301759,
+    "mtime": 1730666360.574818,
     "ast_hash": "ce0e0d0b305b417333a0cd2d684ec401",
     "semantic_hash": "ce0e0d0b305b417333a0cd2d684ec401"
   },
   "src/log4net.Tests/Util/LogLogTest.cs": {
-    "mtime": 1756389323.6627622,
-    "ast_hash": "33bd8f0eb1b01371239c3dc1021be9c1",
-    "semantic_hash": "33bd8f0eb1b01371239c3dc1021be9c1"
+    "mtime": 1757711412.6357305,
+    "ast_hash": "8ff55d090d1f26a77cc0a19590ae0335",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Util/PatternConverterTest.cs": {
-    "mtime": 1730742598.0522547,
+    "mtime": 1730562631.9049897,
     "ast_hash": "53a1c6bd97ac5e1990012c427da90e24",
     "semantic_hash": "53a1c6bd97ac5e1990012c427da90e24"
   },
   "src/log4net.Tests/Util/PatternStringTest.cs": {
-    "mtime": 1730742598.0522547,
+    "mtime": 1730562631.9206147,
     "ast_hash": "fab51b8e7c69b3567b7ae53ab4687822",
     "semantic_hash": "fab51b8e7c69b3567b7ae53ab4687822"
   },
   "src/log4net.Tests/Util/PropertiesDictionaryTest.cs": {
-    "mtime": 1729754866.3087213,
+    "mtime": 1730148717.7899394,
     "ast_hash": "ccdde331553a8b3af0d79a2adf5b27c6",
     "semantic_hash": "ccdde331553a8b3af0d79a2adf5b27c6"
   },
   "src/log4net.Tests/Util/RandomStringPatternConverterTest.cs": {
-    "mtime": 1729754866.3122084,
+    "mtime": 1730148717.7899394,
     "ast_hash": "d45abe01d11cdd42c1f9298b70eb0a0b",
     "semantic_hash": "d45abe01d11cdd42c1f9298b70eb0a0b"
   },
   "src/log4net.Tests/Util/SystemInfoTest.cs": {
-    "mtime": 1746540490.3523054,
-    "ast_hash": "27f35d2c5fe00f62a51fa109f5762cdc",
-    "semantic_hash": "27f35d2c5fe00f62a51fa109f5762cdc"
+    "mtime": 1786041990.922179,
+    "ast_hash": "183f69ae8dc9fe9a43d7f0836b53293a",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Util/TransformTest.cs": {
-    "mtime": 1777473251.9700239,
-    "ast_hash": "ab0c2d674f553ffdbb3fcabb2d16da51",
-    "semantic_hash": "ab0c2d674f553ffdbb3fcabb2d16da51"
+    "mtime": 1776364520.8002508,
+    "ast_hash": "4800c52939f6dfb69a3ac8bb7df1f15e",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Utils.cs": {
-    "mtime": 1729233548.8130002,
-    "ast_hash": "a8b8eee19d3bc945734cded1d28d46ba",
-    "semantic_hash": "a8b8eee19d3bc945734cded1d28d46ba"
+    "mtime": 1785961863.0262547,
+    "ast_hash": "49b8aeacd736fe48096f0868ecb14869",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/log4net.Tests.csproj": {
-    "mtime": 1771315256.199295,
-    "ast_hash": "8b89f22bac52ccff53eb38dc5e6dd0b9",
-    "semantic_hash": "8b89f22bac52ccff53eb38dc5e6dd0b9"
+    "mtime": 1785962885.3990593,
+    "ast_hash": "2c3e5a3c8ce598df2616200dbb8b2715",
+    "semantic_hash": ""
   },
   "src/log4net.sln": {
-    "mtime": 1785767602.2526493,
-    "ast_hash": "7cf813a3661ce1e98505918c8c0d7fe7",
+    "mtime": 1785869401.710258,
+    "ast_hash": "6bfa817e56bd9857782f7c062cdc38bc",
     "semantic_hash": ""
   },
   "src/log4net/Appender/AdoNetAppender.cs": {
-    "mtime": 1771600187.5291228,
-    "ast_hash": "d7e2ffaf1b8276d0f4fbb57987657774",
-    "semantic_hash": "d7e2ffaf1b8276d0f4fbb57987657774"
+    "mtime": 1772298934.2996042,
+    "ast_hash": "0983e71a6b4af0c69093d722203d1ab4",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/AnsiColorTerminalAppender.cs": {
-    "mtime": 1738662357.1318383,
+    "mtime": 1730148717.7899394,
     "ast_hash": "fe972b3d053af01d6a1ba91105d8f978",
     "semantic_hash": "fe972b3d053af01d6a1ba91105d8f978"
   },
   "src/log4net/Appender/AppenderCollection.cs": {
-    "mtime": 1738662357.1358473,
+    "mtime": 1738601788.6710758,
     "ast_hash": "ae94f4c812ffdefedddd622034f81df9",
     "semantic_hash": "ae94f4c812ffdefedddd622034f81df9"
   },
   "src/log4net/Appender/AppenderSkeleton.cs": {
-    "mtime": 1785153721.3556707,
-    "ast_hash": "28c8d4b330142b2d39746faa64c777cc",
+    "mtime": 1782158963.2074811,
+    "ast_hash": "61f1e984754c5d6bc82dddb6715dded7",
     "semantic_hash": ""
   },
   "src/log4net/Appender/AspNetTraceAppender.cs": {
-    "mtime": 1729754866.3281455,
+    "mtime": 1730148717.7899394,
     "ast_hash": "4a38357d3e4283f561d3563cf29e93b0",
     "semantic_hash": "4a38357d3e4283f561d3563cf29e93b0"
   },
   "src/log4net/Appender/BufferingAppenderSkeleton.cs": {
-    "mtime": 1771600187.6326494,
-    "ast_hash": "91898de4435494b3c01b62c275acda51",
-    "semantic_hash": "91898de4435494b3c01b62c275acda51"
+    "mtime": 1772298934.300604,
+    "ast_hash": "f87f8f568de541a3547a442d05fd5a2a",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/BufferingForwardingAppender.cs": {
-    "mtime": 1771600187.6526492,
-    "ast_hash": "b162e54c01a95f300c256eac4df09bb1",
-    "semantic_hash": "b162e54c01a95f300c256eac4df09bb1"
+    "mtime": 1772298934.300604,
+    "ast_hash": "7c02fafb38b2263ebd648ead15aa3505",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/ColoredConsoleAppender.cs": {
-    "mtime": 1771600187.6626506,
-    "ast_hash": "47b07801aa0d26bc09d76700bea5ba2c",
-    "semantic_hash": "47b07801aa0d26bc09d76700bea5ba2c"
+    "mtime": 1772298934.300604,
+    "ast_hash": "5240189a87e9918aa6f452522171453b",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/ConsoleAppender.cs": {
-    "mtime": 1729754866.336846,
+    "mtime": 1730148717.7899394,
     "ast_hash": "f4cf6ac43b8a76664367ddf5fb9c72f8",
     "semantic_hash": "f4cf6ac43b8a76664367ddf5fb9c72f8"
   },
   "src/log4net/Appender/DebugAppender.cs": {
-    "mtime": 1771600187.727177,
-    "ast_hash": "a3b839f8757f0caf67e5a1738f633ad1",
-    "semantic_hash": "a3b839f8757f0caf67e5a1738f633ad1"
+    "mtime": 1772298934.300604,
+    "ast_hash": "7ee573ab28a84579c42b798a5e5a0aff",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/EventLogAppender.cs": {
-    "mtime": 1779183872.3799815,
-    "ast_hash": "1517b2b0aafaee5a9cfa01fdcfaefce4",
-    "semantic_hash": "1517b2b0aafaee5a9cfa01fdcfaefce4"
+    "mtime": 1772298934.300604,
+    "ast_hash": "457f886f3ae20b211b059e64c0991ed7",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/FileAppender.cs": {
-    "mtime": 1785153721.3556707,
-    "ast_hash": "a1062051e0e680f1044f3a338318fa7d",
+    "mtime": 1786046054.491746,
+    "ast_hash": "40b8f92ffaa64d46d209300e96f364e9",
     "semantic_hash": ""
   },
   "src/log4net/Appender/ForwardingAppender.cs": {
-    "mtime": 1771600187.801695,
-    "ast_hash": "6411c1018260c8e67ac60519d70aac1b",
-    "semantic_hash": "6411c1018260c8e67ac60519d70aac1b"
+    "mtime": 1772298934.300604,
+    "ast_hash": "4b87a568056f55ff80a1a60f71a0073f",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/IAppender.cs": {
-    "mtime": 1729754866.3490262,
+    "mtime": 1730148717.7899394,
     "ast_hash": "1e9cfe0017d0ee3fc9db693f21887098",
     "semantic_hash": "1e9cfe0017d0ee3fc9db693f21887098"
   },
   "src/log4net/Appender/IBulkAppender.cs": {
-    "mtime": 1729233548.828626,
+    "mtime": 1729235311.9690003,
     "ast_hash": "4969d449089eab0e80e9d8363a1a4848",
     "semantic_hash": "4969d449089eab0e80e9d8363a1a4848"
   },
   "src/log4net/Appender/IFlushable.cs": {
-    "mtime": 1771600187.8146977,
-    "ast_hash": "3a58f0fc7a4465b5cdcc1c168c7dd61b",
-    "semantic_hash": "3a58f0fc7a4465b5cdcc1c168c7dd61b"
+    "mtime": 1772298934.300604,
+    "ast_hash": "ee1d6e6104ac39cab76935abfa3208c3",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/Internal/IUdpConnection.cs": {
-    "mtime": 1750338448.8860884,
-    "ast_hash": "ccc3cceeb23f1ae083bcebecbafbfaec",
-    "semantic_hash": "ccc3cceeb23f1ae083bcebecbafbfaec"
+    "mtime": 1754410755.8820252,
+    "ast_hash": "a19c7d03faba08846a1daae4d35a24f0",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/Internal/UdpConnection.cs": {
-    "mtime": 1771600187.8396945,
-    "ast_hash": "edf22173fdd1ab0250ddb4e5d0a8d671",
-    "semantic_hash": "edf22173fdd1ab0250ddb4e5d0a8d671"
+    "mtime": 1772298934.300604,
+    "ast_hash": "8ec97e39748f3acf3833ad6c0a30a2d9",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/LocalSyslogAppender.cs": {
-    "mtime": 1771600187.8416965,
-    "ast_hash": "ae118c92435f172e69cfe886ff76b509",
-    "semantic_hash": "ae118c92435f172e69cfe886ff76b509"
+    "mtime": 1772298934.300604,
+    "ast_hash": "6bd0e8d237f36eb61d6c7608843e87ea",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/ManagedColoredConsoleAppender.cs": {
-    "mtime": 1771600187.8436978,
-    "ast_hash": "28fc3d3ea63f1ed7d1b29f729fc48cdd",
-    "semantic_hash": "28fc3d3ea63f1ed7d1b29f729fc48cdd"
+    "mtime": 1772298934.300604,
+    "ast_hash": "8f59e088cea67f249f7699707b503ab4",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/MemoryAppender.cs": {
-    "mtime": 1729754866.3559856,
+    "mtime": 1730148717.8055637,
     "ast_hash": "e13f8e40e2bb30fa4af9a104208c661f",
     "semantic_hash": "e13f8e40e2bb30fa4af9a104208c661f"
   },
   "src/log4net/Appender/OutputDebugStringAppender.cs": {
-    "mtime": 1771315256.2002945,
-    "ast_hash": "4cdd01d47018986298fd3ddead08ea31",
-    "semantic_hash": "4cdd01d47018986298fd3ddead08ea31"
+    "mtime": 1772298934.3016043,
+    "ast_hash": "878d2fe9b3c9d546cd243bff44b205ad",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/RemoteSyslogAppender.cs": {
-    "mtime": 1765210466.4320889,
-    "ast_hash": "f25ffe90ad90201feb03d710fe127dac",
-    "semantic_hash": "f25ffe90ad90201feb03d710fe127dac"
+    "mtime": 1765229369.5857434,
+    "ast_hash": "9b9a5c98f7fc391c4c2020e3340a809e",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/RollingFileAppender.DateTime.cs": {
-    "mtime": 1729754866.3612072,
+    "mtime": 1730148717.8055637,
     "ast_hash": "e6cf80dae8b88fa1120af46fc6e8fb35",
     "semantic_hash": "e6cf80dae8b88fa1120af46fc6e8fb35"
   },
   "src/log4net/Appender/RollingFileAppender.cs": {
-    "mtime": 1771600187.8456943,
-    "ast_hash": "7f7b56ce24d5c8516087af4c6a70ee91",
-    "semantic_hash": "7f7b56ce24d5c8516087af4c6a70ee91"
+    "mtime": 1772298934.3016043,
+    "ast_hash": "82e5bdc72d223826626525c028e5561b",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/SmtpAppender.cs": {
-    "mtime": 1785767602.2526493,
-    "ast_hash": "c5ccac652bb28da242840a5b04350201",
-    "semantic_hash": "c5ccac652bb28da242840a5b04350201"
+    "mtime": 1785869401.710258,
+    "ast_hash": "93bce5c403d889e0ee70a9acb8b092c7",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/SmtpPickupDirAppender.cs": {
-    "mtime": 1729754866.369905,
+    "mtime": 1730148717.8055637,
     "ast_hash": "35964c4a559d07d4805a33cc0e9852a2",
     "semantic_hash": "35964c4a559d07d4805a33cc0e9852a2"
   },
   "src/log4net/Appender/TelnetAppender.cs": {
-    "mtime": 1785767602.2526493,
-    "ast_hash": "4bdd011ee5dd210eb31a5741a9f78318",
+    "mtime": 1785869401.710258,
+    "ast_hash": "13d0291650f39ab2db339af2124482c4",
     "semantic_hash": ""
   },
   "src/log4net/Appender/TextWriterAppender.cs": {
-    "mtime": 1771600187.8506947,
-    "ast_hash": "61b725f9ec363e8ba92595bdc24b216e",
-    "semantic_hash": "61b725f9ec363e8ba92595bdc24b216e"
+    "mtime": 1772298934.3016043,
+    "ast_hash": "64c3478782ac2d9a65eccd10574213a5",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/TraceAppender.cs": {
-    "mtime": 1771600187.8527007,
-    "ast_hash": "c10171e79a125dead5bf39fd58d2ecbd",
-    "semantic_hash": "c10171e79a125dead5bf39fd58d2ecbd"
+    "mtime": 1772298934.3016043,
+    "ast_hash": "c899c0b9fdeb4d400ec30bfcd4efe071",
+    "semantic_hash": ""
   },
   "src/log4net/Appender/UdpAppender.cs": {
-    "mtime": 1750338448.8898354,
-    "ast_hash": "af1fb716516b9e124c25c9ade1fa9178",
-    "semantic_hash": "af1fb716516b9e124c25c9ade1fa9178"
+    "mtime": 1754410755.8820252,
+    "ast_hash": "e711d527d0623f3fb273b4444138d23a",
+    "semantic_hash": ""
   },
   "src/log4net/AssemblyInfo.cs": {
-    "mtime": 1727206011.250587,
+    "mtime": 1728845082.254617,
     "ast_hash": "99791904a227d63c6c14e01bbca83d23",
     "semantic_hash": "99791904a227d63c6c14e01bbca83d23"
   },
   "src/log4net/Config/AliasRepositoryAttribute.cs": {
-    "mtime": 1729233548.859876,
+    "mtime": 1729235312.0309463,
     "ast_hash": "28730190a430b4a59358766bafad5ad6",
     "semantic_hash": "28730190a430b4a59358766bafad5ad6"
   },
   "src/log4net/Config/BasicConfigurator.cs": {
-    "mtime": 1771600187.8546946,
-    "ast_hash": "339e34d9f550506994f7458bb721e354",
-    "semantic_hash": "339e34d9f550506994f7458bb721e354"
+    "mtime": 1785962801.4423604,
+    "ast_hash": "6dfcccaa9efe65f15b2a5ea61abaf7c2",
+    "semantic_hash": ""
   },
   "src/log4net/Config/ConfiguratorAttribute.cs": {
-    "mtime": 1729233548.859876,
+    "mtime": 1729235312.0309463,
     "ast_hash": "cc5769a4be4d1b8a02d03ebb8dab5383",
     "semantic_hash": "cc5769a4be4d1b8a02d03ebb8dab5383"
   },
   "src/log4net/Config/Log4NetConfigurationSectionHandler.cs": {
-    "mtime": 1747667444.2290773,
-    "ast_hash": "e4627b64b98315fcee257f82496a8fe1",
-    "semantic_hash": "e4627b64b98315fcee257f82496a8fe1"
+    "mtime": 1747854397.0921805,
+    "ast_hash": "aa7a92574a77a237159bad6827002a3f",
+    "semantic_hash": ""
   },
   "src/log4net/Config/PluginAttribute.cs": {
-    "mtime": 1729754866.3820863,
+    "mtime": 1730148717.8055637,
     "ast_hash": "d1a2b4e351c34cd896c2c36cd1544e28",
     "semantic_hash": "d1a2b4e351c34cd896c2c36cd1544e28"
   },
   "src/log4net/Config/RepositoryAttribute.cs": {
-    "mtime": 1771600187.856694,
-    "ast_hash": "7311b39cb552680cb1a3fc46d3646a1b",
-    "semantic_hash": "7311b39cb552680cb1a3fc46d3646a1b"
+    "mtime": 1786042663.1428218,
+    "ast_hash": "ef32466626d08ef7a030c52d437c5798",
+    "semantic_hash": ""
   },
   "src/log4net/Config/SecurityContextProviderAttribute.cs": {
-    "mtime": 1729754866.385566,
+    "mtime": 1730148717.8055637,
     "ast_hash": "38a3d6e77b29209a9c52be211f4fa5c9",
     "semantic_hash": "38a3d6e77b29209a9c52be211f4fa5c9"
   },
   "src/log4net/Config/XmlConfigurator.cs": {
-    "mtime": 1771600187.8586962,
-    "ast_hash": "8fc91f2b7f3c0ea2c3aeafbcca1cc2e0",
-    "semantic_hash": "8fc91f2b7f3c0ea2c3aeafbcca1cc2e0"
+    "mtime": 1785962814.338494,
+    "ast_hash": "aa079ead4667ba8dfc762f5c57d64cd4",
+    "semantic_hash": ""
   },
   "src/log4net/Config/XmlConfiguratorAttribute.cs": {
-    "mtime": 1771600187.8786955,
-    "ast_hash": "4c34e0373ba2ff64618d330915f97013",
-    "semantic_hash": "4c34e0373ba2ff64618d330915f97013"
+    "mtime": 1772298934.3016043,
+    "ast_hash": "03c79b2150454b90f051c6b294eb494d",
+    "semantic_hash": ""
   },
   "src/log4net/Core/DefaultRepositorySelector.cs": {
-    "mtime": 1771600187.8937023,
-    "ast_hash": "9c4a2decb9df4eea9eda97db17a6ed0f",
-    "semantic_hash": "9c4a2decb9df4eea9eda97db17a6ed0f"
+    "mtime": 1786042653.8807766,
+    "ast_hash": "ee095730447084f1dff562a41571b259",
+    "semantic_hash": ""
   },
   "src/log4net/Core/ErrorCode.cs": {
-    "mtime": 1750338448.8918402,
-    "ast_hash": "2ce71c067c937603b958c6a5e1f03507",
-    "semantic_hash": "2ce71c067c937603b958c6a5e1f03507"
+    "mtime": 1754410755.8830252,
+    "ast_hash": "e19e0c837859db4d6478c753e614d1f2",
+    "semantic_hash": ""
   },
   "src/log4net/Core/ExceptionEvaluator.cs": {
-    "mtime": 1771600187.9062223,
-    "ast_hash": "9a74dc0c359952f824023a9f9ccfc128",
-    "semantic_hash": "9a74dc0c359952f824023a9f9ccfc128"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "e5d5f55175bb2cfb562ca5c463e99034",
+    "semantic_hash": ""
   },
   "src/log4net/Core/FixFlags.cs": {
-    "mtime": 1729754866.3994868,
+    "mtime": 1730148717.8055637,
     "ast_hash": "d72b21abc934b40d5f3f562b94da94cf",
     "semantic_hash": "d72b21abc934b40d5f3f562b94da94cf"
   },
   "src/log4net/Core/IAppenderAttachable.cs": {
-    "mtime": 1771600187.9112234,
-    "ast_hash": "a59080cc24ee093672781adc7c58fe97",
-    "semantic_hash": "a59080cc24ee093672781adc7c58fe97"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "1bbfdc5ef0403a487dce7918d209e472",
+    "semantic_hash": ""
   },
   "src/log4net/Core/IErrorHandler.cs": {
-    "mtime": 1729754866.401227,
+    "mtime": 1730148717.8055637,
     "ast_hash": "bf5d1ef677c7a4364bea948dd0b92081",
     "semantic_hash": "bf5d1ef677c7a4364bea948dd0b92081"
   },
   "src/log4net/Core/IFixingRequired.cs": {
-    "mtime": 1771600187.9152226,
-    "ast_hash": "14273b8982e3e090d7a85deefb5038fc",
-    "semantic_hash": "14273b8982e3e090d7a85deefb5038fc"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "c4ef9c42b3d1a99a37d04ff7b3bd4ca0",
+    "semantic_hash": ""
   },
   "src/log4net/Core/ILogger.cs": {
-    "mtime": 1771600187.9232223,
-    "ast_hash": "02736d77d685f0654e98f93bea3bdd77",
-    "semantic_hash": "02736d77d685f0654e98f93bea3bdd77"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "f060007f19ef0e91d5f63312cf5f5c2e",
+    "semantic_hash": ""
   },
   "src/log4net/Core/ILoggerWrapper.cs": {
-    "mtime": 1729233548.8915238,
+    "mtime": 1729235312.0621953,
     "ast_hash": "2fa21326b87926775185b00b00a4b527",
     "semantic_hash": "2fa21326b87926775185b00b00a4b527"
   },
   "src/log4net/Core/IOptionHandler.cs": {
-    "mtime": 1729233548.8915238,
+    "mtime": 1729235312.0621953,
     "ast_hash": "4c8d6af9581ad2f679c2ef257f21d1fa",
     "semantic_hash": "4c8d6af9581ad2f679c2ef257f21d1fa"
   },
   "src/log4net/Core/IRepositorySelector.cs": {
-    "mtime": 1771600187.9262228,
-    "ast_hash": "190fc91e841095d47426b1e284204ee6",
-    "semantic_hash": "190fc91e841095d47426b1e284204ee6"
+    "mtime": 1786042653.8807766,
+    "ast_hash": "dc1ddb76f151d6279724506786f83e72",
+    "semantic_hash": ""
   },
   "src/log4net/Core/ITriggeringEventEvaluator.cs": {
-    "mtime": 1771600187.9292235,
-    "ast_hash": "54dfc82ae5524f7e6da6e9296f9b9fe7",
-    "semantic_hash": "54dfc82ae5524f7e6da6e9296f9b9fe7"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "331c9651aaf5cc6b66834447e4dcb101",
+    "semantic_hash": ""
   },
   "src/log4net/Core/Level.cs": {
-    "mtime": 1771600187.946224,
-    "ast_hash": "c9226460de72627a4a4328466d0329ce",
-    "semantic_hash": "c9226460de72627a4a4328466d0329ce"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "b66995abda41383a0728ffd02250d7f4",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LevelCollection.cs": {
-    "mtime": 1771600187.9532235,
-    "ast_hash": "ae198698dafa56d2e1fe691cf90eb892",
-    "semantic_hash": "ae198698dafa56d2e1fe691cf90eb892"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "0d932ec31158502db5ae6dc28658bca4",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LevelEvaluator.cs": {
-    "mtime": 1771600187.955225,
-    "ast_hash": "2b40a6e5df483888567f7e779d9c0b7c",
-    "semantic_hash": "2b40a6e5df483888567f7e779d9c0b7c"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "cf864f514e8886575305464ae4dfae4c",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LevelMap.cs": {
-    "mtime": 1771600187.9572256,
-    "ast_hash": "4cf17eba43b2bdf9d3da9389f5755ced",
-    "semantic_hash": "4cf17eba43b2bdf9d3da9389f5755ced"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "2812a493b5056c2798339020509132d2",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LocationInfo.cs": {
-    "mtime": 1771600187.9632256,
-    "ast_hash": "054d6e2ea028fc98ad2f6a60d1b23ae4",
-    "semantic_hash": "054d6e2ea028fc98ad2f6a60d1b23ae4"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "c76fb5acb5a0deb4625968258ddc2cb3",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LogException.cs": {
-    "mtime": 1729754866.4168866,
+    "mtime": 1730148717.821189,
     "ast_hash": "2046be0909a6622980f4abf3e2f9ca92",
     "semantic_hash": "2046be0909a6622980f4abf3e2f9ca92"
   },
   "src/log4net/Core/LogImpl.cs": {
-    "mtime": 1771600187.9662273,
-    "ast_hash": "76e835c36325072c1471f15108094de8",
-    "semantic_hash": "76e835c36325072c1471f15108094de8"
+    "mtime": 1772298934.3026042,
+    "ast_hash": "5e7b6df014d693daffb249c383887506",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LoggerManager.cs": {
-    "mtime": 1771600187.9712245,
-    "ast_hash": "be4ef8f47d62173da8cd12d22a67d71d",
-    "semantic_hash": "be4ef8f47d62173da8cd12d22a67d71d"
+    "mtime": 1786042653.8807766,
+    "ast_hash": "2fc49725916fdd97ef943274466b0221",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LoggerWrapperImpl.cs": {
-    "mtime": 1771600187.981223,
-    "ast_hash": "e26d4608748f46c41cc5b1ec3c1e1b53",
-    "semantic_hash": "e26d4608748f46c41cc5b1ec3c1e1b53"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "1802e261f0ecb6e929bf1d8a1d2d660d",
+    "semantic_hash": ""
   },
   "src/log4net/Core/LoggingEvent.cs": {
-    "mtime": 1785786936.0401702,
-    "ast_hash": "e006c6ee5c619eb16bce7a6d57349209",
+    "mtime": 1785869401.711258,
+    "ast_hash": "5ac5411b700b9cc50495733dc967b8c2",
     "semantic_hash": ""
   },
   "src/log4net/Core/MethodItem.cs": {
-    "mtime": 1729754866.4305763,
+    "mtime": 1730148717.821189,
     "ast_hash": "f15aff444bfc1d693753e1a4820e3dc7",
     "semantic_hash": "f15aff444bfc1d693753e1a4820e3dc7"
   },
   "src/log4net/Core/SecurityContext.cs": {
-    "mtime": 1771600187.9872298,
-    "ast_hash": "f93bb9342143e121b0e1169a8da3660f",
-    "semantic_hash": "f93bb9342143e121b0e1169a8da3660f"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "71da1486fed084852aba88d6875a5ac7",
+    "semantic_hash": ""
   },
   "src/log4net/Core/SecurityContextProvider.cs": {
-    "mtime": 1771600187.991229,
-    "ast_hash": "e5d0d76daaba6d19aaea8f668d19a296",
-    "semantic_hash": "e5d0d76daaba6d19aaea8f668d19a296"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "28424888c49b5d6c6b10a5e152d30810",
+    "semantic_hash": ""
   },
   "src/log4net/Core/Serializable.cs": {
-    "mtime": 1727427321.9807546,
+    "mtime": 1728845082.356958,
     "ast_hash": "0f040df784b45cf5339cec3b08298ec3",
     "semantic_hash": "0f040df784b45cf5339cec3b08298ec3"
   },
   "src/log4net/Core/StackFrameItem.cs": {
-    "mtime": 1729754866.434057,
+    "mtime": 1730148717.821189,
     "ast_hash": "2b09bc1481899c2ff425dabb08c87004",
     "semantic_hash": "2b09bc1481899c2ff425dabb08c87004"
   },
   "src/log4net/Core/TimeEvaluator.cs": {
-    "mtime": 1771600187.993229,
-    "ast_hash": "19a14f5ec33f3ca4cd67d80dd435c5e9",
-    "semantic_hash": "19a14f5ec33f3ca4cd67d80dd435c5e9"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "a6a8b0e00f095fe47d9c72fbe5e024e5",
+    "semantic_hash": ""
   },
   "src/log4net/Core/WrapperMap.cs": {
-    "mtime": 1729754866.4375355,
+    "mtime": 1730148717.821189,
     "ast_hash": "5eaa7dd9ad668a5fd1e1e4ddb8bef510",
     "semantic_hash": "5eaa7dd9ad668a5fd1e1e4ddb8bef510"
   },
   "src/log4net/DateFormatter/AbsoluteTimeDateFormatter.cs": {
-    "mtime": 1750076240.4968572,
-    "ast_hash": "58b528392be9153641715a0d7aa27fee",
-    "semantic_hash": "58b528392be9153641715a0d7aa27fee"
+    "mtime": 1748283936.1590588,
+    "ast_hash": "da8a0e02b7ecdd68412031ae4017b921",
+    "semantic_hash": ""
   },
   "src/log4net/DateFormatter/DateTimeDateFormatter.cs": {
-    "mtime": 1729754866.4410172,
+    "mtime": 1730148717.821189,
     "ast_hash": "90e4d7312ce667cf38164ad1fad32784",
     "semantic_hash": "90e4d7312ce667cf38164ad1fad32784"
   },
   "src/log4net/DateFormatter/IDateFormatter.cs": {
-    "mtime": 1729233548.938409,
+    "mtime": 1729235312.125148,
     "ast_hash": "1d8d61968df9fdd89eb8d98aa32b8696",
     "semantic_hash": "1d8d61968df9fdd89eb8d98aa32b8696"
   },
   "src/log4net/DateFormatter/Iso8601DateFormatter.cs": {
-    "mtime": 1729754866.442757,
+    "mtime": 1730148717.821189,
     "ast_hash": "c910ce3c4588649c5ca73b4f8a11c392",
     "semantic_hash": "c910ce3c4588649c5ca73b4f8a11c392"
   },
   "src/log4net/DateFormatter/SimpleDateFormatter.cs": {
-    "mtime": 1729754866.4444969,
+    "mtime": 1730148717.821189,
     "ast_hash": "064eb1f0c273db271b11e9a8c1042aec",
     "semantic_hash": "064eb1f0c273db271b11e9a8c1042aec"
   },
   "src/log4net/Diagnostics/CodeAnalysis/AllowNullAttribute.cs": {
-    "mtime": 1726482600.1416314,
+    "mtime": 1728845082.369696,
     "ast_hash": "2c9df41d4df94d51f3930535c2cfa62a",
     "semantic_hash": "2c9df41d4df94d51f3930535c2cfa62a"
   },
   "src/log4net/Diagnostics/CodeAnalysis/CallerArgumentExpressionAttribute.cs": {
-    "mtime": 1726482600.143634,
+    "mtime": 1728845082.37405,
     "ast_hash": "b063d9dc3729ba2a4f9dcd3623e00e3b",
     "semantic_hash": "b063d9dc3729ba2a4f9dcd3623e00e3b"
   },
   "src/log4net/Diagnostics/CodeAnalysis/CompilerFeatureRequiredAttribute.cs": {
-    "mtime": 1726482600.1456327,
+    "mtime": 1728845082.379418,
     "ast_hash": "4f1cb5467d3587bac8fb525aec1b9305",
     "semantic_hash": "4f1cb5467d3587bac8fb525aec1b9305"
   },
   "src/log4net/Diagnostics/CodeAnalysis/DisallowNullAttribute.cs": {
-    "mtime": 1726482600.146633,
+    "mtime": 1728845082.38386,
     "ast_hash": "9b94e172eb5014b89c0aca1757a4bc70",
     "semantic_hash": "9b94e172eb5014b89c0aca1757a4bc70"
   },
   "src/log4net/Diagnostics/CodeAnalysis/DoesNotReturnAttribute.cs": {
-    "mtime": 1726482600.1486316,
+    "mtime": 1728845082.3882437,
     "ast_hash": "b2034cf519ae236e851f0ffc55aeb38e",
     "semantic_hash": "b2034cf519ae236e851f0ffc55aeb38e"
   },
   "src/log4net/Diagnostics/CodeAnalysis/DoesNotReturnIfAttribute.cs": {
-    "mtime": 1726482600.1496322,
+    "mtime": 1728845082.3926291,
     "ast_hash": "f133da223d3972a61a62d4082f73f1cf",
     "semantic_hash": "f133da223d3972a61a62d4082f73f1cf"
   },
   "src/log4net/Diagnostics/CodeAnalysis/IsExternalInit.cs": {
-    "mtime": 1726482600.1516316,
+    "mtime": 1728845082.3969946,
     "ast_hash": "bcd6c7ac2d2d377b02a4a4ae6ad56d92",
     "semantic_hash": "bcd6c7ac2d2d377b02a4a4ae6ad56d92"
   },
   "src/log4net/Diagnostics/CodeAnalysis/MaybeNullAttribute.cs": {
-    "mtime": 1726482600.1526313,
+    "mtime": 1728845082.401402,
     "ast_hash": "f5678f2d699d9ceab186efb33ebef228",
     "semantic_hash": "f5678f2d699d9ceab186efb33ebef228"
   },
   "src/log4net/Diagnostics/CodeAnalysis/MaybeNullWhenAttribute.cs": {
-    "mtime": 1726482600.1546314,
+    "mtime": 1728845082.405832,
     "ast_hash": "8e665d28b00a131596d9b1a696c714ab",
     "semantic_hash": "8e665d28b00a131596d9b1a696c714ab"
   },
   "src/log4net/Diagnostics/CodeAnalysis/MemberNotNullAttribute.cs": {
-    "mtime": 1729233548.938409,
+    "mtime": 1729235312.1407447,
     "ast_hash": "befd45ddc10ed7c06cb9486654b93611",
     "semantic_hash": "befd45ddc10ed7c06cb9486654b93611"
   },
   "src/log4net/Diagnostics/CodeAnalysis/MemberNotNullWhenAttribute.cs": {
-    "mtime": 1729233548.9540348,
+    "mtime": 1729235312.1407447,
     "ast_hash": "49dd5b192ce11db3acbdda289841d971",
     "semantic_hash": "49dd5b192ce11db3acbdda289841d971"
   },
   "src/log4net/Diagnostics/CodeAnalysis/NotNullAttribute.cs": {
-    "mtime": 1726482600.1586318,
+    "mtime": 1728845082.419381,
     "ast_hash": "da43e8925ef19a7633e4b5f9ea4e547d",
     "semantic_hash": "da43e8925ef19a7633e4b5f9ea4e547d"
   },
   "src/log4net/Diagnostics/CodeAnalysis/NotNullIfNotNullAttribute.cs": {
-    "mtime": 1726482600.1606305,
+    "mtime": 1728845082.4237864,
     "ast_hash": "0ce0224c5732c337e56e962e2409710d",
     "semantic_hash": "0ce0224c5732c337e56e962e2409710d"
   },
   "src/log4net/Diagnostics/CodeAnalysis/NotNullWhenAttribute.cs": {
-    "mtime": 1726482600.1616316,
+    "mtime": 1728845082.4282072,
     "ast_hash": "ee6443f979d5c42e218453653e4db3d6",
     "semantic_hash": "ee6443f979d5c42e218453653e4db3d6"
   },
   "src/log4net/Diagnostics/CodeAnalysis/NullableAttribute.cs": {
-    "mtime": 1729233548.9540348,
+    "mtime": 1729235312.1407447,
     "ast_hash": "78885d08cde7d68bd775fd17f5fc86f3",
     "semantic_hash": "78885d08cde7d68bd775fd17f5fc86f3"
   },
   "src/log4net/Diagnostics/CodeAnalysis/NullableContextAttribute.cs": {
-    "mtime": 1726482600.1656325,
+    "mtime": 1728845082.437024,
     "ast_hash": "0f392a3173f7037bcd6d646f6acb6cdc",
     "semantic_hash": "0f392a3173f7037bcd6d646f6acb6cdc"
   },
   "src/log4net/Diagnostics/CodeAnalysis/RequiredMemberAttribute.cs": {
-    "mtime": 1726482600.1666315,
+    "mtime": 1728845082.4414012,
     "ast_hash": "26a91b95ab78617f8e2e558091f80200",
     "semantic_hash": "26a91b95ab78617f8e2e558091f80200"
   },
   "src/log4net/Diagnostics/CodeAnalysis/SetsRequiredMembersAttribute.cs": {
-    "mtime": 1726482600.167631,
+    "mtime": 1728845082.4458096,
     "ast_hash": "d8b9fb49c7061aa6e27bfba72a03ffd6",
     "semantic_hash": "d8b9fb49c7061aa6e27bfba72a03ffd6"
   },
   "src/log4net/Diagnostics/CodeAnalysis/ValidatedNotNullAttribute.cs": {
-    "mtime": 1726482600.1696315,
+    "mtime": 1728845082.4468896,
     "ast_hash": "b1c2beca0dd73f227c61fbf30a34e63e",
     "semantic_hash": "b1c2beca0dd73f227c61fbf30a34e63e"
   },
   "src/log4net/Filter/DenyAllFilter.cs": {
-    "mtime": 1747667444.2310836,
-    "ast_hash": "83b2d5ee74d8c123782f220116772da0",
-    "semantic_hash": "83b2d5ee74d8c123782f220116772da0"
+    "mtime": 1747854397.0931804,
+    "ast_hash": "b9eee1b26cde65b5b046d88d2f9e412f",
+    "semantic_hash": ""
   },
   "src/log4net/Filter/FilterDecision.cs": {
-    "mtime": 1729233548.9540348,
+    "mtime": 1729235312.1407447,
     "ast_hash": "d9b355459a06239dd5fdb6f90f9f2702",
     "semantic_hash": "d9b355459a06239dd5fdb6f90f9f2702"
   },
   "src/log4net/Filter/FilterSkeleton.cs": {
-    "mtime": 1771600187.9952316,
-    "ast_hash": "6875dab9d600b7e633b6b073c279d35d",
-    "semantic_hash": "6875dab9d600b7e633b6b073c279d35d"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "68aff4d174ed7f7c32afb65ec55a8620",
+    "semantic_hash": ""
   },
   "src/log4net/Filter/IFilter.cs": {
-    "mtime": 1771600187.9987364,
-    "ast_hash": "a539be76b0584e78d01a111a60c9457a",
-    "semantic_hash": "a539be76b0584e78d01a111a60c9457a"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "7213acdd093bc37049ca92b3e5eab9d7",
+    "semantic_hash": ""
   },
   "src/log4net/Filter/LevelMatchFilter.cs": {
-    "mtime": 1771600188.0017457,
-    "ast_hash": "2dbd55d6cf905969b469d3827da88a0f",
-    "semantic_hash": "2dbd55d6cf905969b469d3827da88a0f"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "93b368579bb233cfbb1643823081e0d7",
+    "semantic_hash": ""
   },
   "src/log4net/Filter/LevelRangeFilter.cs": {
-    "mtime": 1771600188.0057456,
-    "ast_hash": "d08643ec12e096a7f9b02be543815cb3",
-    "semantic_hash": "d08643ec12e096a7f9b02be543815cb3"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "f803080b663bd23f3b1f0217c6a8ab3a",
+    "semantic_hash": ""
   },
   "src/log4net/Filter/LoggerMatchFilter.cs": {
-    "mtime": 1771600188.0087447,
-    "ast_hash": "730a0af8326b2a26ee52ef76cf8bf0fe",
-    "semantic_hash": "730a0af8326b2a26ee52ef76cf8bf0fe"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "d6bf092335e0b1d73d859e6a9ac338fa",
+    "semantic_hash": ""
   },
   "src/log4net/Filter/MdcFilter.cs": {
-    "mtime": 1729754866.453198,
+    "mtime": 1730148717.821189,
     "ast_hash": "427947b46ccdbec8a05053032f954afc",
     "semantic_hash": "427947b46ccdbec8a05053032f954afc"
   },
   "src/log4net/Filter/NdcFilter.cs": {
-    "mtime": 1729754866.453198,
+    "mtime": 1730148717.821189,
     "ast_hash": "3a0968fb80739eea4ec4edcd1d836e48",
     "semantic_hash": "3a0968fb80739eea4ec4edcd1d836e48"
   },
   "src/log4net/Filter/PropertyFilter.cs": {
-    "mtime": 1729754866.4549365,
+    "mtime": 1730148717.821189,
     "ast_hash": "e5f20c9186af5f775b270dc2b2668ed2",
     "semantic_hash": "e5f20c9186af5f775b270dc2b2668ed2"
   },
   "src/log4net/Filter/StringMatchFilter.cs": {
-    "mtime": 1771600188.0107458,
-    "ast_hash": "b6eb5786f8e2b297e855cd8d92e2cf46",
-    "semantic_hash": "b6eb5786f8e2b297e855cd8d92e2cf46"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "1ad669a669b95688b5c0b0283fd5a52d",
+    "semantic_hash": ""
   },
   "src/log4net/GlobalContext.cs": {
-    "mtime": 1771600188.0137446,
-    "ast_hash": "83b887f34ee6b12d25e281639d08a2f0",
-    "semantic_hash": "83b887f34ee6b12d25e281639d08a2f0"
+    "mtime": 1772298934.3036044,
+    "ast_hash": "47ff9e320881b67df102addf7ac74514",
+    "semantic_hash": ""
   },
   "src/log4net/ILog.cs": {
-    "mtime": 1771600188.0167449,
-    "ast_hash": "d6824b20fb1509cf196b69b51d1cbac7",
-    "semantic_hash": "d6824b20fb1509cf196b69b51d1cbac7"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "e56450376aa19e94ff3c8d187f09810f",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/DynamicPatternLayout.cs": {
-    "mtime": 1729233548.9696593,
+    "mtime": 1729235312.1563966,
     "ast_hash": "23b613f5b8c0a994606fe4f49d3c7030",
     "semantic_hash": "23b613f5b8c0a994606fe4f49d3c7030"
   },
   "src/log4net/Layout/ExceptionLayout.cs": {
-    "mtime": 1771600188.0197456,
-    "ast_hash": "1192c454174afb2d9dbd00cad6aca759",
-    "semantic_hash": "1192c454174afb2d9dbd00cad6aca759"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "250fddaf1a3f44fe6491267f492fdd0f",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/ILayout.cs": {
-    "mtime": 1771600188.022744,
-    "ast_hash": "676ea6360d94c52b196bea74ac9dbc35",
-    "semantic_hash": "676ea6360d94c52b196bea74ac9dbc35"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "7fba9a4601bf67c5c3fea587e8986fe2",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/IRawLayout.cs": {
-    "mtime": 1729233548.9696593,
+    "mtime": 1729235312.1563966,
     "ast_hash": "1e41135d20901e978aa843845d6d2b14",
     "semantic_hash": "1e41135d20901e978aa843845d6d2b14"
   },
   "src/log4net/Layout/Internal/XmlWriterExtensions.cs": {
-    "mtime": 1771320978.4451356,
-    "ast_hash": "daa5e8bd20a8f27d210cc4c2f73d3e8e",
-    "semantic_hash": "daa5e8bd20a8f27d210cc4c2f73d3e8e"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "ec07768e26b142583408d0399b04d3d8",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Layout2RawLayoutAdapter.cs": {
-    "mtime": 1729233548.9696593,
+    "mtime": 1729235312.172465,
     "ast_hash": "561a713aba5746f93183817f74d9dc9c",
     "semantic_hash": "561a713aba5746f93183817f74d9dc9c"
   },
   "src/log4net/Layout/LayoutSkeleton.cs": {
-    "mtime": 1771600188.0257447,
-    "ast_hash": "0d4fa67583eddf9dc17bd550de6c2d68",
-    "semantic_hash": "0d4fa67583eddf9dc17bd550de6c2d68"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "2df219fde6b64532c4c0de66fa0c3726",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/PatternLayout.cs": {
-    "mtime": 1785786099.1840568,
-    "ast_hash": "99f6cc7d9ce016fe1a8a3369cb3a3619",
+    "mtime": 1786045588.321326,
+    "ast_hash": "775cebd9b6159028622266dc2d6018e1",
     "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/AppDomainPatternConverter.cs": {
-    "mtime": 1729754866.4688573,
+    "mtime": 1730148717.8368142,
     "ast_hash": "67f0865dc44d9e3a4e18ef583677ca06",
     "semantic_hash": "67f0865dc44d9e3a4e18ef583677ca06"
   },
   "src/log4net/Layout/Pattern/AspNetCachePatternConverter.cs": {
-    "mtime": 1771600188.028745,
-    "ast_hash": "04323f15331f97d2c7c3961f5db337cf",
-    "semantic_hash": "04323f15331f97d2c7c3961f5db337cf"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "b3b631fadede281ef361dc90ac558aaa",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/AspNetContextPatternConverter.cs": {
-    "mtime": 1771600188.0317461,
-    "ast_hash": "2bdd92ca30a3027e5dda56a4721f24ca",
-    "semantic_hash": "2bdd92ca30a3027e5dda56a4721f24ca"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "9bd616bd39a8663ee9316605203b47b0",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/AspNetPatternConverter.cs": {
-    "mtime": 1729233548.9887934,
+    "mtime": 1729235312.172465,
     "ast_hash": "877602bd379b1ea9dbbac50a262babfd",
     "semantic_hash": "877602bd379b1ea9dbbac50a262babfd"
   },
   "src/log4net/Layout/Pattern/AspNetRequestPatternConverter.cs": {
-    "mtime": 1771600188.0347471,
-    "ast_hash": "709b56e7b0a4d4e3153180ad152e3112",
-    "semantic_hash": "709b56e7b0a4d4e3153180ad152e3112"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "0b93ff6c215c25f21a581edbc1ef1060",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/AspNetSessionPatternConverter.cs": {
-    "mtime": 1771600188.0387456,
-    "ast_hash": "e1c23699f3b302e6467c7321cd6c59d0",
-    "semantic_hash": "e1c23699f3b302e6467c7321cd6c59d0"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "0ca0c28fbc2ff0ff8c223356e06e1d09",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/DatePatternConverter.cs": {
-    "mtime": 1771600188.055746,
-    "ast_hash": "52393d90c186fd2d8b3d09853447e94c",
-    "semantic_hash": "52393d90c186fd2d8b3d09853447e94c"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "1beb6ac89d3c1ced46f2f877917fe07c",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/ExceptionPatternConverter.cs": {
-    "mtime": 1729754866.4810367,
+    "mtime": 1730148717.8368142,
     "ast_hash": "b11cf8967fd56961eb6ee6cab3e9f65a",
     "semantic_hash": "b11cf8967fd56961eb6ee6cab3e9f65a"
   },
   "src/log4net/Layout/Pattern/FileLocationPatternConverter.cs": {
-    "mtime": 1729754866.4827776,
+    "mtime": 1730148717.8368142,
     "ast_hash": "b156404decb56ad28a8df7557e6031b2",
     "semantic_hash": "b156404decb56ad28a8df7557e6031b2"
   },
   "src/log4net/Layout/Pattern/FullLocationPatternConverter.cs": {
-    "mtime": 1729754866.4862573,
+    "mtime": 1730148717.8368142,
     "ast_hash": "ed5c0628b064cf7c190eeb37bc8ec43c",
     "semantic_hash": "ed5c0628b064cf7c190eeb37bc8ec43c"
   },
   "src/log4net/Layout/Pattern/IdentityPatternConverter.cs": {
-    "mtime": 1729754866.4879973,
+    "mtime": 1730148717.8368142,
     "ast_hash": "6c7e50120fa6a5078f2a2c7f8540c0fe",
     "semantic_hash": "6c7e50120fa6a5078f2a2c7f8540c0fe"
   },
   "src/log4net/Layout/Pattern/LevelPatternConverter.cs": {
-    "mtime": 1729754866.4897366,
+    "mtime": 1730148717.8368142,
     "ast_hash": "ecf86df67fbc07b355d9a8b734edc32d",
     "semantic_hash": "ecf86df67fbc07b355d9a8b734edc32d"
   },
   "src/log4net/Layout/Pattern/LineLocationPatternConverter.cs": {
-    "mtime": 1729754866.4914758,
+    "mtime": 1730148717.8368142,
     "ast_hash": "a9ad610823fc75654311858d8cb960e5",
     "semantic_hash": "a9ad610823fc75654311858d8cb960e5"
   },
   "src/log4net/Layout/Pattern/LoggerPatternConverter.cs": {
-    "mtime": 1729754866.4932156,
+    "mtime": 1730148717.8368142,
     "ast_hash": "a49d6ee33701377f585f99a6f1411806",
     "semantic_hash": "a49d6ee33701377f585f99a6f1411806"
   },
   "src/log4net/Layout/Pattern/MessagePatternConverter.cs": {
-    "mtime": 1729754866.494956,
+    "mtime": 1730148717.8368142,
     "ast_hash": "1ac0c96ef1dd2f744f85804d32821b00",
     "semantic_hash": "1ac0c96ef1dd2f744f85804d32821b00"
   },
   "src/log4net/Layout/Pattern/MethodLocationPatternConverter.cs": {
-    "mtime": 1729754866.4966958,
+    "mtime": 1730148717.8368142,
     "ast_hash": "6140c6599066fbfd13d085656124ab57",
     "semantic_hash": "6140c6599066fbfd13d085656124ab57"
   },
   "src/log4net/Layout/Pattern/NamedPatternConverter.cs": {
-    "mtime": 1729754866.4984374,
+    "mtime": 1730148717.8368142,
     "ast_hash": "f346fd25b8c0e2508769900c74466fa9",
     "semantic_hash": "f346fd25b8c0e2508769900c74466fa9"
   },
   "src/log4net/Layout/Pattern/NdcPatternConverter.cs": {
-    "mtime": 1729754866.5019171,
+    "mtime": 1730148717.8368142,
     "ast_hash": "3266e6dff960818de489de3449b94c3e",
     "semantic_hash": "3266e6dff960818de489de3449b94c3e"
   },
   "src/log4net/Layout/Pattern/PatternLayoutConverter.cs": {
-    "mtime": 1771600188.0607462,
-    "ast_hash": "db329413b787db6bb4836f0f682cf20e",
-    "semantic_hash": "db329413b787db6bb4836f0f682cf20e"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "914c358e57ee791c938fabca15fe4032",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/PropertyPatternConverter.cs": {
-    "mtime": 1771600188.0982616,
-    "ast_hash": "021e0d50e246bdfafa3957301e948974",
-    "semantic_hash": "021e0d50e246bdfafa3957301e948974"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "7e2339a560f83195d20f2192b64d50c6",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/Pattern/RelativeTimePatternConverter.cs": {
-    "mtime": 1729754866.5071373,
+    "mtime": 1730148717.8368142,
     "ast_hash": "63cf70ef4ede95614ef069d932744bfb",
     "semantic_hash": "63cf70ef4ede95614ef069d932744bfb"
   },
   "src/log4net/Layout/Pattern/StackTraceDetailPatternConverter.cs": {
-    "mtime": 1729754866.5088768,
+    "mtime": 1730148717.8368142,
     "ast_hash": "25643f40bb9b82b431eca7ab13fcffe1",
     "semantic_hash": "25643f40bb9b82b431eca7ab13fcffe1"
   },
   "src/log4net/Layout/Pattern/StackTracePatternConverter.cs": {
-    "mtime": 1729233549.0169377,
+    "mtime": 1729235312.1880984,
     "ast_hash": "0cf55e791a1a8d8907e9f865a61e9b63",
     "semantic_hash": "0cf55e791a1a8d8907e9f865a61e9b63"
   },
   "src/log4net/Layout/Pattern/ThreadPatternConverter.cs": {
-    "mtime": 1729754866.5106146,
+    "mtime": 1730148717.8368142,
     "ast_hash": "45259f5632c9a7dddf92cb6d3aeb9f94",
     "semantic_hash": "45259f5632c9a7dddf92cb6d3aeb9f94"
   },
   "src/log4net/Layout/Pattern/TypeNamePatternConverter.cs": {
-    "mtime": 1729754866.5123627,
+    "mtime": 1730148717.8368142,
     "ast_hash": "9e62067bfb3b6d4bf0aa85c6b93418f0",
     "semantic_hash": "9e62067bfb3b6d4bf0aa85c6b93418f0"
   },
   "src/log4net/Layout/Pattern/UserNamePatternConverter.cs": {
-    "mtime": 1729755363.0783076,
+    "mtime": 1730148717.8524425,
     "ast_hash": "97f756eb6d97bc327163b32268cde0b3",
     "semantic_hash": "97f756eb6d97bc327163b32268cde0b3"
   },
   "src/log4net/Layout/Pattern/UtcDatePatternConverter.cs": {
-    "mtime": 1729755371.1679082,
+    "mtime": 1730148717.8535457,
     "ast_hash": "24606a16dd5174608589702c0236652b",
     "semantic_hash": "24606a16dd5174608589702c0236652b"
   },
   "src/log4net/Layout/RawLayoutConverter.cs": {
-    "mtime": 1771600188.1282668,
-    "ast_hash": "6a5003087a7d417fe441be7631c51eb2",
-    "semantic_hash": "6a5003087a7d417fe441be7631c51eb2"
+    "mtime": 1772298934.3046043,
+    "ast_hash": "1b2a6e3bb436f898ee7f10059a564803",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/RawPropertyLayout.cs": {
-    "mtime": 1771600188.152271,
-    "ast_hash": "e992fc1ea04b9da7380267a7d3a29254",
-    "semantic_hash": "e992fc1ea04b9da7380267a7d3a29254"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "c95e337e10700aa2e030799b13c9e46b",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/RawTimeStampLayout.cs": {
-    "mtime": 1729754866.5255492,
+    "mtime": 1730148717.8535457,
     "ast_hash": "26debe849714e8dec90bd5785549692e",
     "semantic_hash": "26debe849714e8dec90bd5785549692e"
   },
   "src/log4net/Layout/RawUtcTimeStampLayout.cs": {
-    "mtime": 1729754866.527294,
+    "mtime": 1730148717.8535457,
     "ast_hash": "62c4037ec9633b5ecc5d154135ef7645",
     "semantic_hash": "62c4037ec9633b5ecc5d154135ef7645"
   },
   "src/log4net/Layout/SimpleLayout.cs": {
-    "mtime": 1729754866.529035,
+    "mtime": 1730148717.8535457,
     "ast_hash": "f7628c0db46253d300936bd5c41a1aa1",
     "semantic_hash": "f7628c0db46253d300936bd5c41a1aa1"
   },
   "src/log4net/Layout/XmlLayout.cs": {
-    "mtime": 1771320978.4461346,
-    "ast_hash": "ba5a26a979b7d1cddf07cd131a142a8c",
-    "semantic_hash": "ba5a26a979b7d1cddf07cd131a142a8c"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "d8ae13db40e5dae98901f56f317ea279",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/XmlLayoutBase.cs": {
-    "mtime": 1771600188.1692722,
-    "ast_hash": "a8635c475574e9844de27be8c67d88ac",
-    "semantic_hash": "a8635c475574e9844de27be8c67d88ac"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "6aabe3f9caa2d44ac16085361deba351",
+    "semantic_hash": ""
   },
   "src/log4net/Layout/XmlLayoutSchemaLog4j.cs": {
-    "mtime": 1771320978.4471333,
-    "ast_hash": "7f435b697dbfbc78514daaf2a97647a2",
-    "semantic_hash": "7f435b697dbfbc78514daaf2a97647a2"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "f9340edfd217ddeac47a803a3d77af67",
+    "semantic_hash": ""
   },
   "src/log4net/LogManager.cs": {
-    "mtime": 1771600188.1732721,
-    "ast_hash": "8679ce1e85e84db69a55bae42dce91e8",
-    "semantic_hash": "8679ce1e85e84db69a55bae42dce91e8"
+    "mtime": 1786045920.2116327,
+    "ast_hash": "53f99d8978fc066a63b3dee98f2ef3a4",
+    "semantic_hash": ""
   },
   "src/log4net/LogicalThreadContext.cs": {
-    "mtime": 1771600188.1752732,
-    "ast_hash": "f4328285d3e46356d1c3cc1d76772690",
-    "semantic_hash": "f4328285d3e46356d1c3cc1d76772690"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "e0d7fe56f88d391d5b1db3b1c6afa0a3",
+    "semantic_hash": ""
   },
   "src/log4net/MDC.cs": {
-    "mtime": 1771600188.1772697,
-    "ast_hash": "727ce2ba0cc9f7f040837ba94477eb20",
-    "semantic_hash": "727ce2ba0cc9f7f040837ba94477eb20"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "93568fb5f465fad96cfe8cb7937d4d64",
+    "semantic_hash": ""
   },
   "src/log4net/NDC.cs": {
-    "mtime": 1771600188.1792715,
-    "ast_hash": "129a51ce97859b019058fc146909e92d",
-    "semantic_hash": "129a51ce97859b019058fc146909e92d"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "981853abd928cfd21df75498788eec4d",
+    "semantic_hash": ""
   },
   "src/log4net/ObjectRenderer/DefaultRenderer.cs": {
-    "mtime": 1771600188.1812727,
-    "ast_hash": "1e1685f975e22ed6d6a29e004d207f92",
-    "semantic_hash": "1e1685f975e22ed6d6a29e004d207f92"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "c5741534d11c54757394206229799ed8",
+    "semantic_hash": ""
   },
   "src/log4net/ObjectRenderer/IObjectRenderer.cs": {
-    "mtime": 1729754866.5457032,
+    "mtime": 1730148717.868583,
     "ast_hash": "0c378d61842b046486e11af0254b724f",
     "semantic_hash": "0c378d61842b046486e11af0254b724f"
   },
   "src/log4net/ObjectRenderer/RendererMap.cs": {
-    "mtime": 1771600188.1832707,
-    "ast_hash": "afd29e12b211566964888b4a0db41942",
-    "semantic_hash": "afd29e12b211566964888b4a0db41942"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "566d33eccfd8efdd3e595721aa4691f0",
+    "semantic_hash": ""
   },
   "src/log4net/Plugin/IPlugin.cs": {
-    "mtime": 1771600188.185278,
-    "ast_hash": "6385995ec4171844a5f210733c42d767",
-    "semantic_hash": "6385995ec4171844a5f210733c42d767"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "51303e034bbd67da24d555e06dfcbe0d",
+    "semantic_hash": ""
   },
   "src/log4net/Plugin/IPluginFactory.cs": {
-    "mtime": 1729233549.048187,
+    "mtime": 1729235312.235,
     "ast_hash": "c7bc7d4135ebbea07f8cfe7418976767",
     "semantic_hash": "c7bc7d4135ebbea07f8cfe7418976767"
   },
   "src/log4net/Plugin/PluginCollection.cs": {
-    "mtime": 1771600188.187279,
-    "ast_hash": "adc09050cb21c6590e597a515083c1f5",
-    "semantic_hash": "adc09050cb21c6590e597a515083c1f5"
+    "mtime": 1772298934.3056045,
+    "ast_hash": "4d7e85c2291cf58d86507d85c851fff8",
+    "semantic_hash": ""
   },
   "src/log4net/Plugin/PluginMap.cs": {
-    "mtime": 1771600188.1892786,
-    "ast_hash": "6f8822fd566c5d3ace8ea3f95de8dbe6",
-    "semantic_hash": "6f8822fd566c5d3ace8ea3f95de8dbe6"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "87bf0ea5378eb54c8e9b2de3b35ca955",
+    "semantic_hash": ""
   },
   "src/log4net/Plugin/PluginSkeleton.cs": {
-    "mtime": 1747667444.240111,
-    "ast_hash": "542ff34a1f82fe1e83dff95ac036556a",
-    "semantic_hash": "542ff34a1f82fe1e83dff95ac036556a"
+    "mtime": 1747854397.0931804,
+    "ast_hash": "59765b33ed15d059f9323468fbecae24",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/ConfigurationChangedEventArgs.cs": {
-    "mtime": 1729233549.048187,
+    "mtime": 1729235312.2506237,
     "ast_hash": "9321b8fca8363b304b6ba6285c80009e",
     "semantic_hash": "9321b8fca8363b304b6ba6285c80009e"
   },
   "src/log4net/Repository/Hierarchy/DefaultLoggerFactory.cs": {
-    "mtime": 1771600188.1912763,
-    "ast_hash": "44d9897a130b08c7cbff2c103a99e76f",
-    "semantic_hash": "44d9897a130b08c7cbff2c103a99e76f"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "49f328a475827e4c3ac080d0054cd97d",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/Hierarchy/Hierarchy.cs": {
-    "mtime": 1778670539.4902148,
-    "ast_hash": "18e88bd9f38357b416c3f7574df43fdd",
-    "semantic_hash": "18e88bd9f38357b416c3f7574df43fdd"
+    "mtime": 1779219726.1716964,
+    "ast_hash": "47341ba0ac15a4f1aaf57629d2496562",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/Hierarchy/ILoggerFactory.cs": {
-    "mtime": 1771600188.1922774,
-    "ast_hash": "22e8aa6c4a1648d6754de0a5700efcc8",
-    "semantic_hash": "22e8aa6c4a1648d6754de0a5700efcc8"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "6fec24246b4ab285237dae5ad6de30f8",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/Hierarchy/Logger.cs": {
-    "mtime": 1778670539.492249,
-    "ast_hash": "ac84b66cf153f4c64a6fdb5dac930b0e",
-    "semantic_hash": "ac84b66cf153f4c64a6fdb5dac930b0e"
+    "mtime": 1779219726.1716964,
+    "ast_hash": "62e55d584867ac298f289c8de60f0a91",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/Hierarchy/LoggerKey.cs": {
-    "mtime": 1729233549.0638125,
+    "mtime": 1729235312.2697823,
     "ast_hash": "234c1d771ec9ec21057abd70d2d73c1d",
     "semantic_hash": "234c1d771ec9ec21057abd70d2d73c1d"
   },
   "src/log4net/Repository/Hierarchy/ProvisionNode.cs": {
-    "mtime": 1778670539.493752,
-    "ast_hash": "43f3fbe1ef929d265353befd6b427803",
-    "semantic_hash": "43f3fbe1ef929d265353befd6b427803"
+    "mtime": 1779219726.1716964,
+    "ast_hash": "fbf8118beef909dfadd6cf74b8c1a213",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/Hierarchy/RootLogger.cs": {
-    "mtime": 1771600188.1942801,
-    "ast_hash": "5cdc9b55a43e3bd20b2f5f9221224411",
-    "semantic_hash": "5cdc9b55a43e3bd20b2f5f9221224411"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "ad14994685ca86f23b64fd93f8dad20d",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/Hierarchy/XmlHierarchyConfigurator.cs": {
-    "mtime": 1776346930.3965058,
-    "ast_hash": "c145b00cb8c7058ec253dc68ca3fba17",
-    "semantic_hash": "c145b00cb8c7058ec253dc68ca3fba17"
+    "mtime": 1776190633.894065,
+    "ast_hash": "14152d0b4870bb8ad6b0ec2ba5d339ed",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/IBasicRepositoryConfigurator.cs": {
-    "mtime": 1771600188.2007928,
-    "ast_hash": "3fc83da97ffc46104a96c3cde0a67f5c",
-    "semantic_hash": "3fc83da97ffc46104a96c3cde0a67f5c"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "eb04b40be1c5d663a97b58af5c24af90",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/ILoggerRepository.cs": {
-    "mtime": 1771600188.2027936,
-    "ast_hash": "804d85fd32c55fb2324333cf1d31ce20",
-    "semantic_hash": "804d85fd32c55fb2324333cf1d31ce20"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "dff4c80e9219a981a2839982ba62946a",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/IXmlRepositoryConfigurator.cs": {
-    "mtime": 1771600188.2047913,
-    "ast_hash": "968d528d9aa99bf9a3a532dd7a9b83ee",
-    "semantic_hash": "968d528d9aa99bf9a3a532dd7a9b83ee"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "b5627f1416eb2fb0e63e0ed57d570b8c",
+    "semantic_hash": ""
   },
   "src/log4net/Repository/LoggerRepositorySkeleton.cs": {
-    "mtime": 1771600188.206792,
-    "ast_hash": "c360af28267b6e97cc62678d03d750b7",
-    "semantic_hash": "c360af28267b6e97cc62678d03d750b7"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "dd74bc660a3ead9e611c2d2a512dcc2b",
+    "semantic_hash": ""
   },
   "src/log4net/ThreadContext.cs": {
-    "mtime": 1771600188.2167916,
-    "ast_hash": "068ce86954ca176700f6926b49670cc2",
-    "semantic_hash": "068ce86954ca176700f6926b49670cc2"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "b50f5efe8d0a4b8e81776bd130a26400",
+    "semantic_hash": ""
   },
   "src/log4net/Util/AppenderAttachedImpl.cs": {
-    "mtime": 1771600188.2197933,
-    "ast_hash": "d65ada66cc1dcb90c486e6a12891a578",
-    "semantic_hash": "d65ada66cc1dcb90c486e6a12891a578"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "1e18816593b8557a93f0e30b86c83926",
+    "semantic_hash": ""
   },
   "src/log4net/Util/CompositeProperties.cs": {
-    "mtime": 1771600188.223792,
-    "ast_hash": "8be62855c3dffbe130a9d46454c6112d",
-    "semantic_hash": "8be62855c3dffbe130a9d46454c6112d"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "36f0d5c2f83ebf34d0572fdbca506660",
+    "semantic_hash": ""
   },
   "src/log4net/Util/ContextPropertiesBase.cs": {
-    "mtime": 1729233549.088948,
+    "mtime": 1729235312.3447988,
     "ast_hash": "2389d98bf2871c5319ca70f4faccec5e",
     "semantic_hash": "2389d98bf2871c5319ca70f4faccec5e"
   },
   "src/log4net/Util/ConverterInfo.cs": {
-    "mtime": 1729754866.5752845,
-    "ast_hash": "6a5794bc75d94a9a0a03cde75733a003",
-    "semantic_hash": "6a5794bc75d94a9a0a03cde75733a003"
+    "mtime": 1786042739.6152008,
+    "ast_hash": "cc52a74cf79049b23a700e27b7c01035",
+    "semantic_hash": ""
   },
   "src/log4net/Util/CountingQuietTextWriter.cs": {
-    "mtime": 1729754866.5770245,
+    "mtime": 1730148717.868583,
     "ast_hash": "e1ed845ebb6dc82029fc84be21ad9f58",
     "semantic_hash": "e1ed845ebb6dc82029fc84be21ad9f58"
   },
   "src/log4net/Util/CyclicBuffer.cs": {
-    "mtime": 1771600188.2447934,
-    "ast_hash": "9223f5c8f4514094dbe5ab4c093e00e9",
-    "semantic_hash": "9223f5c8f4514094dbe5ab4c093e00e9"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "8dca7bf464197efefbe05d5d897e6b12",
+    "semantic_hash": ""
   },
   "src/log4net/Util/EmptyCollection.cs": {
-    "mtime": 1771600188.2497923,
-    "ast_hash": "70e5a6fa0a325b41c4f11819e1d2ae3d",
-    "semantic_hash": "70e5a6fa0a325b41c4f11819e1d2ae3d"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "7af58307060a7614c7522d83ec6ef360",
+    "semantic_hash": ""
   },
   "src/log4net/Util/EmptyDictionary.cs": {
-    "mtime": 1771600188.2527947,
-    "ast_hash": "bc8887dab3b9d9295fc137fa9da35592",
-    "semantic_hash": "bc8887dab3b9d9295fc137fa9da35592"
+    "mtime": 1772298934.3066044,
+    "ast_hash": "6a50776bcfe841a5df23f8fbda13e005",
+    "semantic_hash": ""
   },
   "src/log4net/Util/EncodingWithoutPreamble.cs": {
-    "mtime": 1729593890.810313,
+    "mtime": 1729707407.860101,
     "ast_hash": "1f1a3e0907f451027b81360ede87b869",
     "semantic_hash": "1f1a3e0907f451027b81360ede87b869"
   },
   "src/log4net/Util/FormattingInfo.cs": {
-    "mtime": 1729233549.0954552,
+    "mtime": 1729235312.3604238,
     "ast_hash": "907b4138e6b3322b2c01e68147622c1b",
     "semantic_hash": "907b4138e6b3322b2c01e68147622c1b"
   },
   "src/log4net/Util/GlobalContextProperties.cs": {
-    "mtime": 1771600188.2617946,
-    "ast_hash": "cbbf23be4718de8820fd8aedcf6ae920",
-    "semantic_hash": "cbbf23be4718de8820fd8aedcf6ae920"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "45b2c0919d7be1e816676e9f469a4cd1",
+    "semantic_hash": ""
   },
   "src/log4net/Util/ILogExtensions.cs": {
-    "mtime": 1771600188.2647965,
-    "ast_hash": "9906629d5961b09ef849703c92563316",
-    "semantic_hash": "9906629d5961b09ef849703c92563316"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "849242bac25875ace217532e6bf6a112",
+    "semantic_hash": ""
   },
   "src/log4net/Util/LevelMapping.cs": {
-    "mtime": 1729754866.5857258,
+    "mtime": 1730148717.868583,
     "ast_hash": "35c434f610757131eb1174ee7a982a97",
     "semantic_hash": "35c434f610757131eb1174ee7a982a97"
   },
   "src/log4net/Util/LevelMappingEntry.cs": {
-    "mtime": 1729233549.0954552,
+    "mtime": 1729235312.3764877,
     "ast_hash": "28cf89bd4af9d9788f10326831d803ce",
     "semantic_hash": "28cf89bd4af9d9788f10326831d803ce"
   },
   "src/log4net/Util/Log4NetAssert.cs": {
-    "mtime": 1785767602.2526493,
-    "ast_hash": "1eae76940be2036b165ca14b01d0316a",
+    "mtime": 1785869401.711258,
+    "ast_hash": "7e9c8d6c963b96c489a0b404ef82dc8e",
     "semantic_hash": ""
   },
   "src/log4net/Util/LogLog.cs": {
-    "mtime": 1771600188.2687936,
-    "ast_hash": "280ffadbd02911baf4b9ecec71d4494d",
-    "semantic_hash": "280ffadbd02911baf4b9ecec71d4494d"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "b8bc0f6dd5a10d8c794f173aef12193d",
+    "semantic_hash": ""
   },
   "src/log4net/Util/LogicalThreadContextProperties.cs": {
-    "mtime": 1785786062.5157115,
-    "ast_hash": "4653864e1f8a4555a0a8ee584559ed11",
+    "mtime": 1785869401.711258,
+    "ast_hash": "d47e3ba4c27b55a0b880905541a7d3bf",
     "semantic_hash": ""
   },
   "src/log4net/Util/LogicalThreadContextStack.cs": {
-    "mtime": 1771600188.2767959,
-    "ast_hash": "1962d4c880b0b6cba64bc91ab1fbb6fe",
-    "semantic_hash": "1962d4c880b0b6cba64bc91ab1fbb6fe"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "35d462d317fd0c50f899c87fb4dbfd3e",
+    "semantic_hash": ""
   },
   "src/log4net/Util/LogicalThreadContextStacks.cs": {
-    "mtime": 1729754866.596165,
+    "mtime": 1730148717.868583,
     "ast_hash": "a7b3df08982e4d9f35cb686cd769923d",
     "semantic_hash": "a7b3df08982e4d9f35cb686cd769923d"
   },
   "src/log4net/Util/NativeError.cs": {
-    "mtime": 1771600188.2848027,
-    "ast_hash": "e27ee9a83e29066639eac3e312cd269b",
-    "semantic_hash": "e27ee9a83e29066639eac3e312cd269b"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "0cd79bf0a517a6459cf46f86b9c5df15",
+    "semantic_hash": ""
   },
   "src/log4net/Util/NativeMethods.cs": {
-    "mtime": 1765177767.3607934,
-    "ast_hash": "f262cfc1a70400f33a0435451df34e64",
-    "semantic_hash": "f262cfc1a70400f33a0435451df34e64"
+    "mtime": 1757711412.6367307,
+    "ast_hash": "dd2d8323c7a05989d215a0e5704b1d68",
+    "semantic_hash": ""
   },
   "src/log4net/Util/NullDictionaryEnumerator.cs": {
-    "mtime": 1771600188.2878036,
-    "ast_hash": "99114cc80643f7311e2247dfcee4fb64",
-    "semantic_hash": "99114cc80643f7311e2247dfcee4fb64"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "9a52ec17324ad497380c80d687f3d820",
+    "semantic_hash": ""
   },
   "src/log4net/Util/NullEnumerator.cs": {
-    "mtime": 1771600188.2898035,
-    "ast_hash": "1f3b045f4fef00bf7718e71bab498eaa",
-    "semantic_hash": "1f3b045f4fef00bf7718e71bab498eaa"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "f58f16197f0c3fd58483bab466a4ea0b",
+    "semantic_hash": ""
   },
   "src/log4net/Util/NullSecurityContext.cs": {
-    "mtime": 1771600188.2918055,
-    "ast_hash": "8c3f1b8e0bc31d746e1e5796b99db7cb",
-    "semantic_hash": "8c3f1b8e0bc31d746e1e5796b99db7cb"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "fdb164174979e93bc2ad0f37823a96a9",
+    "semantic_hash": ""
   },
   "src/log4net/Util/OnlyOnceErrorHandler.cs": {
-    "mtime": 1771600188.293804,
-    "ast_hash": "178c49fc9d72187c4793ae4e060e0903",
-    "semantic_hash": "178c49fc9d72187c4793ae4e060e0903"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "ea9b7519ea33bff5a794f61d0f387869",
+    "semantic_hash": ""
   },
   "src/log4net/Util/OptionConverter.cs": {
-    "mtime": 1771600188.2968018,
-    "ast_hash": "3a6a2bbb1be319e8bebfe6522bded328",
-    "semantic_hash": "3a6a2bbb1be319e8bebfe6522bded328"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "808324ca904a3c5a1103f780c40e6d68",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternConverter.cs": {
-    "mtime": 1750274421.8586648,
+    "mtime": 1730148717.868583,
     "ast_hash": "e8a1605f0bc1710b62622f8b8dd0219f",
     "semantic_hash": "e8a1605f0bc1710b62622f8b8dd0219f"
   },
   "src/log4net/Util/PatternParser.cs": {
-    "mtime": 1771600188.2993174,
-    "ast_hash": "a678ccc645dc07ae045ee100a9239a65",
-    "semantic_hash": "a678ccc645dc07ae045ee100a9239a65"
+    "mtime": 1772298934.3076046,
+    "ast_hash": "d64619b7384911ffd4bf0d24cd0a051e",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternString.cs": {
-    "mtime": 1771600188.3023143,
-    "ast_hash": "1b5e3b0cab14f46f78525ecf3a98342d",
-    "semantic_hash": "1b5e3b0cab14f46f78525ecf3a98342d"
+    "mtime": 1786045656.2623465,
+    "ast_hash": "2fc17bbddbe736cd633f271b6625243a",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternStringConverters/AppDomainPatternConverter.cs": {
-    "mtime": 1729754866.6135643,
+    "mtime": 1730148717.8842163,
     "ast_hash": "632f280a72d68ca979a7b91aa3fb9b4a",
     "semantic_hash": "632f280a72d68ca979a7b91aa3fb9b4a"
   },
   "src/log4net/Util/PatternStringConverters/AppSettingPatternConverter.cs": {
-    "mtime": 1771600188.3073165,
-    "ast_hash": "be5757514b7f31f0dd047c60a6c632cc",
-    "semantic_hash": "be5757514b7f31f0dd047c60a6c632cc"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "1a731a1e191108e056712b9d7f29cf64",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternStringConverters/DatePatternConverter.cs": {
-    "mtime": 1771600188.3103142,
-    "ast_hash": "b446168d775cb78ec78eacf9a083f28b",
-    "semantic_hash": "b446168d775cb78ec78eacf9a083f28b"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "2baf380ff45f0879fdd4b6e269675640",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternStringConverters/EnvironmentFolderPathPatternConverter.cs": {
-    "mtime": 1771600188.3123133,
-    "ast_hash": "0447ff5debb2ff7672c04e32f7c3a1e7",
-    "semantic_hash": "0447ff5debb2ff7672c04e32f7c3a1e7"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "c4261c89e6f3e80bf5522feda6dbc1dc",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternStringConverters/EnvironmentPatternConverter.cs": {
-    "mtime": 1771600188.3153152,
-    "ast_hash": "5ad7b25029cbb11ed807bcb9666f1945",
-    "semantic_hash": "5ad7b25029cbb11ed807bcb9666f1945"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "5bdcdf1fb56595474f1584d922ef4617",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternStringConverters/IdentityPatternConverter.cs": {
-    "mtime": 1729754866.6240041,
+    "mtime": 1730148717.8842163,
     "ast_hash": "360ffe55029e1695b6568ae13c4b5341",
     "semantic_hash": "360ffe55029e1695b6568ae13c4b5341"
   },
   "src/log4net/Util/PatternStringConverters/LiteralPatternConverter.cs": {
-    "mtime": 1771600188.318314,
-    "ast_hash": "8056e316f77117d7cf4f27eeb0642c19",
-    "semantic_hash": "8056e316f77117d7cf4f27eeb0642c19"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "a94bfd9cd7c6816dcff77f1b52754cb8",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternStringConverters/NewLinePatternConverter.cs": {
-    "mtime": 1729754866.6272564,
+    "mtime": 1730148717.8842163,
     "ast_hash": "ce3be380b4c67e96923d8d435e565ccb",
     "semantic_hash": "ce3be380b4c67e96923d8d435e565ccb"
   },
   "src/log4net/Util/PatternStringConverters/ProcessIdPatternConverter.cs": {
-    "mtime": 1729754866.6289964,
+    "mtime": 1730148717.8842163,
     "ast_hash": "95ed7c725e600926e34cf1aef0683ef6",
     "semantic_hash": "95ed7c725e600926e34cf1aef0683ef6"
   },
   "src/log4net/Util/PatternStringConverters/PropertyPatternConverter.cs": {
-    "mtime": 1771600188.3203142,
-    "ast_hash": "1a754fdb29f92e8348cc5ba5cb439a73",
-    "semantic_hash": "1a754fdb29f92e8348cc5ba5cb439a73"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "9fb837bf62754c01645372934da0b86a",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PatternStringConverters/RandomStringPatternConverter.cs": {
-    "mtime": 1729754866.632476,
+    "mtime": 1730148717.8912942,
     "ast_hash": "74cf1c45710bbbb10f0c572acbfdbed9",
     "semantic_hash": "74cf1c45710bbbb10f0c572acbfdbed9"
   },
   "src/log4net/Util/PatternStringConverters/UserNamePatternConverter.cs": {
-    "mtime": 1729754866.6342163,
+    "mtime": 1730148717.8912942,
     "ast_hash": "1cb3a84b89f96603ee5b238d275d7cdd",
     "semantic_hash": "1cb3a84b89f96603ee5b238d275d7cdd"
   },
   "src/log4net/Util/PatternStringConverters/UtcDatePatternConverter.cs": {
-    "mtime": 1729754866.6359549,
+    "mtime": 1730148717.8923342,
     "ast_hash": "95ac6f7f0ce50ec5eaa6eb8870614ba6",
     "semantic_hash": "95ac6f7f0ce50ec5eaa6eb8870614ba6"
   },
   "src/log4net/Util/PropertiesDictionary.cs": {
-    "mtime": 1771600188.3223126,
-    "ast_hash": "bc528de327951630c184f429262a73bb",
-    "semantic_hash": "bc528de327951630c184f429262a73bb"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "840799487645b0d22d4773e3b2800959",
+    "semantic_hash": ""
   },
   "src/log4net/Util/PropertyEntry.cs": {
-    "mtime": 1747667444.2538922,
-    "ast_hash": "49bf379130f1600a5fae9e64a3767bbb",
-    "semantic_hash": "49bf379130f1600a5fae9e64a3767bbb"
+    "mtime": 1747854397.0941803,
+    "ast_hash": "734f34fed4ce2a91be72dd53d3d4532d",
+    "semantic_hash": ""
   },
   "src/log4net/Util/ProtectCloseTextWriter.cs": {
-    "mtime": 1747667444.255898,
-    "ast_hash": "d2f362d226d7f1e39333cc10cf7d684c",
-    "semantic_hash": "d2f362d226d7f1e39333cc10cf7d684c"
+    "mtime": 1747854397.0941803,
+    "ast_hash": "8e89f01ef58ad9f85c9dc17691ea5bab",
+    "semantic_hash": ""
   },
   "src/log4net/Util/QuietTextWriter.cs": {
-    "mtime": 1771600188.3243136,
-    "ast_hash": "15094c7fca7cc96c07db9574c0eef0ec",
-    "semantic_hash": "15094c7fca7cc96c07db9574c0eef0ec"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "746351e81a8e65f10dba7aa01cd377d7",
+    "semantic_hash": ""
   },
   "src/log4net/Util/ReadOnlyPropertiesDictionary.cs": {
-    "mtime": 1729754866.6429162,
+    "mtime": 1730148717.8933737,
     "ast_hash": "d5b6774793b7c64be7093e1645eb7975",
     "semantic_hash": "d5b6774793b7c64be7093e1645eb7975"
   },
   "src/log4net/Util/ReaderWriterLock.cs": {
-    "mtime": 1771600188.3263135,
-    "ast_hash": "7978ca1f40839724aa08dc8a9cde4b19",
-    "semantic_hash": "7978ca1f40839724aa08dc8a9cde4b19"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "19b10d154bfa7515cbe42c2fa7ee8209",
+    "semantic_hash": ""
   },
   "src/log4net/Util/ReusableStringWriter.cs": {
-    "mtime": 1729233549.142339,
+    "mtime": 1729235312.4701552,
     "ast_hash": "e40ea65a8ae303a305a0a51805c0627c",
     "semantic_hash": "e40ea65a8ae303a305a0a51805c0627c"
   },
   "src/log4net/Util/SystemInfo.cs": {
-    "mtime": 1771600188.3283143,
-    "ast_hash": "1d1a8f978ed6baa702416b35b8764b6a",
-    "semantic_hash": "1d1a8f978ed6baa702416b35b8764b6a"
+    "mtime": 1786041966.4491208,
+    "ast_hash": "c2d3dad97ce8b69da62690a4967b6ca6",
+    "semantic_hash": ""
   },
   "src/log4net/Util/SystemStringFormat.cs": {
-    "mtime": 1771600188.330315,
-    "ast_hash": "9feb4f56b14412e06057181eb77e0f3c",
-    "semantic_hash": "9feb4f56b14412e06057181eb77e0f3c"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "4a677871805191fd3296c584ea41eece",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TextWriterAdapter.cs": {
-    "mtime": 1729233549.1579642,
+    "mtime": 1729235312.5014403,
     "ast_hash": "cd0d2aba7a29a057402fe3d02bdcedb9",
     "semantic_hash": "cd0d2aba7a29a057402fe3d02bdcedb9"
   },
   "src/log4net/Util/ThreadContextProperties.cs": {
-    "mtime": 1771600188.3333142,
-    "ast_hash": "19763825c8188b359f55b5ebc1b9e7e4",
-    "semantic_hash": "19763825c8188b359f55b5ebc1b9e7e4"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "c945307ba1f3960a133000897af11080",
+    "semantic_hash": ""
   },
   "src/log4net/Util/ThreadContextStack.cs": {
-    "mtime": 1771600188.3343165,
-    "ast_hash": "08c22e3e658fe68b1f65bd5612d7f233",
-    "semantic_hash": "08c22e3e658fe68b1f65bd5612d7f233"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "c2731afc15f8f7d64f8adbaa10f49613",
+    "semantic_hash": ""
   },
   "src/log4net/Util/ThreadContextStacks.cs": {
-    "mtime": 1771600188.3363159,
-    "ast_hash": "8759729e16827db417b6892fceffe70b",
-    "semantic_hash": "8759729e16827db417b6892fceffe70b"
+    "mtime": 1772298934.3086045,
+    "ast_hash": "db8017d65d869c39a4ae74a125126219",
+    "semantic_hash": ""
   },
   "src/log4net/Util/Transform.cs": {
-    "mtime": 1777473251.9720242,
-    "ast_hash": "ce1809c8efd187bae8e672e14b1aa7d5",
-    "semantic_hash": "ce1809c8efd187bae8e672e14b1aa7d5"
+    "mtime": 1776364520.8002508,
+    "ast_hash": "ca7cddcaef8b224d496985807b9642df",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/BooleanConverter.cs": {
-    "mtime": 1771600188.3383164,
-    "ast_hash": "2c57ea74ed7d5c1315ca32fa433e20cc",
-    "semantic_hash": "2c57ea74ed7d5c1315ca32fa433e20cc"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "29e4b74e1d29709467d49dc0d442f9e3",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/ConversionNotSupportedException.cs": {
-    "mtime": 1729754866.6603174,
+    "mtime": 1730148717.899972,
     "ast_hash": "46532595edd871cf9ce687c75c9b5212",
     "semantic_hash": "46532595edd871cf9ce687c75c9b5212"
   },
   "src/log4net/Util/TypeConverters/ConverterRegistry.cs": {
-    "mtime": 1771600188.340314,
-    "ast_hash": "da977b5f31a01a980b7dc8828d2041c1",
-    "semantic_hash": "da977b5f31a01a980b7dc8828d2041c1"
+    "mtime": 1786042739.6152008,
+    "ast_hash": "3a23fe73b2bb1d3d72614a7a5dd532c8",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/EncodingConverter.cs": {
-    "mtime": 1771600188.341313,
-    "ast_hash": "bdaaebc82ebd5777cca23e54cc59f618",
-    "semantic_hash": "bdaaebc82ebd5777cca23e54cc59f618"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "128cb46dbf933b711681179c1a5eed3b",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/IConvertFrom.cs": {
-    "mtime": 1729233549.1579642,
+    "mtime": 1729235312.517059,
     "ast_hash": "a084df789027d4942d6fbc9894ea4cf5",
     "semantic_hash": "a084df789027d4942d6fbc9894ea4cf5"
   },
   "src/log4net/Util/TypeConverters/IConvertTo.cs": {
-    "mtime": 1729233549.1735895,
+    "mtime": 1729235312.517059,
     "ast_hash": "831bcbfd9fa14232caf2bb206b8793b6",
     "semantic_hash": "831bcbfd9fa14232caf2bb206b8793b6"
   },
   "src/log4net/Util/TypeConverters/IPAddressConverter.cs": {
-    "mtime": 1771600188.343313,
-    "ast_hash": "fe0c1537d890fd38916078a34da465e4",
-    "semantic_hash": "fe0c1537d890fd38916078a34da465e4"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "7c8c95cc2b0627035884bd1a8822fa87",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/PatternLayoutConverter.cs": {
-    "mtime": 1771600188.3443134,
-    "ast_hash": "d6e685231f072d0a0f947c3e6a0da7ca",
-    "semantic_hash": "d6e685231f072d0a0f947c3e6a0da7ca"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "4640c228c3deb06eaa9aba0cfbab6ef8",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/PatternStringConverter.cs": {
-    "mtime": 1771600188.3463132,
-    "ast_hash": "1356d3d015cde601c2a0d66c8d31c617",
-    "semantic_hash": "1356d3d015cde601c2a0d66c8d31c617"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "9542996e4d9965205a0854e0357cb357",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/TypeConverter.cs": {
-    "mtime": 1771600188.3493137,
-    "ast_hash": "ca2e8d2ee241d5290706c1b4f4a1795d",
-    "semantic_hash": "ca2e8d2ee241d5290706c1b4f4a1795d"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "73863cc4e2fcdf17c61bffe204790c68",
+    "semantic_hash": ""
   },
   "src/log4net/Util/TypeConverters/TypeConverterAttribute.cs": {
-    "mtime": 1771600188.3523135,
-    "ast_hash": "144a0647b62e694230aacbaa907a0263",
-    "semantic_hash": "144a0647b62e694230aacbaa907a0263"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "cfbaa6622f7b355e851920d3f5e4519d",
+    "semantic_hash": ""
   },
   "src/log4net/Util/WindowsSecurityContext.cs": {
-    "mtime": 1771600188.3543136,
-    "ast_hash": "e1f107330ae81315d58cae81b9522053",
-    "semantic_hash": "e1f107330ae81315d58cae81b9522053"
+    "mtime": 1772298934.3096046,
+    "ast_hash": "1c81902f09c3258c42af71837b2ce62e",
+    "semantic_hash": ""
   },
   "src/log4net/log4net.csproj": {
-    "mtime": 1785767602.2526493,
-    "ast_hash": "cee6a5c641e3dd90c66361ddb1536d62",
+    "mtime": 1785961863.0262547,
+    "ast_hash": "b0fee7e72392561ab76dcc2fcb52b569",
     "semantic_hash": ""
   },
   ".asf.yaml": {
-    "mtime": 1779183793.0250793,
-    "ast_hash": "74c230bad1d7f1915240b8f5356b0408",
-    "semantic_hash": "74c230bad1d7f1915240b8f5356b0408"
+    "mtime": 1779219726.1706965,
+    "ast_hash": "ac55f3e8125cb780230734fe70152c47",
+    "semantic_hash": ""
   },
   ".github/FUNDING.yml": {
-    "mtime": 1744621791.8366406,
-    "ast_hash": "e934c50e5266ce35fcf1fe81ca0b160b",
-    "semantic_hash": "e934c50e5266ce35fcf1fe81ca0b160b"
+    "mtime": 1746385885.9237418,
+    "ast_hash": "78fd3f07d1afc20c652e2c66810c9067",
+    "semantic_hash": ""
   },
   ".github/workflows/build.yaml": {
-    "mtime": 1756128975.5704918,
-    "ast_hash": "0c684fe1ec899abfc41bb2186159aeef",
-    "semantic_hash": "0c684fe1ec899abfc41bb2186159aeef"
+    "mtime": 1785961863.0192547,
+    "ast_hash": "4fea9c0d0cc43fe9085d03f83efc1797",
+    "semantic_hash": ""
   },
   ".github/workflows/git-broadcast.yml": {
-    "mtime": 1744621791.837641,
-    "ast_hash": "6c28e911ceca9538f26cd1876c55d21b",
-    "semantic_hash": "6c28e911ceca9538f26cd1876c55d21b"
+    "mtime": 1746385885.9246814,
+    "ast_hash": "6e30d72c1418a3c467caca07581dc513",
+    "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1785153642.980867,
-    "ast_hash": "30c8d014a9f1918809db32b3a2da84d1",
+    "mtime": 1782073967.6638672,
+    "ast_hash": "c4dd08e03b72f2e31863a4abbe691bcc",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1785765819.808886,
-    "ast_hash": "5a97e30f8670f4c60ba33c9d6577cc98",
+    "mtime": 1785792438.232779,
+    "ast_hash": "c88cf0549fa7cfb7ee86e6d2e991532e",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1727089239.2741766,
-    "ast_hash": "27666cdbaa37dd64019a0efcd32edf35",
-    "semantic_hash": "27666cdbaa37dd64019a0efcd32edf35"
+    "mtime": 1785869401.6992579,
+    "ast_hash": "676336ef567499892ee5c6614237a7c5",
+    "semantic_hash": ""
   },
   "STATUS.txt": {
-    "mtime": 1777473251.9486632,
-    "ast_hash": "2a67450d19291024e00a3c19df004e31",
-    "semantic_hash": "2a67450d19291024e00a3c19df004e31"
+    "mtime": 1779219726.1706965,
+    "ast_hash": "d2381e615053129392445904276127e5",
+    "semantic_hash": ""
   },
   "antora-playbook.yaml": {
-    "mtime": 1765272144.2504375,
-    "ast_hash": "96be7a29fb227acac8ead2f6a407f232",
-    "semantic_hash": "96be7a29fb227acac8ead2f6a407f232"
+    "mtime": 1765230243.1728837,
+    "ast_hash": "b51750b08de569c297195491e6d3d2e3",
+    "semantic_hash": ""
   },
   "doc/BUILDING.md": {
-    "mtime": 1726482599.8240821,
-    "ast_hash": "caa8f40cd98877eab37b8d39351cd311",
-    "semantic_hash": "caa8f40cd98877eab37b8d39351cd311"
+    "mtime": 1785961863.0202546,
+    "ast_hash": "f14e6280d91ab43ef0534f2680fd9918",
+    "semantic_hash": ""
   },
   "doc/CONTRIBUTING.md": {
-    "mtime": 1726482599.8270824,
+    "mtime": 1728845081.919357,
     "ast_hash": "50fa79a09872f36c387aacf29a3cf537",
     "semantic_hash": "50fa79a09872f36c387aacf29a3cf537"
   },
   "doc/MailTemplate.Announce.txt": {
-    "mtime": 1785153721.332651,
-    "ast_hash": "da8aafad2c5ae6be38d7ae1851a6a95f",
+    "mtime": 1785871354.3071656,
+    "ast_hash": "30669871aacff49300710930bda7f89b",
     "semantic_hash": ""
   },
   "doc/MailTemplate.Result.txt": {
-    "mtime": 1785153721.332651,
-    "ast_hash": "e760bece4e2143054f8e9bfaedd9067b",
+    "mtime": 1785871354.3051655,
+    "ast_hash": "7e8a89eacf6cb21ed9159b4c79003c55",
     "semantic_hash": ""
   },
   "doc/MailTemplate.txt": {
-    "mtime": 1785153721.332651,
-    "ast_hash": "32f82c02882dd6a4e62758c740853ce4",
+    "mtime": 1785871354.3021655,
+    "ast_hash": "10143709f67bfa13c2d3b0819745326e",
     "semantic_hash": ""
   },
   "doc/RELEASING.md": {
-    "mtime": 1777473251.9545014,
-    "ast_hash": "d1341d51c336e544b97527259f1a4b9a",
-    "semantic_hash": "d1341d51c336e544b97527259f1a4b9a"
+    "mtime": 1785869401.7002578,
+    "ast_hash": "4239130cf9109a8ba0ebf9558ac567fa",
+    "semantic_hash": ""
   },
   "examples/Maui/Resources/Raw/AboutAssets.txt": {
-    "mtime": 1746713736.745485,
-    "ast_hash": "f2a9b40b175b413ea2fc7421ee26c6a5",
-    "semantic_hash": "f2a9b40b175b413ea2fc7421ee26c6a5"
+    "mtime": 1746634909.1849768,
+    "ast_hash": "a7bb83654102550f159655fd968025bf",
+    "semantic_hash": ""
   },
   "src/.github/copilot-instructions.md": {
-    "mtime": 1776350322.9257948,
-    "ast_hash": "bc85397f541b672b094fb6dd66af28a0",
-    "semantic_hash": "bc85397f541b672b094fb6dd66af28a0"
+    "mtime": 1776364520.7992508,
+    "ast_hash": "a0389c04d32190e4955fa448a850d76c",
+    "semantic_hash": ""
   },
   "src/site/antora/antora.tmpl.yml": {
-    "mtime": 1744621791.9721506,
-    "ast_hash": "3a14beb30f3a174600c548909b0975b8",
-    "semantic_hash": "3a14beb30f3a174600c548909b0975b8"
+    "mtime": 1746385885.949321,
+    "ast_hash": "0c547e27c45b5ebae63c82c8fed69db6",
+    "semantic_hash": ""
   },
   "src/site/antora/antora.yml": {
-    "mtime": 1744804051.9541457,
-    "ast_hash": "388cc2fec7c4a8b7676588180f68d9d6",
-    "semantic_hash": "388cc2fec7c4a8b7676588180f68d9d6"
+    "mtime": 1746385885.95013,
+    "ast_hash": "6c8307e7df610b66fcea9c91a65141d1",
+    "semantic_hash": ""
   },
   "examples/Maui/Resources/AppIcon/appicon.svg": {
-    "mtime": 1746713736.7256954,
-    "ast_hash": "5c7fce998bd02a44ecccee4b477919f8",
-    "semantic_hash": "5c7fce998bd02a44ecccee4b477919f8"
+    "mtime": 1746634909.1752524,
+    "ast_hash": "90b8b2906c3f2e7a42cca6b1fff9767f",
+    "semantic_hash": ""
   },
   "examples/Maui/Resources/AppIcon/appiconfg.svg": {
-    "mtime": 1746713736.7256954,
-    "ast_hash": "f90b41ec7837716bd7ed08c88114e060",
-    "semantic_hash": "f90b41ec7837716bd7ed08c88114e060"
+    "mtime": 1746634909.1755276,
+    "ast_hash": "372c7f54cfa260ba09b9f7da16de23da",
+    "semantic_hash": ""
   },
   "examples/Maui/Resources/Images/dotnet_bot.png": {
-    "mtime": 1746713736.7434802,
+    "mtime": 1746634909.1846254,
     "ast_hash": "9fc4808064d8c61c81b9713a7f55019d",
     "semantic_hash": "9fc4808064d8c61c81b9713a7f55019d"
   },
   "examples/Maui/Resources/Splash/splash.svg": {
-    "mtime": 1746713736.745485,
-    "ast_hash": "f90b41ec7837716bd7ed08c88114e060",
-    "semantic_hash": "f90b41ec7837716bd7ed08c88114e060"
+    "mtime": 1746634909.1852248,
+    "ast_hash": "372c7f54cfa260ba09b9f7da16de23da",
+    "semantic_hash": ""
   },
   "package-icon.png": {
-    "mtime": 1765177767.344914,
+    "mtime": 1757711661.6012256,
     "ast_hash": "da857e547c65bb3306467fc8c0b0b4a2",
     "semantic_hash": "da857e547c65bb3306467fc8c0b0b4a2"
   },
   "src/site/antora/modules/ROOT/images/log4net.svg": {
-    "mtime": 1750077942.2385175,
-    "ast_hash": "b77158f77f78f2eb4cf6e01d24121138",
-    "semantic_hash": "b77158f77f78f2eb4cf6e01d24121138"
+    "mtime": 1750020660.6205304,
+    "ast_hash": "f26cf121fc378764d2fa2d9a5cea8f97",
+    "semantic_hash": ""
   },
   "src/log4net.Tests/Appender/AppenderSkeletonTest.cs": {
-    "mtime": 1785153721.3556707,
-    "ast_hash": "73a1201d5377f571e83333d9e0e1f9ff",
+    "mtime": 1782158963.2064812,
+    "ast_hash": "f889aac085d3cff7632087f2ce8315e8",
     "semantic_hash": ""
   },
   "src/log4net.Tests/Core/UserNameFixingTest.cs": {
-    "mtime": 1785786163.902441,
-    "ast_hash": "cfb3f129cd5f81634a969bc1345d5e6f",
+    "mtime": 1785869401.710258,
+    "ast_hash": "d832b4727bd20d67be9a289b1f679506",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail.Tests/Appender/FakeSmtpTransport.cs": {
+    "mtime": 1785869401.7092578,
+    "ast_hash": "34abd9e649ba1ae089f41424191631f3",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail.Tests/Appender/SmtpAppenderTest.cs": {
+    "mtime": 1785869401.7092578,
+    "ast_hash": "bc2093e6529fda707434f90a76bc5183",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail.Tests/log4net.Ext.Mail.Tests.csproj": {
+    "mtime": 1785961863.0242548,
+    "ast_hash": "7d8d9fd6c80ddc84171fa038ef80b593",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/Appender/Internal/ISmtpTransport.cs": {
+    "mtime": 1785869401.7092578,
+    "ast_hash": "9d7200daea25a1a6e7f6c3d8c9c1d130",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/Appender/Internal/MailKitSmtpTransport.cs": {
+    "mtime": 1785869401.7092578,
+    "ast_hash": "e721746e3d4dd5d496295b921b66715f",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/Appender/SmtpAppender.cs": {
+    "mtime": 1785869401.7092578,
+    "ast_hash": "a100ef1c8e77a05dc274306572e31a01",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/log4net.Ext.Mail.csproj": {
+    "mtime": 1785961863.0242548,
+    "ast_hash": "8eb973284a4fd0d2aaabca5ae83f22c7",
+    "semantic_hash": ""
+  },
+  "src/log4net.Tests/Util/CallerAssemblyTest.cs": {
+    "mtime": 1785964238.0278907,
+    "ast_hash": "0424e537c3cc07b8b7ba85d1a48d59a1",
+    "semantic_hash": ""
+  },
+  "src/log4net/Diagnostics/CodeAnalysis/DynamicallyAccessedMemberTypes.cs": {
+    "mtime": 1786042607.9375546,
+    "ast_hash": "c537babc45a72b15486d588277db52e4",
+    "semantic_hash": ""
+  },
+  "src/log4net/Diagnostics/CodeAnalysis/DynamicallyAccessedMembersAttribute.cs": {
+    "mtime": 1786042619.1516085,
+    "ast_hash": "839d4ad7c8dd957ad94d882f9804314e",
+    "semantic_hash": ""
+  },
+  "src/log4net/Util/CallerAssembly.cs": {
+    "mtime": 1785962699.8163116,
+    "ast_hash": "7f7cb35d4f32c37cfefed953abdb1ce2",
+    "semantic_hash": ""
+  },
+  "src/log4net.Ext.Mail/README.md": {
+    "mtime": 1785869401.7092578,
+    "ast_hash": "1a566e209ba25694cf80d38d1b9a9434",
     "semantic_hash": ""
   }
 }

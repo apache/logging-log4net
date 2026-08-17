@@ -39,4 +39,11 @@
   <ItemGroup>
     <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)log4net.globalconfig" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Emitted into every project that generates its assembly info, which is the shipping
+         libraries but not the test projects, as those set GenerateAssemblyInfo to false. -->
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>true</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>
