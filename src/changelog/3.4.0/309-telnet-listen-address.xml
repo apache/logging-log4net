@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <description format="asciidoc">
+    add `ListenAddress` to `TelnetAppender`. The listening socket was bound to `IPAddress.Any` with
+ no way to scope it, so an operator who only wanted to watch the log from the machine itself still
+ got a listener on every interface. The default is unchanged, and the listening socket now follows
+ the address family, so an IPv6 address works too (audit 1231d72-f002)
+  </description>
+</entry>

@@ -27,6 +27,7 @@ using System.Xml;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
+using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender.Internal;
 using NUnit.Framework;
@@ -154,6 +155,57 @@ public sealed class TelnetAppenderTest
 
     appender.SendTimeoutMillis = 250;
     Assert.That(appender.SendTimeoutMillis, Is.EqualTo(250));
+  }
+
+  /// <summary>
+  /// The appender accepts connections on every interface unless told otherwise, which is the
+  /// behaviour it has always had.
+  /// </summary>
+  [Test]
+  public void ListenAddressDefaultsToEveryInterface()
+    => Assert.That(new TelnetAppender().ListenAddress, Is.EqualTo(IPAddress.Any));
+
+  /// <summary>
+  /// Binding to the loopback address has to keep the port unreachable from other machines, which
+  /// is what an operator asking for it wants.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ListenAddressBindsOnlyThatAddress()
+  {
+    int port = FindFreeTcpPort();
+    TelnetAppender appender = new()
+    {
+      Port = port,
+      ListenAddress = IPAddress.Loopback,
+      Layout = new PatternLayout("%message%newline")
+    };
+    appender.ActivateOptions();
+    try
+    {
+      // The loopback listener accepts a loopback connection.
+      using (Socket loopback = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+      {
+        loopback.Connect(new IPEndPoint(IPAddress.Loopback, port));
+        Assert.That(loopback.Connected, Is.True);
+      }
+
+      // and nothing is listening on the machine's other addresses
+      IPAddress? routable = Array.Find(
+        Dns.GetHostAddresses(Dns.GetHostName()),
+        address => address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(address));
+      if (routable is null)
+      {
+        Assert.Ignore("no non-loopback IPv4 address on this machine to test against");
+      }
+
+      using Socket external = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+      Assert.That(() => external.Connect(new IPEndPoint(routable!, port)), Throws.TypeOf<SocketException>());
+    }
+    finally
+    {
+      appender.Close();
+    }
   }
 
   /// <summary>
