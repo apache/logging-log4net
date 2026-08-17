@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <description format="asciidoc">
+    stop a NUL character in logged content from truncating `LocalSyslogAppender` records. The
+ message is marshaled to libc as a null-terminated string, so everything the layout rendered after
+ the NUL was silently dropped, including trailing fields and exception text (CWE-158). NUL is now
+ escaped as `\0`; other control characters are still passed through, because `syslog(3)` encodes
+ them and newlines are needed for multi-line exception output (audit 1231d72-f008)
+  </description>
+</entry>

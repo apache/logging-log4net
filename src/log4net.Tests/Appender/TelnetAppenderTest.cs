@@ -135,11 +135,7 @@ public sealed class TelnetAppenderTest
   /// </summary>
   [Test]
   public void SendTimeoutMillisDefaultsToAFiniteValue()
-  {
-    TelnetAppender appender = new();
-
-    Assert.That(appender.SendTimeoutMillis, Is.EqualTo(5000));
-  }
+    => Assert.That(new TelnetAppender().SendTimeoutMillis, Is.EqualTo(5000));
 
   /// <summary>
   /// 0 is the documented opt-out that restores blocking indefinitely; a negative timeout has no

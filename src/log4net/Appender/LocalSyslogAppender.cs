@@ -331,12 +331,32 @@ public class LocalSyslogAppender : AppenderSkeleton
   protected override void Append(LoggingEvent loggingEvent)
   {
     int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
-    string message = RenderLoggingEvent(loggingEvent);
+    string message = EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
 
     // Call the local libc syslog method
     // The second argument is a printf style format string
     NativeMethods.syslog(priority, "%s", message);
   }
+
+  /// <summary>
+  /// Replaces NUL characters with a visible <c>\0</c> escape.
+  /// </summary>
+  /// <param name="message">The rendered message.</param>
+  /// <returns>The message with every NUL character escaped.</returns>
+  /// <remarks>
+  /// <para>
+  /// The message is marshaled to libc as a null-terminated string, so a NUL character anywhere in
+  /// it would end the record there and silently drop everything the layout rendered after it,
+  /// including trailing fields and exception text. Logged content is not trusted and may well
+  /// contain a NUL, so the character is escaped rather than passed through.
+  /// </para>
+  /// <para>
+  /// Other control characters are left alone: <c>syslog(3)</c> encodes them itself, and newlines
+  /// are needed for the multi-line output an exception layout produces.
+  /// </para>
+  /// </remarks>
+  private static string EscapeNulCharacters(string message)
+    => message.IndexOf('\0') < 0 ? message : message.Replace("\0", "\\0");
 
   /// <summary>
   /// Close the syslog when the appender is closed
