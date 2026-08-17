@@ -17,9 +17,11 @@
 //
 #endregion
 
+using System;
 using System.Reflection;
 
 using log4net.Appender;
+using log4net.Layout;
 
 using NUnit.Framework;
 
@@ -70,6 +72,47 @@ public class LocalSyslogAppenderTest
   [Test]
   public void EmptyMessageIsUnchanged()
     => Assert.That(EscapeNulCharacters(string.Empty), Is.Empty);
+
+  /// <summary>
+  /// <c>openlog</c> registers the identity for the process rather than for an appender, so the
+  /// handle to it has to be shared instead of being kept per instance.
+  /// </summary>
+  [Test]
+  public void TheIdentityHandleBelongsToTheProcess()
+  {
+    FieldInfo field = typeof(LocalSyslogAppender)
+      .GetField("_handleToIdentity", BindingFlags.Static | BindingFlags.NonPublic)
+      ?? throw new InvalidOperationException("LocalSyslogAppender._handleToIdentity is missing");
+
+    Assert.That(field.IsStatic, Is.True);
+  }
+
+  /// <summary>
+  /// Activating twice has to replace the registered identity rather than allocate another one and
+  /// forget the first, which leaked a buffer per call.
+  /// </summary>
+  [Test]
+  [Platform("Linux")]
+  [NonParallelizable]
+  public void ActivatingTwiceReplacesTheIdentity()
+  {
+    LocalSyslogAppender appender = new() { Identity = "log4net-test-first", Layout = new PatternLayout("%message") };
+    appender.ActivateOptions();
+    IntPtr first = CurrentIdentityHandle();
+
+    appender.Identity = "log4net-test-second";
+    appender.ActivateOptions();
+    IntPtr second = CurrentIdentityHandle();
+
+    Assert.That(first, Is.Not.EqualTo(IntPtr.Zero));
+    Assert.That(second, Is.Not.EqualTo(IntPtr.Zero));
+    Assert.That(second, Is.Not.EqualTo(first));
+  }
+
+  private static IntPtr CurrentIdentityHandle()
+    => (IntPtr)typeof(LocalSyslogAppender)
+      .GetField("_handleToIdentity", BindingFlags.Static | BindingFlags.NonPublic)!
+      .GetValue(null)!;
 
   private static string EscapeNulCharacters(string message)
     => (string)typeof(LocalSyslogAppender)

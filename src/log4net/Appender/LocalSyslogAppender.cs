@@ -308,10 +308,32 @@ public class LocalSyslogAppender : AppenderSkeleton
     // create the native heap ansi string. Note this is a copy of our string
     // so we do not need to hold on to the string itself, holding on to the
     // handle will keep the heap ansi string alive.
-    _handleToIdentity = Marshal.StringToHGlobalAnsi(identString);
+    IntPtr identity = Marshal.StringToHGlobalAnsi(identString);
 
-    // open syslog
-    NativeMethods.openlog(_handleToIdentity, 1, Facility);
+    lock (_syslogSyncRoot)
+    {
+      IntPtr replaced = _handleToIdentity;
+      try
+      {
+        // open syslog
+        NativeMethods.openlog(identity, 1, Facility);
+      }
+      catch
+      {
+        Marshal.FreeHGlobal(identity);
+        throw;
+      }
+
+      _handleToIdentity = identity;
+
+      // Only now that openlog points at the new string. Freeing it before would leave libc
+      // dereferencing it for every record, and not freeing it at all leaked one buffer per call,
+      // which ActivateOptions may be called repeatedly.
+      if (replaced != IntPtr.Zero)
+      {
+        Marshal.FreeHGlobal(replaced);
+      }
+    }
   }
 
   /// <summary>
@@ -363,7 +385,8 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// </summary>
   /// <remarks>
   /// <para>
-  /// Close the syslog when the appender is closed
+  /// <c>closelog</c> applies to the process rather than to this instance, so closing one appender
+  /// ends the syslog connection for every other instance as well. A later record reopens it.
   /// </para>
   /// </remarks>
   [System.Security.SecuritySafeCritical]
@@ -381,11 +404,9 @@ public class LocalSyslogAppender : AppenderSkeleton
       // Ignore dll not found at this point
     }
 
-    if (_handleToIdentity != IntPtr.Zero)
-    {
-      // free global ident
-      Marshal.FreeHGlobal(_handleToIdentity);
-    }
+    // The identity is deliberately not freed. openlog registered it for the whole process, so it
+    // outlives this appender: another instance may still be logging through it. ActivateOptions
+    // replaces it rather than letting them accumulate.
   }
 
   /// <summary>
@@ -452,11 +473,24 @@ public class LocalSyslogAppender : AppenderSkeleton
     => ((int)facility * 8) + (int)severity;
 
   /// <summary>
-  /// Marshaled handle to the identity string. We have to hold on to the
-  /// string as the <c>openlog</c> and <c>syslog</c> APIs just hold the
-  /// pointer to the ident and dereference it for each log message.
+  /// Marshaled handle to the identity string currently registered with <c>openlog</c>.
   /// </summary>
-  private IntPtr _handleToIdentity = IntPtr.Zero;
+  /// <remarks>
+  /// <para>
+  /// We have to hold on to the string as the <c>openlog</c> and <c>syslog</c> APIs just hold the
+  /// pointer to the ident and dereference it for each log message.
+  /// </para>
+  /// <para>
+  /// The registration belongs to the process rather than to an instance, so this is static: a
+  /// second appender replaces the identity of the first instead of adding one.
+  /// </para>
+  /// </remarks>
+  private static IntPtr _handleToIdentity = IntPtr.Zero;
+
+  /// <summary>
+  /// Guards <see cref="_handleToIdentity"/> against two appenders being activated at once.
+  /// </summary>
+  private static readonly object _syslogSyncRoot = new();
 
   /// <summary>
   /// Mapping from level object to syslog severity
