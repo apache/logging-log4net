@@ -26,6 +26,7 @@ using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Tests.Appender.Internal;
+using log4net.Util;
 using NUnit.Framework;
 
 namespace log4net.Tests.Appender;
@@ -117,15 +118,75 @@ public sealed class RemoteSyslogAppenderTest
     Assert.That(Encoding.ASCII.GetString(sentBytes[1]), Is.EqualTo(expectedData1));
   }
   
+  /// <summary>
+  /// The Identity becomes the TAG of the record. A control character in it would end the record,
+  /// so that the rest is read as a second record with its own facility and severity.
+  /// </summary>
+  [Test]
+  public void IdentityCannotSplitTheRecord()
+  {
+    List<byte[]> sentBytes = [];
+    // The malformed Identity is reported, which is expected here and should not clutter the output.
+    LogLog.ExecuteWithoutEmittingInternalMessages(
+      () => sentBytes = ExecuteAppend("Test message", identity: "app\r\n<34>sshd"));
+
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    const string expectedData = "<14>app<34>sshd: INFO  - Test message";
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Is.EqualTo(expectedData));
+  }
+
+  /// <summary>
+  /// Removing the characters is not enough on its own: a malformed structural identifier is a
+  /// configuration error and has to be reported rather than quietly repaired.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void IdentityWithControlCharactersIsReported()
+  {
+    List<LogLog> messages = [];
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      using LogLog.LogReceivedAdapter _ = new(messages);
+      ExecuteAppend("Test message", identity: "app\r\n<34>sshd");
+    });
+
+    Assert.That(messages.ConvertAll(m => m.Message),
+      Has.Some.Contains("Identity of appender"));
+  }
+
+  /// <summary>
+  /// An Identity without control characters has to reach the record untouched, including a space,
+  /// which the application friendly name used by default may well contain.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void IdentityWithoutControlCharactersIsUnchangedAndNotReported()
+  {
+    List<LogLog> messages = [];
+    List<byte[]> sentBytes = [];
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      using LogLog.LogReceivedAdapter _ = new(messages);
+      sentBytes = ExecuteAppend("Test message", identity: "My App");
+    });
+
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    const string expectedData = "<14>My App: INFO  - Test message";
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Is.EqualTo(expectedData));
+    Assert.That(messages.ConvertAll(m => m.Message), Has.None.Contains("Identity of appender"));
+  }
+
   private static List<byte[]> ExecuteAppend(string message,
-    RemoteSyslogAppender.SyslogNewLineHandling newLineHandling = default)
+    RemoteSyslogAppender.SyslogNewLineHandling newLineHandling = default,
+    string? identity = null)
   {
     System.Net.IPAddress ipAddress = new([127, 0, 0, 1]);
-    RemoteAppender appender = new() 
-    { 
-      RemoteAddress = ipAddress, 
+    RemoteAppender appender = new()
+    {
+      RemoteAddress = ipAddress,
       Layout = new PatternLayout("%-5level - %message"),
-      NewLineHandling = newLineHandling
+      NewLineHandling = newLineHandling,
+      Identity = identity is null ? null : new PatternLayout(identity)
     };
     appender.ActivateOptions();
     LoggingEvent loggingEvent = new(new()

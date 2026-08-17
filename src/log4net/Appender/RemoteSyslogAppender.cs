@@ -364,7 +364,7 @@ public class RemoteSyslogAppender : UdpAppender
       int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.Level));
 
       // Identity
-      string? identity = Identity?.Format(loggingEvent) ?? loggingEvent.Domain;
+      string? identity = ValidateIdentity(Identity?.Format(loggingEvent) ?? loggingEvent.Domain);
 
       // Message. The message goes after the tag/identity
       string message = RenderLoggingEvent(loggingEvent);
@@ -398,6 +398,64 @@ public class RemoteSyslogAppender : UdpAppender
         $"Unable to enqueue logging event to remote syslog {RemoteAddress} on port {RemotePort}.",
         e, ErrorCode.WriteFailure);
     }
+  }
+
+  /// <summary>
+  /// Checks that <paramref name="identity"/> is usable as the TAG part of a syslog record, and
+  /// reports it through the <see cref="AppenderSkeleton.ErrorHandler"/> when it is not.
+  /// </summary>
+  /// <param name="identity">The formatted <see cref="Identity"/>.</param>
+  /// <returns>
+  /// The identity, with any control character removed.
+  /// </returns>
+  /// <remarks>
+  /// <para>
+  /// The TAG is a structural identifier and therefore expected to be a constant chosen by the
+  /// developer or operator, not something derived from a logging event. A malformed one is a
+  /// configuration error rather than untrusted input, so it is reported instead of being altered
+  /// silently: a carriage return or line feed in the TAG would split the record and let the text
+  /// after it be read as a second record with its own facility and severity.
+  /// </para>
+  /// <para>
+  /// The offending characters are removed rather than the event being dropped, so that an
+  /// <see cref="Identity"/> pattern which does contain event data cannot be used to suppress
+  /// records.
+  /// </para>
+  /// </remarks>
+  private string? ValidateIdentity(string? identity)
+  {
+    if (identity is null)
+    {
+      return null;
+    }
+
+    StringBuilder? sanitized = null;
+    for (int i = 0; i < identity.Length; i++)
+    {
+      // Control characters only. A carriage return or line feed ends the record, so the text
+      // after it is read as a record of its own. Printable characters are left alone, including
+      // the space that an application friendly name may contain, because they cannot break the
+      // record apart.
+      if (identity[i] is >= ' ' and not (char)127)
+      {
+        sanitized?.Append(identity[i]);
+      }
+      else
+      {
+        sanitized ??= new StringBuilder(identity.Length).Append(identity, 0, i);
+      }
+    }
+
+    if (sanitized is null)
+    {
+      return identity;
+    }
+
+    ErrorHandler.Error(
+      $"The Identity of appender [{Name}] rendered control characters, which would have split the syslog record, and they were removed. "
+      + "Identity is a structural identifier and is expected to be a constant rather than a pattern that renders logging event data.");
+
+    return sanitized.ToString();
   }
 
   /// <summary>

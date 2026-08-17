@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <description format="asciidoc">
+    report a `RemoteSyslogAppender` `Identity` that renders control characters, and remove them, so
+ that it cannot split the record. The identity becomes the TAG of the syslog record and was appended
+ verbatim, while the message part is filtered, so a line feed in it let the text that followed be
+ read as a record of its own with an attacker chosen facility and severity. The TAG is a structural
+ identifier and expected to be a constant, so this is reported as the configuration error it is
+ rather than being repaired quietly (audit 1231d72-f016)
+  </description>
+</entry>
