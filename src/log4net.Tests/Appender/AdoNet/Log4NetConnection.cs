@@ -44,7 +44,19 @@ internal sealed class Log4NetConnection : IDbConnection
 
   public IDbCommand CreateCommand() => new Log4NetCommand();
 
-  public void Open() => _open = true;
+  public void Open()
+  {
+    if (FailOnOpen)
+    {
+      throw new InvalidOperationException("Simulated failure to open the connection");
+    }
+    _open = true;
+  }
+
+  /// <summary>
+  /// When set, <see cref="Open"/> throws, simulating a connection that cannot be established.
+  /// </summary>
+  public static bool FailOnOpen { get; set; }
 
   public static Log4NetConnection? MostRecentInstance { get; private set; }
 

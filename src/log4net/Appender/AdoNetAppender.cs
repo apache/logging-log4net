@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.IO;
 
 using log4net.Util;
@@ -788,11 +789,64 @@ public class AdoNetAppender : BufferingAppenderSkeleton
     catch (Exception e) when (!e.IsFatal())
     {
       // Sadly, your connection string is bad.
-      ErrorHandler.Error($"Could not open database connection [{resolvedConnectionString}]. Connection string context [{connectionStringContext}].", e);
+      ErrorHandler.Error($"Could not open database connection [{RedactConnectionString(resolvedConnectionString)}]. Connection string context [{connectionStringContext}].", e);
 
       Connection = null;
     }
   }
+
+  /// <summary>
+  /// Replaces the values of password-bearing keywords in a connection string with
+  /// <see cref="RedactedValue"/>, so that it can be named in a diagnostic message.
+  /// </summary>
+  /// <param name="connectionString">The connection string to redact.</param>
+  /// <returns>
+  /// The connection string with every password value replaced, or <see cref="RedactedValue"/> if it
+  /// could not be parsed.
+  /// </returns>
+  private static string RedactConnectionString(string connectionString)
+  {
+    if (string.IsNullOrEmpty(connectionString))
+    {
+      return connectionString;
+    }
+
+    try
+    {
+      DbConnectionStringBuilder builder = new() { ConnectionString = connectionString };
+
+      List<string> keys = [];
+      foreach (string key in builder.Keys)
+      {
+        keys.Add(key);
+      }
+
+      foreach (string key in keys)
+      {
+        // Providers spell the secret differently - Password, PWD, User Password - so match on
+        // the keyword rather than on a fixed list.
+        if (key.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0
+            || key.Equals("pwd", StringComparison.OrdinalIgnoreCase))
+        {
+          builder[key] = RedactedValue;
+        }
+      }
+
+      return builder.ConnectionString;
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      // The connection string could not be parsed - which is likely, given that it just failed
+      // to connect - so redact all of it rather than risk echoing a password.
+      LogLog.Debug(_declaringType, "Could not parse the connection string in order to redact it", e);
+      return RedactedValue;
+    }
+  }
+
+  /// <summary>
+  /// Stands in for a password in diagnostic messages.
+  /// </summary>
+  private const string RedactedValue = "*****";
 
   /// <summary>
   /// Cleanup the existing connection.

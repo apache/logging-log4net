@@ -266,6 +266,46 @@ public class AdoNetAppenderTest
   }
 
   /// <summary>
+  /// The message reporting a failed connection must not repeat the password from the connection
+  /// string. The appender reports the failure through its ErrorHandler, so this message is what
+  /// an operator sees on stderr in a default configuration.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void FailedConnectionDoesNotReportThePassword()
+  {
+    const string password = "H0rseBatteryStaple";
+    List<LogLog> messages = [];
+    try
+    {
+      Log4NetConnection.FailOnOpen = true;
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        using LogLog.LogReceivedAdapter _ = new(messages);
+        AdoNetAppender adoNetAppender = new()
+        {
+          BufferSize = -1,
+          ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+          ConnectionString = $"data source=someserver;initial catalog=somedb;User ID=someuser;Password={password}",
+          CommandText = "INSERT INTO Log ([Message]) VALUES (@message)"
+        };
+        adoNetAppender.ActivateOptions();
+      });
+
+      string reported = string.Join(Environment.NewLine, messages.ConvertAll(m => m.Message));
+
+      Assert.That(reported, Does.Not.Contain(password));
+      Assert.That(reported, Does.Contain("Could not open database connection"));
+      // The rest of the connection string survives, so the message stays useful for diagnosis.
+      Assert.That(reported, Does.Contain("someserver"));
+    }
+    finally
+    {
+      Log4NetConnection.FailOnOpen = false;
+    }
+  }
+
+  /// <summary>
   /// Without CommandText the rendered Layout is executed as the SQL statement, which is open
   /// to SQL injection from logged content. Activation has to say so.
   /// </summary>
