@@ -356,6 +356,13 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </summary>
   /// <param name="messageBody">the body text to include in the mail</param>
   /// <returns>the message to send</returns>
+  /// <remarks>
+  /// <para>
+  /// Not CLS compliant, because <see cref="MimeMessage"/> comes from MimeKit, which does not
+  /// declare itself CLS compliant.
+  /// </para>
+  /// </remarks>
+  [CLSCompliant(false)]
   protected virtual MimeMessage CreateMessage(string messageBody)
   {
     MimeMessage message = new();
