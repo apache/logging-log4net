@@ -130,6 +130,37 @@ public sealed class TelnetAppenderTest
   }
 
   /// <summary>
+  /// Writes to a client block while the appender lock is held, so the send timeout has to be
+  /// finite by default - otherwise a client that stops reading suspends all logging.
+  /// </summary>
+  [Test]
+  public void SendTimeoutMillisDefaultsToAFiniteValue()
+  {
+    TelnetAppender appender = new();
+
+    Assert.That(appender.SendTimeoutMillis, Is.EqualTo(5000));
+  }
+
+  /// <summary>
+  /// 0 is the documented opt-out that restores blocking indefinitely; a negative timeout has no
+  /// meaning for <see cref="Socket.SendTimeout"/> and is rejected instead of being silently
+  /// reinterpreted.
+  /// </summary>
+  [Test]
+  public void SendTimeoutMillisRejectsNegativeValuesButAllowsZero()
+  {
+    TelnetAppender appender = new();
+
+    Assert.That(() => appender.SendTimeoutMillis = -1, Throws.TypeOf<ArgumentOutOfRangeException>());
+
+    appender.SendTimeoutMillis = 0;
+    Assert.That(appender.SendTimeoutMillis, Is.EqualTo(0));
+
+    appender.SendTimeoutMillis = 250;
+    Assert.That(appender.SendTimeoutMillis, Is.EqualTo(250));
+  }
+
+  /// <summary>
   /// Asks the OS for a currently unused TCP port - a fixed port would collide with
   /// other tests or processes on the build machine.
   /// </summary>
