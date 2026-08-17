@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System;
 using System.Text.RegularExpressions;
 
 using log4net.Core;
@@ -53,13 +54,91 @@ public class StringMatchFilter : FilterSkeleton
   /// <see cref="ActivateOptions"/> must be called again.
   /// </para>
   /// </remarks>
-  public override void ActivateOptions() 
+  public override void ActivateOptions()
   {
     if (RegexToMatch is not null)
     {
-      m_regexToMatch = new(RegexToMatch, RegexOptions.Compiled);
+      m_regexToMatch = new(RegexToMatch, RegexOptions.Compiled,
+        _matchTimeoutMillis == 0
+          ? Regex.InfiniteMatchTimeout
+          : TimeSpan.FromMilliseconds(_matchTimeoutMillis));
     }
   }
+
+  /// <summary>
+  /// Gets or sets the time, in milliseconds, that matching <see cref="RegexToMatch"/> against a
+  /// single event may take before the match is abandoned.
+  /// </summary>
+  /// <value>
+  /// A positive number of milliseconds, or 0 to let a match run for as long as it takes.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// A regular expression that backtracks can take a very long time on some inputs. The pattern is
+  /// matched while the appender lock is held, so an unbounded match would stall everything logging
+  /// through the appender, and matching is therefore given a deadline. A match that reaches it is
+  /// treated as no match, leaving the rest of the filter chain to decide.
+  /// </para>
+  /// <para>
+  /// The pattern comes from configuration and is trusted, so this is a guard against a pattern that
+  /// turns out to be expensive rather than protection against untrusted input.
+  /// </para>
+  /// <para>
+  /// The default value is 1000 (one second). Setting the value to 0 restores unbounded matching and
+  /// is not recommended. Changing it takes effect when <see cref="ActivateOptions"/> is called.
+  /// </para>
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
+  public int MatchTimeoutMillis
+  {
+    get => _matchTimeoutMillis;
+    set
+    {
+      if (value < 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for MatchTimeoutMillis is negative.");
+      }
+      _matchTimeoutMillis = value;
+    }
+  }
+
+  private int _matchTimeoutMillis = 1000;
+  private bool _matchTimeoutReported;
+
+  /// <summary>
+  /// Matches <paramref name="value"/> against <see cref="m_regexToMatch"/>.
+  /// </summary>
+  /// <param name="value">The text to match.</param>
+  /// <returns>
+  /// <see langword="true"/> when the pattern matches, and <see langword="false"/> when it does not
+  /// or when matching took longer than <see cref="MatchTimeoutMillis"/>.
+  /// </returns>
+  protected bool IsRegexMatch(string value)
+  {
+    try
+    {
+      return m_regexToMatch!.IsMatch(value);
+    }
+    catch (RegexMatchTimeoutException)
+    {
+      if (!_matchTimeoutReported)
+      {
+        // Once per filter. The condition repeats for every event that reaches it, and a warning
+        // per event would be a denial of service of its own.
+        _matchTimeoutReported = true;
+        LogLog.Warn(_declaringType,
+          $"Matching the pattern [{RegexToMatch}] took longer than {MatchTimeoutMillis}ms and was abandoned, so the event was not filtered by it. "
+          + "A pattern that backtracks can take arbitrarily long on some inputs; consider rewriting it or raising MatchTimeoutMillis.");
+      }
+      return false;
+    }
+  }
+
+  /// <summary>
+  /// The fully qualified type of the <see cref="StringMatchFilter"/> class.
+  /// </summary>
+  private static readonly Type _declaringType = typeof(StringMatchFilter);
 
   /// <summary>
   /// <see cref="FilterDecision.Accept"/> when matching <see cref="StringToMatch"/> or <see cref="RegexToMatch"/>
@@ -144,11 +223,11 @@ public class StringMatchFilter : FilterSkeleton
     if (m_regexToMatch is not null)
     {
       // Check the regex
-      if (m_regexToMatch.Match(msg).Success == false)
+      if (!IsRegexMatch(msg))
       {
         // No match, continue processing
         return FilterDecision.Neutral;
-      } 
+      }
 
       // we've got a match
       if (AcceptOnMatch) 
