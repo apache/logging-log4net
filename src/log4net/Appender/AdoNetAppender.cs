@@ -243,6 +243,15 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// If this property is not set, the command text is retrieved by invoking
   /// <see cref="GetLogStatement(LoggingEvent)"/>.
   /// </para>
+  /// <para>
+  /// Setting this property is strongly recommended. Without it every event is turned into
+  /// a complete SQL statement by the <see cref="AppenderSkeleton.Layout"/> and executed as
+  /// it is. Layouts perform no SQL quoting or escaping and offer no way to add it, so any
+  /// content that reaches a log statement - a user name or a request parameter, for
+  /// example - is executed as part of the statement, with the privileges of the appender's
+  /// connection. Use this property together with <see cref="AdoNetAppenderParameter"/>
+  /// bindings, which pass the content as database parameters instead.
+  /// </para>
   /// </remarks>
   public string? CommandText { get; set; }
 
@@ -362,6 +371,17 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   public override void ActivateOptions()
   {
     base.ActivateOptions();
+
+    if (string.IsNullOrWhiteSpace(CommandText))
+    {
+      // Without CommandText every event is turned into a complete SQL statement by the
+      // Layout and executed as it is. Layouts do not quote or escape anything, so a single
+      // quote anywhere in the logged content changes the statement that gets executed.
+      LogLog.Error(_declaringType,
+        $"AdoNetAppender [{Name}]: CommandText is not configured, so the rendered Layout is executed as the SQL statement. "
+        + "Layouts perform no SQL quoting, which makes this mode open to SQL injection from logged content. "
+        + "Configure CommandText together with AdoNetAppenderParameter bindings instead, which pass the content as database parameters.");
+    }
 
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
@@ -622,8 +642,16 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </summary>
   /// <param name="logEvent">The event being logged.</param>
   /// <remarks>
-  /// This method can be overridden by subclasses to provide 
+  /// <para>
+  /// This method can be overridden by subclasses to provide
   /// more control over the format of the database statement.
+  /// </para>
+  /// <para>
+  /// The returned text is executed as the SQL statement without any quoting, so an override
+  /// that interpolates event content has to escape that content itself. Prefer configuring
+  /// <see cref="CommandText"/> with <see cref="AdoNetAppenderParameter"/> bindings over
+  /// generating statement text here.
+  /// </para>
   /// </remarks>
   /// <returns>
   /// Text that can be passed to a <see cref="IDbCommand"/>.

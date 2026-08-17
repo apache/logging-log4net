@@ -20,6 +20,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Xml;
 using log4net.Appender;
@@ -262,6 +263,54 @@ public class AdoNetAppenderTest
 
     param = (IDbDataParameter)command.Parameters["@exception"];
     Assert.That(param.Value, Is.Empty);
+  }
+
+  /// <summary>
+  /// Without CommandText the rendered Layout is executed as the SQL statement, which is open
+  /// to SQL injection from logged content. Activation has to say so.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ActivateOptionsWithoutCommandTextWarnsAboutSqlInjection()
+  {
+    List<LogLog> messages = [];
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      using LogLog.LogReceivedAdapter _ = new(messages);
+      AdoNetAppender adoNetAppender = new()
+      {
+        BufferSize = -1,
+        ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
+      };
+      adoNetAppender.ActivateOptions();
+    });
+
+    Assert.That(messages.ConvertAll(m => m.Message),
+      Has.Some.Contains("open to SQL injection"));
+  }
+
+  /// <summary>
+  /// Configuring CommandText is the supported way to use the appender and must not warn.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ActivateOptionsWithCommandTextDoesNotWarn()
+  {
+    List<LogLog> messages = [];
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      using LogLog.LogReceivedAdapter _ = new(messages);
+      AdoNetAppender adoNetAppender = new()
+      {
+        BufferSize = -1,
+        ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+        CommandText = "INSERT INTO Log ([Message]) VALUES (@message)"
+      };
+      adoNetAppender.ActivateOptions();
+    });
+
+    Assert.That(messages.ConvertAll(m => m.Message),
+      Has.None.Contains("open to SQL injection"));
   }
 
   /// <summary>
