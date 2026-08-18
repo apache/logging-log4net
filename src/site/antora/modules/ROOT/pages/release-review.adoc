@@ -141,13 +141,18 @@ for sigFile in *.asc; do gpg --verify $sigFile ${sigFile%.asc}; done
 +
 [source,bash]
 ----
-mkdir -p src
-cd src
-unzip -q -o ../*source*.zip
-
-cd src
+unzip -q -o *source*.zip -d src
 ----
 ====
+
+// Keep this step here: verify-release.sh runs in a child process, so it cannot cd for the reader,
+// and the next step needs the extracted root (the Dockerfile), not the src below it.
+. Switch to the extracted sources, which is the directory holding the `Dockerfile`:
++
+[source,bash]
+----
+cd src
+----
 
 . Verify the build (install https://docs.docker.com/engine/install[docker], if you haven't already):
 +  

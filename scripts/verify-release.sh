@@ -59,4 +59,6 @@ mkdir -p src
 cd src
 unzip -q -o ../*source*.zip
 
-cd src
+# Do not "cd" here to position the reviewer: this runs as "bash ./verify-release.sh", so a child
+# process, and the change would be lost. The step stays in release-review.adoc, typed by the reviewer.
+echo "Sources extracted to $(pwd)"
