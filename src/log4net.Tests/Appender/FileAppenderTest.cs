@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
@@ -259,6 +259,8 @@ public sealed class FileAppenderTest
     {
       release.Set();
       holder.Wait(TimeSpan.FromSeconds(10));
+      // CloseFile closes the stream opened by OpenFile; OnClose only disposes the mutex.
+      lockingModel.CloseFile();
       lockingModel.OnClose();
       File.Delete(tempFile);
     }
