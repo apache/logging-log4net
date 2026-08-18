@@ -3,7 +3,7 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="added">
-  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
   <description format="asciidoc">
     log an error when `AdoNetAppender` is activated without `CommandText`. In that legacy mode the
  rendered `Layout` output is executed as the SQL statement, and because layouts perform no SQL

@@ -3,7 +3,7 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="removed">
-  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
   <description format="asciidoc">
     remove the `git-broadcast` workflow. Its push and pull request triggers had been commented out,
  leaving it dispatched by hand only, while it still ran `npx git-broadcast@beta`, a dist-tag that can

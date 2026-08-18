@@ -3,7 +3,7 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="added">
-  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
   <description format="asciidoc">
     add `ListenAddress` to `TelnetAppender`. The listening socket was bound to `IPAddress.Any` with
  no way to scope it, so an operator who only wanted to watch the log from the machine itself still

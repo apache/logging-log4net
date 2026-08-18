@@ -3,7 +3,7 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="changed">
-  <issue id="309" link="https://github.com/apache/logging-log4net/pull/309"/>
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
   <description format="asciidoc">
     report the first error of an appender even when `log4net.Internal.Debug` is off, which is the
  default. `OnlyOnceErrorHandler` is the default error handler of every appender, so an appender
