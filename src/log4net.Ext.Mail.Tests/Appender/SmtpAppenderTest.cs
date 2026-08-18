@@ -24,7 +24,6 @@ using System.Net.Mail;
 using System.Text;
 using log4net.Core;
 using log4net.Ext.Mail.Appender;
-using log4net.Ext.Mail.Appender.Internal;
 using log4net.Layout;
 using MailKit.Security;
 using MimeKit;

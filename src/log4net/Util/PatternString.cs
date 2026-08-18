@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using log4net.Util.PatternStringConverters;
@@ -258,29 +259,51 @@ public class PatternString : IOptionHandler
   /// <summary>
   /// Internal map of converter identifiers to converter types.
   /// </summary>
-  private static readonly Dictionary<string, Type> _sGlobalRulesRegistry = new(StringComparer.Ordinal)
+  private static readonly Dictionary<string, ConverterInfo> _sGlobalRulesRegistry = CreateGlobalRulesRegistry();
+
+  /// <summary>
+  /// Builds the registry of built-in converters.
+  /// </summary>
+  /// <returns>the built-in rules, keyed by the name used in a pattern</returns>
+  /// <remarks>
+  /// <para>
+  /// Holds <see cref="ConverterInfo"/> rather than a bare <see cref="Type"/> for the reason given
+  /// on <see cref="Layout.PatternLayout"/>'s registry: a <see cref="Type"/> in a collection loses
+  /// its trimmer annotation, and these converters are only ever created reflectively.
+  /// </para>
+  /// </remarks>
+  private static Dictionary<string, ConverterInfo> CreateGlobalRulesRegistry()
   {
     // TODO - have added common variants of casing for utcdate and appsetting.
     // Wouldn't it be better to use a case-insensitive dictionary?
 
-    ["appdomain"] = typeof(AppDomainPatternConverter),
-    ["appsetting"] = typeof(AppSettingPatternConverter),
-    ["appSetting"] = typeof(AppSettingPatternConverter),
-    ["AppSetting"] = typeof(AppSettingPatternConverter),
-    ["date"] = typeof(DatePatternConverter),
-    ["env"] = typeof(EnvironmentPatternConverter),
-    ["envFolderPath"] = typeof(EnvironmentFolderPathPatternConverter),
-    ["identity"] = typeof(IdentityPatternConverter),
-    ["literal"] = typeof(LiteralPatternConverter),
-    ["newline"] = typeof(NewLinePatternConverter),
-    ["processid"] = typeof(ProcessIdPatternConverter),
-    ["property"] = typeof(PropertyPatternConverter),
-    ["random"] = typeof(RandomStringPatternConverter),
-    ["username"] = typeof(UserNamePatternConverter),
-    ["utcdate"] = typeof(UtcDatePatternConverter),
-    ["utcDate"] = typeof(UtcDatePatternConverter),
-    ["UtcDate"] = typeof(UtcDatePatternConverter),
-  };
+    Dictionary<string, ConverterInfo> rules = new(StringComparer.Ordinal);
+
+    Add<AppDomainPatternConverter>("appdomain");
+    Add<AppSettingPatternConverter>("appsetting", "appSetting", "AppSetting");
+    Add<DatePatternConverter>("date");
+    Add<EnvironmentPatternConverter>("env");
+    Add<EnvironmentFolderPathPatternConverter>("envFolderPath");
+    Add<IdentityPatternConverter>("identity");
+    Add<LiteralPatternConverter>("literal");
+    Add<NewLinePatternConverter>("newline");
+    Add<ProcessIdPatternConverter>("processid");
+    Add<PropertyPatternConverter>("property");
+    Add<RandomStringPatternConverter>("random");
+    Add<UserNamePatternConverter>("username");
+    Add<UtcDatePatternConverter>("utcdate", "utcDate", "UtcDate");
+
+    return rules;
+
+    void Add<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(
+      params string[] names) where T : PatternConverter, new()
+    {
+      foreach (string name in names)
+      {
+        rules[name] = new() { Name = name, Type = typeof(T) };
+      }
+    }
+  }
 
   /// <summary>
   /// the head of the pattern converter chain
@@ -378,15 +401,14 @@ public class PatternString : IOptionHandler
   {
     PatternParser patternParser = new(pattern);
 
-    // Add all the builtin patterns
-    foreach (KeyValuePair<string, Type> entry in _sGlobalRulesRegistry)
+    // Add all the builtin patterns - copied, not shared; see PatternLayout.CreatePatternParser
+    foreach (KeyValuePair<string, ConverterInfo> entry in _sGlobalRulesRegistry)
     {
-      ConverterInfo converterInfo = new()
+      patternParser.PatternConverters.Add(entry.Key, new ConverterInfo
       {
-        Name = entry.Key,
-        Type = entry.Value
-      };
-      patternParser.PatternConverters.Add(entry.Key, converterInfo);
+        Name = entry.Value.Name,
+        Type = entry.Value.Type
+      });
     }
     // Add the instance patterns
     foreach (KeyValuePair<string, ConverterInfo> entry in _instanceRulesRegistry)
@@ -461,7 +483,8 @@ public class PatternString : IOptionHandler
   /// </summary>
   /// <param name="name">the name of the conversion pattern for this converter</param>
   /// <param name="type">the type of the converter</param>
-  public void AddConverter(string name, Type type)
+  public void AddConverter(string name,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type type)
   {
     AddConverter(new()
     {

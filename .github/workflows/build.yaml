@@ -57,3 +57,19 @@ jobs:
       - name: Test
         run: |
             dotnet test ./src/log4net.sln
+
+      # Runs the same probes twice, JIT compiled and published with Native AOT, so that a
+      # difference between the two is caused by AOT rather than by the platform. The project
+      # knows which probes are expected to fail in each mode and exits non-zero when reality
+      # does not match, in either direction.
+      - name: AOT probes
+        shell: pwsh
+        env:
+          "log4net.AotEnvironmentProbe": from-environment
+        run: |
+            dotnet run --project ./src/log4net.Tests.Aot/log4net.Tests.Aot.csproj -c Release
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            dotnet publish ./src/log4net.Tests.Aot/log4net.Tests.Aot.csproj -c Release -o ./aot-probes
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            & "./aot-probes/log4net.Tests.Aot$($IsWindows ? '.exe' : '')"
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>log4net.Tests.Aot</RootNamespace>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <!-- Native AOT is the point of this project; the RuntimeIdentifier is inferred from the host. -->
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- Surface trim warnings from log4net itself instead of collapsing them into one IL2104. -->
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\log4net\log4net.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.config" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

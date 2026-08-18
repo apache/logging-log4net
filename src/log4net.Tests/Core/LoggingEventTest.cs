@@ -19,9 +19,11 @@
 
 using System;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
+#if NET462_OR_GREATER
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 using log4net.Core;
 using log4net.Util;
 using NUnit.Framework;
@@ -119,7 +121,7 @@ public sealed class LoggingEventTest
 #endif // NET462_OR_GREATER
 
   /// <summary>
-  /// Tests <see cref="LoggingEvent.ReviseThreadName"/>
+  /// Tests <c>LoggingEvent.ReviseThreadName</c>, which is not publicly visible.
   /// </summary>
   [Test]
   public void ReviseThreadNameTest()

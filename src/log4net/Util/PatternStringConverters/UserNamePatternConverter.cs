@@ -20,7 +20,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+#if !NET462_OR_GREATER
 using System.Runtime.InteropServices;
+#endif
 
 namespace log4net.Util.PatternStringConverters;
 

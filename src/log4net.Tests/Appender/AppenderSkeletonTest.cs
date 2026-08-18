@@ -49,7 +49,7 @@ public sealed class AppenderSkeletonTest
   }
 
   /// <summary>
-  /// Verifies that a second <see cref="AppenderSkeleton.AddFilter"/> call appends the filter via <see cref="Filter.IFilter.Next"/>.
+  /// Verifies that a second <see cref="AppenderSkeleton.AddFilter"/> call appends the filter via <c>IFilter.Next</c>.
   /// </summary>
   [Test]
   public void AddFilter_SecondFilter_LinksToChain()

@@ -22,7 +22,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+#if NET471_OR_GREATER || NETSTANDARD2_0_OR_GREATER
 using System.Runtime.InteropServices;
+#endif
 using System.Runtime.Serialization;
 using System.Security;
 using System.Security.Principal;

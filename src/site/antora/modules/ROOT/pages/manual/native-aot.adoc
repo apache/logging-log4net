@@ -1,0 +1,196 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+[#native-aot]
+= Native AOT and trimming
+
+log4net can be used from an application published with `PublishAot` or `PublishTrimmed`, with one
+important restriction: **you have to configure log4net in code.**
+
+A Native AOT application is compiled ahead of time and trimmed, so any type that is only ever named
+in a string is removed from the build. That is exactly how XML configuration works, which is why it
+cannot be supported.
+
+[#configuring]
+== Configuring in code
+
+Build the appenders and layouts yourself and hand them to
+xref:manual/configuration.adoc[`BasicConfigurator`].
+Because you construct them with `new`, the compiler sees them and keeps them:
+
+[source,csharp]
+----
+using log4net;
+using log4net.Appender;
+using log4net.Config;
+using log4net.Core;
+using log4net.Layout;
+
+ConsoleAppender appender = new()
+{
+  Layout = new PatternLayout("%level %logger - %message%newline"),
+  Threshold = Level.All,
+};
+appender.ActivateOptions();
+BasicConfigurator.Configure(appender);
+
+ILog log = LogManager.GetLogger(typeof(Program));
+log.Info("Hello from Native AOT.");
+----
+
+Conversion patterns work as usual. The built-in pattern converters are resolved by name at run time,
+but log4net declares them in a way the trimmer understands, so they are preserved for you.
+
+A custom converter is preserved as long as you register it by type:
+
+[source,csharp]
+----
+PatternLayout layout = new();
+layout.AddConverter("mine", typeof(MyPatternConverter));
+layout.ConversionPattern = "%mine %message%newline";
+layout.ActivateOptions();
+----
+
+[#levels-from-a-file]
+== Reading levels from a configuration file
+
+log4net cannot read a configuration file under Native AOT, but *your application can*, and levels
+can be set at any time through the API. That covers the common case of wanting to change verbosity
+without rebuilding, without needing XML configuration.
+
+Put the levels wherever your application already keeps its settings:
+
+[source,json]
+----
+{
+  "Logging": {
+    "Default": "WARN",
+    "Loggers": {
+      "Noisy.Component": "ERROR",
+      "Important.Component": "DEBUG"
+    }
+  }
+}
+----
+
+Read them yourself and apply them to the repository:
+
+[source,csharp]
+----
+using System.Text.Json;
+using log4net.Core;
+using log4net.Repository.Hierarchy;
+
+Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
+
+using JsonDocument document = JsonDocument.Parse(
+  File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json")));
+JsonElement logging = document.RootElement.GetProperty("Logging");
+
+// the level of the root logger, inherited by every logger that has none of its own
+if (hierarchy.LevelMap[logging.GetProperty("Default").GetString()!] is Level rootLevel)
+{
+  hierarchy.Root.Level = rootLevel;
+}
+
+// and levels for individual loggers
+foreach (JsonProperty entry in logging.GetProperty("Loggers").EnumerateObject())
+{
+  if (hierarchy.LevelMap[entry.Value.GetString()!] is Level loggerLevel)
+  {
+    ((Logger)hierarchy.GetLogger(entry.Name)).Level = loggerLevel;
+  }
+}
+----
+
+With the settings above, `Important.Component` logs from `DEBUG` upwards, `Noisy.Component` only
+`ERROR` and above, and every other logger inherits `WARN` from the root.
+
+[TIP]
+====
+`LevelMap` returns `null` for a name it does not know, which is why both lookups are written as
+`is Level`. An unrecognised name in the file then leaves the level unchanged rather than throwing.
+Custom levels registered with `hierarchy.LevelMap.Add(...)` can be named in the file too.
+====
+
+[NOTE]
+====
+`JsonDocument` is used here because it parses without reflection and is safe to trim.
+`JsonSerializer.Deserialize<T>()` is not, unless you generate a `JsonSerializerContext` for your
+settings type. Any other format your application can already read works just as well - the point is
+only that *your* code reads the file, not log4net's.
+====
+
+Levels can be changed whenever you like, so the same code can be run again to reload the file while
+the application is running.
+
+[#unsupported]
+== What does not work
+
+[IMPORTANT]
+====
+xref:manual/configuration.adoc[XML configuration] - `XmlConfigurator.Configure()`, the
+`log4net.config` file and the `<log4net>` section of `app.config` - is **not available** under
+Native AOT. Appender, layout and filter types are named as strings there, and the trimmer has no way
+to know that they are needed.
+
+This is about *log4net* reading the file. Your application can still read a file of its own and
+apply what it finds - see <<levels-from-a-file>>.
+====
+
+`ConfigurationManager` cannot initialize either, so log4net's own `appSettings` keys are read from
+**environment variables** instead. To set them, use the same names you would have used in
+`app.config`:
+
+[source,shell]
+----
+log4net.NullText=NULL
+log4net.NotAvailableText=N/A
+----
+
+[#repositories]
+== Loggers and repositories
+
+`Assembly.GetCallingAssembly()` is not implemented by Native AOT. The log4net methods that infer a
+repository from their caller - `LogManager.GetLogger(string)`, `LogManager.GetLogger(Type)`,
+`LogManager.GetRepository()` and their siblings - therefore fall back to the entry assembly.
+
+For most applications this changes nothing, because there is a single default repository and both
+answers lead to it. It matters only if you use **per-assembly repositories**, for example by placing
+
+[source,csharp]
+----
+[assembly: log4net.Config.Repository("MyRepository")]
+----
+
+on a library. Under Native AOT that library's loggers are placed in the entry assembly's repository
+rather than its own.
+
+If you depend on this, use the overloads that take the assembly explicitly. They are exact on every
+runtime and need no special handling:
+
+[source,csharp]
+----
+ILog log = LogManager.GetLogger(typeof(MyType).Assembly, typeof(MyType));
+----
+
+[#warnings]
+== Trimming warnings
+
+Publishing may report `IL3000` for `log4net.Util.SystemInfo.AssemblyLocationInfo`, because
+`Assembly.Location` returns an empty string for an assembly embedded in a single-file application.
+This affects the `%file`-style location information only; logging itself is unaffected.

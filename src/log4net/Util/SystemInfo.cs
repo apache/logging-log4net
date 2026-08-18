@@ -19,9 +19,11 @@
 
 using System;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.IO;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace log4net.Util;
 
@@ -61,18 +63,18 @@ public static class SystemInfo
 
     // Look for log4net.NullText in AppSettings
     string? nullTextAppSettingsKey = GetAppSetting("log4net.NullText");
-    if (nullTextAppSettingsKey is not null && nullTextAppSettingsKey.Length > 0)
+    if (!string.IsNullOrEmpty(nullTextAppSettingsKey))
     {
       LogLog.Debug(_declaringType, $"Initializing NullText value to [{nullTextAppSettingsKey}].");
-      nullText = nullTextAppSettingsKey;
+      nullText = nullTextAppSettingsKey!;
     }
 
     // Look for log4net.NotAvailableText in AppSettings
     string? notAvailableTextAppSettingsKey = GetAppSetting("log4net.NotAvailableText");
-    if (notAvailableTextAppSettingsKey is not null && notAvailableTextAppSettingsKey.Length > 0)
+    if (!string.IsNullOrEmpty(notAvailableTextAppSettingsKey))
     {
       LogLog.Debug(_declaringType, $"Initializing NotAvailableText value to [{notAvailableTextAppSettingsKey}].");
-      notAvailableText = notAvailableTextAppSettingsKey;
+      notAvailableText = notAvailableTextAppSettingsKey!;
     }
     NotAvailableText = notAvailableText;
     NullText = nullText;
@@ -154,11 +156,35 @@ public static class SystemInfo
       {
         return _entryAssemblyLocation;
       }
-      return _entryAssemblyLocation = Assembly.GetEntryAssembly()?.Location
+      Assembly entryAssembly = Assembly.GetEntryAssembly()
         ?? throw new InvalidOperationException($"Unable to determine EntryAssembly location: EntryAssembly is null. Try explicitly setting {nameof(SystemInfo)}.{nameof(EntryAssemblyLocation)}");
+      string location = GetAssemblyLocation(entryAssembly);
+      if (location.Length == 0)
+      {
+        // A single file application has no file on disk for the assemblies it embeds, so the
+        // closest thing to the entry assembly's path is the directory it was published to.
+        location = Path.Combine(AppContext.BaseDirectory, $"{entryAssembly.GetName().Name}.dll");
+      }
+      return _entryAssemblyLocation = location;
     }
     set => _entryAssemblyLocation = value;
   }
+
+  /// <summary>
+  /// Reads <see cref="Assembly.Location"/>.
+  /// </summary>
+  /// <param name="assembly">the assembly to locate</param>
+  /// <returns>the path to the assembly, or an empty string when it has none</returns>
+  /// <remarks>
+  /// <para>
+  /// An assembly embedded in a single file application has no path, and
+  /// <see cref="Assembly.Location"/> returns an empty string for it rather than failing. Callers
+  /// handle that here, which is what the suppressed warning asks them to do.
+  /// </para>
+  /// </remarks>
+  [UnconditionalSuppressMessage("SingleFile", "IL3000",
+    Justification = "The empty string returned by a single file application is handled by the callers.")]
+  private static string GetAssemblyLocation(Assembly assembly) => assembly.Location;
 
   /// <summary>
   /// Gets the ID of the current thread.
@@ -368,7 +394,8 @@ public static class SystemInfo
       // This call requires FileIOPermission for access to the path
       // if we don't have permission then we just ignore it and
       // carry on.
-      return myAssembly.Location;
+      string location = GetAssemblyLocation(myAssembly);
+      return location.Length > 0 ? location : "Single File Application";
     }
     catch (NotSupportedException)
     {
@@ -475,7 +502,9 @@ public static class SystemInfo
   /// </para>
   /// </remarks>
   public static Type? GetTypeFromString(string typeName, bool throwOnError, bool ignoreCase) 
-    => GetTypeFromString(Assembly.GetCallingAssembly(), typeName, throwOnError, ignoreCase);
+    => GetTypeFromString(CallerAssembly.IsSupported
+        ? Assembly.GetCallingAssembly()
+        : CallerAssembly.Fallback, typeName, throwOnError, ignoreCase);
 
   /// <summary>
   /// Loads the type specified in the type string.
@@ -680,19 +709,106 @@ public static class SystemInfo
   /// <returns>the value for the key, or <see langword="null"/></returns>
   public static string? GetAppSetting(string key)
   {
-    if (IsAndroid)
-      return Environment.GetEnvironmentVariable(key); // Android does not support config files
+    // Android does not support config files, and neither does a runtime that has trimmed the
+    // configuration system away.
+    if (IsAndroid || _configurationSystemUnavailable)
+      return Environment.GetEnvironmentVariable(key);
     try
     {
-      return ConfigurationManager.AppSettings[key];
+      return ReadAppSetting(key);
     }
     catch (Exception e) when (!e.IsFatal())
     {
-      // If an exception is thrown here then it looks like the config file does not parse correctly.
+      if (IsMissingConfigurationSystem(e))
+      {
+        // There is no configuration system to read - Native AOT trims System.Configuration away.
+        // That is a property of the runtime rather than a fault, so it is not reported as an
+        // error, and the environment stands in for the config file as it does on Android.
+        _configurationSystemUnavailable = true;
+        LogLog.Debug(_declaringType,
+          "No configuration system on this runtime. Using environment variables for application settings.", e);
+        return Environment.GetEnvironmentVariable(key);
+      }
+
+      // The config file itself does not parse. Report it and treat the setting as absent, without
+      // falling back to the environment - a broken config file must not silently change where
+      // settings come from.
       LogLog.Error(_declaringType, "Exception while reading ConfigurationSettings. Check your .config file is well formed XML.", e);
     }
     return null;
   }
+
+  /// <summary>
+  /// Determines whether <paramref name="exception"/> means that there is no configuration system
+  /// on this runtime, as opposed to a configuration file that does not parse.
+  /// </summary>
+  /// <param name="exception">the exception thrown while reading an application setting</param>
+  /// <returns><see langword="true"/> if the configuration system itself is unavailable</returns>
+  /// <remarks>
+  /// <para>
+  /// The inner exceptions have to be walked, because Native AOT surfaces this as a
+  /// <see cref="ConfigurationErrorsException"/> - the very type a malformed file produces. What
+  /// distinguishes it is further down the chain: a <see cref="MissingMethodException"/> for
+  /// <c>ClientConfigurationHost</c>, whose constructor the trimmer removed.
+  /// </para>
+  /// <para>
+  /// An unrecognized failure is treated as a configuration file problem, which is the safer way
+  /// round: it is reported rather than silently swallowed.
+  /// </para>
+  /// </remarks>
+  private static bool IsMissingConfigurationSystem(Exception? exception)
+  {
+    // Native AOT is what this exists for, and it identifies itself without any guesswork:
+    // GetCallingAssembly is unsupported there for the same reason the configuration system cannot
+    // initialize, so no configuration file can be read whatever the exception happens to be.
+    if (!CallerAssembly.IsSupported)
+    {
+      return true;
+    }
+
+    // Anywhere else, only a failure that names System.Configuration itself counts. A failure that
+    // names anything else belongs to the application's own configuration and has to keep being
+    // reported as an error rather than silently redirecting every setting to the environment.
+    for (; exception is not null; exception = exception.InnerException)
+    {
+      switch (exception)
+      {
+        case FileNotFoundException { FileName: string fileName }
+          when IsConfigurationSystem(fileName):
+        case TypeLoadException { TypeName: string typeName }
+          when IsConfigurationSystem(typeName):
+          return true;
+      }
+    }
+    return false;
+  }
+
+  private static bool IsConfigurationSystem(string name)
+    => name.StartsWith("System.Configuration", StringComparison.Ordinal);
+
+  /// <summary>
+  /// Reads a single application setting.
+  /// </summary>
+  /// <param name="key">the application settings key to lookup</param>
+  /// <returns>the value for the key, or <see langword="null"/></returns>
+  /// <remarks>
+  /// <para>
+  /// Separate from <see cref="GetAppSetting"/>, and never inlined into it, so that the failure to
+  /// resolve <see cref="ConfigurationManager"/> itself is raised on entry to this method - inside
+  /// the caller's try block - rather than on entry to <see cref="GetAppSetting"/>, where nothing
+  /// would catch it and a <see cref="FileNotFoundException"/> would escape the static constructor
+  /// as a <see cref="TypeInitializationException"/>.
+  /// </para>
+  /// <para>
+  /// The package declares a dependency on System.Configuration.ConfigurationManager, so this only
+  /// arises where the assembly is deployed by other means than the package - it costs one method
+  /// to keep those deployments running instead of failing at type initialization.
+  /// </para>
+  /// </remarks>
+  [MethodImpl(MethodImplOptions.NoInlining)]
+  private static string? ReadAppSetting(string key) => ConfigurationManager.AppSettings[key];
+
+  private static volatile bool _configurationSystemUnavailable;
 
   /// <summary>
   /// Convert a path into a fully qualified local file path.

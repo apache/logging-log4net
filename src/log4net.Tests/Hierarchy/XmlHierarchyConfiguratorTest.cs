@@ -23,7 +23,6 @@ using System.Xml;
 using NUnit.Framework;
 
 using log4net.Repository.Hierarchy;
-using HierarchyClass = log4net.Repository.Hierarchy.Hierarchy;
 
 namespace log4net.Tests.Hierarchy;
 

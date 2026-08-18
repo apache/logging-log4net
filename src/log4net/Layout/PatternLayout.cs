@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
 using System.IO;
 
@@ -820,84 +821,78 @@ public class PatternLayout : LayoutSkeleton
   /// This static map is overridden by the converterRegistry instance map
   /// </para>
   /// </remarks>
-  private static readonly Dictionary<string, Type> _sGlobalRulesRegistry = new(StringComparer.Ordinal)
+  private static readonly Dictionary<string, ConverterInfo> _sGlobalRulesRegistry = CreateGlobalRulesRegistry();
+
+  /// <summary>
+  /// Builds the registry of built-in pattern converters.
+  /// </summary>
+  /// <returns>the built-in rules, keyed by the name used in a conversion pattern</returns>
+  /// <remarks>
+  /// <para>
+  /// The registry holds <see cref="ConverterInfo"/> rather than a bare <see cref="Type"/> because a
+  /// <see cref="Type"/> put into a collection loses any
+  /// <see cref="System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute"/> annotation,
+  /// which is what left these converters without a constructor once a Native AOT build had trimmed
+  /// them. <see cref="ConverterInfo.Type"/> carries the annotation, so it survives the round trip.
+  /// </para>
+  /// <para>
+  /// The <c>new()</c> constraint states the same requirement a second time, structurally: a
+  /// converter that loses its public parameterless constructor becomes a compile error here rather
+  /// than a run-time failure that only shows up in a trimmed build.
+  /// </para>
+  /// </remarks>
+  private static Dictionary<string, ConverterInfo> CreateGlobalRulesRegistry()
   {
-    ["literal"] = typeof(LiteralPatternConverter),
-    ["newline"] = typeof(NewLinePatternConverter),
-    ["n"] = typeof(NewLinePatternConverter),
+    Dictionary<string, ConverterInfo> rules = new(StringComparer.Ordinal);
+
+    Add<LiteralPatternConverter>("literal");
+    Add<NewLinePatternConverter>("newline", "n");
 
     // .NET Standard has no support for ASP.NET
 #if NET462_OR_GREATER
-    ["aspnet-cache"] = typeof(AspNetCachePatternConverter),
-    ["aspnet-context"] = typeof(AspNetContextPatternConverter),
-    ["aspnet-request"] = typeof(AspNetRequestPatternConverter),
-    ["aspnet-session"] = typeof(AspNetSessionPatternConverter),
+    Add<AspNetCachePatternConverter>("aspnet-cache");
+    Add<AspNetContextPatternConverter>("aspnet-context");
+    Add<AspNetRequestPatternConverter>("aspnet-request");
+    Add<AspNetSessionPatternConverter>("aspnet-session");
 #endif
 
-    ["c"] = typeof(LoggerPatternConverter),
-    ["logger"] = typeof(LoggerPatternConverter),
-
-    ["C"] = typeof(TypeNamePatternConverter),
-    ["class"] = typeof(TypeNamePatternConverter),
-    ["type"] = typeof(TypeNamePatternConverter),
-
-    ["d"] = typeof(DatePatternConverter),
-    ["date"] = typeof(DatePatternConverter),
-
-    ["exception"] = typeof(ExceptionPatternConverter),
-
-    ["F"] = typeof(FileLocationPatternConverter),
-    ["file"] = typeof(FileLocationPatternConverter),
-
-    ["l"] = typeof(FullLocationPatternConverter),
-    ["location"] = typeof(FullLocationPatternConverter),
-
-    ["L"] = typeof(LineLocationPatternConverter),
-    ["line"] = typeof(LineLocationPatternConverter),
-
-    ["m"] = typeof(MessagePatternConverter),
-    ["message"] = typeof(MessagePatternConverter),
-
-    ["M"] = typeof(MethodLocationPatternConverter),
-    ["method"] = typeof(MethodLocationPatternConverter),
-
-    ["p"] = typeof(LevelPatternConverter),
-    ["level"] = typeof(LevelPatternConverter),
-
-    ["P"] = typeof(PropertyPatternConverter),
-    ["property"] = typeof(PropertyPatternConverter),
-    ["properties"] = typeof(PropertyPatternConverter),
-
-    ["r"] = typeof(RelativeTimePatternConverter),
-    ["timestamp"] = typeof(RelativeTimePatternConverter),
-
-    ["stacktrace"] = typeof(StackTracePatternConverter),
-    ["stacktracedetail"] = typeof(StackTraceDetailPatternConverter),
-
-    ["t"] = typeof(ThreadPatternConverter),
-    ["thread"] = typeof(ThreadPatternConverter),
+    Add<LoggerPatternConverter>("c", "logger");
+    Add<TypeNamePatternConverter>("C", "class", "type");
+    Add<DatePatternConverter>("d", "date");
+    Add<ExceptionPatternConverter>("exception");
+    Add<FileLocationPatternConverter>("F", "file");
+    Add<FullLocationPatternConverter>("l", "location");
+    Add<LineLocationPatternConverter>("L", "line");
+    Add<MessagePatternConverter>("m", "message");
+    Add<MethodLocationPatternConverter>("M", "method");
+    Add<LevelPatternConverter>("p", "level");
+    Add<RelativeTimePatternConverter>("r", "timestamp");
+    Add<StackTracePatternConverter>("stacktrace");
+    Add<StackTraceDetailPatternConverter>("stacktracedetail");
+    Add<ThreadPatternConverter>("t", "thread");
 
     // For backwards compatibility the NDC patterns
-    ["x"] = typeof(NdcPatternConverter),
-    ["ndc"] = typeof(NdcPatternConverter),
+    Add<NdcPatternConverter>("x", "ndc");
 
     // For backwards compatibility the MDC patterns just do a property lookup
-    ["X"] = typeof(PropertyPatternConverter),
-    ["mdc"] = typeof(PropertyPatternConverter),
+    Add<PropertyPatternConverter>("P", "property", "properties", "X", "mdc");
 
-    ["a"] = typeof(AppDomainPatternConverter),
-    ["appdomain"] = typeof(AppDomainPatternConverter),
+    Add<AppDomainPatternConverter>("a", "appdomain");
+    Add<IdentityPatternConverter>("u", "identity");
+    Add<UtcDatePatternConverter>("utcdate", "utcDate", "UtcDate");
+    Add<UserNamePatternConverter>("w", "username");
 
-    ["u"] = typeof(IdentityPatternConverter),
-    ["identity"] = typeof(IdentityPatternConverter),
+    return rules;
 
-    ["utcdate"] = typeof(UtcDatePatternConverter),
-    ["utcDate"] = typeof(UtcDatePatternConverter),
-    ["UtcDate"] = typeof(UtcDatePatternConverter),
-
-    ["w"] = typeof(UserNamePatternConverter),
-    ["username"] = typeof(UserNamePatternConverter),
-  };
+    void Add<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T>(
+      params string[] names) where T : PatternConverter, new()
+    {
+      foreach (string name in names)
+      {
+        rules[name] = new() { Name = name, Type = typeof(T) };
+      }
+    }
+  }
 
   /// <summary>
   /// the head of the pattern converter chain
@@ -982,15 +977,17 @@ public class PatternLayout : LayoutSkeleton
   {
     PatternParser patternParser = new(pattern);
 
-    // Add all the builtin patterns
-    foreach (KeyValuePair<string, Type> entry in _sGlobalRulesRegistry)
+    // Add all the builtin patterns. The registry entries are copied rather than handed out:
+    // PatternConverters is public, and PatternParser assigns ConverterInfo.Properties to every
+    // converter it creates, so sharing one instance would let a single layout mutate state that
+    // every other layout in the process can see.
+    foreach (KeyValuePair<string, ConverterInfo> entry in _sGlobalRulesRegistry)
     {
-      ConverterInfo converterInfo = new()
+      patternParser.PatternConverters[entry.Key] = new ConverterInfo
       {
-        Name = entry.Key,
-        Type = entry.Value
+        Name = entry.Value.Name,
+        Type = entry.Value.Type
       };
-      patternParser.PatternConverters[entry.Key] = converterInfo;
     }
     // Add the instance patterns
     foreach (KeyValuePair<string, ConverterInfo> entry in _instanceRulesRegistry)
@@ -1093,7 +1090,8 @@ public class PatternLayout : LayoutSkeleton
   /// <see cref="PatternConverter"/> type.
   /// </para>
   /// </remarks>
-  public void AddConverter(string name, Type type) => AddConverter(new()
+  public void AddConverter(string name,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type type) => AddConverter(new()
   {
     Name = name.EnsureNotNull(),
     Type = type.EnsureNotNull()

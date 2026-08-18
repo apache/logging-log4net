@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 using log4net.Util;
@@ -466,7 +467,8 @@ public static class LoggerManager
   /// </para>
   /// </remarks>
   /// <exception cref="LogException">The specified repository already exists.</exception>
-  public static ILoggerRepository CreateRepository(string repository, Type repositoryType)
+  public static ILoggerRepository CreateRepository(string repository,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type repositoryType)
     => RepositorySelector.CreateRepository(repository.EnsureNotNull(), repositoryType.EnsureNotNull());
 
   /// <summary>
@@ -484,7 +486,8 @@ public static class LoggerManager
   /// same assembly specified will return the same repository instance.
   /// </para>
   /// </remarks>
-  public static ILoggerRepository CreateRepository(Assembly repositoryAssembly, Type repositoryType)
+  public static ILoggerRepository CreateRepository(Assembly repositoryAssembly,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] Type repositoryType)
     => RepositorySelector.CreateRepository(repositoryAssembly.EnsureNotNull(), repositoryType.EnsureNotNull());
 
   /// <summary>

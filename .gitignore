@@ -254,3 +254,6 @@ validate
 /graphify-out/.graphify_python
 /graphify-out/*.sig
 /graphify-out/20*
+
+# output of the AOT probe step
+/aot-probes/

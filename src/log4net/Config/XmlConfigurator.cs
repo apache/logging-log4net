@@ -140,7 +140,7 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// </remarks>
   /// <seealso cref="Log4NetConfigurationSectionHandler"/>
   public static ICollection Configure() 
-    => Configure(LogManager.GetRepository(Assembly.GetCallingAssembly()));
+    => Configure(LogManager.GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback));
 
   /// <summary>
   /// Configures log4net using a <c>log4net</c> element
@@ -156,7 +156,7 @@ The configuration section should look like: <section name=""log4net"" type=""log
   {
     List<LogLog> configurationMessages = [];
 
-    ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
+    ILoggerRepository repository = LogManager.GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
@@ -222,9 +222,11 @@ The configuration section should look like: <section name=""log4net"" type=""log
   {
     List<LogLog> configurationMessages = [];
 
+    Assembly repositoryAssembly = CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback;
+
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
-      InternalConfigure(LogManager.GetRepository(Assembly.GetCallingAssembly()), configFile);
+      InternalConfigure(LogManager.GetRepository(repositoryAssembly), configFile);
     }
 
     return configurationMessages;
@@ -248,7 +250,7 @@ The configuration section should look like: <section name=""log4net"" type=""log
   {
     List<LogLog> configurationMessages = [];
 
-    ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
+    ILoggerRepository repository = LogManager.GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
       InternalConfigure(repository, configUri);
@@ -277,7 +279,7 @@ The configuration section should look like: <section name=""log4net"" type=""log
   {
     List<LogLog> configurationMessages = [];
 
-    ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
+    ILoggerRepository repository = LogManager.GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
       InternalConfigure(repository, configStream);
@@ -644,7 +646,7 @@ The configuration section should look like: <section name=""log4net"" type=""log
   {
     List<LogLog> configurationMessages = [];
 
-    ILoggerRepository repository = LogManager.GetRepository(Assembly.GetCallingAssembly());
+    ILoggerRepository repository = LogManager.GetRepository(CallerAssembly.IsSupported ? Assembly.GetCallingAssembly() : CallerAssembly.Fallback);
 
     using (new LogLog.LogReceivedAdapter(configurationMessages))
     {
