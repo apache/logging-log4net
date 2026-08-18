@@ -97,8 +97,9 @@ The MailKit based appender from the `log4net.Ext.Mail` package is recommended; t
 |xref:manual/configuration/appenders/smtppickupdirappender.adoc[]
 |Sends logging events to an email address but writes the emails to a configurable directory rather than sending them directly via SMTP.
 
-|TelnetAppender
+|xref:manual/configuration/appenders/telnetappender.adoc[]
 |*Clients* connect via Telnet to receive logging events.
+The connection is unauthenticated and unencrypted.
 
 |xref:manual/configuration/appenders/traceappender.adoc[]
 |Writes logging events to the .NET trace system (https://web.archive.org/web/20240907024634/https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.trace?view=net-8.0[System.Diagnostics.Trace]).

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    log an error when `AdoNetAppender` is activated without `CommandText`. In that legacy mode the
+ rendered `Layout` output is executed as the SQL statement, and because layouts perform no SQL
+ quoting, logged content becomes part of the statement (CWE-89). Configure `CommandText` with
+ `AdoNetAppenderParameter` bindings instead (audit 1231d72-f003)
+  </description>
+</entry>

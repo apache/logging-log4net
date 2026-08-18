@@ -735,8 +735,63 @@ public class LoggingEvent : ILog4NetSerializable
   /// rather than the Windows account the request happens to run as.
   /// </para>
   /// </remarks>
-  public string UserName =>
-      _data.UserName ??= TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
+  public string UserName
+  {
+    get
+    {
+      if (_data.UserName is null)
+      {
+        // Resolving late gives the process identity, which is the same on every thread. On an
+        // impersonating thread it would give whoever is reading the event instead, so nothing is
+        // reported; FixVolatileData captures that case up front.
+        if (_cacheUpdatable || !IsImpersonating())
+        {
+          _data.UserName = TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
+        }
+      }
+
+      return _data.UserName ?? SystemInfo.NotAvailableText;
+    }
+  }
+
+  /// <summary>
+  /// Whether the calling thread is impersonating another identity.
+  /// </summary>
+  /// <returns>
+  /// <see langword="true"/> when the thread runs as an impersonated identity rather than as the
+  /// process identity, and <see langword="false"/> when it does not or when that cannot be known.
+  /// </returns>
+  /// <remarks>
+  /// <para>
+  /// Only queries the thread token. Resolving the name behind it is the expensive part and is left
+  /// to <see cref="TryGetCurrentUserName"/>.
+  /// </para>
+  /// </remarks>
+  private static bool IsImpersonating()
+  {
+    try
+    {
+      if (_windowsIdentityUnavailable)
+      {
+        return false;
+      }
+
+      if (!IsWindowsIdentitySupported())
+      {
+        _windowsIdentityUnavailable = true;
+        return false;
+      }
+
+      using WindowsIdentity? impersonated = WindowsIdentity.GetCurrent(ifImpersonating: true);
+      return impersonated is not null;
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      // As in TryGetCurrentUserName: an unreadable identity must not break logging.
+      _windowsIdentityUnavailable = true;
+      return false;
+    }
+  }
 
   private static string? TryGetCurrentUserName()
   {
@@ -1154,6 +1209,15 @@ public class LoggingEvent : ILog4NetSerializable
 
         _fixFlags |= FixFlags.Properties;
       }
+    }
+
+    // Last point at which the identity that logged the event is known, so grab it even when it was
+    // not asked for. Outside the block above, which is skipped when there is nothing to fix while
+    // the cache is locked all the same. FixFlags.UserName stays unset: the flags report what the
+    // caller requested.
+    if (_data.UserName is null && IsImpersonating())
+    {
+      _data.UserName = TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
     }
 
     // Finally lock everything we've cached.

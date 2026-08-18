@@ -26,19 +26,21 @@ namespace log4net.Tests.Appender.AdoNet;
 
 internal sealed class Log4NetTransaction : IDbTransaction
 {
+  /// <inheritdoc/>
   public void Commit()
-  {
-    // empty
-  }
+  { }
 
+  /// <inheritdoc/>
   public void Rollback()
-  {
-    // empty
-  }
+  { }
 
+  /// <inheritdoc/>
   public IDbConnection Connection => throw new NotImplementedException();
 
+  /// <inheritdoc/>
   public IsolationLevel IsolationLevel => throw new NotImplementedException();
 
-  public void Dispose() => throw new NotImplementedException();
+  /// <inheritdoc/>
+  public void Dispose()
+  { }
 }

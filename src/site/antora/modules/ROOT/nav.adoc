@@ -38,6 +38,7 @@
 **** xref:manual/configuration/appenders/rollingfileappender.adoc[]
 **** xref:manual/configuration/appenders/smtpappender.adoc[]
 **** xref:manual/configuration/appenders/smtppickupdirappender.adoc[]
+**** xref:manual/configuration/appenders/telnetappender.adoc[]
 **** xref:manual/configuration/appenders/traceappender.adoc[]
 **** xref:manual/configuration/appenders/udpappender.adoc[]
 *** xref:manual/configuration/filters.adoc[]

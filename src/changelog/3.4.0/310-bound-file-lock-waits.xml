@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    bound the waits for the named mutexes used by `FileAppender.InterProcessLock` and by
+ `RollingFileAppender` when it decides whether to roll. Both waited without a timeout while the
+ appender lock was held, so a mutex nobody released suspended every thread logging through the
+ appender. The wait now stops after `LockTimeoutMillis`, 10000 by default, reporting through the
+ error handler and dropping the event or skipping the roll check; `Timeout.Infinite` restores the
+ previous behaviour. `AbandonedMutexException` is handled as the successful acquisition it is,
+ rather than leaving the mutex held, and the rolling lock is no longer released when it was never
+ taken (audit 1231d72-f015)
+  </description>
+</entry>

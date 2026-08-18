@@ -69,6 +69,12 @@ namespace log4net.Ext.Mail.Appender;
 /// </remarks>
 public class SmtpAppender : BufferingAppenderSkeleton
 {
+  /// <summary>
+  /// The port reserved for SMTP over implicit TLS, where TLS starts before the SMTP greeting
+  /// rather than being negotiated with <c>STARTTLS</c>.
+  /// </summary>
+  private const int ImplicitTlsPort = 465;
+
   private readonly Func<ISmtpTransport> _transportFactory;
 
   /// <summary>
@@ -239,18 +245,40 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </summary>
   /// <remarks>
   /// <para>
-  /// When <see langword="true"/>, <see cref="SecureSocketOptions.Auto"/> is used, which
-  /// negotiates implicit TLS or <c>STARTTLS</c> depending on the <see cref="Port"/> and
-  /// what the server advertises. When <see langword="false"/> the connection is not
-  /// encrypted at all (<see cref="SecureSocketOptions.None"/>), matching the behaviour of
-  /// <see cref="System.Net.Mail.SmtpClient.EnableSsl"/>.
+  /// This is a shorthand for <see cref="TransportSecurity"/>: setting it to
+  /// <see langword="true"/> selects <see cref="SmtpTransportSecurity.Required"/> and setting it to
+  /// <see langword="false"/> selects <see cref="SmtpTransportSecurity.None"/>. The two properties
+  /// are the same setting, so the one assigned last wins.
   /// </para>
   /// <para>
-  /// Use <see cref="SecureSocketOptions"/> directly via a custom
-  /// <see cref="ISmtpTransport"/> if you need finer control.
+  /// When <see langword="true"/>, transport security is required: implicit TLS on port 465 and
+  /// <c>STARTTLS</c> on every other port. Connecting fails if the server does not offer TLS,
+  /// rather than continuing unencrypted, which matches the behaviour of
+  /// <see cref="System.Net.Mail.SmtpClient.EnableSsl"/>. Use <see cref="TransportSecurity"/> when
+  /// the server needs something else.
   /// </para>
   /// </remarks>
-  public bool EnableSsl { get; set; }
+  public bool EnableSsl
+  {
+    get => TransportSecurity != SmtpTransportSecurity.None;
+    set => TransportSecurity = value ? SmtpTransportSecurity.Required : SmtpTransportSecurity.None;
+  }
+
+  /// <summary>
+  /// Gets or sets how the connection to the SMTP server is secured.
+  /// </summary>
+  /// <value>
+  /// One of the <see cref="SmtpTransportSecurity"/> values. The default is
+  /// <see cref="SmtpTransportSecurity.None"/>.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// <see cref="EnableSsl"/> is a shorthand for this property and covers the usual cases; set this
+  /// one when the server expects implicit TLS on a port other than 465, or when only opportunistic
+  /// <c>STARTTLS</c> is possible.
+  /// </para>
+  /// </remarks>
+  public SmtpTransportSecurity TransportSecurity { get; set; } = SmtpTransportSecurity.None;
 
   /// <summary>
   /// Gets or sets the reply-to e-mail address.
@@ -316,6 +344,32 @@ public class SmtpAppender : BufferingAppenderSkeleton
   protected override bool RequiresLayout => true;
 
   /// <summary>
+  /// Translates <see cref="TransportSecurity"/> into the mail library's own representation.
+  /// </summary>
+  /// <returns>The transport security to connect with.</returns>
+  /// <remarks>
+  /// <para>
+  /// <see cref="SecureSocketOptions.Auto"/> is deliberately never used: away from port 465 it is
+  /// opportunistic, so an attacker who strips <c>STARTTLS</c> from the EHLO response silently
+  /// downgrades the session to plaintext, taking the credentials and the log content with it.
+  /// Opportunistic behavior is available, but only by asking for it with
+  /// <see cref="SmtpTransportSecurity.StartTlsWhenAvailable"/>.
+  /// </para>
+  /// </remarks>
+  private SecureSocketOptions ResolveSecureSocketOptions() => TransportSecurity switch
+  {
+    SmtpTransportSecurity.None => SecureSocketOptions.None,
+    SmtpTransportSecurity.Required => Port == ImplicitTlsPort
+      ? SecureSocketOptions.SslOnConnect
+      : SecureSocketOptions.StartTls,
+    SmtpTransportSecurity.ImplicitTls => SecureSocketOptions.SslOnConnect,
+    SmtpTransportSecurity.StartTls => SecureSocketOptions.StartTls,
+    SmtpTransportSecurity.StartTlsWhenAvailable => SecureSocketOptions.StartTlsWhenAvailable,
+    _ => throw SystemInfo.CreateArgumentOutOfRangeException(nameof(TransportSecurity), TransportSecurity,
+      $"The value specified for TransportSecurity is not one of the {nameof(SmtpTransportSecurity)} values.")
+  };
+
+  /// <summary>
   /// Send the email message
   /// </summary>
   /// <param name="messageBody">the body text to include in the mail</param>
@@ -324,10 +378,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     using MimeMessage message = CreateMessage(messageBody);
     using ISmtpTransport transport = _transportFactory().EnsureNotNull();
 
-    transport.Connect(
-        SmtpHost.EnsureNotNullOrEmpty(),
-        Port,
-        EnableSsl ? SecureSocketOptions.Auto : SecureSocketOptions.None);
+    transport.Connect(SmtpHost.EnsureNotNullOrEmpty(), Port, ResolveSecureSocketOptions());
     try
     {
       switch (Authentication)

@@ -491,6 +491,20 @@ The configuration section should look like: <section name=""log4net"" type=""log
       }
       else
       {
+        // The URI is not restricted to a particular scheme and the request below is sent with the
+        // process credentials. Both are intentional and are not vulnerabilities:
+        //
+        // Configuration is operator-supplied and therefore trusted, and the endpoint named here is
+        // part of that configuration - it is trusted for the same reason an appender destination
+        // is. Ensuring that configuration is transmitted only over a confidential channel, and
+        // that the endpoint is one the credentials may be presented to, is a deployer
+        // responsibility. Nothing here is reachable until an operator supplies a URI, either by
+        // calling Configure(Uri) or through the log4net.Config appSetting.
+        //
+        // See the Apache Logging Services common threat model, sections "Configuration
+        // (operator-controlled)" and "Adversary capabilities":
+        // https://raw.githubusercontent.com/apache/logging-site/refs/heads/main/src/site/antora/modules/ROOT/pages/_threat-model-common.adoc
+
         // NETCF dose not support WebClient
         WebRequest? configRequest = null;
 
@@ -749,6 +763,10 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// </remarks>
   private sealed class ConfigureAndWatchHandler : IDisposable
   {
+    // The replaced file is reloaded without re-checking its origin. Keeping the watched file
+    // writable only by the operator is a deployer responsibility, see
+    // https://raw.githubusercontent.com/apache/logging-site/refs/heads/main/src/site/antora/modules/ROOT/pages/_threat-model-common.adoc
+
     /// <summary>
     /// Holds the FileInfo used to configure the XmlConfigurator
     /// </summary>

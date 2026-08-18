@@ -95,7 +95,7 @@ public class PropertyFilter : StringMatchFilter
     if (m_regexToMatch is not null)
     {
       // Check the regex
-      if (m_regexToMatch.Match(msg).Success == false)
+      if (!IsRegexMatch(msg))
       {
         // No match, continue processing
         return FilterDecision.Neutral;

@@ -94,3 +94,26 @@ The following filters are defined in the log4net package:
 |log4net.Filter.StringMatchFilter
 |Matches events containing a specific substring in the message.
 |===
+
+[#filters-regex-timeout]
+== Matching with a regular expression
+
+`StringMatchFilter`, `PropertyFilter`, `MdcFilter` and `NdcFilter` accept a `regexToMatch` instead
+of a `stringToMatch`.
+
+A regular expression that backtracks can take a very long time on some inputs, and the match runs
+while the appender lock is held.
+Matching is therefore given a deadline of one second, configurable with `matchTimeoutMillis`.
+A match that reaches the deadline is abandoned, the filter reports it once and returns `Neutral`,
+and the remaining filters decide the event.
+Prefer a pattern that cannot backtrack; the deadline is a safety net, not a substitute.
+
+[source,xml]
+----
+<filter type="log4net.Filter.StringMatchFilter">
+  <regexToMatch value="user=[a-z0-9._-]+@example\.com" />
+  <matchTimeoutMillis value="1000" />
+</filter>
+----
+
+Setting `matchTimeoutMillis` to `0` lets a match run for as long as it takes and is not recommended.

@@ -576,6 +576,42 @@ public class FileAppender : TextWriterAppender
     private Mutex? _mutex;
     private Stream? _stream;
     private int _recursiveWatch;
+    private int _lockTimeoutMillis = 10_000;
+
+    /// <summary>
+    /// Gets or sets the time, in milliseconds, to wait for the lock before giving up on an event.
+    /// </summary>
+    /// <value>
+    /// A number of milliseconds, 0 to fail immediately when the lock is held, or
+    /// <see cref="Timeout.Infinite"/> to wait for as long as it takes.
+    /// </value>
+    /// <remarks>
+    /// <para>
+    /// The wait happens while the appender lock is held, so a lock nobody releases would otherwise
+    /// suspend every thread logging through this appender. An event that cannot get the lock in
+    /// time is reported and dropped instead.
+    /// </para>
+    /// <para>
+    /// The default value is 10000. Raise it when the file is on storage where the lock is
+    /// legitimately slow to obtain, such as a network share.
+    /// </para>
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// The value specified is negative and is not <see cref="Timeout.Infinite"/>.
+    /// </exception>
+    public int LockTimeoutMillis
+    {
+      get => _lockTimeoutMillis;
+      set
+      {
+        if (value < 0 && value != Timeout.Infinite)
+        {
+          throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+            $"The value specified for LockTimeoutMillis is negative and is not {nameof(Timeout)}.{nameof(Timeout.Infinite)}.");
+        }
+        _lockTimeoutMillis = value;
+      }
+    }
 
     /// <summary>
     /// Open the file specified and prepare for logging.
@@ -641,8 +677,23 @@ public class FileAppender : TextWriterAppender
     {
       if (_mutex is not null)
       {
-        // TODO: add timeout?
-        _mutex.WaitOne();
+        bool acquired;
+        try
+        {
+          acquired = _mutex.WaitOne(LockTimeoutMillis);
+        }
+        catch (AbandonedMutexException)
+        {
+          // Previous owner died without releasing; the wait succeeded and we own the mutex.
+          acquired = true;
+        }
+
+        if (!acquired)
+        {
+          CurrentAppender?.ErrorHandler.Error(
+            $"Timeout after {LockTimeoutMillis}ms waiting for the inter process lock on the log file, so the logging event was not written.");
+          return null;
+        }
 
         // increment recursive watch
         _recursiveWatch++;

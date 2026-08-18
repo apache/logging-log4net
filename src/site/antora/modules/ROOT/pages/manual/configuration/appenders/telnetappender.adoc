@@ -1,0 +1,98 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+[#telnetappender]
+= TelnetAppender
+
+The `TelnetAppender` listens for incoming TCP connections and streams rendered log events to
+every connected client, so that a running application's log can be watched over a socket with a
+telnet client.
+Unlike every other appender, it does not write to a destination you configure: it accepts
+connections from clients that reach it.
+It is intended for diagnostic use on trusted networks; see <<telnetappender-trust>>.
+
+At most 20 clients may be connected at the same time; further connection attempts are answered
+with a message and closed.
+
+The following example configures the appender to listen on port 8023.
+
+[source,xml]
+----
+<appender name="TelnetAppender" type="log4net.Appender.TelnetAppender">
+  <listenAddress value="127.0.0.1" />
+  <port value="8023" />
+  <sendTimeoutMillis value="5000" />
+  <layout type="log4net.Layout.PatternLayout">
+    <conversionPattern value="%date %-5level %logger - %message%newline" />
+  </layout>
+</appender>
+----
+
+[#telnetappender-settings]
+== Settings
+
+`port`::
+The TCP port to listen on.
+The default is `23`, the telnet port.
+
+`listenAddress`::
+The local address to accept connections on.
+The default is `0.0.0.0`, every interface of the machine.
++
+Set it to `127.0.0.1` to accept connections only from the machine the application runs on, which is
+what diagnostic use usually needs.
+An IPv6 address may be given instead, and the listening socket follows its family.
+
+`sendTimeoutMillis`::
+How long, in milliseconds, a write to a client may block before that client is treated as dead
+and disconnected.
+The default is `5000`.
++
+Clients are written to synchronously while the appender lock is held, so a client that connects
+and then stops reading lets TCP flow control fill its receive window.
+A finite timeout bounds how long that client can hold up the threads that log through this
+appender.
+Setting the value to `0` restores blocking indefinitely and is not recommended.
+
+[#telnetappender-trust]
+== Intended use and trust model
+
+This appender is a *diagnostic tool for trusted networks*.
+It is meant for watching the log of a running application during development or while
+investigating a problem, not as a general-purpose logging destination.
+
+Like every other appender destination, the connecting client is *trusted*: by enabling the
+appender the operator declares that whoever can reach the port is allowed to read the
+application's log.
+The appender therefore performs no authentication of its own.
+
+[WARNING]
+====
+The connection is *unauthenticated* and *unencrypted*, and by default the appender listens on *all
+network interfaces*.
+There is no option to require a credential or to enable TLS.
+
+Any client that can reach the port receives the full rendered log stream, including whatever the
+layout renders: user names, session identifiers, request parameters, stack traces.
+Keeping untrusted parties away from the port is the operator's responsibility, exactly as it is
+for a log file:
+
+* Set `listenAddress` to `127.0.0.1` unless clients on other machines really have to connect.
+* Only enable this appender on a trusted network.
+* Restrict access to the port with a host firewall or network policy.
+* Prefer it for local or short-lived diagnostics rather than as a permanent logging destination.
+====

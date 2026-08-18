@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    stop a Telnet client that connects and then stops reading from suspending all logging.
+ `TelnetAppender` writes to its clients while the appender lock is held and set no
+ `Socket.SendTimeout`, so once TCP flow control filled the client's receive window the next write
+ blocked forever and every thread logging through the appender queued behind it (CWE-833). Writes
+ now time out after `SendTimeoutMillis` (5000 by default) and the client is disconnected; 0
+ restores the previous unbounded behavior (audit 1231d72-f001)
+  </description>
+</entry>

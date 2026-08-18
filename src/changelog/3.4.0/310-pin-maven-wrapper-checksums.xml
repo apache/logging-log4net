@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    pin the Maven wrapper and the Maven distribution it downloads with
+ `wrapperSha256Sum` and `distributionSha256Sum`. `mvnw` and `MavenWrapperDownloader` already refuse
+ to run when a download does not match, but neither property was set, so whatever the URLs returned
+ was executed (CWE-494). Both values were taken from artifacts whose PGP signature verifies against
+ the Apache Maven KEYS (audit 1231d72-f023)
+  </description>
+</entry>

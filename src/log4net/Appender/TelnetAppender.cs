@@ -40,6 +40,13 @@ namespace log4net.Appender;
 /// <para>
 /// The default <see cref="Port"/> is 23 (the telnet port).
 /// </para>
+/// <para>
+/// This appender is a diagnostic tool for trusted networks. As with any other appender
+/// destination, the connecting client is trusted: enabling the appender declares that whoever can
+/// reach the port may read the application's log, so no authentication is performed and the stream
+/// is not encrypted. Keeping untrusted parties away from the port is the operator's
+/// responsibility, exactly as it is for a log file.
+/// </para>
 /// </remarks>
 /// <author>Keith Long</author>
 /// <author>Nicko Cadell</author>
@@ -47,6 +54,29 @@ public class TelnetAppender : AppenderSkeleton
 {
   private SocketHandler? _handler;
   private int _listeningPort = 23;
+  private int _sendTimeoutMillis = 5_000;
+  private IPAddress _listenAddress = IPAddress.Any;
+
+  /// <summary>
+  /// Gets or sets the address to listen on.
+  /// </summary>
+  /// <value>
+  /// The local address to accept connections on. The default is <see cref="IPAddress.Any"/>, every
+  /// interface of the machine.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// Set this to <see cref="IPAddress.Loopback"/> to accept connections only from the machine the
+  /// application runs on, which is what the diagnostic use this appender is meant for usually
+  /// needs.
+  /// </para>
+  /// </remarks>
+  /// <exception cref="ArgumentNullException">The value specified is <see langword="null"/>.</exception>
+  public IPAddress ListenAddress
+  {
+    get => _listenAddress;
+    set => _listenAddress = value.EnsureNotNull();
+  }
 
   /// <summary>
   /// The fully qualified type of the TelnetAppender class.
@@ -86,6 +116,42 @@ public class TelnetAppender : AppenderSkeleton
   }
 
   /// <summary>
+  /// Gets or sets the time, in milliseconds, that a write to a client may block before that
+  /// client is treated as dead and disconnected.
+  /// </summary>
+  /// <value>
+  /// A positive number of milliseconds, or 0 to block indefinitely.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// Clients are written to synchronously while the appender lock is held, so a client that
+  /// connects and then stops reading lets TCP flow control fill its receive window and the
+  /// server send buffer. Without a timeout the next write blocks forever and suspends every
+  /// thread that logs through this appender.
+  /// </para>
+  /// <para>
+  /// The default value is 5000 (5 seconds). A write that exceeds it fails with a
+  /// <see cref="SocketException"/>, and the client is then disconnected like any other dead
+  /// connection. Setting the value to 0 restores the previous behavior of blocking
+  /// indefinitely and is not recommended.
+  /// </para>
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
+  public int SendTimeoutMillis
+  {
+    get => _sendTimeoutMillis;
+    set
+    {
+      if (value < 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendTimeoutMillis is negative.");
+      }
+      _sendTimeoutMillis = value;
+    }
+  }
+
+  /// <summary>
   /// Overrides the parent method to close the socket handler
   /// </summary>
   /// <remarks>
@@ -114,8 +180,8 @@ public class TelnetAppender : AppenderSkeleton
     base.ActivateOptions();
     try
     {
-      LogLog.Debug(_declaringType, $"Creating SocketHandler to listen on port [{_listeningPort}]");
-      _handler = new SocketHandler(_listeningPort);
+      LogLog.Debug(_declaringType, $"Creating SocketHandler to listen on [{_listenAddress}]:[{_listeningPort}]");
+      _handler = new SocketHandler(_listenAddress, _listeningPort, _sendTimeoutMillis);
     }
     catch (Exception ex)
     {
@@ -151,6 +217,7 @@ public class TelnetAppender : AppenderSkeleton
     private const int MaxConnections = 20;
 
     private readonly Socket _serverSocket;
+    private readonly int _sendTimeoutMillis;
     private readonly List<SocketClient> _clients = [];
     private readonly object _syncRoot = new();
     private bool _wasDisposed;
@@ -238,13 +305,47 @@ public class TelnetAppender : AppenderSkeleton
     /// <param name="port">the local port to listen on for connections</param>
     /// <remarks>
     /// <para>
-    /// Creates a socket handler on the specified local server port.
+    /// Creates a socket handler on the specified local server port, blocking indefinitely on
+    /// clients that stop reading. Prefer <see cref="SocketHandler(int, int)"/>.
     /// </para>
     /// </remarks>
     public SocketHandler(int port)
+      : this(port, 0)
+    { }
+
+    /// <summary>
+    /// Opens a new server port on <paramref ref="port"/>
+    /// </summary>
+    /// <param name="port">the local port to listen on for connections</param>
+    /// <param name="sendTimeoutMillis">the time, in milliseconds, that a write to a client may
+    /// block before that client is disconnected, or 0 to block indefinitely</param>
+    /// <remarks>
+    /// <para>
+    /// Creates a socket handler on the specified local server port.
+    /// </para>
+    /// </remarks>
+    public SocketHandler(int port, int sendTimeoutMillis)
+      : this(IPAddress.Any, port, sendTimeoutMillis)
+    { }
+
+    /// <summary>
+    /// Opens a new server port on <paramref ref="port"/> of <paramref ref="listenAddress"/>
+    /// </summary>
+    /// <param name="listenAddress">the local address to accept connections on</param>
+    /// <param name="port">the local port to listen on for connections</param>
+    /// <param name="sendTimeoutMillis">the time, in milliseconds, that a write to a client may
+    /// block before that client is disconnected, or 0 to block indefinitely</param>
+    /// <remarks>
+    /// <para>
+    /// Creates a socket handler on the specified local address and server port.
+    /// </para>
+    /// </remarks>
+    public SocketHandler(IPAddress listenAddress, int port, int sendTimeoutMillis)
     {
-      _serverSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-      _serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+      _sendTimeoutMillis = sendTimeoutMillis;
+      // The address decides the family, so that an IPv6 address does not end up on an IPv4 socket.
+      _serverSocket = new(listenAddress.EnsureNotNull().AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+      _serverSocket.Bind(new IPEndPoint(listenAddress, port));
       _serverSocket.Listen(5);
       AcceptConnection();
     }
@@ -332,6 +433,14 @@ public class TelnetAppender : AppenderSkeleton
         // Block until a client connects
         Socket socket = _serverSocket.EndAccept(asyncResult);
         LogLog.Debug(_declaringType, $"Accepting connection from [{socket.RemoteEndPoint}]");
+        if (_sendTimeoutMillis > 0)
+        {
+          // Bound how long a write to this client can block. Clients are written to while the
+          // appender lock is held, so without a timeout a client that stops reading suspends
+          // every thread that logs. A timed-out write throws and the client is then evicted
+          // like any other dead connection.
+          socket.SendTimeout = _sendTimeoutMillis;
+        }
         SocketClient client = new(socket);
 
         // clients.Count is an atomic read that can be done outside the lock.

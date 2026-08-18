@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    report the first error of an appender even when `log4net.Internal.Debug` is off, which is the
+ default. `OnlyOnceErrorHandler` is the default error handler of every appender, so an appender
+ that stopped delivering events previously did so without leaving any trace (CWE-778).
+ `log4net.Internal.Quiet` and `LogLog.EmitInternalMessages` remain the ways to silence internal
+ messages (audit 1231d72-f019)
+  </description>
+</entry>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    fix the lifetime of the `LocalSyslogAppender` identity. `openlog` keeps the pointer it is given
+ rather than a copy of the string, and registers it for the process rather than for an appender.
+ Each `ActivateOptions` allocated a new buffer and forgot the previous one, leaking it (CWE-401),
+ while `OnClose` freed a buffer that another instance may still have been logging through. The
+ handle is now shared, replaced under a lock once `openlog` points at the new string, and left
+ allocated when an appender closes (audit 1231d72-f017)
+  </description>
+</entry>

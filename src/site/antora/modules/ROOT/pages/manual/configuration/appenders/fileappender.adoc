@@ -64,3 +64,35 @@ This example shows how to configure the appender to use the minimal locking mode
   </layout>
 </appender>
 ----
+
+[#fileappender-lock-timeout]
+== Waiting for the lock
+
+`InterProcessLock` coordinates several processes writing to one file through a named mutex.
+The wait for it happens while the appender lock is held, so a lock nobody releases would suspend
+every thread logging through the appender.
+
+The wait is therefore bounded by `lockTimeoutMillis`, 10000 by default.
+An event that cannot get the lock in time is reported through the error handler and dropped, and the
+appender carries on with the next one.
+Raise the value when the file is on storage where the lock is legitimately slow to obtain, such as a
+network share, or set it to `-1` to wait for as long as it takes.
+
+[source,xml]
+----
+<appender name="FileAppender" type="log4net.Appender.FileAppender">
+  <file value="MyApp.log" />
+  <appendToFile value="true" />
+  <lockingModel type="log4net.Appender.FileAppender+InterProcessLock">
+    <lockTimeoutMillis value="10000" />
+  </lockingModel>
+  <layout type="log4net.Layout.PatternLayout">
+    <conversionPattern value="%date [%thread] %-5level %logger %message%newline" />
+  </layout>
+</appender>
+----
+
+`RollingFileAppender` takes a second mutex around the decision to roll and has its own
+`lockTimeoutMillis` for it, with the same default.
+An event that cannot get that lock is written to the current file without checking whether it should
+roll first, rather than waiting.

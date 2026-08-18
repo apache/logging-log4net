@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.IO;
 
 using log4net.Util;
@@ -243,6 +244,15 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// If this property is not set, the command text is retrieved by invoking
   /// <see cref="GetLogStatement(LoggingEvent)"/>.
   /// </para>
+  /// <para>
+  /// Setting this property is strongly recommended. Without it every event is turned into
+  /// a complete SQL statement by the <see cref="AppenderSkeleton.Layout"/> and executed as
+  /// it is. Layouts perform no SQL quoting or escaping and offer no way to add it, so any
+  /// content that reaches a log statement - a user name or a request parameter, for
+  /// example - is executed as part of the statement, with the privileges of the appender's
+  /// connection. Use this property together with <see cref="AdoNetAppenderParameter"/>
+  /// bindings, which pass the content as database parameters instead.
+  /// </para>
   /// </remarks>
   public string? CommandText { get; set; }
 
@@ -363,6 +373,17 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   {
     base.ActivateOptions();
 
+    if (string.IsNullOrWhiteSpace(CommandText))
+    {
+      // Without CommandText every event is turned into a complete SQL statement by the
+      // Layout and executed as it is. Layouts do not quote or escape anything, so a single
+      // quote anywhere in the logged content changes the statement that gets executed.
+      LogLog.Error(_declaringType,
+        $"AdoNetAppender [{Name}]: CommandText is not configured, so the rendered Layout is executed as the SQL statement. "
+        + "Layouts perform no SQL quoting, which makes this mode open to SQL injection from logged content. "
+        + "Configure CommandText together with AdoNetAppenderParameter bindings instead, which pass the content as database parameters.");
+    }
+
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
     InitializeDatabaseConnection();
@@ -394,6 +415,8 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </remarks>
   protected override void SendBuffer(LoggingEvent[] events)
   {
+    events.EnsureNotNull();
+
     if (ReconnectOnError && (Connection is null || Connection.State != ConnectionState.Open))
     {
       LogLog.Debug(_declaringType, $"Attempting to reconnect to database. Current Connection State: {((Connection is null) ? SystemInfo.NullText : Connection.State.ToString())}");
@@ -406,30 +429,45 @@ public class AdoNetAppender : BufferingAppenderSkeleton
     {
       if (UseTransactions)
       {
+        bool retryPerEvent = false;
+
         // Create transaction
         // NJC - Do this on 2 lines because it can confuse the debugger
-        using IDbTransaction dbTran = Connection.BeginTransaction();
-        try
+        using (IDbTransaction dbTran = Connection.BeginTransaction())
         {
-          SendBuffer(dbTran, events);
-
-          // commit transaction
-          dbTran.Commit();
-        }
-        catch (Exception ex) when (!ex.IsFatal())
-        {
-          // rollback the transaction
           try
           {
-            dbTran.Rollback();
-          }
-          catch (Exception inner) when (!inner.IsFatal())
-          {
-            // Ignore exception
-          }
+            SendBuffer(dbTran, events);
 
-          // Can't insert into the database. That's a bad thing
-          ErrorHandler.Error("Exception while writing to database", ex);
+            // commit transaction
+            dbTran.Commit();
+          }
+          catch (Exception ex) when (!ex.IsFatal())
+          {
+            // rollback the transaction
+            try
+            {
+              dbTran.Rollback();
+            }
+            catch (Exception inner) when (!inner.IsFatal())
+            {
+              // Ignore exception
+            }
+
+            // Can't insert into the database. That's a bad thing
+            ErrorHandler.Error("Exception while writing to database", ex);
+
+            retryPerEvent = true;
+          }
+        }
+
+        // The events have already been removed from the buffer, so a rolled back
+        // transaction would lose all of them - including the events logged before the one
+        // the database rejected. Retry them one by one, outside the failed transaction,
+        // so that only the events the database actually rejects are lost.
+        if (retryPerEvent)
+        {
+          SendBufferPerEvent(events);
         }
       }
       else
@@ -493,15 +531,26 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       // run for all events
       foreach (LoggingEvent e in events)
       {
-        // No need to clear dbCmd.Parameters, just use existing.
-        // Set the parameter values
-        foreach (AdoNetAppenderParameter param in m_parameters)
+        try
         {
-          param.FormatValue(dbCmd, e);
-        }
+          // No need to clear dbCmd.Parameters, just use existing.
+          // Set the parameter values
+          foreach (AdoNetAppenderParameter param in m_parameters)
+          {
+            param.FormatValue(dbCmd, e);
+          }
 
-        // Execute the query
-        dbCmd.ExecuteNonQuery();
+          // Execute the query
+          dbCmd.ExecuteNonQuery();
+        }
+        catch (Exception ex) when (dbTran is null && !ex.IsFatal())
+        {
+          // Without a transaction every event stands alone, so an event the database
+          // rejects must not stop the remaining events from being written. In transaction
+          // mode the exception has to propagate - the transaction is in a failed state -
+          // and SendBuffer retries the events individually after the rollback.
+          ErrorHandler.Error("Exception while writing a logging event to the database. Continuing with the remaining events.", ex);
+        }
       }
     }
     else
@@ -515,13 +564,61 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       // run for all events
       foreach (LoggingEvent e in events)
       {
-        // Get the command text from the Layout
-        string logStatement = GetLogStatement(e);
+        try
+        {
+          // Get the command text from the Layout
+          string logStatement = GetLogStatement(e);
 
-        LogLog.Debug(_declaringType, $"LogStatement [{logStatement}]");
+          LogLog.Debug(_declaringType, $"LogStatement [{logStatement}]");
 
-        dbCmd.CommandText = logStatement;
-        dbCmd.ExecuteNonQuery();
+          dbCmd.CommandText = logStatement;
+          dbCmd.ExecuteNonQuery();
+        }
+        catch (Exception ex) when (dbTran is null && !ex.IsFatal())
+        {
+          // See the parameterized path above: contain per-event failures outside transactions.
+          ErrorHandler.Error("Exception while writing a logging event to the database. Continuing with the remaining events.", ex);
+        }
+      }
+    }
+  }
+
+  /// <summary>
+  /// Writes each event with its own command, so that an event the database rejects only
+  /// loses itself.
+  /// </summary>
+  /// <param name="events">The events to insert into the database.</param>
+  /// <remarks>
+  /// <para>
+  /// Used as the fallback after a transactional batch failed and was rolled back. The
+  /// events are sent without a transaction and failures are reported to the
+  /// <see cref="AppenderSkeleton.ErrorHandler"/> without affecting the remaining events.
+  /// </para>
+  /// <para>
+  /// Note that this makes delivery at-least-once rather than exactly-once: if the batch
+  /// failed after the database had already applied some of its statements - for example
+  /// when the commit itself failed but the rollback did not take effect - those events are
+  /// written a second time here. Duplicated events are preferred over silently losing the
+  /// whole buffer.
+  /// </para>
+  /// </remarks>
+  private void SendBufferPerEvent(LoggingEvent[] events)
+  {
+    foreach (LoggingEvent e in events)
+    {
+      if (Connection is not { State: ConnectionState.Open })
+      {
+        // The connection failed rather than a single event - nothing more can be written.
+        return;
+      }
+
+      try
+      {
+        SendBuffer(null, [e]);
+      }
+      catch (Exception ex) when (!ex.IsFatal())
+      {
+        ErrorHandler.Error("Exception while writing a logging event to the database. The event has been dropped.", ex);
       }
     }
   }
@@ -546,8 +643,16 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </summary>
   /// <param name="logEvent">The event being logged.</param>
   /// <remarks>
-  /// This method can be overridden by subclasses to provide 
+  /// <para>
+  /// This method can be overridden by subclasses to provide
   /// more control over the format of the database statement.
+  /// </para>
+  /// <para>
+  /// The returned text is executed as the SQL statement without any quoting, so an override
+  /// that interpolates event content has to escape that content itself. Prefer configuring
+  /// <see cref="CommandText"/> with <see cref="AdoNetAppenderParameter"/> bindings over
+  /// generating statement text here.
+  /// </para>
   /// </remarks>
   /// <returns>
   /// Text that can be passed to a <see cref="IDbCommand"/>.
@@ -684,11 +789,64 @@ public class AdoNetAppender : BufferingAppenderSkeleton
     catch (Exception e) when (!e.IsFatal())
     {
       // Sadly, your connection string is bad.
-      ErrorHandler.Error($"Could not open database connection [{resolvedConnectionString}]. Connection string context [{connectionStringContext}].", e);
+      ErrorHandler.Error($"Could not open database connection [{RedactConnectionString(resolvedConnectionString)}]. Connection string context [{connectionStringContext}].", e);
 
       Connection = null;
     }
   }
+
+  /// <summary>
+  /// Replaces the values of password-bearing keywords in a connection string with
+  /// <see cref="RedactedValue"/>, so that it can be named in a diagnostic message.
+  /// </summary>
+  /// <param name="connectionString">The connection string to redact.</param>
+  /// <returns>
+  /// The connection string with every password value replaced, or <see cref="RedactedValue"/> if it
+  /// could not be parsed.
+  /// </returns>
+  private static string RedactConnectionString(string connectionString)
+  {
+    if (string.IsNullOrEmpty(connectionString))
+    {
+      return connectionString;
+    }
+
+    try
+    {
+      DbConnectionStringBuilder builder = new() { ConnectionString = connectionString };
+
+      List<string> keys = [];
+      foreach (string key in builder.Keys)
+      {
+        keys.Add(key);
+      }
+
+      foreach (string key in keys)
+      {
+        // Providers spell the secret differently - Password, PWD, User Password - so match on
+        // the keyword rather than on a fixed list.
+        if (key.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0
+            || key.Equals("pwd", StringComparison.OrdinalIgnoreCase))
+        {
+          builder[key] = RedactedValue;
+        }
+      }
+
+      return builder.ConnectionString;
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      // The connection string could not be parsed - which is likely, given that it just failed
+      // to connect - so redact all of it rather than risk echoing a password.
+      LogLog.Debug(_declaringType, "Could not parse the connection string in order to redact it", e);
+      return RedactedValue;
+    }
+  }
+
+  /// <summary>
+  /// Stands in for a password in diagnostic messages.
+  /// </summary>
+  private const string RedactedValue = "*****";
 
   /// <summary>
   /// Cleanup the existing connection.

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    stop `LoggingEvent.UserName` reporting the wrong user for an event logged while impersonating.
+ The property resolved the identity of whichever thread read it, so with a buffering appender the
+ buffered events were attributed to the thread flushing the buffer rather than the one that logged
+ them (CWE-282). An event logged while impersonating now takes its user name with it when it is
+ fixed, and an event read on an impersonating thread reports the not available text instead of that
+ thread's user. Without impersonation the name is the process identity, which is the same on every
+ thread, so it is still resolved lazily and nothing changes (audit 1231d72-f014)
+  </description>
+</entry>

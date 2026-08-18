@@ -82,7 +82,10 @@ public sealed class SystemStringFormat(IFormatProvider? provider, string format,
         return format;
       }
 
-      // Try to format the string
+      // An alignment such as "{0,2000000000}" allocates before anything can reject it, and the
+      // OutOfMemoryException is fatal and escapes the catch below. Not guarded against: the format
+      // string is trusted developer input, see
+      // https://raw.githubusercontent.com/apache/logging-site/refs/heads/main/src/site/antora/modules/ROOT/pages/_threat-model-common.adoc
       return string.Format(provider, format, args);
     }
     catch (Exception e) when (!e.IsFatal())

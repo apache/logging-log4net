@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    give `RegexToMatch` matching a deadline in `StringMatchFilter` and the filters deriving from it,
+ `PropertyFilter`, `MdcFilter` and `NdcFilter`. The pattern was matched with
+ `Regex.InfiniteMatchTimeout` while the appender lock was held, so a pattern that backtracks could
+ stall everything logging through the appender on some inputs. Matching now stops after
+ `MatchTimeoutMillis`, 1000 by default, and an abandoned match is reported once and leaves the event
+ to the rest of the filter chain; 0 restores unbounded matching. The pattern comes from
+ configuration and is trusted, so this is hardening rather than a vulnerability fix
+ (audit 1231d72-f013)
+  </description>
+</entry>

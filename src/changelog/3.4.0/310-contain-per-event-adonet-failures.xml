@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    stop a single logging event that the database rejects from discarding the whole buffer in
+ `AdoNetAppender`. The events have already been removed from the buffer when they are sent, so a
+ rolled back transaction lost up to `BufferSize` unrelated events, which an attacker could trigger
+ repeatedly with content the provider refuses, such as `U+0000` on npgsql (CWE-778). Delivery
+ becomes at-least-once: events already applied by a batch that then failed may be written again
+ (audit 1231d72-f004)
+  </description>
+</entry>

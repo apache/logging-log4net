@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="310" link="https://github.com/apache/logging-log4net/pull/310"/>
+  <description format="asciidoc">
+    make `TextWriterAppender` and the appenders deriving from it, including `FileAppender` and
+ `RollingFileAppender`, flush under the appender lock. `Flush` synchronized on a private object while
+ `Append` runs under the lock taken by `DoAppend`, so a flush could run concurrently with a write to
+ the same `QuietTextWriter`, which is not thread safe, and interleave or lose output. `Flush` also
+ returned `true` whatever happened and let a failure from the underlying writer escape to its
+ caller; it now reports through the `ErrorHandler` and returns `false` (audit 1231d72-f020)
+  </description>
+</entry>
