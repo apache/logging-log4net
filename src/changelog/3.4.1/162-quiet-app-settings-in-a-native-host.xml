@@ -10,5 +10,6 @@
   it fails with `PlatformNotSupportedException` before any config file is read. That is now recognised
   as an absent configuration system, the same as under Native AOT: it is logged once at debug level and
   application settings are read from environment variables instead
-  (reported by @viktorgobbi, fixed by @FreeAndNil)</description>
+  (reported by @viktorgobbi,
+  fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/311[#311])</description>
 </entry>
