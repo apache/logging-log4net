@@ -750,7 +750,7 @@
     "semantic_hash": "d45abe01d11cdd42c1f9298b70eb0a0b"
   },
   "src/log4net.Tests/Util/SystemInfoTest.cs": {
-    "mtime": 1787167595.1477523,
+    "mtime": 1787170071.9646068,
     "ast_hash": "f274bffe26a405bcca666d7be9db9a31",
     "semantic_hash": ""
   },
@@ -1900,7 +1900,7 @@
     "semantic_hash": "e40ea65a8ae303a305a0a51805c0627c"
   },
   "src/log4net/Util/SystemInfo.cs": {
-    "mtime": 1787167745.2936997,
+    "mtime": 1787171561.7977078,
     "ast_hash": "528793d1e2f3c9da86633e759a28e499",
     "semantic_hash": ""
   },
@@ -2010,8 +2010,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/build.yaml": {
-    "mtime": 1787041914.4702363,
-    "ast_hash": "ab413a3cd0823e6f8fee27a4ef6f09dc",
+    "mtime": 1787171608.233604,
+    "ast_hash": "15890809df0f98f97a12d332ced08d0c",
     "semantic_hash": ""
   },
   "AGENTS.md": {
@@ -2020,8 +2020,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1787167510.25325,
-    "ast_hash": "e2732c586fdd84de28721eb171ac7b97",
+    "mtime": 1787171243.436365,
+    "ast_hash": "9378cea36946f91e2bfef0d2f4ce98f9",
     "semantic_hash": ""
   },
   "README.md": {
@@ -2140,7 +2140,7 @@
     "semantic_hash": ""
   },
   "src/log4net.Ext.Mail.Tests/log4net.Ext.Mail.Tests.csproj": {
-    "mtime": 1787041914.4806013,
+    "mtime": 1787171229.3359876,
     "ast_hash": "f1174d5188970ed00294e46cab40264a",
     "semantic_hash": ""
   },
@@ -2205,8 +2205,8 @@
     "semantic_hash": ""
   },
   "src/log4net.Tests.Aot/Program.cs": {
-    "mtime": 1787041914.4877694,
-    "ast_hash": "86bea13ca1ed4adc2c545b3496028ef7",
+    "mtime": 1787171441.4067352,
+    "ast_hash": "d5242e5f97ad062b91e622f4c05470f3",
     "semantic_hash": ""
   },
   "src/log4net.Tests.Aot/log4net.Tests.Aot.csproj": {
@@ -2242,6 +2242,11 @@
   "src/log4net/Diagnostics/CodeAnalysis/UnconditionalSuppressMessageAttribute.cs": {
     "mtime": 1787041914.511018,
     "ast_hash": "34b9ef2654ae14695a5aab2715e34f2b",
+    "semantic_hash": ""
+  },
+  "src/log4net.Tests.Aot/NativeHostCheck.cs": {
+    "mtime": 1787171620.3117375,
+    "ast_hash": "7d35fb652ee7d2ebd3aabf707c652364",
     "semantic_hash": ""
   }
 }
