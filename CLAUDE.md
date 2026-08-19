@@ -76,6 +76,14 @@ almost always be doing.
 ### Projects and dependencies
 - All package versions live in `src/Directory.Build.props` as `<XxxPackageVersion>` properties.
   Never hardcode a version in a `.csproj`.
+- Such a version is a floor, and raising one is a minor-release change, never part of a fix.
+  NuGet resolves to the maximum of all requests, so a consumer who updates gets the newer
+  version through their own graph whatever our floor says; the only consumers a floor moves are
+  those who pinned deliberately, and they get an `NU1605` downgrade error that stops their build.
+  Argue a bump on dependency-hygiene grounds on its own, not as a fix for the symptom that
+  prompted it.
+- `System.Configuration.ConfigurationManager` is referenced only when `TargetFramework != net462`
+  (`src/log4net/log4net.csproj:82-88`), so its floor affects the `netstandard2.0` asset alone.
 - `Log4NetAssert` and the `Diagnostics/CodeAnalysis` attributes are `internal` to `log4net`.
   Satellite projects therefore *compile the sources in* rather than referencing them:
   `<Compile Include="..\log4net\Util\Log4NetAssert.cs" Link="Util\Log4NetAssert.cs" />`
@@ -120,6 +128,10 @@ almost always be doing.
 - Guard platform-specific tests with `[Platform("Win")]` / `[Platform("Linux")]`. A test that only
   runs on Windows leaves the behaviour unverified in local Linux runs, so prefer a cross-platform
   home for the assertion when one exists.
+- When a diagnosis genuinely needs the other operating system, ask the user to continue the work
+  in a session on that platform rather than approximating it. Many devlopers work on both Linux and Windows
+  and can switch, so leave a handoff note with what is established and what still needs the other
+  machine, as was done for issue #162.
 - `NUnit.Analyzers` warnings are errors too: for example NUnit1032 requires an `IDisposable` fixture
   field to be disposed in a `[TearDown]` method.
 - For code that talks to the outside world, introduce a narrow interface and hand-write a fake;
@@ -131,6 +143,23 @@ almost always be doing.
   MSBuild's console logger formats differently when piped than when redirected, so a multi-line
   diagnostic message then looks truncated when it is not. Before reporting that the toolchain
   mangles something, re-check with `dotnet build … > out.txt 2>&1` and inspect `out.txt`.
+
+### Application settings without a configuration system
+
+`SystemInfo.GetAppSetting` degrades to environment variables when the configuration system is
+unavailable, and `IsMissingConfigurationSystem` decides that from the shape of the exception. The
+unit tests construct those exceptions by hand; to see the real thing:
+
+- The trigger is `Assembly.GetEntryAssembly() == null`, which is true in any process that hosts
+  the runtime natively. Reflecting onto the internal `Assembly.SetEntryAssembly(null)` reproduces
+  it in-process on .NET 10, P/Invoking `hostfxr` from `powershell.exe` 5.1 loads the CoreCLR side
+  by side in a .NET Framework process, and a C++ host built with `cl.exe` is the real case from
+  issue #162. All three produce the same exception chain.
+- Which `System.Configuration.ConfigurationManager` asset is loaded decides the behaviour. The
+  net4x assets are around 92 KB and only forward types to the in-box `System.Configuration`, which
+  handles a null entry assembly happily; the `netstandard2.0` asset (around 382 KB at 4.5.0) is the
+  ported implementation that fails. A `netstandard2.0` build output dropped into a .NET Framework
+  host therefore behaves unlike the same library restored from NuGet on `net4x`.
 
 ## Changelog
 
