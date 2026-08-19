@@ -129,7 +129,7 @@ almost always be doing.
   runs on Windows leaves the behaviour unverified in local Linux runs, so prefer a cross-platform
   home for the assertion when one exists.
 - When a diagnosis genuinely needs the other operating system, ask the user to continue the work
-  in a session on that platform rather than approximating it. Many devlopers work on both Linux and Windows
+  in a session on that platform rather than approximating it. Many developers work on both Linux and Windows
   and can switch, so leave a handoff note with what is established and what still needs the other
   machine, as was done for issue #162.
 - `NUnit.Analyzers` warnings are errors too: for example NUnit1032 requires an `IDisposable` fixture
