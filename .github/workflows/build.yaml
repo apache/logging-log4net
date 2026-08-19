@@ -73,3 +73,19 @@ jobs:
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             & "./aot-probes/log4net.Tests.Aot$($IsWindows ? '.exe' : '')"
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      # A process that hosts the runtime natively has no entry assembly, so the configuration
+      # system cannot work out where the config file is (issue #162). The check owns the process
+      # from its first statement, because the configuration system caches its initialization and
+      # log4net reads its first setting from a static constructor, so it cannot be one of the
+      # probes above.
+      #
+      # JIT only, deliberately: under Native AOT the configuration system is trimmed away, so the
+      # first setting read fails as a missing constructor long before it can fail for want of an
+      # entry assembly. The published executable passes this check with the fix reverted, which
+      # makes it a green that cannot fail for the reason the check exists.
+      - name: AOT probes, no entry assembly
+        shell: pwsh
+        run: |
+            dotnet run --project ./src/log4net.Tests.Aot/log4net.Tests.Aot.csproj -c Release -- --no-entry-assembly
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

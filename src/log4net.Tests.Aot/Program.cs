@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using log4net.Util;
@@ -42,8 +43,15 @@ internal static class Program
   /// </summary>
   internal const string EnvironmentProbeKey = "log4net.AotEnvironmentProbe";
 
-  private static int Main()
+  private static int Main(string[] args)
   {
+    if (args.Contains(NativeHostCheck.Argument))
+    {
+      // Owns the process from here: it has to remove the entry assembly before anything reads a
+      // setting, so it cannot share a run with the probes.
+      return NativeHostCheck.Run();
+    }
+
     // The probes report their own failures, so log4net's internal error reporting is only noise
     // here, and a passing run that prints errors reads as a broken one.
     LogLog.EmitInternalMessages = false;
