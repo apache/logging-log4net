@@ -171,6 +171,13 @@ Every user-visible change gets an entry in `src/changelog/<unreleased version>/`
   `missing attribute: link` otherwise, which is only caught by the Maven site build.
 - Put anything that has no issue number, such as an external finding identifier, in the description
   text rather than inventing an `<issue>` for it.
+- Close the description with an attribution in parentheses, crediting both sides: who raised it and
+  who did the work, as in `(reported by @viktorgobbi, fixed by @FreeAndNil)`. `implemented by` reads
+  better than `fixed by` for an `added` or `changed` entry, and once a pull request exists the house
+  form appends it: `fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/246[#246]`.
+  Take the fixer from the active committers in `STATUS.txt`, whose Apache ids are the GitHub handles
+  (`freeandnil`, `gdziadkiewicz`, `davydm`), and identify which one from the session's `git config
+  user.email`. Ask rather than guess if that does not match a listed committer.
 - `src/changelog/3.3.2/298-fix-interprocesslock-mutex-leak.xml` shows the shape for a change that
   came out of an external audit.
 
