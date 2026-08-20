@@ -721,12 +721,13 @@ public static class SystemInfo
     {
       if (IsMissingConfigurationSystem(e))
       {
-        // There is no configuration system to read - Native AOT trims System.Configuration away.
-        // That is a property of the runtime rather than a fault, so it is not reported as an
-        // error, and the environment stands in for the config file as it does on Android.
+        // There is no configuration system to read - Native AOT trims System.Configuration away,
+        // and a native process hosting the runtime has no entry assembly for it to derive the
+        // config file path from. That is a property of the host rather than a fault, so it is not
+        // reported as an error, and the environment stands in for the config file as on Android.
         _configurationSystemUnavailable = true;
         LogLog.Debug(_declaringType,
-          "No configuration system on this runtime. Using environment variables for application settings.", e);
+          "No configuration system on this host. Using environment variables for application settings.", e);
         return Environment.GetEnvironmentVariable(key);
       }
 
@@ -746,10 +747,12 @@ public static class SystemInfo
   /// <returns><see langword="true"/> if the configuration system itself is unavailable</returns>
   /// <remarks>
   /// <para>
-  /// The inner exceptions have to be walked, because Native AOT surfaces this as a
+  /// The inner exceptions have to be walked, because the runtime surfaces both cases as a
   /// <see cref="ConfigurationErrorsException"/> - the very type a malformed file produces. What
-  /// distinguishes it is further down the chain: a <see cref="MissingMethodException"/> for
-  /// <c>ClientConfigurationHost</c>, whose constructor the trimmer removed.
+  /// distinguishes them is further down the chain: under Native AOT a
+  /// <see cref="MissingMethodException"/> for <c>ClientConfigurationHost</c>, whose constructor the
+  /// trimmer removed, and in a native process hosting the runtime a
+  /// <see cref="PlatformNotSupportedException"/> from <c>ClientConfigPaths</c>.
   /// </para>
   /// <para>
   /// An unrecognized failure is treated as a configuration file problem, which is the safer way
@@ -773,6 +776,11 @@ public static class SystemInfo
     {
       switch (exception)
       {
+        // The configuration system cannot work out where the config file is, because there is no
+        // entry assembly to derive its path from. That is what a native process hosting the runtime
+        // looks like, and no config file can be read there however well formed it is. A malformed
+        // file never produces this, so it needs no check on which assembly it came from.
+        case PlatformNotSupportedException:
         case FileNotFoundException { FileName: string fileName }
           when IsConfigurationSystem(fileName):
         case TypeLoadException { TypeName: string typeName }

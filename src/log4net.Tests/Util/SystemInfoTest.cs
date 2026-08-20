@@ -274,6 +274,19 @@ public class SystemInfoTest
       new ConfigurationErrorsException("An error occurred creating the configuration section handler",
         new FileNotFoundException("Could not load file or assembly", "Contoso.SectionHandlers"))), Is.False);
 
+  /// <summary>
+  /// A process that hosts the runtime natively has no entry assembly for the configuration system
+  /// to derive the config file path from, so it cannot read a config file whatever state that file
+  /// is in. That is recognised and the environment stands in, rather than being reported as a
+  /// malformed file on every setting log4net reads.
+  /// </summary>
+  [Test]
+  public void NativeHostExceptionIsRecognised()
+    => Assert.That(IsMissingConfigurationSystem(
+        new ConfigurationErrorsException("Configuration system failed to initialize",
+          new PlatformNotSupportedException("Operation is not supported on this platform."))),
+      Is.True);
+
   private static bool IsMissingConfigurationSystem(Exception exception)
   {
     MethodInfo method = typeof(SystemInfo).GetMethod("IsMissingConfigurationSystem", BindingFlags.Static | BindingFlags.NonPublic)

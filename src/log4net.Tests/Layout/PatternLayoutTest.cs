@@ -21,7 +21,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+#if NET8_0_OR_GREATER
 using System.Linq;
+#endif
 using System.Threading;
 using log4net.Config;
 using log4net.Core;
@@ -37,15 +39,16 @@ namespace log4net.Tests.Layout;
 /// <summary>
 /// Used for internal unit testing the <see cref="PatternLayout"/> class.
 /// </summary>
-/// <remarks>
-/// Used for internal unit testing the <see cref="PatternLayout"/> class.
-/// </remarks>
 [TestFixture]
 public class PatternLayoutTest
 {
   private CultureInfo? _currentCulture;
   private CultureInfo? _currentUiCulture;
 
+  /// <summary>
+  /// Renders in the invariant culture, so that the dates and numbers the tests assert on do not
+  /// depend on the machine's locale.
+  /// </summary>
   [SetUp]
   public void SetUp()
   {
@@ -54,6 +57,10 @@ public class PatternLayoutTest
     _currentUiCulture = Thread.CurrentThread.CurrentUICulture;
     Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
   }
+
+  /// <summary>
+  /// Removes the context property the tests set and restores the culture <see cref="SetUp"/> replaced.
+  /// </summary>
   [TearDown]
   public void TearDown()
   {
@@ -63,10 +70,23 @@ public class PatternLayoutTest
     Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
   }
 
+  /// <summary>
+  /// Creates the layout every test in this fixture renders with.
+  /// </summary>
+  /// <returns>the layout under test</returns>
   protected virtual PatternLayout NewPatternLayout() => new();
 
+  /// <summary>
+  /// Creates the layout every test in this fixture renders with, from a conversion pattern.
+  /// </summary>
+  /// <param name="pattern">the conversion pattern</param>
+  /// <returns>the layout under test</returns>
   protected virtual PatternLayout NewPatternLayout(string pattern) => new(pattern);
 
+  /// <summary>
+  /// %property{key} renders a value taken from <see cref="ThreadContext"/>, and the null text while
+  /// the property is unset or has been removed again.
+  /// </summary>
   [Test]
   public void TestThreadPropertiesPattern()
   {
@@ -97,6 +117,9 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  /// <summary>
+  /// %stacktrace{2} names the method that logged the event.
+  /// </summary>
   [Test]
   public void TestStackTracePattern()
   {
@@ -115,6 +138,10 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  /// <summary>
+  /// %property{key} renders a value taken from <see cref="GlobalContext"/>, and the null text while
+  /// the property is unset or has been removed again.
+  /// </summary>
   [Test]
   public void TestGlobalPropertiesPattern()
   {
@@ -145,6 +172,10 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  /// <summary>
+  /// A converter registered with <c>AddConverter</c> is picked up by its name in the conversion
+  /// pattern.
+  /// </summary>
   [Test]
   public void TestAddingCustomPattern()
   {
@@ -167,6 +198,11 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  /// <summary>
+  /// A <see cref="NamedPatternConverter"/> without a precision renders the whole name, dots and all.
+  /// The empty string, a bare dot and a leading or trailing dot are covered, because those are where
+  /// an off by one in the index arithmetic would show.
+  /// </summary>
   [Test]
   public void NamedPatternConverterWithoutPrecisionShouldReturnFullName()
   {
@@ -214,6 +250,10 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  /// <summary>
+  /// A precision of 1 keeps the last dot separated component, and leaves a name that ends in a dot,
+  /// or has no dot at all, as it is.
+  /// </summary>
   [Test]
   public void NamedPatternConverterWithPrecision1ShouldStripLeadingStuffIfPresent()
   {
@@ -261,6 +301,9 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  /// <summary>
+  /// A precision of 2 keeps the last two dot separated components.
+  /// </summary>
   [Test]
   public void NamedPatternConverterWithPrecision2ShouldStripLessLeadingStuffIfPresent()
   {
@@ -323,6 +366,9 @@ public class PatternLayoutTest
     protected override void Convert(TextWriter writer, LoggingEvent loggingEvent) => loggingEvent.WriteRenderedMessage(writer);
   }
 
+  /// <summary>
+  /// %exception{stacktrace} renders the null text rather than the stack trace of the logged exception.
+  /// </summary>
   [Test]
   public void TestExceptionPattern()
   {
@@ -343,6 +389,10 @@ public class PatternLayoutTest
     stringAppender.Reset();
   }
 
+  /// <summary>
+  /// Two %utcdate converters in one pattern each render in their own format, and both follow the
+  /// timestamp of the event rather than reusing what they rendered for the previous one.
+  /// </summary>
   [Test]
   public void ConvertMultipleDatePatternsTest()
   {
@@ -364,6 +414,9 @@ public class PatternLayoutTest
   }
 
 #if NET8_0_OR_GREATER
+  /// <summary>
+  /// A date format with microsecond precision renders all six fractional digits.
+  /// </summary>
   [Test]
   public void ConvertMicrosecondsPatternTest()
   {
@@ -381,6 +434,10 @@ public class PatternLayoutTest
     Assert.That(stringAppender.GetString(), Is.EqualTo("20250210 13:01:02.123456"));
   }
 
+  /// <summary>
+  /// Microsecond timestamps stay distinct across events logged in a tight loop, so no part of the
+  /// rendered date is cached between events.
+  /// </summary>
   [Test]
   public void ConvertMultipleMicrosecondsPatternTest()
   {
@@ -404,9 +461,14 @@ public class PatternLayoutTest
   }
 #endif
 
+  /// <summary>
+  /// Converter that treats the message of an event as the name a <see cref="NamedPatternConverter"/>
+  /// works on, so that the precision handling can be exercised with arbitrary input.
+  /// </summary>
   [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
   private sealed class MessageAsNamePatternConverter : NamedPatternConverter
   {
+    /// <inheritdoc/>
     protected override string GetFullyQualifiedName(LoggingEvent loggingEvent) => loggingEvent.MessageObject?.ToString() ?? string.Empty;
   }
 }
