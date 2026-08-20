@@ -22,8 +22,8 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Label="Package Versions">
-    <VersionPrefix>3.4.0</VersionPrefix>
-    <Log4NetPackageVersion>3.3.2</Log4NetPackageVersion>
+    <VersionPrefix>3.4.1</VersionPrefix>
+    <Log4NetPackageVersion>3.4.0</Log4NetPackageVersion>
     <MailKitPackageVersion>4.17.0</MailKitPackageVersion>
     <SystemConfigurationConfigurationManagerPackageVersion>4.5.0</SystemConfigurationConfigurationManagerPackageVersion>
     <MicrosoftSourceLinkGitHubPackageVersion>8.0.0</MicrosoftSourceLinkGitHubPackageVersion>
