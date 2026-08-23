@@ -131,7 +131,7 @@ The `RemoteSyslogAppender` uses the UDP protocol to send log messages to the sys
 However, there are size limitations associated with UDP:
 
 * **Message size:** Each log message is limited to **64 KB**, including both the message content and the headers.
-* **Practical size limit:** On many networks, such as Ethernet, the practical limit for message size is typically much lower — around **1500 bytes**.
+* **Practical size limit:** On many networks, such as Ethernet, the practical limit for message size is typically much lower, around **1500 bytes**.
 * **Message truncation:** If a log message exceeds these size limits, it will be **truncated**, which means some of the message content will be lost.
 
 To avoid truncation, ensure that log messages are kept within the size limits of your network setup.

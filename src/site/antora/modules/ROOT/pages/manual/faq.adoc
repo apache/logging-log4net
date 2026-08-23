@@ -230,7 +230,7 @@ log.Debug("Entry number: " + i + " is " + entry[i]);
 log.Debug($"Entry number: {i} is {entry[i]}");
 ----
 
-incurs the cost of constructing the message, including converting values to strings and concatenating them—regardless of whether the message is logged.
+incurs the cost of constructing the message, including converting values to strings and concatenating them, regardless of whether the message is logged.
 
 A more efficient alternative is to use log.DebugFormat etc., which formats the message only if the log level is enabled:
 
@@ -252,7 +252,7 @@ if (log.IsDebugEnabled)
 [#locking-models]
 === How do I get multiple process to log to the same file?
 
-Before proceeding, consider if it's absolutely necessary to have multiple processes log to the same file — it's often better to avoid this.
+Before proceeding, consider if it's absolutely necessary to have multiple processes log to the same file: it's often better to avoid this.
 
 FileAppender offers different locking models, but they have limitations:
 

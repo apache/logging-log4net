@@ -328,7 +328,7 @@ log4net can render the content of log messages using custom logic defined by the
 For example, if you often log `Orange` objects, you can register an `OrangeRenderer` to format them consistently in logs.
 
 Renderers follow the class hierarchy.
-If you register a `FruitRenderer`, it will be used for all `Fruit` types—including `Orange`—unless a more specific `OrangeRenderer` is also registered.
+If you register a `FruitRenderer`, it will be used for all `Fruit` types (including `Orange`) unless a more specific `OrangeRenderer` is also registered.
 
 Renderers must implement the `log4net.ObjectRenderer.IObjectRenderer` interface.
 

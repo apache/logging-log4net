@@ -128,7 +128,7 @@ This prevents logging events from being passed to ancestor appenders beyond that
 
 [NOTE]
 ====
-If the `Animals` logger has `additivity = false`, then the `Animals.Carnivora` logger will only send its log messages to its own appenders and to `Animals`’ appenders—
+If the `Animals` logger has `additivity = false`, then the `Animals.Carnivora` logger will only send its log messages to its own appenders and to `Animals`’ appenders,
 but not to any appenders higher up in the hierarchy, such as those on the root logger.
 ====
 

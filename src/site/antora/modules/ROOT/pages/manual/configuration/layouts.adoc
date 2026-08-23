@@ -34,13 +34,13 @@ This section outlines some common concerns shared by most predefined layouts in 
 In modern production environments, logs are typically not read from local files by engineers.
 Instead, they are sent to log ingestion systems like Elasticsearch, Google Cloud Logging, or similar platforms for observability, metrics, and monitoring purposes.
 
-To support this, logs must be encoded in a machine-readable format — a practice known as *structured logging*.
+To support this, logs must be encoded in a machine-readable format, a practice known as *structured logging*.
 
 log4net provides support for structured logging through specialized layouts.
 For production use cases, we recommend using either:
 
-* `XmlLayout` — for structured XML output.
-* `JsonLayout` — via the external project https://gitlab.com/gdziadkiewicz/log4net.Ext.Json/-/blob/develop/log4net.Ext.Json/Layout/SerializedLayout.cs[log4net.Ext.Json].
+* `XmlLayout` - for structured XML output.
+* `JsonLayout` - via the external project https://gitlab.com/gdziadkiewicz/log4net.Ext.Json/-/blob/develop/log4net.Ext.Json/Layout/SerializedLayout.cs[log4net.Ext.Json].
 
 These layouts help ensure your logs are compatible with log aggregation and analysis tools.
 
@@ -84,7 +84,7 @@ will yield the output
 The `DynamicPatternLayout` should be used whenever the header or footer needs to include information that may change over time.
 
 Unlike the static `PatternLayout`, which renders headers and footers only once, the `DynamicPatternLayout` re-evaluates its pattern every time it is invoked.
-This makes it possible, for example, to include the current date and time in the header or footer—something not possible with the static layout.
+This makes it possible, for example, to include the current date and time in the header or footer, something not possible with the static layout.
 
 The following example shows how to configure the `DynamicPatternLayout`:
 
