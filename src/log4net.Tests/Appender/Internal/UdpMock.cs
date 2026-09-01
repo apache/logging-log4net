@@ -17,6 +17,7 @@
 //
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -44,9 +45,20 @@ internal sealed class UdpMock : IUdpConnection
   /// </summary>
   internal (int LocalPort, IPAddress Host, int RemotePort)? ConnectedTo { get; private set; }
 
+  /// <summary>
+  /// When set, <see cref="Connect(int, IPAddress, int)"/> throws this.
+  /// </summary>
+  internal Exception? ConnectException { get; set; }
+
   /// <inheritdoc/>
-  public void Connect(int localPort, IPAddress host, int remotePort) 
-    => ConnectedTo = (localPort, host, remotePort);
+  public void Connect(int localPort, IPAddress host, int remotePort)
+  {
+    ConnectedTo = (localPort, host, remotePort);
+    if (ConnectException is Exception exception)
+    {
+      throw exception;
+    }
+  }
 
   /// <inheritdoc/>
   public void Dispose() => WasDisposed = true;

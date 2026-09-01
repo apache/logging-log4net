@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="314" link="https://github.com/apache/logging-log4net/pull/314"/>
+  <description format="asciidoc">
+    stop `RemoteSyslogAppender` from opening a second, unused UDP socket. It sends through the
+ connection its background pump owns, but also inherited one from `UdpAppender` that nothing ever
+ used, which bound `localPort` twice. A pump that cannot connect now reports it as well, instead
+ of ending unobserved and leaving every later event queued behind a sender that is gone
+ (implemented by @FreeAndNil)
+  </description>
+</entry>

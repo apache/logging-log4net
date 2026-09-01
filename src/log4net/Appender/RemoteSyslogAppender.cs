@@ -645,12 +645,36 @@ public class RemoteSyslogAppender : UdpAppender
     base.OnClose();
   }
 
+  /// <inheritdoc/>
+  /// <remarks>
+  /// Deliberately empty: this appender sends through the connection its pump owns, so the
+  /// inherited client would be a second socket that nothing ever uses.
+  /// </remarks>
+  protected override void InitializeClientConnection()
+  {
+  }
+
   private async Task ProcessQueueAsync(CancellationToken token)
   {
     // We create our own UdpClient here, so that client lifetime is tied to this task
-    using IUdpConnection udpClient = CreateUdpConnection();
-    udpClient.Connect(LocalPort, RemoteAddress.EnsureNotNull(), RemotePort);
+    IUdpConnection udpClient;
+    try
+    {
+      udpClient = CreateUdpConnection();
+      udpClient.Connect(LocalPort, RemoteAddress.EnsureNotNull(), RemotePort);
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      // Outside the loop below, so this would otherwise fault the pump unobserved and leave
+      // every later event queued behind a sender that is no longer running.
+      ErrorHandler.Error(
+        $"Unable to connect to remote syslog {RemoteAddress} on port {RemotePort} from local port {LocalPort}. "
+        + "No logging event will be sent.",
+        e, ErrorCode.GenericFailure);
+      return;
+    }
 
+    using IUdpConnection connection = udpClient;
     try
     {
       while (!token.IsCancellationRequested)
