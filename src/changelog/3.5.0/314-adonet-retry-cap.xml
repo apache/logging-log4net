@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="314" link="https://github.com/apache/logging-log4net/pull/314"/>
+  <description format="asciidoc">
+    stop `AdoNetAppender` from retrying a whole batch one event at a time when none of them can be
+ written. Retrying after a rolled back transaction was added in 3.4.0 to save the events around
+ the one the database rejected, but a batch that fails outright, such as a missing table or a
+ missing permission, then cost one round trip per event: 513 instead of 1 for a full buffer. It
+ now gives up after five consecutive failures (implemented by @FreeAndNil)
+  </description>
+</entry>
