@@ -18,10 +18,8 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Layout;
@@ -279,9 +277,11 @@ public class RemoteSyslogAppender : UdpAppender
     Keep
   }
   
-  private readonly BlockingCollection<byte[]> _sendQueue = new();
-  private CancellationTokenSource? _cancellationTokenSource;
-  private Task? _pumpTask;
+  private const int CloseTimeoutMillis = 5_000;
+  private IUdpConnection? _connection;
+  private BackgroundSender<byte[]>? _sender;
+  private int _sendQueueSize = 500;
+  private int _enqueueTimeoutMillis = 5_000;
 
   /// <summary>
   /// Initializes a new instance of the <see cref="RemoteSyslogAppender" /> class.
@@ -389,7 +389,8 @@ public class RemoteSyslogAppender : UdpAppender
         // Grab as a byte array
         byte[] buffer = Encoding.GetBytes(builder.ToString());
 
-        _sendQueue.Add(buffer);
+        // A full queue is reported by the sender itself.
+        _sender?.TryEnqueue(buffer, EnqueueTimeoutMillis);
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -524,10 +525,89 @@ public class RemoteSyslogAppender : UdpAppender
         $"The NewLineHandling is not {SyslogNewLineHandling.Escape} or {SyslogNewLineHandling.Keep} or {SyslogNewLineHandling.Split}.");
     }
     _levelMapping.ActivateOptions();
-    // Start the background pump
-    _cancellationTokenSource = new();
-    _pumpTask = Task.Factory.StartNew(() => ProcessQueueAsync(_cancellationTokenSource.Token), CancellationToken.None,
-      TaskCreationOptions.LongRunning, TaskScheduler.Default);
+    StopSending();
+
+    IUdpConnection connection = CreateUdpConnection();
+    try
+    {
+      connection.Connect(LocalPort, RemoteAddress.EnsureNotNull(), RemotePort);
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      ErrorHandler.Error(
+        $"Unable to connect to remote syslog {RemoteAddress} on port {RemotePort} from local port {LocalPort}. "
+        + "No logging event will be sent.",
+        e, ErrorCode.GenericFailure);
+      connection.Dispose();
+      return;
+    }
+
+    _connection = connection;
+    _sender = new(nameof(RemoteSyslogAppender), SendQueueSize, Send, Report);
+  }
+
+  /// <summary>
+  /// How many datagrams may wait to be sent. Defaults to 500.
+  /// </summary>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not positive.</exception>
+  public int SendQueueSize
+  {
+    get => _sendQueueSize;
+    set
+    {
+      if (value <= 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendQueueSize is not positive.");
+      }
+      _sendQueueSize = value;
+    }
+  }
+
+  /// <summary>
+  /// How long a logging call waits for room in a full queue. Defaults to 5000, 0 never waits.
+  /// </summary>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
+  public int EnqueueTimeoutMillis
+  {
+    get => _enqueueTimeoutMillis;
+    set
+    {
+      if (value < 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for EnqueueTimeoutMillis is negative.");
+      }
+      _enqueueTimeoutMillis = value;
+    }
+  }
+
+  private void Send(byte[] datagram, CancellationToken cancellationToken)
+    => _connection?.SendAsync(datagram, datagram.Length).GetAwaiter().GetResult();
+
+  private void Report(string message, Exception? exception)
+  {
+    if (exception is null)
+    {
+      ErrorHandler.Error(message);
+    }
+    else
+    {
+      ErrorHandler.Error(message, exception);
+    }
+  }
+
+  private void StopSending()
+  {
+    if (_sender is BackgroundSender<byte[]> sender)
+    {
+      _sender = null;
+      sender.Close(CloseTimeoutMillis);
+      sender.Dispose();
+    }
+
+    _connection?.Dispose();
+    _connection = null;
   }
 
   /// <summary>
@@ -636,12 +716,17 @@ public class RemoteSyslogAppender : UdpAppender
     public SyslogSeverity Severity { get; set; }
   }
 
+  /// <summary>
+  /// Waits until everything queued so far has been sent.
+  /// </summary>
+  /// <param name="millisecondsTimeout">The maximum time to wait.</param>
+  /// <returns><see langword="false"/> on timeout, or when the sender is no longer running.</returns>
+  public override bool Flush(int millisecondsTimeout) => _sender?.Flush(millisecondsTimeout) ?? true;
+
   /// <inheritdoc/>
   protected override void OnClose()
   {
-    // Signal shutdown and wait for the pump to drain
-    _cancellationTokenSource?.Cancel();
-    _pumpTask?.Wait(TimeSpan.FromSeconds(5));
+    StopSending();
     base.OnClose();
   }
 
@@ -652,59 +737,5 @@ public class RemoteSyslogAppender : UdpAppender
   /// </remarks>
   protected override void InitializeClientConnection()
   {
-  }
-
-  private async Task ProcessQueueAsync(CancellationToken token)
-  {
-    // We create our own UdpClient here, so that client lifetime is tied to this task
-    IUdpConnection udpClient;
-    try
-    {
-      udpClient = CreateUdpConnection();
-      udpClient.Connect(LocalPort, RemoteAddress.EnsureNotNull(), RemotePort);
-    }
-    catch (Exception e) when (!e.IsFatal())
-    {
-      // Outside the loop below, so this would otherwise fault the pump unobserved and leave
-      // every later event queued behind a sender that is no longer running.
-      ErrorHandler.Error(
-        $"Unable to connect to remote syslog {RemoteAddress} on port {RemotePort} from local port {LocalPort}. "
-        + "No logging event will be sent.",
-        e, ErrorCode.GenericFailure);
-      return;
-    }
-
-    using IUdpConnection connection = udpClient;
-    try
-    {
-      while (!token.IsCancellationRequested)
-      {
-        // Take next message or throw when canceled
-        byte[] datagram = _sendQueue.Take(token);
-        try
-        {
-          await udpClient.SendAsync(datagram, datagram.Length).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (!ex.IsFatal())
-        {
-          ErrorHandler.Error("RemoteSyslogAppender: send failed", ex, ErrorCode.WriteFailure);
-        }
-      }
-    }
-    catch (OperationCanceledException)
-    {
-      // Clean shutdown: drain remaining items if desired
-      while (_sendQueue.TryTake(out byte[]? leftover))
-      {
-        try
-        {
-          await udpClient.SendAsync(leftover, leftover.Length).ConfigureAwait(false);
-        }
-        catch (Exception ex) when (!ex.IsFatal())
-        {
-          ErrorHandler.Error("RemoteSyslogAppender: send failed during shutdown", ex, ErrorCode.FlushFailure);
-        }
-      }
-    }
   }
 }

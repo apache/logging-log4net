@@ -42,6 +42,13 @@ You can also specify:
 
 * Facility (default: user)
 * Identity (default: application name)
+* SendQueueSize (default: 500), how many datagrams may wait to be sent
+* EnqueueTimeoutMillis (default: 5000), how long a logging call waits for room in a full queue
+
+Datagrams are handed to a background thread, so a slow or unreachable syslog server does not hold
+up logging. Once the queue is full, a logging call waits `EnqueueTimeoutMillis` for room and the
+datagram is then discarded and counted, rather than growing the queue without limit. `Flush` waits
+for the queue to drain.
 
 [source,xml]
 ----
