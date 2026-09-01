@@ -100,4 +100,39 @@ public class BufferingAppenderTest
     logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message 8", null);
     Assert.That(_countingAppender.Counter, Is.EqualTo(6), "Test 2 event in buffer. 6 event sent");
   }
+
+  /// <summary>The buffer is emptied, so the answer is yes.</summary>
+  [Test]
+  public void FlushReportsSuccessWhenTheBufferIsEmptied()
+  {
+    SetupRepository();
+    _bufferingForwardingAppender.BufferSize = 5;
+    _bufferingForwardingAppender.ActivateOptions();
+
+    ILogger logger = _hierarchy.GetLogger("test");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message", null);
+
+    Assert.That(_bufferingForwardingAppender.Flush(0), Is.True);
+    Assert.That(_countingAppender.Counter, Is.EqualTo(1));
+  }
+
+  /// <summary>
+  /// A lossy appender keeps its events until something triggers them, so reporting that they
+  /// were flushed would be untrue.
+  /// </summary>
+  [Test]
+  public void FlushReportsFailureWhileALossyBufferKeepsItsEvents()
+  {
+    SetupRepository();
+    _bufferingForwardingAppender.BufferSize = 5;
+    _bufferingForwardingAppender.Lossy = true;
+    _bufferingForwardingAppender.Evaluator = new LevelEvaluator(Level.Off);
+    _bufferingForwardingAppender.ActivateOptions();
+
+    ILogger logger = _hierarchy.GetLogger("test");
+    logger.Log(typeof(BufferingAppenderTest), Level.Warn, "Message", null);
+
+    Assert.That(_bufferingForwardingAppender.Flush(0), Is.False);
+    Assert.That(_countingAppender.Counter, Is.EqualTo(0));
+  }
 }

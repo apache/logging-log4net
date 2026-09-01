@@ -201,12 +201,20 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// <summary>
   /// Flushes any buffered log data.
   /// </summary>
-  /// <param name="millisecondsTimeout">The maximum time to wait for logging events to be flushed.</param>
-  /// <returns><see langword="true"/> if all logging events were flushed successfully, else <see langword="false"/>.</returns>
+  /// <param name="millisecondsTimeout">
+  /// Unused: the buffer is sent on the calling thread, so there is nothing to wait for.
+  /// </param>
+  /// <returns>
+  /// <see langword="false"/> when events are still buffered afterwards, which is what a
+  /// <see cref="Lossy"/> appender does: it keeps them until a triggering event arrives.
+  /// </returns>
   public override bool Flush(int millisecondsTimeout)
   {
     Flush();
-    return true;
+    lock (LockObj)
+    {
+      return _cyclicBuffer is null || _cyclicBuffer.Length == 0;
+    }
   }
 
   /// <summary>

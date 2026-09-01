@@ -359,8 +359,9 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <inheritdoc/>
   public override bool Flush(int millisecondsTimeout)
   {
-    base.Flush();
-    return _sender?.Flush(millisecondsTimeout) ?? true;
+    bool buffered = base.Flush(millisecondsTimeout);
+    bool queued = _sender?.Flush(millisecondsTimeout) ?? true;
+    return buffered && queued;
   }
 
   /// <inheritdoc/>
