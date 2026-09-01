@@ -266,15 +266,19 @@ public class AdoNetAppenderTest
   }
 
   /// <summary>
-  /// The message reporting a failed connection must not repeat the password from the connection
-  /// string. The appender reports the failure through its ErrorHandler, so this message is what
-  /// an operator sees on stderr in a default configuration.
+  /// A secret need not sit under a password-like keyword: Extended Properties nests a whole
+  /// connection string, and tokens have keywords of their own.
   /// </summary>
   [Test]
   [NonParallelizable]
-  public void FailedConnectionDoesNotReportThePassword()
+  [TestCase("Extended Properties=\"Driver={SQL Server};Server=someserver;UID=someuser;PWD=H0rseBatteryStaple\"")]
+  [TestCase("AccessToken=H0rseBatteryStaple")]
+  [TestCase("SharedAccessSignature=H0rseBatteryStaple")]
+  [TestCase("Password=H0rseBatteryStaple")]
+  [TestCase("PWD=H0rseBatteryStaple")]
+  public void FailedConnectionDoesNotReportASecret(string secretBearingKeyword)
   {
-    const string password = "H0rseBatteryStaple";
+    const string secret = "H0rseBatteryStaple";
     List<LogLog> messages = [];
     try
     {
@@ -286,7 +290,7 @@ public class AdoNetAppenderTest
         {
           BufferSize = -1,
           ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
-          ConnectionString = $"data source=someserver;initial catalog=somedb;User ID=someuser;Password={password}",
+          ConnectionString = $"data source=someserver;initial catalog=somedb;{secretBearingKeyword}",
           CommandText = "INSERT INTO Log ([Message]) VALUES (@message)"
         };
         adoNetAppender.ActivateOptions();
@@ -294,9 +298,9 @@ public class AdoNetAppenderTest
 
       string reported = string.Join(Environment.NewLine, messages.ConvertAll(m => m.Message));
 
-      Assert.That(reported, Does.Not.Contain(password));
+      Assert.That(reported, Does.Not.Contain(secret));
       Assert.That(reported, Does.Contain("Could not open database connection"));
-      // The rest of the connection string survives, so the message stays useful for diagnosis.
+      // The server is still named, which is what makes the message worth printing.
       Assert.That(reported, Does.Contain("someserver"));
     }
     finally

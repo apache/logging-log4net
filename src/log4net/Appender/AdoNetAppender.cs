@@ -796,14 +796,16 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   }
 
   /// <summary>
-  /// Replaces the values of password-bearing keywords in a connection string with
-  /// <see cref="RedactedValue"/>, so that it can be named in a diagnostic message.
+  /// Reduces a connection string to the keywords that identify the server, for a diagnostic message.
   /// </summary>
   /// <param name="connectionString">The connection string to redact.</param>
-  /// <returns>
-  /// The connection string with every password value replaced, or <see cref="RedactedValue"/> if it
-  /// could not be parsed.
-  /// </returns>
+  /// <returns>The other values replaced, or <see cref="RedactedValue"/> if it could not be parsed.</returns>
+  /// <remarks>
+  /// <para>
+  /// An allowlist, because hiding known secret keywords misses `Extended Properties`: it nests a
+  /// whole connection string that the parser returns as one opaque value.
+  /// </para>
+  /// </remarks>
   private static string RedactConnectionString(string connectionString)
   {
     if (string.IsNullOrEmpty(connectionString))
@@ -823,10 +825,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
 
       foreach (string key in keys)
       {
-        // Providers spell the secret differently - Password, PWD, User Password - so match on
-        // the keyword rather than on a fixed list.
-        if (key.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0
-            || key.Equals("pwd", StringComparison.OrdinalIgnoreCase))
+        if (!DiagnosticKeywords.Contains(key))
         {
           builder[key] = RedactedValue;
         }
@@ -844,7 +843,18 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   }
 
   /// <summary>
-  /// Stands in for a password in diagnostic messages.
+  /// Keywords whose values are kept: they name the server and account, not the credentials.
+  /// </summary>
+  private static readonly HashSet<string> DiagnosticKeywords = new(StringComparer.OrdinalIgnoreCase)
+  {
+    "provider", "driver", "data source", "server", "address", "addr", "network address",
+    "initial catalog", "database", "port", "user id", "uid", "user", "username",
+    "integrated security", "trusted_connection", "encrypt", "timeout", "connect timeout",
+    "connection timeout", "application name", "workstation id", "pooling",
+  };
+
+  /// <summary>
+  /// Stands in for a value withheld from a diagnostic message.
   /// </summary>
   private const string RedactedValue = "*****";
 
