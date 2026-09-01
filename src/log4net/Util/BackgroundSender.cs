@@ -128,7 +128,7 @@ public sealed class BackgroundSender<T> : IDisposable
       }
     }
 
-    CountDrop();
+    ReportQueueFull();
     return false;
   }
 
@@ -249,8 +249,8 @@ public sealed class BackgroundSender<T> : IDisposable
 
         if (_shutdown.IsCancellationRequested)
         {
-          // Closing and out of time. Drain the queue without sending, so that Close returns.
-          CountDrop();
+          // Closing and out of time. Drain without sending, so that Close returns.
+          CountLost();
           continue;
         }
 
@@ -260,7 +260,7 @@ public sealed class BackgroundSender<T> : IDisposable
         }
         catch (Exception e) when (!e.IsFatal())
         {
-          CountDrop();
+          CountLost();
           Report($"[{_name}] Failed to send a logging event.", e);
         }
       }
@@ -298,7 +298,7 @@ public sealed class BackgroundSender<T> : IDisposable
         }
         else
         {
-          CountDrop();
+          CountLost();
         }
       }
     }
@@ -309,13 +309,18 @@ public sealed class BackgroundSender<T> : IDisposable
     }
   }
 
-  private void CountDrop()
+  private void CountLost() => Interlocked.Increment(ref _droppedItemCount);
+
+  /// <summary>
+  /// A full or closed queue, unlike a failed send, which reports for itself.
+  /// </summary>
+  private void ReportQueueFull()
   {
-    Interlocked.Increment(ref _droppedItemCount);
+    CountLost();
     if (Interlocked.Exchange(ref _dropReported, 1) == 0)
     {
-      Report($"[{_name}] A logging event was dropped. The sink is not keeping up or is unreachable. "
-        + "Further drops are counted and reported when the appender closes.", null);
+      Report($"[{_name}] A logging event was dropped: the queue is full or closed. "
+        + "Further losses are counted and reported when the sender closes.", null);
     }
   }
 

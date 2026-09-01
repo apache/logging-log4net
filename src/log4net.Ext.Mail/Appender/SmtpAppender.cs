@@ -331,13 +331,106 @@ public class SmtpAppender : BufferingAppenderSkeleton
         writer.Write(footer);
       }
 
-      SendEmail(writer.ToString());
+      string body = writer.ToString();
+      if (_sender is BackgroundSender<string> sender)
+      {
+        // A full queue is reported by the sender itself.
+        sender.TryEnqueue(body, EnqueueTimeoutMillis);
+      }
+      else
+      {
+        SendEmail(body);
+      }
     }
     catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
     }
   }
+
+  /// <inheritdoc/>
+  public override void ActivateOptions()
+  {
+    base.ActivateOptions();
+    CloseSender();
+    _sender = new(nameof(SmtpAppender), SendQueueSize, (body, _) => SendEmail(body), Report);
+  }
+
+  /// <inheritdoc/>
+  public override bool Flush(int millisecondsTimeout)
+  {
+    base.Flush();
+    return _sender?.Flush(millisecondsTimeout) ?? true;
+  }
+
+  /// <inheritdoc/>
+  protected override void OnClose()
+  {
+    base.OnClose();
+    CloseSender();
+  }
+
+  /// <summary>
+  /// How many rendered mails may wait to be sent. Defaults to 500.
+  /// </summary>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not positive.</exception>
+  public int SendQueueSize
+  {
+    get => _sendQueueSize;
+    set
+    {
+      if (value <= 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendQueueSize is not positive.");
+      }
+      _sendQueueSize = value;
+    }
+  }
+
+  /// <summary>
+  /// How long a logging call waits for room in a full queue. Defaults to 5000, 0 never waits.
+  /// </summary>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
+  public int EnqueueTimeoutMillis
+  {
+    get => _enqueueTimeoutMillis;
+    set
+    {
+      if (value < 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for EnqueueTimeoutMillis is negative.");
+      }
+      _enqueueTimeoutMillis = value;
+    }
+  }
+
+  private void CloseSender()
+  {
+    if (_sender is BackgroundSender<string> sender)
+    {
+      _sender = null;
+      sender.Close(SendTimeoutMillis);
+      sender.Dispose();
+    }
+  }
+
+  private void Report(string message, Exception? exception)
+  {
+    if (exception is null)
+    {
+      ErrorHandler.Error(message);
+    }
+    else
+    {
+      ErrorHandler.Error(message, exception);
+    }
+  }
+
+  private BackgroundSender<string>? _sender;
+  private int _sendQueueSize = 500;
+  private int _enqueueTimeoutMillis = 5_000;
 
   /// <summary>
   /// This appender requires a <see cref="AppenderSkeleton.Layout"/> to be set.

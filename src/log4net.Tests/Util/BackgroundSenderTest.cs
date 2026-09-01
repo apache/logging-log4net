@@ -262,6 +262,10 @@ public class BackgroundSenderTest
     Assert.That(sender.Flush(WaitMillis), Is.True);
     Assert.That(Sent, Is.EqualTo(new[] { 0, 2, 3 }));
     Assert.That(sender.DroppedItemCount, Is.EqualTo(1));
+
+    // A failed send is not queue pressure and must not be reported as such.
+    Assert.That(_reported, Has.Some.Contains("Failed to send"));
+    Assert.That(_reported, Has.None.Contains("queue is full"));
   }
 
   /// <summary>

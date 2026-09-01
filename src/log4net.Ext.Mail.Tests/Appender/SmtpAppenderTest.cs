@@ -107,7 +107,11 @@ public class SmtpAppenderTest
   {
     appender.ActivateOptions();
     appender.DoAppend(CreateEvent(message));
+    // Sending is asynchronous.
+    appender.Flush(FlushTimeoutMillis);
   }
+
+  private const int FlushTimeoutMillis = 30_000;
 
   [Test]
   public void SendsOneMailPerEventWhenNotBuffering()
@@ -498,7 +502,7 @@ public class SmtpAppenderTest
 
     Assert.DoesNotThrow(() => Append(appender));
 
-    Assert.That(_errorHandler.Message, Does.Contain("Error occurred while sending e-mail notification."));
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
     Assert.That(_errorHandler.Message, Does.Contain("relay refused"));
   }
 
@@ -551,6 +555,7 @@ public class SmtpAppenderTest
 
     appender.DoAppend(CreateEvent("first"));
     appender.DoAppend(CreateEvent("second"));
+    appender.Flush(FlushTimeoutMillis);
 
     Assert.That(transports, Has.Count.EqualTo(2));
     Assert.That(transports[0].SentMails[0].Body, Does.Contain("first"));
@@ -662,7 +667,30 @@ public class SmtpAppenderTest
     stopwatch.Stop();
 
     Assert.That(_transport.SentMails, Is.Empty);
-    Assert.That(_errorHandler.Message, Does.Contain("Error occurred while sending e-mail notification."));
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
     Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(generousBoundMillis));
   }
+
+  /// <summary>Bounded, so an unreachable server cannot grow the queue without limit.</summary>
+  [Test]
+  public void SendQueueSizeDefaultsTo500()
+    => Assert.That(CreateAppender().SendQueueSize, Is.EqualTo(500));
+
+  /// <summary>The longest a logging call waits when the queue is full.</summary>
+  [Test]
+  public void EnqueueTimeoutMillisDefaultsTo5000()
+    => Assert.That(CreateAppender().EnqueueTimeoutMillis, Is.EqualTo(5_000));
+
+  /// <summary>A queue with no room for anything cannot work.</summary>
+  [TestCase(0)]
+  [TestCase(-1)]
+  public void SendQueueSizeRejectsValuesThatAreNotPositive(int value)
+    => Assert.That(() => CreateAppender().SendQueueSize = value,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>0 is allowed and never waits, a negative wait is meaningless.</summary>
+  [Test]
+  public void EnqueueTimeoutMillisRejectsANegativeValue()
+    => Assert.That(() => CreateAppender().EnqueueTimeoutMillis = -1,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
 }
