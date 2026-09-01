@@ -1,3 +1,7 @@
+# Not a hint: $PSNativeCommandUseErrorActionPreference below exists only from 7.4, and setting it
+# on an older host is a silent no-op that leaves a failed signature check unnoticed.
+#Requires -Version 7.4
+
 Param (
   [Parameter()]
   [System.IO.DirectoryInfo]$Directory
@@ -7,7 +11,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 # $ErrorActionPreference alone does not apply to native commands: gpg only sets $LASTEXITCODE, so
 # without this a failed signature check would still reach the extraction at the end and the script
-# would exit 0. Requires PowerShell 7.3+.
+# would exit 0. Only honored from PowerShell 7.4, hence the #Requires above.
 $PSNativeCommandUseErrorActionPreference = $true
 
 if (!$Directory)

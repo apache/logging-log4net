@@ -20,7 +20,11 @@
 
 Releases of log4net can be verified with following steps:
 [#windows]
-== Windows (PowerShell)
+== Windows (PowerShell 7)
+
+The scripts need PowerShell 7.4 or newer and refuse to run on anything older, because the setting
+that makes a failing `gpg` abort the script exists only from 7.4.
+Windows PowerShell 5.1, the `powershell.exe` that ships with Windows, is not enough; use `pwsh`.
 
 . Prerequisites (winget - in case of problems see next section choco)
 +
@@ -28,6 +32,7 @@ Releases of log4net can be verified with following steps:
 ----
 # as administrator
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+winget install -e --id Microsoft.PowerShell
 winget install -e --id GnuPG.Gpg4win
 winget install -e --id Slik.Subversion  # or any other subversion client
 winget install -e --id Mono.Mono
@@ -60,7 +65,7 @@ pushd log4net-${releaseVersion}
 [source,powershell]
 ----
 Unblock-File ./verify-release.ps1
-& ./verify-release.ps1
+pwsh ./verify-release.ps1
 ----
 
 . switch to the directory where you extracted the sources (in case you didn't use verify-release.ps1) 
