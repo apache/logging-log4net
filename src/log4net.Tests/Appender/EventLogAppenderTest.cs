@@ -21,6 +21,7 @@
 #if NET462_OR_GREATER
 
 using System.Diagnostics;
+using System.Reflection;
 
 using log4net.Appender;
 using log4net.Core;
@@ -81,6 +82,40 @@ public sealed class EventLogAppenderTest
     eventAppender.ActivateOptions();
     Assert.That(eventAppender.Threshold, Is.EqualTo(Level.Off));
   }
+
+  /// <summary>
+  /// ReportEventW takes a null terminated string, so a NUL in content ends the stored record
+  /// there and silently drops whatever the layout rendered after it. Measured on Windows 11
+  /// 26200: WriteEntry does not throw, and only the prefix is stored.
+  /// </summary>
+  [Test]
+  public void NulCharactersAreEscaped()
+    => Assert.That(PrepareEventText("before\0after", 100), Is.EqualTo("before\\0after"));
+
+  /// <summary>
+  /// The escape doubles each NUL, so it has to happen before the limit is applied. Escaping
+  /// afterwards would push a message near the limit back over it.
+  /// </summary>
+  [Test]
+  public void EscapingHappensBeforeTheLimitIsApplied()
+  {
+    const int maxSize = 4;
+
+    string prepared = PrepareEventText("\0\0\0", maxSize);
+
+    Assert.That(prepared, Has.Length.EqualTo(maxSize));
+    Assert.That(prepared, Does.Not.Contain("\0"));
+  }
+
+  /// <summary>A message within the limit and without a NUL comes through untouched.</summary>
+  [Test]
+  public void MessagesWithinTheLimitAreUnchanged()
+    => Assert.That(PrepareEventText("field=1\tfield=2", 100), Is.EqualTo("field=1\tfield=2"));
+
+  private static string PrepareEventText(string rendered, int maxSize)
+    => (string)typeof(EventLogAppender)
+      .GetMethod("PrepareEventText", BindingFlags.Static | BindingFlags.NonPublic)!
+      .Invoke(null, [rendered, maxSize])!;
 }
 
 #endif // NET462_OR_GREATER

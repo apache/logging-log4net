@@ -23,6 +23,7 @@ using System;
 using System.Diagnostics;
 
 using log4net.Util;
+using log4net.Appender.Internal;
 using log4net.Core;
 
 namespace log4net.Appender;
@@ -377,13 +378,7 @@ public class EventLogAppender : AppenderSkeleton
     // Write to the event log
     try
     {
-      string eventTxt = RenderLoggingEvent(loggingEvent);
-
-      // There is a limit of about 32K characters for an event log message
-      if (eventTxt.Length > _maxEventlogMessageSize)
-      {
-        eventTxt = eventTxt.Substring(0, _maxEventlogMessageSize);
-      }
+      string eventTxt = PrepareEventText(RenderLoggingEvent(loggingEvent), _maxEventlogMessageSize);
 
       EventLogEntryType entryType = GetEntryType(loggingEvent.Level);
 
@@ -396,6 +391,25 @@ public class EventLogAppender : AppenderSkeleton
     {
       ErrorHandler.Error($"Unable to write to event log [{LogName}] using source [{ApplicationName}]", e);
     }
+  }
+
+  /// <summary>
+  /// Escapes the NUL characters and then applies the message size limit.
+  /// </summary>
+  /// <param name="rendered">The rendered event.</param>
+  /// <param name="maxSize">The largest message the event log accepts.</param>
+  /// <returns>The text to write.</returns>
+  /// <remarks>
+  /// <para>
+  /// The order matters. <c>ReportEventW</c> takes a null terminated string, so a NUL in content
+  /// ends the stored record there, and escaping doubles each NUL, so escaping after the limit was
+  /// applied could push the message back over it.
+  /// </para>
+  /// </remarks>
+  private static string PrepareEventText(string rendered, int maxSize)
+  {
+    string escaped = NativeStringEscape.EscapeNulCharacters(rendered);
+    return escaped.Length > maxSize ? escaped.Substring(0, maxSize) : escaped;
   }
 
   /// <summary>
