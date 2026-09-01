@@ -38,6 +38,13 @@ You can also specify:
 
 * Facility (default: user)
 * Identity (default: application name)
+* NewLineHandling (default: Escape), one of `Escape`, `Split` or `Keep`
+
+A newline in logged content ends the record for a syslog daemon that writes the message through to
+a line oriented log, so content can otherwise forge a second, authentic looking entry. `Escape`
+writes them as `\r` and `\n`, `Split` sends one record per line, and `Keep` passes them through
+for a daemon that handles multiline messages itself. Note that `syslog(3)` does no escaping of its
+own: whatever escaping you see on a mainstream Linux comes from the daemon, not from libc.
 
 [source,xml]
 ----

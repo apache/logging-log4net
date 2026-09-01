@@ -355,10 +355,55 @@ public class LocalSyslogAppender : AppenderSkeleton
     int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
     string message = EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
 
-    // Call the local libc syslog method
-    // The second argument is a printf style format string
+    // The second argument is a printf style format string.
+    if (NewLineHandling == SyslogNewLineHandling.Split)
+    {
+      foreach (string line in SplitLines(message))
+      {
+        NativeMethods.syslog(priority, "%s", line);
+      }
+
+      return;
+    }
+
+    if (NewLineHandling == SyslogNewLineHandling.Escape)
+    {
+      message = EscapeNewLines(message);
+    }
+
     NativeMethods.syslog(priority, "%s", message);
   }
+
+  /// <summary>
+  /// What to do with the newlines in logged content. Defaults to
+  /// <see cref="SyslogNewLineHandling.Escape"/>.
+  /// </summary>
+  /// <remarks>
+  /// A newline in content ends the record for daemons that write the message through to a line
+  /// oriented log, letting content forge a second, authentic looking entry.
+  /// </remarks>
+  public SyslogNewLineHandling NewLineHandling { get; set; }
+    = SyslogNewLineHandling.Escape;
+
+  /// <summary>
+  /// Replaces the newlines with a visible <c>\r</c> or <c>\n</c> escape.
+  /// </summary>
+  /// <param name="message">The rendered message.</param>
+  /// <returns>The message with every newline escaped.</returns>
+  private static string EscapeNewLines(string message)
+    => message.IndexOf('\r') < 0 && message.IndexOf('\n') < 0
+      ? message
+      : message.Replace("\r", "\\r").Replace("\n", "\\n");
+
+  /// <summary>
+  /// Splits the message into the lines to send as separate records, dropping the empty ones.
+  /// </summary>
+  /// <param name="message">The rendered message.</param>
+  /// <returns>One entry per non-empty line.</returns>
+  private static string[] SplitLines(string message)
+    => message.Split(_newLines, StringSplitOptions.RemoveEmptyEntries);
+
+  private static readonly string[] _newLines = ["\r\n", "\n", "\r"];
 
   /// <summary>
   /// Replaces NUL characters with a visible <c>\0</c> escape.
@@ -373,8 +418,8 @@ public class LocalSyslogAppender : AppenderSkeleton
   /// contain a NUL, so the character is escaped rather than passed through.
   /// </para>
   /// <para>
-  /// Other control characters are left alone: <c>syslog(3)</c> encodes them itself, and newlines
-  /// are needed for the multi-line output an exception layout produces.
+  /// Newlines are handled separately, see <see cref="NewLineHandling"/>. Other control characters
+  /// are passed through.
   /// </para>
   /// </remarks>
   private static string EscapeNulCharacters(string message)
