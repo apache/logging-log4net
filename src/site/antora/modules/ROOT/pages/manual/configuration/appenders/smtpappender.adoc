@@ -189,6 +189,10 @@ This example authenticates against a mail server that requires an encrypted conn
 |`port`
 |The port the SMTP server listens on. Defaults to `25`.
 
+|`sendTimeoutMillis`
+|How long one send may take before it is abandoned, in milliseconds. Defaults to `15000`.
+The mail goes out under the appender lock, so an unresponsive server would otherwise stall logging.
+
 |`enableSsl`
 |Whether to require transport security. Defaults to `false`.
 Shorthand for `transportSecurity`: `true` selects `Required`, `false` selects `None`.
@@ -280,6 +284,8 @@ The options above are named exactly as in the legacy appender, but a few behave 
 MailKit cannot reuse the Windows logon session of the current thread or process, which the legacy appender did.
 * Semicolon-delimited recipient lists in `to`, `cc` and `bcc` are parsed correctly.
 * `transportSecurity` has no counterpart in the legacy appender, which offers only `enableSsl`.
+* `sendTimeoutMillis` is a deadline for the whole send here, while in the legacy appender it bounds
+the one `SmtpClient.Send` call. Both default to `15000`.
 
 `enableSsl` keeps its meaning, so a migrated configuration secures the connection exactly as before.
 If the legacy appender reached your server with `enableSsl` set to `true`, so does this one.

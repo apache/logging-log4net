@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using System.Diagnostics;
 using System.Text;
 using log4net.Core;
 using log4net.Ext.Mail.Appender;
@@ -614,5 +615,54 @@ public class SmtpAppenderTest
     Assert.That(appender.SubjectEncoding, Is.EqualTo(Encoding.UTF8));
     Assert.That(appender.BodyEncoding, Is.EqualTo(Encoding.UTF8));
     Assert.That(appender.EnableSsl, Is.False);
+  }
+
+  /// <summary>An unbounded send stalls every thread logging through the appender.</summary>
+  [Test]
+  public void SendTimeoutMillisDefaultsToFifteenSeconds()
+    => Assert.That(CreateAppender().SendTimeoutMillis, Is.EqualTo(15_000));
+
+  /// <summary>Neither 0 nor a negative value is a usable deadline.</summary>
+  [TestCase(0)]
+  [TestCase(-1)]
+  public void SendTimeoutMillisRejectsValuesThatAreNotPositive(int value)
+    => Assert.That(() => CreateAppender().SendTimeoutMillis = value,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>MailKit needs it too, for the reads and writes between the cancellation checks.</summary>
+  [Test]
+  public void TheTimeoutReachesTheTransport()
+  {
+    const int sendTimeoutMillis = 1_234;
+    SmtpAppender appender = CreateAppender();
+    appender.SendTimeoutMillis = sendTimeoutMillis;
+
+    Append(appender);
+
+    Assert.That(_transport.Timeout, Is.EqualTo(sendTimeoutMillis));
+  }
+
+  /// <summary>
+  /// Every single operation stays inside the timeout here, their sum does not. A per operation
+  /// timeout would let this run on; the deadline stops it.
+  /// </summary>
+  [Test]
+  public void TheDeadlineCoversTheWholeSendAndNotOneOperation()
+  {
+    const int sendTimeoutMillis = 300;
+    const int delayMillisPerCall = 200;
+    const int generousBoundMillis = 5_000;
+
+    SmtpAppender appender = CreateAppender();
+    appender.SendTimeoutMillis = sendTimeoutMillis;
+    _transport.DelayMillisPerCall = delayMillisPerCall;
+
+    Stopwatch stopwatch = Stopwatch.StartNew();
+    Append(appender);
+    stopwatch.Stop();
+
+    Assert.That(_transport.SentMails, Is.Empty);
+    Assert.That(_errorHandler.Message, Does.Contain("Error occurred while sending e-mail notification."));
+    Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(generousBoundMillis));
   }
 }

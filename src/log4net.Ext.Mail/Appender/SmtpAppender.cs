@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Net.Mail;
 using System.Text;
 
@@ -375,32 +376,59 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <param name="messageBody">the body text to include in the mail</param>
   protected virtual void SendEmail(string messageBody)
   {
+    using CancellationTokenSource deadline = new(SendTimeoutMillis);
     using MimeMessage message = CreateMessage(messageBody);
     using ISmtpTransport transport = _transportFactory().EnsureNotNull();
+    transport.Timeout = SendTimeoutMillis;
 
-    transport.Connect(SmtpHost.EnsureNotNullOrEmpty(), Port, ResolveSecureSocketOptions());
+    transport.Connect(SmtpHost.EnsureNotNullOrEmpty(), Port, ResolveSecureSocketOptions(), deadline.Token);
     try
     {
       switch (Authentication)
       {
         case SmtpAuthentication.Basic:
-          transport.Authenticate(new NetworkCredential(Username, Password));
+          transport.Authenticate(new NetworkCredential(Username, Password), deadline.Token);
           break;
         case SmtpAuthentication.Ntlm:
-          transport.Authenticate(new SaslMechanismNtlm(new NetworkCredential(Username, Password)));
+          transport.Authenticate(new SaslMechanismNtlm(new NetworkCredential(Username, Password)), deadline.Token);
           break;
         case SmtpAuthentication.None:
         default:
           break;
       }
 
-      transport.Send(message);
+      transport.Send(message, deadline.Token);
     }
     finally
     {
+      // No token: already cancelled, it would replace the failure that got us here.
       transport.Disconnect(true);
     }
   }
+
+  /// <summary>
+  /// A deadline for the whole send, in milliseconds. Defaults to 15000.
+  /// </summary>
+  /// <remarks>
+  /// MailKit's own timeout applies per operation, so a server answering just inside it can still
+  /// take a multiple of it. The mail goes out under the appender lock.
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not positive.</exception>
+  public int SendTimeoutMillis
+  {
+    get => _sendTimeoutMillis;
+    set
+    {
+      if (value <= 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendTimeoutMillis is not positive.");
+      }
+      _sendTimeoutMillis = value;
+    }
+  }
+
+  private int _sendTimeoutMillis = 15_000;
 
   /// <summary>
   /// Builds the <see cref="MimeMessage"/> for the given body text from the configured options.

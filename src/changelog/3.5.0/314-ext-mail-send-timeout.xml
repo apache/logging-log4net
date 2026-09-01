@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="314" link="https://github.com/apache/logging-log4net/pull/314"/>
+  <description format="asciidoc">
+    bound a whole send in the MailKit based `SmtpAppender` to 15 seconds. MailKit waits 100 seconds
+ per operation by default, and the mail goes out while the appender lock is held, so an
+ unresponsive server suspended every thread logging through the appender. `SendTimeoutMillis` is a
+ deadline for the send as a whole, because a per operation timeout still allows a multiple of
+ itself overall (implemented by @FreeAndNil)
+  </description>
+</entry>
