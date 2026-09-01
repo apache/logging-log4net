@@ -20,6 +20,7 @@
 using System;
 using System.Runtime.InteropServices;
 
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -353,7 +354,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   protected override void Append(LoggingEvent loggingEvent)
   {
     int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
-    string message = EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
+    string message = NativeStringEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
 
     // The second argument is a printf style format string.
     if (NewLineHandling == SyslogNewLineHandling.Split)
@@ -404,26 +405,6 @@ public class LocalSyslogAppender : AppenderSkeleton
     => message.Split(_newLines, StringSplitOptions.RemoveEmptyEntries);
 
   private static readonly string[] _newLines = ["\r\n", "\n", "\r"];
-
-  /// <summary>
-  /// Replaces NUL characters with a visible <c>\0</c> escape.
-  /// </summary>
-  /// <param name="message">The rendered message.</param>
-  /// <returns>The message with every NUL character escaped.</returns>
-  /// <remarks>
-  /// <para>
-  /// The message is marshaled to libc as a null-terminated string, so a NUL character anywhere in
-  /// it would end the record there and silently drop everything the layout rendered after it,
-  /// including trailing fields and exception text. Logged content is not trusted and may well
-  /// contain a NUL, so the character is escaped rather than passed through.
-  /// </para>
-  /// <para>
-  /// Newlines are handled separately, see <see cref="NewLineHandling"/>. Other control characters
-  /// are passed through.
-  /// </para>
-  /// </remarks>
-  private static string EscapeNulCharacters(string message)
-    => message.IndexOf('\0') < 0 ? message : message.Replace("\0", "\\0");
 
   /// <summary>
   /// Close the syslog when the appender is closed

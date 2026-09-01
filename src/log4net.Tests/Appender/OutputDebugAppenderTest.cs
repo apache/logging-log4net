@@ -58,6 +58,29 @@ public sealed class OutputDebugStringAppenderTest
     log.Debug(DebugMessage);
     Assert.That(lastDebugString, Is.Not.Null.And.Contains(DebugMessage));
   }
+
+  /// <summary>
+  /// OutputDebugStringW takes a null terminated string, so a NUL in content would end the record
+  /// there and drop whatever the layout rendered after it.
+  /// </summary>
+  [Test]
+  public void NulCharactersAreEscapedBeforeTheNativeCall()
+  {
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    string? lastDebugString = null;
+    OutputAppender appender = new(value => lastDebugString = value)
+    {
+      Layout = new SimpleLayout(),
+      ErrorHandler = new FailOnError()
+    };
+    appender.ActivateOptions();
+    BasicConfigurator.Configure(rep, appender);
+
+    LogManager.GetLogger(rep.Name, GetType()).Debug("before\0after");
+
+    Assert.That(lastDebugString, Does.Contain("before\\0after"));
+    Assert.That(lastDebugString, Does.Not.Contain("\0"));
+  }
 }
 
 file sealed class OutputAppender(Action<string> outputDebugString)

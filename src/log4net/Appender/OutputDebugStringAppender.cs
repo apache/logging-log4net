@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -59,7 +60,7 @@ public class OutputDebugStringAppender : AppenderSkeleton
     }
 #endif
 
-    _outputDebugString(RenderLoggingEvent(loggingEvent));
+    _outputDebugString(NativeStringEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent)));
   }
 
   /// <summary>
