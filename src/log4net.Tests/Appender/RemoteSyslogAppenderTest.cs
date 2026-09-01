@@ -154,7 +154,7 @@ public sealed class RemoteSyslogAppenderTest
   
   /// <summary>
   /// Test for the <see cref="RemoteSyslogAppender.NewLineHandling"/>
-  /// with <see cref="RemoteSyslogAppender.SyslogNewLineHandling.Escape"/>
+  /// with <see cref="SyslogNewLineHandling.Escape"/>
   /// </summary>
   /// <remarks>
   /// https://github.com/apache/logging-log4net/issues/274
@@ -171,7 +171,7 @@ public sealed class RemoteSyslogAppenderTest
   
   /// <summary>
   /// Test for the <see cref="RemoteSyslogAppender.NewLineHandling"/>
-  /// with <see cref="RemoteSyslogAppender.SyslogNewLineHandling.Keep"/>
+  /// with <see cref="SyslogNewLineHandling.Keep"/>
   /// </summary>
   /// <remarks>
   /// https://github.com/apache/logging-log4net/issues/274
@@ -180,7 +180,7 @@ public sealed class RemoteSyslogAppenderTest
   public void RemoteSyslogNewLineHandlingKeepTest()
   {
     List<byte[]> sentBytes = ExecuteAppend("Test\r\nmessage",
-      RemoteSyslogAppender.SyslogNewLineHandling.Keep);
+      SyslogNewLineHandling.Keep);
     // ReSharper disable once StringLiteralTypo
     const string expectedData = "<14>TestDomain: INFO  - Test\r\nmessage";
     Assert.That(sentBytes, Has.Count.EqualTo(1));
@@ -189,7 +189,7 @@ public sealed class RemoteSyslogAppenderTest
   
   /// <summary>
   /// Test for the <see cref="RemoteSyslogAppender.NewLineHandling"/>
-  /// with <see cref="RemoteSyslogAppender.SyslogNewLineHandling.Split"/>
+  /// with <see cref="SyslogNewLineHandling.Split"/>
   /// </summary>
   /// <remarks>
   /// https://github.com/apache/logging-log4net/issues/274
@@ -198,7 +198,7 @@ public sealed class RemoteSyslogAppenderTest
   public void RemoteSyslogNewLineHandlingSplitTest()
   {
     List<byte[]> sentBytes = ExecuteAppend("Test\r\nmessage",
-      RemoteSyslogAppender.SyslogNewLineHandling.Split);
+      SyslogNewLineHandling.Split);
     // ReSharper disable once StringLiteralTypo
     Assert.That(sentBytes, Has.Count.EqualTo(2));
     const string expectedData0 = "<14>TestDomain: INFO  - Test";
@@ -266,7 +266,7 @@ public sealed class RemoteSyslogAppenderTest
   }
 
   private static List<byte[]> ExecuteAppend(string message,
-    RemoteSyslogAppender.SyslogNewLineHandling newLineHandling = default,
+    SyslogNewLineHandling newLineHandling = default,
     string? identity = null)
   {
     System.Net.IPAddress ipAddress = new([127, 0, 0, 1]);

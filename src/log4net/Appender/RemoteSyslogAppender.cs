@@ -256,27 +256,6 @@ public class RemoteSyslogAppender : UdpAppender
     Local7 = 23
   }
 
-  /// <summary>
-  /// Options for handling newlines (\r or \n) in <see ref="AppendMessage" />
-  /// </summary>
-  public enum SyslogNewLineHandling
-  {
-    /// <summary>
-    /// escape the newlines (\\r for \r and \\n for \n)
-    /// </summary>
-    Escape,
-    
-    /// <summary>
-    /// split the message at new lines
-    /// </summary>
-    Split,
-    
-    /// <summary>
-    /// keep newlines as is (many syslog servers can handle newlines in the message part)
-    /// </summary>
-    Keep
-  }
-  
   private const int CloseTimeoutMillis = 5_000;
   private IUdpConnection? _connection;
   private BackgroundSender<byte[]>? _sender;

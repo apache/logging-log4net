@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="315" link="https://github.com/apache/logging-log4net/pull/315"/>
+  <description format="asciidoc">
+    move `SyslogNewLineHandling` out of `RemoteSyslogAppender` to `log4net.Appender`, now that
+ `LocalSyslogAppender` uses it too. Configuration files are unaffected, they bind the value by
+ name, but code naming `RemoteSyslogAppender.SyslogNewLineHandling` has to drop the prefix
+ (implemented by @FreeAndNil)
+  </description>
+</entry>
