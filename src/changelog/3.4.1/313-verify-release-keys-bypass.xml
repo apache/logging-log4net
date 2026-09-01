@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="313" link="https://github.com/apache/logging-log4net/pull/313"/>
+  <description format="asciidoc">
+    stop the release verification scripts from importing a `KEYS` file that came with the artifacts
+ instead of the one they download. `wget` refuses to overwrite, so a planted `KEYS` stayed in place
+ and was imported into the verification key ring, and artifacts signed by whoever placed it verified
+ (CWE-347). The key ring is now filled from a copy downloaded to a temporary directory. Present in
+ 3.2.0 onward, since the script was added (audit da18b6fd-f003)
+  </description>
+</entry>

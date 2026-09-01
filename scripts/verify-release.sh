@@ -38,14 +38,19 @@ for file in "${artifacts[@]}"; do
   sha512sum --check "$file.sha512"
 done
 
-wget https://downloads.apache.org/logging/KEYS
-
 # A key ring of its own, holding only the downloaded KEYS. Importing into the default key ring
 # would accept a signature from any key this machine already has, not only from a key in the
 # Logging Services KEYS file.
 keyring_dir="$(mktemp -d)"
 trap 'rm -rf "$keyring_dir"' EXIT
-gpg --no-default-keyring --keyring "$keyring_dir/logging-keys.gpg" --batch --quiet --import KEYS
+
+# Downloaded into that directory, and never read from the one being verified. "wget URL" writes to
+# ./KEYS but refuses to overwrite, so with a KEYS file already sitting next to the artifacts the
+# download would land in KEYS.1 and the pre-existing file, which nothing here verifies, would be
+# the one imported. Anyone who can place a file in the directory could then have their own key
+# accepted as a release key.
+wget -O "$keyring_dir/KEYS" https://downloads.apache.org/logging/KEYS
+gpg --no-default-keyring --keyring "$keyring_dir/logging-keys.gpg" --batch --quiet --import "$keyring_dir/KEYS"
 
 for file in "${artifacts[@]}"; do
   if test ! -f "$file.asc"; then

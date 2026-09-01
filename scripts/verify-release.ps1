@@ -55,16 +55,20 @@ foreach ($Artifact in $Artifacts)
   Assert-Hash $Artifact
 }
 
-Invoke-WebRequest https://downloads.apache.org/logging/KEYS -OutFile $Directory/KEYS
-
 # A key ring of its own, holding only the downloaded KEYS. Importing into the default key ring
 # would accept a signature from any key this machine already has, not only from a key in the
 # Logging Services KEYS file.
 $KeyringDirectory = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) ([guid]::NewGuid()))
 try
 {
+  # Downloaded into that directory, and never read from the one being verified: a KEYS file sitting
+  # next to the artifacts is not covered by any of the checks above, so importing it would let
+  # anyone who can place a file there have their own key accepted as a release key.
+  $Keys = Join-Path $KeyringDirectory 'KEYS'
+  Invoke-WebRequest https://downloads.apache.org/logging/KEYS -OutFile $Keys
+
   $Keyring = Join-Path $KeyringDirectory 'logging-keys.gpg'
-  gpg --no-default-keyring --keyring $Keyring --batch --quiet --import $Directory/KEYS
+  gpg --no-default-keyring --keyring $Keyring --batch --quiet --import $Keys
 
   foreach ($Artifact in $Artifacts)
   {
