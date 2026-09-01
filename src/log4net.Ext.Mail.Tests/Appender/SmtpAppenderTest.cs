@@ -574,7 +574,7 @@ public class SmtpAppenderTest
     appender.DoAppend(CreateEvent("three"));
     Assert.That(_transport.SentMails, Is.Empty, "the buffer is not full yet");
 
-    appender.Flush(true);
+    Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
 
     Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
     string body = _transport.SentMails[0].Body;
@@ -599,6 +599,7 @@ public class SmtpAppenderTest
     appender.ActivateOptions();
 
     appender.DoAppend(CreateEvent("no layout"));
+    appender.Flush(FlushTimeoutMillis);
 
     Assert.That(_transport.SentMails, Is.Empty);
     Assert.That(_errorHandler.Message, Is.Not.Empty);
