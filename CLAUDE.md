@@ -118,6 +118,10 @@ almost always be doing.
   not exist on `net462`/`netstandard2.0`, so use `TaskCompletionSource<bool>`.
 
 ### Documentation comments
+- **Keep them short.** A doc comment is one or two sentences, an inline comment is one line. If a
+  remark wants a second paragraph, the reason belongs in the commit message or the changelog, not
+  in the source. Say what the code does not already say, then stop. This is the single most common
+  correction made in review, so err shorter than feels right.
 - **Every public and protected member gets an XML doc comment**, in test code as well as production
   code: test methods, nested helper classes and hand-written fakes included.
 - Use `/// <inheritdoc/>` when the member implements an interface or overrides a base member, and a
