@@ -51,6 +51,11 @@ almost always be doing.
   `net462`/`netstandard2.0` too.
 - Private fields are `_camelCase`. Private fields and helper methods are commonly placed
   *after* the public surface of the type rather than at the top.
+- A small private carrier type is a `readonly record struct` with a primary constructor. Extra
+  intent-revealing constructors chain onto it (`internal Item(T payload) : this(payload, null) { }`).
+- Infrastructure that has to be `public` only to cross an assembly boundary gets
+  `[EditorBrowsable(EditorBrowsableState.Never)]` and a `<remarks>` paragraph saying why it is
+  public, so it stays out of consumers' IntelliSense. See `log4net.Util.BackgroundSender`.
 
 ### Nullability, the big constraint
 - `Nullable` is enabled solution-wide with `WarningsAsErrors=nullable`: **any nullability
@@ -72,6 +77,15 @@ almost always be doing.
   not `_x = x ?? throw new ArgumentNullException(nameof(x));`.
 - Appenders never let exceptions escape to the caller. The house pattern is
   `catch (Exception e) when (!e.IsFatal()) { ErrorHandler.Error("...", e); }`.
+- **A catch of `Exception` always carries `when (!e.IsFatal())`.** The filter is not a licence to
+  widen: a catch that handles one expected exception keeps naming that type. Widening it to
+  `Exception` turns an unrelated bug into a silently counted failure, which is the opposite of what
+  the idiom is for.
+- On a background thread the same rule is harder: an exception that escapes the thread body is
+  unhandled and takes the process down. Everything the thread calls out to, the error reporting
+  included, has to be wrapped, because a caller-supplied error handler can throw too. See the
+  `Report` helper in `log4net.Util.BackgroundSender`, and its `finally` block, which may run
+  against an already disposed queue.
 
 ### Projects and dependencies
 - All package versions live in `src/Directory.Build.props` as `<XxxPackageVersion>` properties.
@@ -90,8 +104,18 @@ almost always be doing.
   (see `log4net.Ext.Mail.csproj` and `log4net.Tests.csproj`). Linking `Log4NetAssert` also
   requires linking `NotNullAttribute`, `ValidatedNotNullAttribute` and
   `CallerArgumentExpressionAttribute`, or you get `CS0122`.
+- `log4net` is strong named (`SignAssembly`, `log4net.snk`); `log4net.Ext.Mail` deliberately is
+  not, and says so in its `.csproj`. The CLR forbids a strong-named assembly from granting
+  `InternalsVisibleTo` to an unsigned one, so **no internal of `log4net` can ever be reached from
+  `log4net.Ext.Mail`**. Shared infrastructure is therefore either `public` (with
+  `[EditorBrowsable]`, above) or compiled in by `<Compile Include>` as `Log4NetAssert` is.
 - Analyzers (`Microsoft.CodeAnalysis.NetAnalyzers`, `AnalysisLevel 8`, `src/log4net.globalconfig`)
-  run on every build. **The solution builds with 0 warnings, keep it that way.**
+  run on every build. **The solution builds with 0 warnings, keep it that way.** Two that bite new
+  code: CA1711 rejects a type name ending in `Queue`, `Collection` or `Flags`, and CA2000 rejects
+  an `IDisposable` that is not disposed on every path. Prefer a design that removes the warning
+  over suppressing it: swapping a `ManualResetEventSlim` for a `TaskCompletionSource<bool>` dropped
+  CA2000 and the disposal race behind it at once. Note the non-generic `TaskCompletionSource` does
+  not exist on `net462`/`netstandard2.0`, so use `TaskCompletionSource<bool>`.
 
 ### Documentation comments
 - **Every public and protected member gets an XML doc comment**, in test code as well as production
@@ -120,6 +144,11 @@ almost always be doing.
   reflection, not by widening their accessibility. See `SystemInfoTest`, `LevelMappingTest` and
   `UserNameFixingTest` for the `BindingFlags.Static | BindingFlags.NonPublic` pattern.
   `log4net.Ext.Mail` does grant `InternalsVisibleTo` to its own test project.
+- **NUnit constructs one fixture instance for the whole fixture**, so an instance field that
+  records what a test observed accumulates across the tests in it. Clear such state in `[SetUp]`.
+- Drive a test over a background thread with gates (`ManualResetEventSlim`), never with
+  `Thread.Sleep`: park the worker, assert the state you care about, then release it. See
+  `BackgroundSenderTest`, where every wait has a generous timeout and the assertions are exact.
 - Mark a test `[NonParallelizable]` when it mutates static state (`LogLog.InternalDebugging`, a
   static field on a test double, a process-wide native registration).
 - Wrap expected internal logging in `LogLog.ExecuteWithoutEmittingInternalMessages(...)` and capture
