@@ -69,6 +69,30 @@ public sealed class RemoteSyslogAppenderTest
 
   private const int FlushTimeoutMillis = 30_000;
 
+  /// <summary>
+  /// Content outside the RFC 3164 range used to be deleted with no marker, so a message written
+  /// in a non-Latin script reached the audit trail empty.
+  /// </summary>
+  [Test]
+  public void NonAsciiContentIsEscapedAndNotDeleted()
+  {
+    List<byte[]> sentBytes = ExecuteAppend("Sch\u00f6nwetter \u4f60\u597d");
+
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]),
+      Is.EqualTo(@"<14>TestDomain: INFO  - Sch\u00f6nwetter \u4f60\u597d"));
+  }
+
+  /// <summary>A control character other than CR or LF was dropped as well.</summary>
+  [Test]
+  public void OtherControlCharactersAreEscaped()
+  {
+    List<byte[]> sentBytes = ExecuteAppend("a\tb");
+
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Is.EqualTo(@"<14>TestDomain: INFO  - a\u0009b"));
+  }
+
   /// <summary>Bounded, so an unreachable server cannot grow the queue without limit.</summary>
   [Test]
   public void SendQueueSizeDefaultsTo500()

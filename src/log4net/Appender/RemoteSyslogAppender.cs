@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 using log4net.Appender.Internal;
@@ -483,6 +484,12 @@ public class RemoteSyslogAppender : UdpAppender
           characterIndex++;
           break;
         }
+      }
+      else
+      {
+        // Escaped, not dropped: content is masked visibly rather than deleted. RFC 3164 allows
+        // only 0x20 to 0x7E here, so the escape itself stays inside that range.
+        builder.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
       }
     }
   }
