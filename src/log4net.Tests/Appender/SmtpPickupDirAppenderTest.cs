@@ -154,6 +154,29 @@ public class SmtpPickupDirAppenderTest
   }
 
   /// <summary>
+  /// An unpaired surrogate used to abort the write, losing every buffered event with it and
+  /// leaving a truncated mail behind for the pickup service to send.
+  /// </summary>
+  [Test]
+  public void ContentThatCannotBeEncodedDoesNotDestroyTheBatch()
+  {
+    SilentErrorHandler sh = new();
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
+    ILogger log = CreateLogger(appender);
+
+    log.Log(GetType(), Level.Info, "poison" + (char)0xd800 + "event", null);
+    log.Log(GetType(), Level.Info, "the event after it", null);
+    DestroyLogger();
+
+    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
+    string content = File.ReadAllText(Directory.GetFiles(_testPickupDir)[0]);
+
+    Assert.That(content, Does.Contain(@"poison\ud800event"));
+    Assert.That(content, Does.Contain("the event after it"));
+    Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
+  }
+
+  /// <summary>
   /// Tests if the sent message contained the date header.
   /// </summary>
   [Test]

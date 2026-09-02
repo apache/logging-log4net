@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="315" link="https://github.com/apache/logging-log4net/pull/315"/>
+  <description format="asciidoc">
+    stop one logging event destroying a whole `SmtpPickupDirAppender` batch. `File.CreateText`
+ throws on content it cannot encode, such as an unpaired surrogate, which abandoned every buffered
+ event and left a truncated mail in the pickup directory for the service to send. Such content is
+ now written as a `\uXXXX` escape (audit da18b6fd-f011)
+  </description>
+</entry>
