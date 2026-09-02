@@ -1,3 +1,5 @@
+#Requires -Version 7.4
+
 param(
   $Version = '3.4.1'
 )
@@ -6,7 +8,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 # $ErrorActionPreference alone does not apply to native commands: dotnet, git, zip, gpg and mvnw
 # only set $LASTEXITCODE, so without this a failing build would still be packaged and signed.
-# Requires PowerShell 7.3+.
+# Only honored from PowerShell 7.4, hence the #Requires above.
 $PSNativeCommandUseErrorActionPreference = $true
 
 function Write-HashAndSignature

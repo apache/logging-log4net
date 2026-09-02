@@ -58,6 +58,13 @@ jobs:
         run: |
             dotnet test ./src/log4net.sln
 
+      # Pester 5.9 ships on all three runner images, so nothing is installed here.
+      - name: Release script tests
+        shell: pwsh
+        run: |
+            $result = Invoke-Pester ./scripts/verify-release.Tests.ps1 -Output Detailed -PassThru
+            if ($result.FailedCount -ne 0) { exit 1 }
+
       # Runs the same probes twice, JIT compiled and published with Native AOT, so that a
       # difference between the two is caused by AOT rather than by the platform. The project
       # knows which probes are expected to fail in each mode and exits non-zero when reality

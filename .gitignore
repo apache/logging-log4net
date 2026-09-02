@@ -240,20 +240,6 @@ validate
 
 /.claude/settings.local.json
 /.claude/settings.json
-/graphify-out/cache
-/graphify-out/cost.json
-/graphify-out/.graphify_detect.json
-/graphify-out/.graphify_ast.json
-/graphify-out/.graphify_semantic.json
-/graphify-out/.graphify_extract.json
-/graphify-out/.graphify_analysis.json
-/graphify-out/.graphify_labels.json
-/graphify-out/GRAPH_REPORT.md
-/graphify-out/graph.html
-/graphify-out/.graphify_root
-/graphify-out/.graphify_python
-/graphify-out/*.sig
-/graphify-out/20*
 
 # output of the AOT probe step
 /aot-probes/

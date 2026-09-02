@@ -12,9 +12,8 @@ if test -z "$TARGET_DIR"; then
 fi
 cd "$TARGET_DIR"
 
-# Everything that is not a hash, a signature or the key file has to be covered by both. Driving the
-# checks from the artifacts, rather than from the .sha512 and .asc files that happen to be present,
-# is what turns a missing signature into a failure instead of one loop iteration fewer.
+# Driven from the artifacts, not from the .sha512 and .asc files present, so a missing one fails
+# instead of being one loop iteration fewer.
 shopt -s nullglob
 artifacts=()
 for file in *; do
@@ -38,21 +37,25 @@ for file in "${artifacts[@]}"; do
   sha512sum --check "$file.sha512"
 done
 
-wget https://downloads.apache.org/logging/KEYS
+# A home of its own, so only the downloaded KEYS can verify. Not --keyring: gpg ignores that where
+# common.conf sets use-keyboxd. Assigned before exporting, or a failed mktemp would go unnoticed
+# and an empty GNUPGHOME means the reviewer's own home.
+GNUPGHOME="$(mktemp -d)"
+export GNUPGHOME
+# "|| true", or a failing gpgconf aborts the trap before the directory is removed.
+trap 'gpgconf --kill all >/dev/null 2>&1 || true; rm -rf "$GNUPGHOME"' EXIT
 
-# A key ring of its own, holding only the downloaded KEYS. Importing into the default key ring
-# would accept a signature from any key this machine already has, not only from a key in the
-# Logging Services KEYS file.
-keyring_dir="$(mktemp -d)"
-trap 'rm -rf "$keyring_dir"' EXIT
-gpg --no-default-keyring --keyring "$keyring_dir/logging-keys.gpg" --batch --quiet --import KEYS
+# -O, and never the KEYS next to the artifacts: plain "wget URL" refuses to overwrite, so a planted
+# KEYS would stay and the download would land in KEYS.1.
+wget -O "$GNUPGHOME/KEYS" https://downloads.apache.org/logging/KEYS
+gpg --batch --quiet --import "$GNUPGHOME/KEYS"
 
 for file in "${artifacts[@]}"; do
   if test ! -f "$file.asc"; then
     echo "$file: no $file.asc to verify it with" >&2
     exit 1
   fi
-  gpg --no-default-keyring --keyring "$keyring_dir/logging-keys.gpg" --batch --verify "$file.asc" "$file"
+  gpg --batch --verify "$file.asc" "$file"
 done
 
 mkdir -p src
