@@ -43,9 +43,8 @@ function Assert-Hash
   "$($File.Name): hash ok"
 }
 
-# Everything that is not a hash, a signature or the key file has to be covered by both. Driving the
-# checks from the artifacts, rather than from the .sha512 and .asc files that happen to be present,
-# is what turns a missing signature into a failure instead of one loop iteration fewer.
+# Driven from the artifacts, not from the .sha512 and .asc files present, so a missing one fails
+# instead of being one loop iteration fewer.
 $Artifacts = @(Get-ChildItem $Directory -File |
   Where-Object { $_.Extension -notin '.asc', '.sha512' -and $_.Name -ne 'KEYS' })
 
@@ -59,20 +58,19 @@ foreach ($Artifact in $Artifacts)
   Assert-Hash $Artifact
 }
 
-# A key ring of its own, holding only the downloaded KEYS. Importing into the default key ring
-# would accept a signature from any key this machine already has, not only from a key in the
-# Logging Services KEYS file.
-$KeyringDirectory = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) ([guid]::NewGuid()))
+# A home of its own, so only the downloaded KEYS can verify. Not --keyring: gpg ignores that where
+# common.conf sets use-keyboxd.
+$GnupgHome = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) ([guid]::NewGuid()))
+$PreviousGnupgHome = $env:GNUPGHOME
+$env:GNUPGHOME = $GnupgHome
 try
 {
-  # Downloaded into that directory, and never read from the one being verified: a KEYS file sitting
-  # next to the artifacts is not covered by any of the checks above, so importing it would let
-  # anyone who can place a file there have their own key accepted as a release key.
-  $Keys = Join-Path $KeyringDirectory 'KEYS'
+  # Never the KEYS next to the artifacts: nothing above verifies it, so importing it would let
+  # anyone who can write there supply a release key.
+  $Keys = Join-Path $GnupgHome 'KEYS'
   Invoke-WebRequest https://downloads.apache.org/logging/KEYS -OutFile $Keys
 
-  $Keyring = Join-Path $KeyringDirectory 'logging-keys.gpg'
-  gpg --no-default-keyring --keyring $Keyring --batch --quiet --import $Keys
+  gpg --batch --quiet --import $Keys
 
   foreach ($Artifact in $Artifacts)
   {
@@ -82,13 +80,17 @@ try
       throw "$($Artifact.Name): no $($Artifact.Name).asc to verify it with"
     }
 
-    gpg --no-default-keyring --keyring $Keyring --batch --verify $Signature $Artifact.FullName
+    gpg --batch --verify $Signature $Artifact.FullName
     "$($Artifact.Name): signature ok"
   }
 }
 finally
 {
-  Remove-Item $KeyringDirectory -Recurse -Force -ErrorAction SilentlyContinue
+  # The daemons hold the directory open until told to stop. Wrapped, or a non-zero exit throws under
+  # $PSNativeCommandUseErrorActionPreference and abandons the rest of the finally.
+  try { gpgconf --kill all 2>&1 | Out-Null } catch { }
+  $env:GNUPGHOME = $PreviousGnupgHome
+  Remove-Item $GnupgHome -Recurse -Force -ErrorAction SilentlyContinue
 }
 
 Expand-Archive $Directory/*source*.zip -DestinationPath $Directory/src

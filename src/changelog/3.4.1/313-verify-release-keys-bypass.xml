@@ -8,7 +8,8 @@
     stop the release verification scripts from importing a `KEYS` file that came with the artifacts
  instead of the one they download. `wget` refuses to overwrite, so a planted `KEYS` stayed in place
  and was imported into the verification key ring, and artifacts signed by whoever placed it verified
- (CWE-347). The key ring is now filled from a copy downloaded to a temporary directory. Present in
- 3.2.0 onward, since the script was added (audit da18b6fd-f003)
+ (CWE-347). The scripts now verify in a GnuPG home of their own, filled from a copy downloaded
+ there, rather than with `--keyring`, which `gpg` ignores where `common.conf` sets `use-keyboxd`.
+ Present in 3.2.0 onward, since the script was added (audit da18b6fd-f003, reported by @swebb2066)
   </description>
 </entry>
