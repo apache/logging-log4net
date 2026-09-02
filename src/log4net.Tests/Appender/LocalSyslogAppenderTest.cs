@@ -157,7 +157,7 @@ public class LocalSyslogAppenderTest
 
   private static string EscapeNulCharacters(string message)
     => (string)typeof(LocalSyslogAppender).Assembly
-      .GetType("log4net.Appender.Internal.NativeStringEscape")!
+      .GetType("log4net.Appender.Internal.ContentEscape")!
       .GetMethod("EscapeNulCharacters", BindingFlags.Static | BindingFlags.NonPublic)!
       .Invoke(null, [message])!;
 }

@@ -60,7 +60,7 @@ public class OutputDebugStringAppender : AppenderSkeleton
     }
 #endif
 
-    _outputDebugString(NativeStringEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent)));
+    _outputDebugString(ContentEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent)));
   }
 
   /// <summary>

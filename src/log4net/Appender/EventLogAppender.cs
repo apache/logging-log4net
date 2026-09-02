@@ -378,7 +378,7 @@ public class EventLogAppender : AppenderSkeleton
     // Write to the event log
     try
     {
-      string escaped = NativeStringEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
+      string escaped = ContentEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
       int maxSize = GetMaxMessageSize();
       string eventTxt = PrepareEventText(escaped, maxSize);
       if (eventTxt.Length < escaped.Length)
@@ -417,7 +417,7 @@ public class EventLogAppender : AppenderSkeleton
   /// </remarks>
   private static string PrepareEventText(string rendered, int maxSize)
   {
-    string escaped = NativeStringEscape.EscapeNulCharacters(rendered);
+    string escaped = ContentEscape.EscapeNulCharacters(rendered);
     return escaped.Length > maxSize ? escaped.Substring(0, maxSize) : escaped;
   }
 
