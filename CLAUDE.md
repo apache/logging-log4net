@@ -153,6 +153,12 @@ almost always be doing.
 - Drive a test over a background thread with gates (`ManualResetEventSlim`), never with
   `Thread.Sleep`: park the worker, assert the state you care about, then release it. See
   `BackgroundSenderTest`, where every wait has a generous timeout and the assertions are exact.
+- **`Does.Contain` is culture sensitive and cannot be made ordinal**: its `ContainsConstraint` has
+  no comparison parameter. Linguistic comparison skips ignorable characters, so `Does.Not.Contain`
+  reports a match for NUL, soft hyphen or a zero-width character in a string that holds none. When
+  the assertion is about control characters, use
+  `Contains.Substring(x).Using(StringComparison.Ordinal)`, negated with the `!` operator that
+  `Constraint` defines, or assert the whole value with `Is.EqualTo`, which is ordinal.
 - Mark a test `[NonParallelizable]` when it mutates static state (`LogLog.InternalDebugging`, a
   static field on a test double, a process-wide native registration).
 - Wrap expected internal logging in `LogLog.ExecuteWithoutEmittingInternalMessages(...)` and capture
