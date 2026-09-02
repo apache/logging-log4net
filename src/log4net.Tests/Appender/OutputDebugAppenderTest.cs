@@ -78,8 +78,10 @@ public sealed class OutputDebugStringAppenderTest
 
     LogManager.GetLogger(rep.Name, GetType()).Debug("before\0after");
 
-    Assert.That(lastDebugString, Does.Contain("before\\0after"));
-    Assert.That(lastDebugString, Does.Not.Contain("\0"));
+    // Ordinal throughout: a culture sensitive comparison treats NUL as ignorable, so it reports a
+    // match in a string that has none.
+    Assert.That(lastDebugString, Contains.Substring("before\\0after").Using(StringComparison.Ordinal));
+    Assert.That(lastDebugString, !Contains.Substring("\0").Using(StringComparison.Ordinal));
   }
 }
 

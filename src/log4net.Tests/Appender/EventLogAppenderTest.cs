@@ -103,8 +103,9 @@ public sealed class EventLogAppenderTest
 
     string prepared = PrepareEventText("\0\0\0", maxSize);
 
-    Assert.That(prepared, Has.Length.EqualTo(maxSize));
-    Assert.That(prepared, Does.Not.Contain("\0"));
+    // Equality is ordinal, and pins the length and the absence of a NUL in one go. Escaping the
+    // three NULs gives six characters, so the limit has to cut it back to four.
+    Assert.That(prepared, Is.EqualTo(@"\0\0"));
   }
 
   /// <summary>A message within the limit and without a NUL comes through untouched.</summary>
