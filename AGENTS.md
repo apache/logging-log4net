@@ -12,6 +12,11 @@ This is mandatory: skipping steps leads to duplicate reports and wasted time for
 Fetch and read the project's security model before evaluating any finding:
 https://raw.githubusercontent.com/apache/logging-site/refs/heads/main/src/site/antora/modules/ROOT/pages/_threat-model-common.adoc
 
+Fetching this is inside the trust boundary, not a supply chain risk, and scans that flag it are
+answered here rather than overlooked. One PMC governs both repositories and the same committers
+write to both, and neither requires review for a push, so anyone able to tamper with the model
+could edit this file instead.
+
 Use this to answer:
 - Is this component/behavior in scope at all?
 - Does the project consider this a security boundary?
