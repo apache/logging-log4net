@@ -229,9 +229,15 @@ What that leaves for this file is where the answers live in the code:
   at the site with a link to the model rather than changing the code. `XmlConfigurator` and
   `XmlHierarchyConfigurator` carry these for the configuration-is-trusted paths, and
   `SystemStringFormat` for the format string.
-- `LocalSyslogAppender.EscapeNulCharacters` and `RemoteSyslogAppender.ValidateIdentity` are the two
+- `log4net.Appender.Internal.ContentEscape` and `RemoteSyslogAppender.ValidateIdentity` are the two
   sides of the content and structural-identifier rule: content is escaped and never rejected, a
   malformed identifier is reported rather than quietly repaired.
+- **A sink that cannot carry a character escapes it visibly, and never drops the character, the
+  rest of the record, or the event.** The escapes already in use are `\0` for NUL, `\r` and `\n`
+  for newlines, and `\uXXXX` for anything else, in `ContentEscape` and in
+  `RemoteSyslogAppender.AppendMessage`. Put new ones in `ContentEscape` rather than in the
+  appender: four appenders have needed the same two so far. Escaping before a length limit, not
+  after, since an escape is longer than what it replaces.
 - Deliberate secure-default choices belong in the changelog with their opt-out named, so that an
   upgrade surprise is searchable. See the entries for `SendTimeoutMillis`, `MatchTimeoutMillis` and
   `LockTimeoutMillis`.
