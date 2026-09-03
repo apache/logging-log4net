@@ -8,6 +8,6 @@
     escape NUL characters in `OutputDebugStringAppender` content. `OutputDebugStringW` takes a null
  terminated string, so a NUL in logged content ended the record there and silently dropped whatever
  the layout rendered after it, exception text and trailing fields included (CWE-158). The escape
- `LocalSyslogAppender` already applied is now shared between the two (audit da18b6fd-f009)
+ `LocalSyslogAppender` already applied is now shared between the two (audit da18b6fd-f009, fixed by @FreeAndNil)
   </description>
 </entry>
