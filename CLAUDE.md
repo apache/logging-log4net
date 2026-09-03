@@ -149,6 +149,12 @@ almost always be doing.
   the assertion is about control characters, use
   `Contains.Substring(x).Using(StringComparison.Ordinal)`, negated with the `!` operator that
   `Constraint` defines, or assert the whole value with `Is.EqualTo`, which is ordinal.
+- **Give a `[TestCase]` an explicit `TestName` when an argument holds a control character.**
+  Otherwise the whole fixture can become invisible to `dotnet test --filter`, silently: it is
+  listed by `--list-tests` and runs in a full pass, but every filter reports "No test matches".
+  Reproduced with `[TestCase("one", "\x1b[0m")]`; a single argument holding the same escape is
+  fine, so it takes two arguments and an escape character. `AnsiColorTerminalAppenderTest` names
+  all ten of its cases for that reason, and a filtered run there is 54 ms against 9 s for the suite.
 - Mark a test `[NonParallelizable]` when it mutates static state (`LogLog.InternalDebugging`, a
   static field on a test double, a process-wide native registration).
 - Wrap expected internal logging in `LogLog.ExecuteWithoutEmittingInternalMessages(...)` and capture

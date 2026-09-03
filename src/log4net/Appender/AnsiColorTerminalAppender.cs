@@ -251,36 +251,10 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
       loggingMessage = levelColors.CombinedColor + loggingMessage;
     }
 
-    // on most terminals there are weird effects if we don't clear the background color
-    // before the new line.  This checks to see if it ends with a newline, and if
-    // so, inserts the clear codes before the newline, otherwise the clear codes
-    // are inserted afterward.
-    if (loggingMessage.Length > 1)
-    {
-      if (loggingMessage.EndsWith("\r\n") || loggingMessage.EndsWith("\n\r"))
-      {
-        loggingMessage = loggingMessage.Insert(loggingMessage.Length - 2, PostEventCodes);
-      }
-      else if (loggingMessage.EndsWith("\n") || loggingMessage.EndsWith("\r"))
-      {
-        loggingMessage = loggingMessage.Insert(loggingMessage.Length - 1, PostEventCodes);
-      }
-      else
-      {
-        loggingMessage += PostEventCodes;
-      }
-    }
-    else
-    {
-      if (loggingMessage[0] is '\n' or '\r')
-      {
-        loggingMessage = PostEventCodes + loggingMessage;
-      }
-      else
-      {
-        loggingMessage += PostEventCodes;
-      }
-    }
+    // On most terminals there are weird effects if the background colour is not cleared before
+    // the line break, so the reset codes go before it rather than after.
+    loggingMessage = loggingMessage.Insert(
+      loggingMessage.Length - TrailingLineBreakLength(loggingMessage), PostEventCodes);
 
     if (_writeToErrorStream)
     {
@@ -293,6 +267,23 @@ public class AnsiColorTerminalAppender : AppenderSkeleton
       Console.Write(loggingMessage);
     }
 
+  }
+
+  /// <summary>
+  /// How many characters of line break the message ends with, 0, 1 or 2.
+  /// </summary>
+  private static int TrailingLineBreakLength(string message)
+  {
+    int last = message.Length - 1;
+    if (last < 0 || message[last] is not '\n' and not '\r')
+    {
+      return 0;
+    }
+
+    int previous = last - 1;
+    return previous >= 0 && message[previous] is '\n' or '\r' && message[previous] != message[last]
+      ? 2
+      : 1;
   }
 
   /// <summary>

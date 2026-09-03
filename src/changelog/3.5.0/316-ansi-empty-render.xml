@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="316" link="https://github.com/apache/logging-log4net/pull/316"/>
+  <description format="asciidoc">
+    stop `AnsiColorTerminalAppender` dropping an event that renders to nothing. The branch meant
+ for a single character read the first one without checking there was one, so an empty render
+ threw and the event was lost. The reset codes are now placed by one computed offset, which has no
+ special case to get wrong (audit da18b6fd-f029)
+  </description>
+</entry>
