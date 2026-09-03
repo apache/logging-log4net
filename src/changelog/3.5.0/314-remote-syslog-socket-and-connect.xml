@@ -9,6 +9,6 @@
  connection its background pump owns, but also inherited one from `UdpAppender` that nothing ever
  used, which bound `localPort` twice. A pump that cannot connect now reports it as well, instead
  of ending unobserved and leaving every later event queued behind a sender that is gone
- (implemented by @FreeAndNil)
+ (audit da18b6fd-f034, implemented by @FreeAndNil)
   </description>
 </entry>

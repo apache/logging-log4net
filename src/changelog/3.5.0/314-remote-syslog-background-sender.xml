@@ -9,6 +9,6 @@
  stopped accepting datagrams grew it until the process ran out of memory, and shutdown waited five
  seconds and then abandoned a drain that had no limit of its own. It now holds `sendQueueSize`
  datagrams (500), a logging call waits at most `enqueueTimeoutMillis` (5000) for room, losses are
- counted and reported, and `Flush` honours its timeout (implemented by @FreeAndNil)
+ counted and reported, and `Flush` honours its timeout (audit da18b6fd-f034, implemented by @FreeAndNil)
   </description>
 </entry>

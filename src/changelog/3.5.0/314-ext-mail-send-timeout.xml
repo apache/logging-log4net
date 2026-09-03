@@ -9,6 +9,6 @@
  per operation by default, and the mail goes out while the appender lock is held, so an
  unresponsive server suspended every thread logging through the appender. `SendTimeoutMillis` is a
  deadline for the send as a whole, because a per operation timeout still allows a multiple of
- itself overall (implemented by @FreeAndNil)
+ itself overall (audit da18b6fd-f004, implemented by @FreeAndNil)
   </description>
 </entry>
