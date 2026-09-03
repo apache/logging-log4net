@@ -10,6 +10,6 @@
  records everything after the newline as its own entry, so content could forge an authentic
  looking record (CWE-117). `NewLineHandling` mirrors the option of the same name on
  `RemoteSyslogAppender`, which already escaped by default; set it to `Keep` for the previous
- behaviour (audit da18b6fd-f008)
+ behaviour (audit da18b6fd-f008, fixed by @FreeAndNil)
   </description>
 </entry>

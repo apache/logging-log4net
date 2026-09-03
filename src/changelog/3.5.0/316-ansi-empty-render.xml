@@ -8,6 +8,6 @@
     stop `AnsiColorTerminalAppender` dropping an event that renders to nothing. The branch meant
  for a single character read the first one without checking there was one, so an empty render
  threw and the event was lost. The reset codes are now placed by one computed offset, which has no
- special case to get wrong (audit da18b6fd-f029)
+ special case to get wrong (audit da18b6fd-f029, fixed by @FreeAndNil)
   </description>
 </entry>

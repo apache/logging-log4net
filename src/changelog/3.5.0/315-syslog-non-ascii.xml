@@ -9,6 +9,6 @@
  allows only the visible ASCII characters and space, and everything else was dropped silently, so
  `Sch&#246;nwetter &#20320;&#22909;` reached the collector as `Schnwetter ` and a tab disappeared
  from between its neighbours. Such characters are now written as a `\uXXXX` escape, which keeps
- the record inside the allowed range and readable (audit da18b6fd-f035)
+ the record inside the allowed range and readable (audit da18b6fd-f035, fixed by @FreeAndNil)
   </description>
 </entry>

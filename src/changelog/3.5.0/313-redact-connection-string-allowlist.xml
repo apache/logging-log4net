@@ -8,6 +8,6 @@
     keep secrets out of the `AdoNetAppender` message for a connection it could not open. Hiding
  password-bearing keywords missed `Extended Properties`, which nests a whole connection string, and
  keywords such as `AccessToken` (CWE-532). Only keywords naming the server and account are kept now
- (audit da18b6fd-f028)
+ (audit da18b6fd-f028, fixed by @FreeAndNil)
   </description>
 </entry>
