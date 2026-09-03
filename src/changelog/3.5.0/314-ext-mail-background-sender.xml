@@ -10,6 +10,6 @@
  for the SMTP server. The queue holds `sendQueueSize` mails (500) and a logging call waits at most
  `enqueueTimeoutMillis` (5000) for room in it. Failures are still reported to the error handler,
  but after the logging call has returned, and `Flush` now honours its timeout
- (implemented by @FreeAndNil)
+ (audit da18b6fd-f004, implemented by @FreeAndNil)
   </description>
 </entry>
