@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="317" link="https://github.com/apache/logging-log4net/pull/317"/>
+  <description format="asciidoc">`TimeoutDecision` on `StringMatchFilter` and `PropertyFilter`, deciding an
+  event whose regular expression match was abandoned. An abandoned match was treated as a non-match,
+  but the content decides whether the deadline is reached, so in an `AcceptOnMatch` allowlist
+  followed by a deny-all it let content suppress its own record. The default stays `Neutral`;
+  `Accept` makes such a chain fail towards logging (audit da18b6fd-f017, implemented by
+  @FreeAndNil)</description>
+</entry>

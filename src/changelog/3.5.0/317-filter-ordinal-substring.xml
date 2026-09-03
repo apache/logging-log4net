@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="317" link="https://github.com/apache/logging-log4net/pull/317"/>
+  <description format="asciidoc">Compare `StringToMatch` ordinally in `StringMatchFilter` and `PropertyFilter`.
+  The substring search was culture sensitive, and a linguistic search skips ignorable characters, so
+  content holding a NUL, a soft hyphen or a zero-width space between the letters of the configured
+  text still matched it, and the decision varied with the host culture. The filter now decides the
+  same way a reader of the log would (audit da18b6fd-f018, fixed by @FreeAndNil)</description>
+</entry>

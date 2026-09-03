@@ -50,7 +50,7 @@ public class StringMatchFilterTest
   [Test]
   public void AMatchThatBacktracksIsAbandoned()
   {
-    StringMatchFilter filter = new() { RegexToMatch = CatastrophicPattern, MatchTimeoutMillis = 100 };
+    StringMatchFilter filter = new() { RegexToMatch = CatastrophicPattern, MatchTimeoutMillis = 50 };
     filter.ActivateOptions();
 
     Stopwatch stopwatch = Stopwatch.StartNew();
@@ -70,7 +70,7 @@ public class StringMatchFilterTest
   [NonParallelizable]
   public void AnAbandonedMatchIsReportedOnce()
   {
-    StringMatchFilter filter = new() { RegexToMatch = CatastrophicPattern, MatchTimeoutMillis = 100 };
+    StringMatchFilter filter = new() { RegexToMatch = CatastrophicPattern, MatchTimeoutMillis = 50 };
     filter.ActivateOptions();
 
     List<LogLog> messages = [];
@@ -101,12 +101,72 @@ public class StringMatchFilterTest
   }
 
   /// <summary>
-  /// The deadline has to be finite by default, so that an expensive pattern cannot hold the
-  /// appender lock indefinitely without the operator having opted into that.
+  /// The deadline bounds how long one crafted event holds the appender lock, so it has to be
+  /// finite by default and short enough to matter.
   /// </summary>
   [Test]
   public void MatchTimeoutMillisDefaultsToAFiniteValue()
-    => Assert.That(new StringMatchFilter().MatchTimeoutMillis, Is.EqualTo(1000));
+    => Assert.That(new StringMatchFilter().MatchTimeoutMillis, Is.EqualTo(50));
+
+  /// <summary>
+  /// An abandoned match leaves the chain to decide unless the operator says otherwise, so the
+  /// default has to stay Neutral.
+  /// </summary>
+  [Test]
+  public void TimeoutDecisionDefaultsToNeutral()
+    => Assert.That(new StringMatchFilter().TimeoutDecision, Is.EqualTo(FilterDecision.Neutral));
+
+  /// <summary>
+  /// The content decides whether the deadline is reached, so an allowlist that treats an abandoned
+  /// match as a non-match lets content suppress its own record. TimeoutDecision is how such a
+  /// chain fails towards logging instead.
+  /// </summary>
+  [TestCase(FilterDecision.Deny, TestName = "AnAbandonedMatchIsDecidedByTimeoutDecisionDeny")]
+  [TestCase(FilterDecision.Accept, TestName = "AnAbandonedMatchIsDecidedByTimeoutDecisionAccept")]
+  [TestCase(FilterDecision.Neutral, TestName = "AnAbandonedMatchIsDecidedByTimeoutDecisionNeutral")]
+  public void AnAbandonedMatchIsDecidedByTimeoutDecision(FilterDecision timeoutDecision)
+  {
+    StringMatchFilter filter = new()
+    {
+      RegexToMatch = CatastrophicPattern,
+      MatchTimeoutMillis = 50,
+      TimeoutDecision = timeoutDecision
+    };
+    filter.ActivateOptions();
+
+    FilterDecision decision = FilterDecision.Accept;
+    LogLog.ExecuteWithoutEmittingInternalMessages(() => decision = filter.Decide(CreateEvent(CraftedMessage)));
+
+    Assert.That(decision, Is.EqualTo(timeoutDecision));
+  }
+
+  /// <summary>
+  /// A linguistic search skips ignorable characters, so content could otherwise force a substring
+  /// match that no ordinal reader of the same log would make.
+  /// </summary>
+  [TestCase("\0", TestName = "ANulDoesNotForceASubstringMatch")]
+  [TestCase("­", TestName = "ASoftHyphenDoesNotForceASubstringMatch")]
+  [TestCase("​", TestName = "AZeroWidthSpaceDoesNotForceASubstringMatch")]
+  public void AnIgnorableCharacterDoesNotForceASubstringMatch(string ignorable)
+  {
+    StringMatchFilter filter = new() { StringToMatch = "password", AcceptOnMatch = true };
+    filter.ActivateOptions();
+
+    Assert.That(filter.Decide(CreateEvent($"pass{ignorable}word")), Is.EqualTo(FilterDecision.Neutral));
+  }
+
+  /// <summary>
+  /// The ordinal comparison must not break the match it exists to protect.
+  /// </summary>
+  [Test]
+  public void AnExactSubstringStillMatches()
+  {
+    StringMatchFilter filter = new() { StringToMatch = "password", AcceptOnMatch = true };
+    filter.ActivateOptions();
+
+    Assert.That(filter.Decide(CreateEvent("a password here")), Is.EqualTo(FilterDecision.Accept));
+    Assert.That(filter.Decide(CreateEvent("nothing here")), Is.EqualTo(FilterDecision.Neutral));
+  }
 
   /// <summary>
   /// 0 is the documented opt-out that restores unbounded matching; a negative deadline has no
