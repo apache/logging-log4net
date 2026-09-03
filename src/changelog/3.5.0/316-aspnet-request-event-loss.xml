@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="316" link="https://github.com/apache/logging-log4net/pull/316"/>
+  <description format="asciidoc">Stop `%aspnet-request` losing the whole event for a request that fails
+  ASP.NET request validation. Reading `HttpRequest.Params` validates the query string, form and
+  cookies on first access, so a request carrying `&lt;script&gt;` threw inside the layout and the
+  appender discarded the event: a sender could suppress the log record of their own request. The
+  converter now reads through `HttpRequest.Unvalidated`, which keeps the content instead of
+  dropping it (audit da18b6fd-f019, fixed by @FreeAndNil)</description>
+</entry>
