@@ -60,6 +60,7 @@ internal sealed class Log4NetCommand : IDbCommand
     }
     payload ??= CommandText;
 
+    AttemptCount++;
     if (ExceptionTrigger is not null
         && payload?.IndexOf(ExceptionTrigger, StringComparison.Ordinal) >= 0)
     {
@@ -78,6 +79,11 @@ internal sealed class Log4NetCommand : IDbCommand
   /// The number of successful <see cref="ExecuteNonQuery"/> calls on this instance.
   /// </summary>
   public int ExecuteNonQueryCount { get; private set; }
+
+  /// <summary>
+  /// Every <see cref="ExecuteNonQuery"/> attempt across all instances, failed ones included.
+  /// </summary>
+  internal static int AttemptCount { get; set; }
 
   /// <summary>
   /// When set, <see cref="ExecuteNonQuery"/> throws for every command whose payload

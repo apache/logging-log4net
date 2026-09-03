@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Net.Mail;
 using System.Text;
 
@@ -330,13 +331,107 @@ public class SmtpAppender : BufferingAppenderSkeleton
         writer.Write(footer);
       }
 
-      SendEmail(writer.ToString());
+      string body = writer.ToString();
+      if (_sender is BackgroundSender<string> sender)
+      {
+        // A full queue is reported by the sender itself.
+        sender.TryEnqueue(body, EnqueueTimeoutMillis);
+      }
+      else
+      {
+        SendEmail(body);
+      }
     }
     catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
     }
   }
+
+  /// <inheritdoc/>
+  public override void ActivateOptions()
+  {
+    base.ActivateOptions();
+    CloseSender();
+    _sender = new(nameof(SmtpAppender), SendQueueSize, (body, _) => SendEmail(body), Report);
+  }
+
+  /// <inheritdoc/>
+  public override bool Flush(int millisecondsTimeout)
+  {
+    bool buffered = base.Flush(millisecondsTimeout);
+    bool queued = _sender?.Flush(millisecondsTimeout) ?? true;
+    return buffered && queued;
+  }
+
+  /// <inheritdoc/>
+  protected override void OnClose()
+  {
+    base.OnClose();
+    CloseSender();
+  }
+
+  /// <summary>
+  /// How many rendered mails may wait to be sent. Defaults to 500.
+  /// </summary>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not positive.</exception>
+  public int SendQueueSize
+  {
+    get => _sendQueueSize;
+    set
+    {
+      if (value <= 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendQueueSize is not positive.");
+      }
+      _sendQueueSize = value;
+    }
+  }
+
+  /// <summary>
+  /// How long a logging call waits for room in a full queue. Defaults to 5000, 0 never waits.
+  /// </summary>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
+  public int EnqueueTimeoutMillis
+  {
+    get => _enqueueTimeoutMillis;
+    set
+    {
+      if (value < 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for EnqueueTimeoutMillis is negative.");
+      }
+      _enqueueTimeoutMillis = value;
+    }
+  }
+
+  private void CloseSender()
+  {
+    if (_sender is BackgroundSender<string> sender)
+    {
+      _sender = null;
+      sender.Close(SendTimeoutMillis);
+      sender.Dispose();
+    }
+  }
+
+  private void Report(string message, Exception? exception)
+  {
+    if (exception is null)
+    {
+      ErrorHandler.Error(message);
+    }
+    else
+    {
+      ErrorHandler.Error(message, exception);
+    }
+  }
+
+  private BackgroundSender<string>? _sender;
+  private int _sendQueueSize = 500;
+  private int _enqueueTimeoutMillis = 5_000;
 
   /// <summary>
   /// This appender requires a <see cref="AppenderSkeleton.Layout"/> to be set.
@@ -375,32 +470,59 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <param name="messageBody">the body text to include in the mail</param>
   protected virtual void SendEmail(string messageBody)
   {
+    using CancellationTokenSource deadline = new(SendTimeoutMillis);
     using MimeMessage message = CreateMessage(messageBody);
     using ISmtpTransport transport = _transportFactory().EnsureNotNull();
+    transport.Timeout = SendTimeoutMillis;
 
-    transport.Connect(SmtpHost.EnsureNotNullOrEmpty(), Port, ResolveSecureSocketOptions());
+    transport.Connect(SmtpHost.EnsureNotNullOrEmpty(), Port, ResolveSecureSocketOptions(), deadline.Token);
     try
     {
       switch (Authentication)
       {
         case SmtpAuthentication.Basic:
-          transport.Authenticate(new NetworkCredential(Username, Password));
+          transport.Authenticate(new NetworkCredential(Username, Password), deadline.Token);
           break;
         case SmtpAuthentication.Ntlm:
-          transport.Authenticate(new SaslMechanismNtlm(new NetworkCredential(Username, Password)));
+          transport.Authenticate(new SaslMechanismNtlm(new NetworkCredential(Username, Password)), deadline.Token);
           break;
         case SmtpAuthentication.None:
         default:
           break;
       }
 
-      transport.Send(message);
+      transport.Send(message, deadline.Token);
     }
     finally
     {
+      // No token: already cancelled, it would replace the failure that got us here.
       transport.Disconnect(true);
     }
   }
+
+  /// <summary>
+  /// A deadline for the whole send, in milliseconds. Defaults to 15000.
+  /// </summary>
+  /// <remarks>
+  /// MailKit's own timeout applies per operation, so a server answering just inside it can still
+  /// take a multiple of it. The mail goes out under the appender lock.
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not positive.</exception>
+  public int SendTimeoutMillis
+  {
+    get => _sendTimeoutMillis;
+    set
+    {
+      if (value <= 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendTimeoutMillis is not positive.");
+      }
+      _sendTimeoutMillis = value;
+    }
+  }
+
+  private int _sendTimeoutMillis = 15_000;
 
   /// <summary>
   /// Builds the <see cref="MimeMessage"/> for the given body text from the configured options.

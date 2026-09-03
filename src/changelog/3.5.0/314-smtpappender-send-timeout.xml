@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="314" link="https://github.com/apache/logging-log4net/pull/314"/>
+  <description format="asciidoc">
+    bound a single send in `SmtpAppender` to 15 seconds. `SmtpClient.Timeout` defaults to 100
+ seconds and the appender never set it, and the mail goes out while the appender lock is held, so
+ a server that accepted the connection and then stopped answering suspended every thread logging
+ through the appender. Configurable with `SendTimeoutMillis` (implemented by @FreeAndNil)
+  </description>
+</entry>

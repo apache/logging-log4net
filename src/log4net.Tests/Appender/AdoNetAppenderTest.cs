@@ -501,4 +501,130 @@ public class AdoNetAppenderTest
     Assert.That(param.Value, Is.Not.EqualTo(SystemInfo.NullText));
     Assert.That(param.Value, Is.EqualTo(DBNull.Value));
   }
+
+  /// <summary>
+  /// Retrying one by one exists to save the events around the one the database rejected. When
+  /// every one of them fails, the batch is not the problem and each further round trip only
+  /// learns that again.
+  /// </summary>
+  [Test]
+  public void RetryingPerEventGivesUpAfterRepeatedFailures()
+  {
+    const int bufferSize = 19;
+    // One inside the transaction, then five one by one before it gives up.
+    const int expectedAttempts = 6;
+
+    Log4NetCommand.AttemptCount = 0;
+    Log4NetCommand.ExceptionTrigger = "Message";
+    try
+    {
+      XmlDocument log4NetConfig = new();
+      log4NetConfig.LoadXml(
+        """
+        <log4net>
+        <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+          <bufferSize value="19" />
+          <useTransactions value="true" />
+          <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection" />
+          <connectionString value="data source=[database server]" />
+          <commandText value="INSERT INTO Log ([Message]) VALUES (@message)" />
+          <parameter>
+            <parameterName value="@message" />
+            <dbType value="String" />
+            <size value="4000" />
+            <layout type="log4net.Layout.PatternLayout">
+              <conversionPattern value="%message" />
+            </layout>
+          </parameter>
+        </appender>
+        <root>
+          <level value="ALL" />
+          <appender-ref ref="AdoNetAppender" />
+        </root>
+        </log4net>
+        """);
+
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
+      ILog log = LogManager.GetLogger(rep.Name, nameof(RetryingPerEventGivesUpAfterRepeatedFailures));
+
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        // The event after the buffer is full flushes all twenty.
+        for (int i = 0; i <= bufferSize; i++)
+        {
+          log.Debug("Message");
+        }
+      });
+
+      Assert.That(Log4NetCommand.AttemptCount, Is.EqualTo(expectedAttempts));
+    }
+    finally
+    {
+      Log4NetCommand.ExceptionTrigger = null;
+      Log4NetCommand.ExecutedPayloads.Clear();
+    }
+  }
+
+  /// <summary>
+  /// Giving up must not cost the events around a rejected one, which is the whole point of
+  /// retrying: five failures spread out are not five in a row.
+  /// </summary>
+  [Test]
+  public void RetryingPerEventKeepsGoingWhileFailuresAreSpreadOut()
+  {
+    const int bufferSize = 9;
+    const int expectedWrites = 5;
+
+    Log4NetCommand.AttemptCount = 0;
+    Log4NetCommand.ExceptionTrigger = "POISON";
+    try
+    {
+      XmlDocument log4NetConfig = new();
+      log4NetConfig.LoadXml(
+        """
+        <log4net>
+        <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+          <bufferSize value="9" />
+          <useTransactions value="true" />
+          <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection" />
+          <connectionString value="data source=[database server]" />
+          <commandText value="INSERT INTO Log ([Message]) VALUES (@message)" />
+          <parameter>
+            <parameterName value="@message" />
+            <dbType value="String" />
+            <size value="4000" />
+            <layout type="log4net.Layout.PatternLayout">
+              <conversionPattern value="%message" />
+            </layout>
+          </parameter>
+        </appender>
+        <root>
+          <level value="ALL" />
+          <appender-ref ref="AdoNetAppender" />
+        </root>
+        </log4net>
+        """);
+
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
+      ILog log = LogManager.GetLogger(rep.Name, nameof(RetryingPerEventKeepsGoingWhileFailuresAreSpreadOut));
+
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i <= bufferSize; i++)
+        {
+          log.Debug(i % 2 == 0 ? "POISON" : $"good {i}");
+        }
+      });
+
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.Count.EqualTo(expectedWrites));
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.Member("good 9"));
+    }
+    finally
+    {
+      Log4NetCommand.ExceptionTrigger = null;
+      Log4NetCommand.ExecutedPayloads.Clear();
+    }
+  }
 }

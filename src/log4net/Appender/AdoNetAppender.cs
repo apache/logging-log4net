@@ -549,6 +549,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
           // rejects must not stop the remaining events from being written. In transaction
           // mode the exception has to propagate - the transaction is in a failed state -
           // and SendBuffer retries the events individually after the rollback.
+          _eventFailed = true;
           ErrorHandler.Error("Exception while writing a logging event to the database. Continuing with the remaining events.", ex);
         }
       }
@@ -577,6 +578,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
         catch (Exception ex) when (dbTran is null && !ex.IsFatal())
         {
           // See the parameterized path above: contain per-event failures outside transactions.
+          _eventFailed = true;
           ErrorHandler.Error("Exception while writing a logging event to the database. Continuing with the remaining events.", ex);
         }
       }
@@ -604,6 +606,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// </remarks>
   private void SendBufferPerEvent(LoggingEvent[] events)
   {
+    int failuresInARow = 0;
     foreach (LoggingEvent e in events)
     {
       if (Connection is not { State: ConnectionState.Open })
@@ -612,16 +615,40 @@ public class AdoNetAppender : BufferingAppenderSkeleton
         return;
       }
 
+      _eventFailed = false;
       try
       {
         SendBuffer(null, [e]);
       }
       catch (Exception ex) when (!ex.IsFatal())
       {
+        _eventFailed = true;
         ErrorHandler.Error("Exception while writing a logging event to the database. The event has been dropped.", ex);
+      }
+
+      if (!_eventFailed)
+      {
+        failuresInARow = 0;
+      }
+      else if (++failuresInARow >= MaxFailuresInARow)
+      {
+        // Retrying one by one is meant to save the events around the one the database rejected.
+        // This many in a row means the batch is not the problem, and the remaining events would
+        // cost one round trip each to learn the same thing.
+        ErrorHandler.Error(
+          $"Giving up on the remaining logging events after {failuresInARow} consecutive failures.");
+        return;
       }
     }
   }
+
+  /// <summary>
+  /// Set by the contained per-event failure path in <see cref="SendBuffer(IDbTransaction, LoggingEvent[])"/>,
+  /// which reports rather than throws, so <see cref="SendBufferPerEvent"/> can count failures.
+  /// </summary>
+  private bool _eventFailed;
+
+  private const int MaxFailuresInARow = 5;
 
   /// <summary>
   /// Prepare entire database command object to be executed.

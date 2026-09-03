@@ -1,16 +1,16 @@
 To: announce@apache.org, dev@logging.apache.org
-Subject: [ANNOUNCE] Apache log4net 3.4.1 released
+Subject: [ANNOUNCE] Apache log4net 3.5.0 released
 
 Hi,
 
-the Apache log4net team is pleased to announce the 3.4.1 release.
+the Apache log4net team is pleased to announce the 3.5.0 release.
 
 For further information (support, download, etc.) see
 
 - https://logging.apache.org/log4net/release-notes.html
-- https://github.com/apache/logging-log4net/releases/tag/rel%2F3.4.1
-- https://www.nuget.org/packages/log4net/3.4.1
-- https://www.nuget.org/packages/log4net.Ext.Mail/3.4.1
+- https://github.com/apache/logging-log4net/releases/tag/rel%2F3.5.0
+- https://www.nuget.org/packages/log4net/3.5.0
+- https://www.nuget.org/packages/log4net.Ext.Mail/3.5.0
 
 Highlights of this release:
 

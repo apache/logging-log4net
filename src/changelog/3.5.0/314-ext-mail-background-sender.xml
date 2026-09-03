@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="314" link="https://github.com/apache/logging-log4net/pull/314"/>
+  <description format="asciidoc">
+    send mail from a background thread in the MailKit based `SmtpAppender`. The mail used to go out
+ while the appender lock was held, so the thread that logged, and every thread behind it, waited
+ for the SMTP server. The queue holds `sendQueueSize` mails (500) and a logging call waits at most
+ `enqueueTimeoutMillis` (5000) for room in it. Failures are still reported to the error handler,
+ but after the logging call has returned, and `Flush` now honours its timeout
+ (implemented by @FreeAndNil)
+  </description>
+</entry>

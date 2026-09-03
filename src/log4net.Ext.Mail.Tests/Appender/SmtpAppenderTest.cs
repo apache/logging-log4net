@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using System.Diagnostics;
 using System.Text;
 using log4net.Core;
 using log4net.Ext.Mail.Appender;
@@ -106,7 +107,11 @@ public class SmtpAppenderTest
   {
     appender.ActivateOptions();
     appender.DoAppend(CreateEvent(message));
+    // Sending is asynchronous.
+    appender.Flush(FlushTimeoutMillis);
   }
+
+  private const int FlushTimeoutMillis = 30_000;
 
   [Test]
   public void SendsOneMailPerEventWhenNotBuffering()
@@ -497,7 +502,7 @@ public class SmtpAppenderTest
 
     Assert.DoesNotThrow(() => Append(appender));
 
-    Assert.That(_errorHandler.Message, Does.Contain("Error occurred while sending e-mail notification."));
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
     Assert.That(_errorHandler.Message, Does.Contain("relay refused"));
   }
 
@@ -550,6 +555,7 @@ public class SmtpAppenderTest
 
     appender.DoAppend(CreateEvent("first"));
     appender.DoAppend(CreateEvent("second"));
+    appender.Flush(FlushTimeoutMillis);
 
     Assert.That(transports, Has.Count.EqualTo(2));
     Assert.That(transports[0].SentMails[0].Body, Does.Contain("first"));
@@ -568,7 +574,7 @@ public class SmtpAppenderTest
     appender.DoAppend(CreateEvent("three"));
     Assert.That(_transport.SentMails, Is.Empty, "the buffer is not full yet");
 
-    appender.Flush(true);
+    Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
 
     Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
     string body = _transport.SentMails[0].Body;
@@ -593,6 +599,7 @@ public class SmtpAppenderTest
     appender.ActivateOptions();
 
     appender.DoAppend(CreateEvent("no layout"));
+    appender.Flush(FlushTimeoutMillis);
 
     Assert.That(_transport.SentMails, Is.Empty);
     Assert.That(_errorHandler.Message, Is.Not.Empty);
@@ -615,4 +622,76 @@ public class SmtpAppenderTest
     Assert.That(appender.BodyEncoding, Is.EqualTo(Encoding.UTF8));
     Assert.That(appender.EnableSsl, Is.False);
   }
+
+  /// <summary>An unbounded send stalls every thread logging through the appender.</summary>
+  [Test]
+  public void SendTimeoutMillisDefaultsToFifteenSeconds()
+    => Assert.That(CreateAppender().SendTimeoutMillis, Is.EqualTo(15_000));
+
+  /// <summary>Neither 0 nor a negative value is a usable deadline.</summary>
+  [TestCase(0)]
+  [TestCase(-1)]
+  public void SendTimeoutMillisRejectsValuesThatAreNotPositive(int value)
+    => Assert.That(() => CreateAppender().SendTimeoutMillis = value,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>MailKit needs it too, for the reads and writes between the cancellation checks.</summary>
+  [Test]
+  public void TheTimeoutReachesTheTransport()
+  {
+    const int sendTimeoutMillis = 1_234;
+    SmtpAppender appender = CreateAppender();
+    appender.SendTimeoutMillis = sendTimeoutMillis;
+
+    Append(appender);
+
+    Assert.That(_transport.Timeout, Is.EqualTo(sendTimeoutMillis));
+  }
+
+  /// <summary>
+  /// Every single operation stays inside the timeout here, their sum does not. A per operation
+  /// timeout would let this run on; the deadline stops it.
+  /// </summary>
+  [Test]
+  public void TheDeadlineCoversTheWholeSendAndNotOneOperation()
+  {
+    const int sendTimeoutMillis = 300;
+    const int delayMillisPerCall = 200;
+    const int generousBoundMillis = 5_000;
+
+    SmtpAppender appender = CreateAppender();
+    appender.SendTimeoutMillis = sendTimeoutMillis;
+    _transport.DelayMillisPerCall = delayMillisPerCall;
+
+    Stopwatch stopwatch = Stopwatch.StartNew();
+    Append(appender);
+    stopwatch.Stop();
+
+    Assert.That(_transport.SentMails, Is.Empty);
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
+    Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(generousBoundMillis));
+  }
+
+  /// <summary>Bounded, so an unreachable server cannot grow the queue without limit.</summary>
+  [Test]
+  public void SendQueueSizeDefaultsTo500()
+    => Assert.That(CreateAppender().SendQueueSize, Is.EqualTo(500));
+
+  /// <summary>The longest a logging call waits when the queue is full.</summary>
+  [Test]
+  public void EnqueueTimeoutMillisDefaultsTo5000()
+    => Assert.That(CreateAppender().EnqueueTimeoutMillis, Is.EqualTo(5_000));
+
+  /// <summary>A queue with no room for anything cannot work.</summary>
+  [TestCase(0)]
+  [TestCase(-1)]
+  public void SendQueueSizeRejectsValuesThatAreNotPositive(int value)
+    => Assert.That(() => CreateAppender().SendQueueSize = value,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>0 is allowed and never waits, a negative wait is meaningless.</summary>
+  [Test]
+  public void EnqueueTimeoutMillisRejectsANegativeValue()
+    => Assert.That(() => CreateAppender().EnqueueTimeoutMillis = -1,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
 }

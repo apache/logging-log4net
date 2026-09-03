@@ -18,6 +18,7 @@
 #endregion
 
 using System.Net;
+using System.Threading;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -33,23 +34,34 @@ internal sealed class MailKitSmtpTransport : ISmtpTransport
   private readonly SmtpClient _client = new();
 
   /// <inheritdoc/>
+  public int Timeout
+  {
+    get => _client.Timeout;
+    set => _client.Timeout = value;
+  }
+
+  /// <inheritdoc/>
   public bool IsConnected => _client.IsConnected;
 
   /// <inheritdoc/>
   public bool IsAuthenticated => _client.IsAuthenticated;
 
   /// <inheritdoc/>
-  public void Connect(string host, int port, SecureSocketOptions secureSocketOptions)
-    => _client.Connect(host, port, secureSocketOptions);
+  public void Connect(string host, int port, SecureSocketOptions secureSocketOptions,
+    CancellationToken cancellationToken)
+    => _client.Connect(host, port, secureSocketOptions, cancellationToken);
 
   /// <inheritdoc/>
-  public void Authenticate(ICredentials credentials) => _client.Authenticate(credentials);
+  public void Authenticate(ICredentials credentials, CancellationToken cancellationToken)
+    => _client.Authenticate(credentials, cancellationToken);
 
   /// <inheritdoc/>
-  public void Authenticate(SaslMechanism mechanism) => _client.Authenticate(mechanism);
+  public void Authenticate(SaslMechanism mechanism, CancellationToken cancellationToken)
+    => _client.Authenticate(mechanism, cancellationToken);
 
   /// <inheritdoc/>
-  public void Send(MimeMessage message) => _client.Send(message);
+  public void Send(MimeMessage message, CancellationToken cancellationToken)
+    => _client.Send(message, cancellationToken);
 
   /// <inheritdoc/>
   public void Disconnect(bool quit) => _client.Disconnect(quit);

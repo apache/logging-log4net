@@ -19,6 +19,7 @@
 
 using System;
 using System.Net;
+using System.Threading;
 using MailKit.Security;
 using MimeKit;
 
@@ -41,6 +42,11 @@ namespace log4net.Ext.Mail.Appender.Internal;
 internal interface ISmtpTransport : IDisposable
 {
   /// <summary>
+  /// The timeout for a single network operation, in milliseconds.
+  /// </summary>
+  int Timeout { get; set; }
+
+  /// <summary>
   /// Gets a value indicating whether the transport is connected to a server.
   /// </summary>
   bool IsConnected { get; }
@@ -56,26 +62,31 @@ internal interface ISmtpTransport : IDisposable
   /// <param name="host">The name or address of the SMTP server.</param>
   /// <param name="port">The port the SMTP server is listening on.</param>
   /// <param name="secureSocketOptions">The transport security to use.</param>
-  void Connect(string host, int port, SecureSocketOptions secureSocketOptions);
+  /// <param name="cancellationToken">Abandons the operation when the deadline passes.</param>
+  void Connect(string host, int port, SecureSocketOptions secureSocketOptions,
+    CancellationToken cancellationToken);
 
   /// <summary>
   /// Authenticates using the supplied <paramref name="credentials"/> and whichever
   /// SASL mechanism the server and client agree on.
   /// </summary>
   /// <param name="credentials">The credentials to authenticate with.</param>
-  void Authenticate(ICredentials credentials);
+  /// <param name="cancellationToken">Abandons the operation when the deadline passes.</param>
+  void Authenticate(ICredentials credentials, CancellationToken cancellationToken);
 
   /// <summary>
   /// Authenticates using an explicit SASL <paramref name="mechanism"/>.
   /// </summary>
   /// <param name="mechanism">The SASL mechanism to authenticate with.</param>
-  void Authenticate(SaslMechanism mechanism);
+  /// <param name="cancellationToken">Abandons the operation when the deadline passes.</param>
+  void Authenticate(SaslMechanism mechanism, CancellationToken cancellationToken);
 
   /// <summary>
   /// Sends the specified <paramref name="message"/>.
   /// </summary>
   /// <param name="message">The message to send.</param>
-  void Send(MimeMessage message);
+  /// <param name="cancellationToken">Abandons the operation when the deadline passes.</param>
+  void Send(MimeMessage message, CancellationToken cancellationToken);
 
   /// <summary>
   /// Disconnects from the SMTP server.

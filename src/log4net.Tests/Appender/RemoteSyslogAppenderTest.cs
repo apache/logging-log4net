@@ -17,10 +17,10 @@
 //
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using log4net.Appender;
 using log4net.Appender.Internal;
 using log4net.Core;
@@ -46,6 +46,95 @@ public sealed class RemoteSyslogAppenderTest
 
     /// <inheritdoc/>
     protected override IUdpConnection CreateUdpConnection() => Mock;
+
+    /// <summary>The socket the base class would have opened.</summary>
+    internal System.Net.Sockets.UdpClient? InheritedClient => Client;
+  }
+
+  /// <summary>Collects reported errors instead of letting them reach the console.</summary>
+  private sealed class RecordingErrorHandler : IErrorHandler
+  {
+    /// <summary>Reported messages.</summary>
+    internal List<string> Messages { get; } = [];
+
+    /// <inheritdoc/>
+    public void Error(string message, Exception? e, ErrorCode errorCode) => Messages.Add(message);
+
+    /// <inheritdoc/>
+    public void Error(string message, Exception e) => Messages.Add(message);
+
+    /// <inheritdoc/>
+    public void Error(string message) => Messages.Add(message);
+  }
+
+  private const int FlushTimeoutMillis = 30_000;
+
+  /// <summary>Bounded, so an unreachable server cannot grow the queue without limit.</summary>
+  [Test]
+  public void SendQueueSizeDefaultsTo500()
+    => Assert.That(new RemoteSyslogAppender().SendQueueSize, Is.EqualTo(500));
+
+  /// <summary>The longest a logging call waits when the queue is full.</summary>
+  [Test]
+  public void EnqueueTimeoutMillisDefaultsTo5000()
+    => Assert.That(new RemoteSyslogAppender().EnqueueTimeoutMillis, Is.EqualTo(5_000));
+
+  /// <summary>A queue with no room for anything cannot work.</summary>
+  [TestCase(0)]
+  [TestCase(-1)]
+  public void SendQueueSizeRejectsValuesThatAreNotPositive(int value)
+    => Assert.That(() => new RemoteSyslogAppender().SendQueueSize = value,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>0 is allowed and never waits, a negative wait is meaningless.</summary>
+  [Test]
+  public void EnqueueTimeoutMillisRejectsANegativeValue()
+    => Assert.That(() => new RemoteSyslogAppender().EnqueueTimeoutMillis = -1,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>
+  /// This appender sends through the connection its pump owns, so the inherited one would be a
+  /// second socket, holding a second binding of LocalPort, that nothing ever uses.
+  /// </summary>
+  [Test]
+  public void TheInheritedSocketIsNotOpened()
+  {
+    RemoteAppender appender = new()
+    {
+      RemoteAddress = new System.Net.IPAddress([127, 0, 0, 1]),
+      Layout = new PatternLayout("%message")
+    };
+    appender.ActivateOptions();
+    try
+    {
+      Assert.That(appender.InheritedClient, Is.Null);
+    }
+    finally
+    {
+      appender.Close();
+    }
+  }
+
+  /// <summary>
+  /// Connecting happens outside the send loop, so a failure there used to fault the pump with
+  /// nobody watching and every later event queued behind a sender that was gone.
+  /// </summary>
+  [Test]
+  public void AConnectFailureIsReported()
+  {
+    RecordingErrorHandler errorHandler = new();
+    RemoteAppender appender = new()
+    {
+      RemoteAddress = new System.Net.IPAddress([127, 0, 0, 1]),
+      Layout = new PatternLayout("%message"),
+      ErrorHandler = errorHandler
+    };
+    appender.Mock.ConnectException = new InvalidOperationException("simulated connect failure");
+
+    appender.ActivateOptions();
+    appender.Close();
+
+    Assert.That(errorHandler.Messages, Has.Some.Contains("Unable to connect to remote syslog"));
   }
 
   /// <summary>
@@ -197,13 +286,7 @@ public sealed class RemoteSyslogAppenderTest
       Domain = "TestDomain",
     });
     appender.DoAppend(loggingEvent);
-    for (int i = 0; i < 20; i++)
-    {
-      if (appender.Mock.Sent.Count == 0)
-      {
-        Thread.Sleep(10);
-      }
-    }
+    Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
     appender.Close();
     Assert.That(appender.Mock.ConnectedTo, Is.EqualTo((0, ipAddress, 514)));
     Assert.That(appender.Mock.WasDisposed, Is.True);

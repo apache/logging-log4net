@@ -1,7 +1,7 @@
 #Requires -Version 7.4
 
 param(
-  $Version = '3.4.1',
+  $Version = '3.5.0',
   $Preview = '1'
 )
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="314" link="https://github.com/apache/logging-log4net/pull/314"/>
+  <description format="asciidoc">
+    bound the queue `RemoteSyslogAppender` sends from. It was unbounded, so a syslog server that
+ stopped accepting datagrams grew it until the process ran out of memory, and shutdown waited five
+ seconds and then abandoned a drain that had no limit of its own. It now holds `sendQueueSize`
+ datagrams (500), a logging call waits at most `enqueueTimeoutMillis` (5000) for room, losses are
+ counted and reported, and `Flush` honours its timeout (implemented by @FreeAndNil)
+  </description>
+</entry>

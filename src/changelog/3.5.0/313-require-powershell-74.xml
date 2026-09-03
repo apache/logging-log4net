@@ -9,6 +9,6 @@
  `$PSNativeCommandUseErrorActionPreference`, which exists only from 7.4, so under Windows PowerShell
  5.1 a failing `gpg --verify` was ignored and `verify-release.ps1` reported success and exited 0. The
  scripts now refuse to start on an older host, and the review instructions install PowerShell 7 and
- run the script with `pwsh` (audit da18b6fd-f004)
+ run the script with `pwsh` (audit 1231d72-f009)
   </description>
 </entry>

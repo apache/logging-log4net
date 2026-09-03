@@ -296,6 +296,28 @@ public class SmtpAppender : BufferingAppenderSkeleton
   protected override bool RequiresLayout => true;
 
   /// <summary>
+  /// How long one send may take before it is abandoned. Defaults to 15000.
+  /// </summary>
+  /// <remarks>
+  /// The mail goes out under the appender lock, and <see cref="System.Net.Mail.SmtpClient"/>
+  /// waits 100 seconds by default. There is no "wait forever" value: 0 means "do not wait".
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not positive.</exception>
+  public int SendTimeoutMillis
+  {
+    get => _sendTimeoutMillis;
+    set
+    {
+      if (value <= 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendTimeoutMillis is not positive.");
+      }
+      _sendTimeoutMillis = value;
+    }
+  }
+
+  /// <summary>
   /// Send the email message
   /// </summary>
   /// <param name="messageBody">the body text to include in the mail</param>
@@ -312,6 +334,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     smtpClient.Port = Port;
     smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
     smtpClient.EnableSsl = EnableSsl;
+    smtpClient.Timeout = SendTimeoutMillis;
 
     if (Authentication == SmtpAuthentication.Basic)
     {
@@ -349,6 +372,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     smtpClient.Send(mailMessage);
   }
 
+  private int _sendTimeoutMillis = 15_000;
   private string? _to;
   private string? _cc;
   private string? _bcc;
