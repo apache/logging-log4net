@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="318" link="https://github.com/apache/logging-log4net/pull/318"/>
+  <description format="asciidoc">`TelnetAppender` now listens on `127.0.0.1` by default instead of every
+  interface. The stream is unauthenticated and unencrypted, so any host that could reach the port
+  could read the application's log, and every documented example already used loopback. Watching the
+  log from another machine is now opt-in: set `listenAddress` to `0.0.0.0` or `::` to restore the old
+  behaviour. The `SocketHandler(port, sendTimeoutMillis)` constructor defaults the same way (audit
+  da18b6fd-f012, implemented by @FreeAndNil)</description>
+</entry>

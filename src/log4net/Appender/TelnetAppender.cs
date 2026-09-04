@@ -37,10 +37,11 @@ namespace log4net.Appender;
 /// <para>
 /// The TelnetAppender accepts socket connections and streams logging messages back to the client.
 /// The output is provided in a telnet-friendly way so that a log can be monitored over a TCP/IP socket.
-/// This allows simple remote monitoring of application logging.
 /// </para>
 /// <para>
-/// The default <see cref="Port"/> is 23 (the telnet port).
+/// The default <see cref="Port"/> is 23 (the telnet port) and the default
+/// <see cref="ListenAddress"/> is <see cref="IPAddress.Loopback"/>, so monitoring from another
+/// machine has to be turned on deliberately.
 /// </para>
 /// <para>
 /// This appender is a diagnostic tool for trusted networks. As with any other appender
@@ -57,20 +58,20 @@ public class TelnetAppender : AppenderSkeleton
   private SocketHandler? _handler;
   private int _listeningPort = 23;
   private int _sendTimeoutMillis = 5_000;
-  private IPAddress _listenAddress = IPAddress.Any;
+  private IPAddress _listenAddress = IPAddress.Loopback;
 
   /// <summary>
   /// Gets or sets the address to listen on.
   /// </summary>
   /// <value>
-  /// The local address to accept connections on. The default is <see cref="IPAddress.Any"/>, every
-  /// interface of the machine.
+  /// The local address to accept connections on. The default is <see cref="IPAddress.Loopback"/>,
+  /// the machine the application runs on.
   /// </value>
   /// <remarks>
   /// <para>
-  /// Set this to <see cref="IPAddress.Loopback"/> to accept connections only from the machine the
-  /// application runs on, which is what the diagnostic use this appender is meant for usually
-  /// needs.
+  /// The stream is unauthenticated and unencrypted, so reaching it from another machine is opt-in:
+  /// set this to <see cref="IPAddress.Any"/> or <see cref="IPAddress.IPv6Any"/> for that, and keep
+  /// untrusted parties away from the port.
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentNullException">The value specified is <see langword="null"/>.</exception>
@@ -183,7 +184,7 @@ public class TelnetAppender : AppenderSkeleton
     try
     {
       LogLog.Debug(_declaringType, $"Creating SocketHandler to listen on [{_listenAddress}]:[{_listeningPort}]");
-      _handler = new SocketHandler(_listenAddress, _listeningPort, _sendTimeoutMillis);
+      _handler = new(_listenAddress, _listeningPort, _sendTimeoutMillis);
     }
     catch (Exception ex)
     {
@@ -325,11 +326,12 @@ public class TelnetAppender : AppenderSkeleton
     /// block before that client is disconnected, or 0 to block indefinitely</param>
     /// <remarks>
     /// <para>
-    /// Creates a socket handler on the specified local server port.
+    /// Creates a socket handler on the specified local server port, listening on
+    /// <see cref="IPAddress.Loopback"/>.
     /// </para>
     /// </remarks>
     public SocketHandler(int port, int sendTimeoutMillis)
-      : this(IPAddress.Any, port, sendTimeoutMillis)
+      : this(IPAddress.Loopback, port, sendTimeoutMillis)
     { }
 
     /// <summary>

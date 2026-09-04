@@ -239,12 +239,21 @@ public sealed class TelnetAppenderTest
   }
 
   /// <summary>
-  /// The appender accepts connections on every interface unless told otherwise, which is the
-  /// behaviour it has always had.
+  /// The stream is unauthenticated, so an appender nobody configured an address for must not be
+  /// reachable from another machine.
   /// </summary>
   [Test]
-  public void ListenAddressDefaultsToEveryInterface()
-    => Assert.That(new TelnetAppender().ListenAddress, Is.EqualTo(IPAddress.Any));
+  public void ListenAddressDefaultsToLoopback()
+    => Assert.That(new TelnetAppender().ListenAddress, Is.EqualTo(IPAddress.Loopback));
+
+  /// <summary>
+  /// Remote monitoring is still available, it just has to be asked for.
+  /// </summary>
+  [TestCase("::", TestName = "EveryIPv6InterfaceCanBeAskedFor")]
+  [TestCase("0.0.0.0", TestName = "EveryIPv4InterfaceCanBeAskedFor")]
+  public void EveryInterfaceCanBeAskedFor(string address)
+    => Assert.That(new TelnetAppender { ListenAddress = IPAddress.Parse(address) }.ListenAddress,
+      Is.EqualTo(IPAddress.Parse(address)));
 
   /// <summary>
   /// Binding to the loopback address has to keep the port unreachable from other machines, which
