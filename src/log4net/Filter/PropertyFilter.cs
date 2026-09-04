@@ -76,46 +76,11 @@ public class PropertyFilter : StringMatchFilter
       return FilterDecision.Neutral;
     }
 
-    // Lookup the string to match in from the properties using 
+    // Lookup the string to match in from the properties using
     // the key specified.
     object? msgObj = loggingEvent.LookupProperty(Key);
 
     // Use an ObjectRenderer to convert the property value to a string
-    string? msg = loggingEvent.Repository?.RendererMap.FindAndRender(msgObj);
-
-    // Check if we have been setup to filter
-    if (msg is null || (StringToMatch is null && m_regexToMatch is null))
-    {
-      // We cannot filter so allow the filter chain
-      // to continue processing
-      return FilterDecision.Neutral;
-    }
-
-    // Firstly check if we are matching using a regex
-    if (m_regexToMatch is not null)
-    {
-      // Check the regex
-      if (!IsRegexMatch(msg))
-      {
-        // No match, continue processing
-        return FilterDecision.Neutral;
-      }
-
-      // we've got a match
-      return AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
-    }
-    else if (StringToMatch is not null)
-    {
-      // Check substring match
-      if (msg.IndexOf(StringToMatch) == -1)
-      {
-        // No match, continue processing
-        return FilterDecision.Neutral;
-      }
-
-      // we've got a match
-      return AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
-    }
-    return FilterDecision.Neutral;
+    return DecideOnValue(loggingEvent.Repository?.RendererMap.FindAndRender(msgObj));
   }
 }

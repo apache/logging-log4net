@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="317" link="https://github.com/apache/logging-log4net/pull/317"/>
+  <description format="asciidoc">The default `MatchTimeoutMillis` on `StringMatchFilter` and
+  `PropertyFilter` is now 50 instead of 1000. The match runs while the appender lock is held, so the
+  deadline is the bound on how long one crafted event can stall everything logging through the
+  appender. A legitimate match over an event takes a fraction of 50ms; raise the property if a
+  pattern genuinely needs longer (audit da18b6fd-f041, implemented by @FreeAndNil)</description>
+</entry>

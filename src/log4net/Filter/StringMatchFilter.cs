@@ -76,16 +76,18 @@ public class StringMatchFilter : FilterSkeleton
   /// <para>
   /// A regular expression that backtracks can take a very long time on some inputs. The pattern is
   /// matched while the appender lock is held, so an unbounded match would stall everything logging
-  /// through the appender, and matching is therefore given a deadline. A match that reaches it is
-  /// treated as no match, leaving the rest of the filter chain to decide.
+  /// through the appender, and matching is therefore given a deadline. <see cref="TimeoutDecision"/>
+  /// decides an event whose match is abandoned.
   /// </para>
   /// <para>
-  /// The pattern comes from configuration and is trusted, so this is a guard against a pattern that
-  /// turns out to be expensive rather than protection against untrusted input.
+  /// The pattern comes from configuration and is trusted, but the content it is matched against is
+  /// not, and the content decides whether the deadline is reached. This is therefore the bound on
+  /// how long one crafted event can hold the appender lock.
   /// </para>
   /// <para>
-  /// The default value is 1000 (one second). Setting the value to 0 restores unbounded matching and
-  /// is not recommended. Changing it takes effect when <see cref="ActivateOptions"/> is called.
+  /// The default value is 50. A legitimate match over an event runs in a fraction of that; raise it
+  /// if a pattern genuinely needs longer. Setting the value to 0 restores unbounded matching and is
+  /// not recommended. Changing it takes effect when <see cref="ActivateOptions"/> is called.
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
@@ -103,8 +105,33 @@ public class StringMatchFilter : FilterSkeleton
     }
   }
 
-  private int _matchTimeoutMillis = 1000;
+  private int _matchTimeoutMillis = 50;
   private bool _matchTimeoutReported;
+
+  /// <summary>
+  /// Gets or sets the decision for an event whose match was abandoned because it reached
+  /// <see cref="MatchTimeoutMillis"/>.
+  /// </summary>
+  /// <remarks>
+  /// <para>
+  /// An abandoned match is not a non-match: the content being matched decides whether the deadline
+  /// is reached, so treating it as "did not match" lets content choose its own outcome. In an
+  /// <see cref="AcceptOnMatch"/> allowlist followed by a deny-all, that means content can suppress
+  /// its own record.
+  /// </para>
+  /// <para>
+  /// The default is <see cref="FilterDecision.Neutral"/>, which leaves the rest of the chain to
+  /// decide. Set <see cref="FilterDecision.Accept"/> to make an allowlist fail towards logging, or
+  /// <see cref="FilterDecision.Deny"/> in a deny-on-match chain. No one direction is right for
+  /// every chain, which is why this is configured rather than chosen here.
+  /// </para>
+  /// </remarks>
+  public FilterDecision TimeoutDecision { get; set; } = FilterDecision.Neutral;
+
+  /// <summary>
+  /// The decision a match produces, per <see cref="AcceptOnMatch"/>.
+  /// </summary>
+  private FilterDecision MatchDecision => AcceptOnMatch ? FilterDecision.Accept : FilterDecision.Deny;
 
   /// <summary>
   /// Matches <paramref name="value"/> against <see cref="m_regexToMatch"/>.
@@ -114,25 +141,72 @@ public class StringMatchFilter : FilterSkeleton
   /// <see langword="true"/> when the pattern matches, and <see langword="false"/> when it does not
   /// or when matching took longer than <see cref="MatchTimeoutMillis"/>.
   /// </returns>
-  protected bool IsRegexMatch(string value)
+  protected bool IsRegexMatch(string value) => TryRegexMatch(value, out bool isMatch) && isMatch;
+
+  /// <summary>
+  /// Decides <paramref name="value"/> on the pattern, honouring <see cref="TimeoutDecision"/>.
+  /// </summary>
+  /// <param name="value">The text to match.</param>
+  /// <returns>The decision for the event the text came from.</returns>
+  protected FilterDecision DecideRegexMatch(string value)
+    => TryRegexMatch(value, out bool isMatch)
+      ? isMatch 
+        ? MatchDecision
+        : FilterDecision.Neutral
+      : TimeoutDecision;
+
+  /// <summary>
+  /// Matches <paramref name="value"/>, reporting an abandoned match once per filter.
+  /// </summary>
+  /// <returns><see langword="false"/> when the match was abandoned.</returns>
+  private bool TryRegexMatch(string value, out bool isMatch)
   {
     try
     {
-      return m_regexToMatch!.IsMatch(value);
+      isMatch = m_regexToMatch!.IsMatch(value);
+      return true;
     }
     catch (RegexMatchTimeoutException)
     {
+      isMatch = false;
       if (!_matchTimeoutReported)
       {
         // Once per filter. The condition repeats for every event that reaches it, and a warning
         // per event would be a denial of service of its own.
         _matchTimeoutReported = true;
         LogLog.Warn(_declaringType,
-          $"Matching the pattern [{RegexToMatch}] took longer than {MatchTimeoutMillis}ms and was abandoned, so the event was not filtered by it. "
-          + "A pattern that backtracks can take arbitrarily long on some inputs; consider rewriting it or raising MatchTimeoutMillis.");
+          $"Matching the pattern [{RegexToMatch}] took longer than {MatchTimeoutMillis}ms and was abandoned, so the event was decided as {TimeoutDecision}. "
+          + "A pattern that backtracks can take arbitrarily long on some inputs; consider rewriting it, raising MatchTimeoutMillis or setting TimeoutDecision.");
       }
       return false;
     }
+  }
+
+  /// <summary>
+  /// Decides <paramref name="value"/> on <see cref="RegexToMatch"/> or <see cref="StringToMatch"/>.
+  /// </summary>
+  /// <param name="value">The text to match, or <see langword="null"/> when there is none.</param>
+  /// <returns>
+  /// <see cref="FilterDecision.Neutral"/> when there is nothing to match or nothing to match it
+  /// against, otherwise the decision for the event the text came from.
+  /// </returns>
+  protected FilterDecision DecideOnValue(string? value)
+  {
+    if (value is null)
+    {
+      return FilterDecision.Neutral;
+    }
+
+    if (m_regexToMatch is not null)
+    {
+      return DecideRegexMatch(value);
+    }
+
+    // Ordinal: a linguistic search skips ignorable characters, so content holding a NUL, a soft
+    // hyphen or a combining mark could otherwise flip the decision.
+    return StringToMatch is not null && value.IndexOf(StringToMatch, StringComparison.Ordinal) >= 0
+      ? MatchDecision
+      : FilterDecision.Neutral;
   }
 
   /// <summary>
@@ -207,52 +281,6 @@ public class StringMatchFilter : FilterSkeleton
   /// <see cref="FilterDecision.Deny"/> is returned.
   /// </para>
   /// </remarks>
-  public override FilterDecision Decide(LoggingEvent loggingEvent) 
-  {
-    string? msg = loggingEvent.EnsureNotNull().RenderedMessage;
-
-    // Check if we have been setup to filter
-    if (msg is null || (StringToMatch is null && m_regexToMatch is null))
-    {
-      // We cannot filter so allow the filter chain
-      // to continue processing
-      return FilterDecision.Neutral;
-    }
-  
-    // Firstly check if we are matching using a regex
-    if (m_regexToMatch is not null)
-    {
-      // Check the regex
-      if (!IsRegexMatch(msg))
-      {
-        // No match, continue processing
-        return FilterDecision.Neutral;
-      }
-
-      // we've got a match
-      if (AcceptOnMatch) 
-      {
-        return FilterDecision.Accept;
-      } 
-      return FilterDecision.Deny;
-    }
-    else if (StringToMatch is not null)
-    {
-      // Check substring match
-      if (msg.IndexOf(StringToMatch) == -1) 
-      {
-        // No match, continue processing
-        return FilterDecision.Neutral;
-      } 
-
-      // we've got a match
-      if (AcceptOnMatch) 
-      {
-        return FilterDecision.Accept;
-      } 
-      return FilterDecision.Deny;
-    }
-
-    return FilterDecision.Neutral;
-  }
+  public override FilterDecision Decide(LoggingEvent loggingEvent)
+    => DecideOnValue(loggingEvent.EnsureNotNull().RenderedMessage);
 }

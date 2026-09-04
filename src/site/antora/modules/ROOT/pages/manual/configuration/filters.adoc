@@ -103,17 +103,43 @@ of a `stringToMatch`.
 
 A regular expression that backtracks can take a very long time on some inputs, and the match runs
 while the appender lock is held.
-Matching is therefore given a deadline of one second, configurable with `matchTimeoutMillis`.
-A match that reaches the deadline is abandoned, the filter reports it once and returns `Neutral`,
-and the remaining filters decide the event.
+The deadline is therefore what bounds how long one event can stall every thread logging through the
+appender, and it defaults to 50 milliseconds, configurable with `matchTimeoutMillis`.
+A legitimate match over an event takes a fraction of that; raise it only if a pattern genuinely
+needs longer.
 Prefer a pattern that cannot backtrack; the deadline is a safety net, not a substitute.
 
 [source,xml]
 ----
 <filter type="log4net.Filter.StringMatchFilter">
   <regexToMatch value="user=[a-z0-9._-]+@example\.com" />
-  <matchTimeoutMillis value="1000" />
+  <matchTimeoutMillis value="200" />
 </filter>
 ----
 
 Setting `matchTimeoutMillis` to `0` lets a match run for as long as it takes and is not recommended.
+
+[#filters-regex-timeout-decision]
+=== Deciding an abandoned match
+
+A match that reaches the deadline is abandoned and the filter reports it once.
+The event is then decided by `timeoutDecision`, which defaults to `Neutral`, leaving the remaining
+filters to decide as before.
+
+An abandoned match is not the same as a non-match: the content being matched is what decides whether
+the deadline is reached, so treating it as "did not match" lets content choose its own outcome.
+In the allowlist arrangement above, where a matching filter accepts and a `DenyAllFilter` ends the
+chain, that means an event can suppress its own record.
+Set `timeoutDecision` to `Accept` there so the chain fails towards logging:
+
+[source,xml]
+----
+<filter type="log4net.Filter.StringMatchFilter">
+  <regexToMatch value="user=[a-z0-9._-]+@example\.com" />
+  <timeoutDecision value="Accept" />
+</filter>
+<filter type="log4net.Filter.DenyAllFilter" />
+----
+
+In a chain that denies on match, `Deny` is the equivalent choice.
+No one direction is right for every chain, which is why it is configured rather than chosen for you.
