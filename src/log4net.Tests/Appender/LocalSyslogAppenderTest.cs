@@ -55,8 +55,7 @@ public class LocalSyslogAppenderTest
     => Assert.That(EscapeNulCharacters("a\0b\0c"), Is.EqualTo("a\\0b\\0c"));
 
   /// <summary>
-  /// A message without a NUL character has to come through untouched, including the newlines an
-  /// exception layout produces: <c>syslog(3)</c> deals with those itself.
+  /// This escape is only about NUL. Newlines are <see cref="LocalSyslogAppender.NewLineHandling"/>.
   /// </summary>
   [Test]
   public void MessagesWithoutNulCharactersAreUnchanged()
@@ -114,8 +113,51 @@ public class LocalSyslogAppenderTest
       .GetField("_handleToIdentity", BindingFlags.Static | BindingFlags.NonPublic)!
       .GetValue(null)!;
 
-  private static string EscapeNulCharacters(string message)
+  /// <summary>
+  /// A newline ends the record for a daemon that writes the message through to a line oriented
+  /// log, so content could otherwise forge a second entry. glibc does not escape it.
+  /// </summary>
+  [Test]
+  public void NewLinesAreEscaped()
+    => Assert.That(EscapeNewLines("value\r\nJan  1 00:00:00 host sshd[1]: forged"),
+      Is.EqualTo("value\\r\\nJan  1 00:00:00 host sshd[1]: forged"));
+
+  /// <summary>Both characters count, on their own as well as paired.</summary>
+  [TestCase("a\rb", "a\\rb")]
+  [TestCase("a\nb", "a\\nb")]
+  [TestCase("a\n\nb", "a\\n\\nb")]
+  public void EveryNewLineIsEscaped(string message, string expected)
+    => Assert.That(EscapeNewLines(message), Is.EqualTo(expected));
+
+  /// <summary>A message without newlines takes the fast path and comes through untouched.</summary>
+  [Test]
+  public void MessagesWithoutNewLinesAreUnchanged()
+    => Assert.That(EscapeNewLines("field=1\tfield=2"), Is.EqualTo("field=1\tfield=2"));
+
+  /// <summary>Escaping is the default, because a daemon that splits the record is the common case.</summary>
+  [Test]
+  public void NewLineHandlingDefaultsToEscape()
+    => Assert.That(new LocalSyslogAppender().NewLineHandling,
+      Is.EqualTo(SyslogNewLineHandling.Escape));
+
+  /// <summary>One record per line, and a blank line is no record at all.</summary>
+  [Test]
+  public void SplittingDropsTheEmptyLines()
+    => Assert.That(SplitLines("first\r\nsecond\n\nthird\r"), Is.EqualTo(new[] { "first", "second", "third" }));
+
+  private static string EscapeNewLines(string message)
     => (string)typeof(LocalSyslogAppender)
+      .GetMethod("EscapeNewLines", BindingFlags.Static | BindingFlags.NonPublic)!
+      .Invoke(null, [message])!;
+
+  private static string[] SplitLines(string message)
+    => (string[])typeof(LocalSyslogAppender)
+      .GetMethod("SplitLines", BindingFlags.Static | BindingFlags.NonPublic)!
+      .Invoke(null, [message])!;
+
+  private static string EscapeNulCharacters(string message)
+    => (string)typeof(LocalSyslogAppender).Assembly
+      .GetType("log4net.Appender.Internal.ContentEscape")!
       .GetMethod("EscapeNulCharacters", BindingFlags.Static | BindingFlags.NonPublic)!
       .Invoke(null, [message])!;
 }

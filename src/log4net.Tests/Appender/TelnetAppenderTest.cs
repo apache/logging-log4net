@@ -48,6 +48,87 @@ public sealed class TelnetAppenderTest
   /// https://stackoverflow.com/questions/79053363/log4net-telnetappender-doesnt-work-after-migrate-to-log4net-3
   /// </remarks>
   /// <summary>
+  /// An unpaired surrogate used to throw while encoding, and Send reads any throw as a client
+  /// that hung up, so one such event reached nobody and disconnected everybody.
+  /// </summary>
+  [Test]
+  public void ContentThatCannotBeEncodedDoesNotDisconnectTheClient()
+  {
+    StringBuilder received = new();
+    object receivedSyncRoot = new();
+
+    int port = FindFreeTcpPort();
+    XmlDocument log4NetConfig = new();
+    log4NetConfig.LoadXml(
+      $"""
+      <log4net>
+        <appender name="TelnetAppender" type="log4net.Appender.TelnetAppender">
+          <port value="{port}" />
+          <layout type="log4net.Layout.PatternLayout">
+            <conversionPattern value="%message%newline" />
+          </layout>
+        </appender>
+        <root>
+          <level value="INFO"/>
+          <appender-ref ref="TelnetAppender"/>
+        </root>
+      </log4net>
+      """);
+    string marker = Guid.NewGuid().ToString();
+    ILoggerRepository repository = LogManager.CreateRepository(marker);
+    XmlConfigurator.Configure(repository, log4NetConfig["log4net"]!);
+    try
+    {
+      using (SimpleTelnetClient telnetClient = new(Received, port))
+      {
+        telnetClient.Run(TestContext.Out.WriteLine);
+        WaitFor("welcome message", WelcomeMessage);
+
+        ILogger logger = repository.GetLogger("Telnet");
+        logger.Log(typeof(TelnetAppenderTest), Level.Info, "poison\ud800event", null);
+        // The event after it only arrives if the client survived the one before.
+        logger.Log(typeof(TelnetAppenderTest), Level.Info, marker, null);
+        WaitFor("the event after the unencodable one", marker);
+      }
+    }
+    finally
+    {
+      repository.Shutdown();
+    }
+
+    Assert.That(ReceivedText(), Does.Contain(@"poison\ud800event"));
+
+    void Received(string message)
+    {
+      lock (receivedSyncRoot)
+      {
+        received.Append(message);
+      }
+    }
+
+    string ReceivedText()
+    {
+      lock (receivedSyncRoot)
+      {
+        return received.ToString();
+      }
+    }
+
+    void WaitFor(string what, string expected)
+    {
+      Stopwatch stopwatch = Stopwatch.StartNew();
+      while (ReceivedText().IndexOf(expected, StringComparison.Ordinal) < 0)
+      {
+        if (stopwatch.Elapsed > _receiveTimeout)
+        {
+          Assert.Fail($"Timeout waiting for {what} - received so far: '{ReceivedText()}'");
+        }
+        Thread.Sleep(20);
+      }
+    }
+  }
+
+  /// <summary>
   /// Maximum time to wait for a message to arrive at the client.
   /// </summary>
   private static readonly TimeSpan _receiveTimeout = TimeSpan.FromSeconds(30);

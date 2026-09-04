@@ -21,8 +21,10 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.IO;
 using System.Linq;
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -245,7 +247,9 @@ public class TelnetAppender : AppenderSkeleton
         _socket = socket;
         try
         {
-          _writer = new(new NetworkStream(socket));
+          // Belt and braces. Send escapes what cannot be encoded; this keeps a future gap costing
+          // one character rather than every client, since Send reads a throw as a hung up client.
+          _writer = new(new NetworkStream(socket), new UTF8Encoding(false));
         }
         catch (Exception e) when (!e.IsFatal())
         {
@@ -260,7 +264,7 @@ public class TelnetAppender : AppenderSkeleton
       /// <param name="message">string to send</param>
       public void Send(string message)
       {
-        _writer.Write(message);
+        _writer.Write(ContentEscape.EscapeUnpairedSurrogates(message.EnsureNotNull()));
         _writer.Flush();
       }
 

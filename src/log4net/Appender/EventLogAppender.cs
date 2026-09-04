@@ -23,6 +23,7 @@ using System;
 using System.Diagnostics;
 
 using log4net.Util;
+using log4net.Appender.Internal;
 using log4net.Core;
 
 namespace log4net.Appender;
@@ -377,12 +378,15 @@ public class EventLogAppender : AppenderSkeleton
     // Write to the event log
     try
     {
-      string eventTxt = RenderLoggingEvent(loggingEvent);
-
-      // There is a limit of about 32K characters for an event log message
-      if (eventTxt.Length > _maxEventlogMessageSize)
+      string escaped = ContentEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
+      int maxSize = GetMaxMessageSize();
+      string eventTxt = PrepareEventText(escaped, maxSize);
+      if (eventTxt.Length < escaped.Length)
       {
-        eventTxt = eventTxt.Substring(0, _maxEventlogMessageSize);
+        // The only signal there is: the service reports neither a truncated nor a dropped record.
+        ErrorHandler.Error(
+          $"Truncated a logging event from {escaped.Length} to {maxSize} characters for log [{LogName}] "
+          + $"using source [{ApplicationName}]. What the layout rendered after that is not in the record.");
       }
 
       EventLogEntryType entryType = GetEntryType(loggingEvent.Level);
@@ -396,6 +400,45 @@ public class EventLogAppender : AppenderSkeleton
     {
       ErrorHandler.Error($"Unable to write to event log [{LogName}] using source [{ApplicationName}]", e);
     }
+  }
+
+  /// <summary>
+  /// Escapes the NUL characters and then applies the message size limit.
+  /// </summary>
+  /// <param name="rendered">The rendered event.</param>
+  /// <param name="maxSize">The largest message the event log accepts.</param>
+  /// <returns>The text to write.</returns>
+  /// <remarks>
+  /// <para>
+  /// The order matters. <c>ReportEventW</c> takes a null terminated string, so a NUL in content
+  /// ends the stored record there, and escaping doubles each NUL, so escaping after the limit was
+  /// applied could push the message back over it.
+  /// </para>
+  /// </remarks>
+  private static string PrepareEventText(string rendered, int maxSize)
+  {
+    string escaped = ContentEscape.EscapeNulCharacters(rendered);
+    return escaped.Length > maxSize ? escaped.Substring(0, maxSize) : escaped;
+  }
+
+  /// <summary>
+  /// The largest message this appender may hand to the event log.
+  /// </summary>
+  /// <returns>What is left of the record budget once the names are spent from it.</returns>
+  /// <remarks>
+  /// Computed, not a constant: <see cref="ApplicationName"/> defaults to the app domain name, so
+  /// the consumer's assembly name comes out of the budget. The machine name is subtracted on the
+  /// assumption that it counts, which cannot be tested without renaming a machine.
+  /// </remarks>
+  private int GetMaxMessageSize()
+  {
+    string machineName = MachineName == "." ? Environment.MachineName : MachineName;
+    int budget = _maxEventlogMessageSize
+      - LogName.Length
+      - ApplicationName.Length
+      - machineName.Length
+      - MaxEventlogMessageSizeMargin;
+    return Math.Max(budget, 0);
   }
 
   /// <summary>
@@ -513,12 +556,16 @@ public class EventLogAppender : AppenderSkeleton
   /// Going over this size may succeed a few times but the buffer will overrun and 
   /// eventually corrupt the log (based on testing).
   /// 
-  /// The maxEventMsgSize size is based on the max buffer size of the lpStrings parameter of the ReportEvent API.
-  /// The documented max size for EventLog.WriteEntry for Windows Vista and higher is 31839, but I'm leaving room for a
-  /// terminator of #0#0, as we cannot see the source of ReportEvent (though we could use an API monitor to examine the
-  /// buffer, given enough time).
+  /// Measured on Windows 11 build 26200: a record is stored while message plus log name plus
+  /// source stays within 31736 characters, and one character more stores nothing at all.
   /// </remarks>
-  private const int MaxEventlogMessageSizeVistaOrNewer = 31839 - 2;
+  private const int MaxEventlogMessageSizeVistaOrNewer = 31736;
+
+  /// <summary>
+  /// Held back from the computed limit. Crossing it discards the record silently, consumes the
+  /// log's space anyway, and has been seen to leave the log unreadable.
+  /// </summary>
+  private const int MaxEventlogMessageSizeMargin = 1024;
 
   /// <summary>
   /// The maximum size that the operating system supports for

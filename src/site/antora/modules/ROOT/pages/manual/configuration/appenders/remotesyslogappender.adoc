@@ -45,6 +45,10 @@ You can also specify:
 * SendQueueSize (default: 500), how many datagrams may wait to be sent
 * EnqueueTimeoutMillis (default: 5000), how long a logging call waits for room in a full queue
 
+RFC 3164 allows only the visible ASCII characters and space in the message, so anything else is
+written as a `\uXXXX` escape rather than dropped: a message in a non-Latin script reaches the
+collector readable instead of empty. `Encoding` therefore does not make the message body non-ASCII.
+
 Datagrams are handed to a background thread, so a slow or unreachable syslog server does not hold
 up logging. Once the queue is full, a logging call waits `EnqueueTimeoutMillis` for room and the
 datagram is then discarded and counted, rather than growing the queue without limit. `Flush` waits

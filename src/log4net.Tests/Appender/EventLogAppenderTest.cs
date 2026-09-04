@@ -21,6 +21,7 @@
 #if NET462_OR_GREATER
 
 using System.Diagnostics;
+using System.Reflection;
 
 using log4net.Appender;
 using log4net.Core;
@@ -81,6 +82,79 @@ public sealed class EventLogAppenderTest
     eventAppender.ActivateOptions();
     Assert.That(eventAppender.Threshold, Is.EqualTo(Level.Off));
   }
+
+  /// <summary>
+  /// ReportEventW takes a null terminated string, so a NUL in content ends the stored record
+  /// there and silently drops whatever the layout rendered after it. Measured on Windows 11
+  /// 26200: WriteEntry does not throw, and only the prefix is stored.
+  /// </summary>
+  [Test]
+  public void NulCharactersAreEscaped()
+    => Assert.That(PrepareEventText("before\0after", 100), Is.EqualTo("before\\0after"));
+
+  /// <summary>
+  /// The escape doubles each NUL, so it has to happen before the limit is applied. Escaping
+  /// afterwards would push a message near the limit back over it.
+  /// </summary>
+  [Test]
+  public void EscapingHappensBeforeTheLimitIsApplied()
+  {
+    const int maxSize = 4;
+
+    string prepared = PrepareEventText("\0\0\0", maxSize);
+
+    // Equality is ordinal, and pins the length and the absence of a NUL in one go. Escaping the
+    // three NULs gives six characters, so the limit has to cut it back to four.
+    Assert.That(prepared, Is.EqualTo(@"\0\0"));
+  }
+
+  /// <summary>A message within the limit and without a NUL comes through untouched.</summary>
+  [Test]
+  public void MessagesWithinTheLimitAreUnchanged()
+    => Assert.That(PrepareEventText("field=1\tfield=2", 100), Is.EqualTo("field=1\tfield=2"));
+
+  private static string PrepareEventText(string rendered, int maxSize)
+    => (string)typeof(EventLogAppender)
+      .GetMethod("PrepareEventText", BindingFlags.Static | BindingFlags.NonPublic)!
+      .Invoke(null, [rendered, maxSize])!;
+
+  /// <summary>
+  /// The limit is a whole record budget: the source is spent from it one character for one, so a
+  /// longer ApplicationName has to leave less room for the message.
+  /// </summary>
+  [Test]
+  public void TheSourceNameIsSpentFromTheMessageBudget()
+  {
+    const int difference = 44;
+    int shortSource = GetMaxMessageSize(new() { LogName = "Application", ApplicationName = "abc" });
+    int longSource = GetMaxMessageSize(new() { LogName = "Application", ApplicationName = new('a', 3 + difference) });
+
+    Assert.That(shortSource - longSource, Is.EqualTo(difference));
+  }
+
+  /// <summary>
+  /// And so is the log name, which is the half of the budget that was not expected.
+  /// </summary>
+  [Test]
+  public void TheLogNameIsSpentFromTheMessageBudgetToo()
+  {
+    const int difference = 7;
+    int shortLog = GetMaxMessageSize(new() { LogName = "Application", ApplicationName = "abc" });
+    int longLog = GetMaxMessageSize(new() { LogName = new('L', 11 + difference), ApplicationName = "abc" });
+
+    Assert.That(shortLog - longLog, Is.EqualTo(difference));
+  }
+
+  /// <summary>Names long enough to exhaust the budget must not produce a negative length.</summary>
+  [Test]
+  public void TheLimitNeverGoesBelowZero()
+    => Assert.That(GetMaxMessageSize(new() { LogName = new('L', 40000), ApplicationName = "abc" }),
+      Is.EqualTo(0));
+
+  private static int GetMaxMessageSize(EventLogAppender appender)
+    => (int)typeof(EventLogAppender)
+      .GetMethod("GetMaxMessageSize", BindingFlags.Instance | BindingFlags.NonPublic)!
+      .Invoke(appender, [])!;
 }
 
 #endif // NET462_OR_GREATER

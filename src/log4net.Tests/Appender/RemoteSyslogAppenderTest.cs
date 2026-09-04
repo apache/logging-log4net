@@ -69,6 +69,30 @@ public sealed class RemoteSyslogAppenderTest
 
   private const int FlushTimeoutMillis = 30_000;
 
+  /// <summary>
+  /// Content outside the RFC 3164 range used to be deleted with no marker, so a message written
+  /// in a non-Latin script reached the audit trail empty.
+  /// </summary>
+  [Test]
+  public void NonAsciiContentIsEscapedAndNotDeleted()
+  {
+    List<byte[]> sentBytes = ExecuteAppend("Sch\u00f6nwetter \u4f60\u597d");
+
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]),
+      Is.EqualTo(@"<14>TestDomain: INFO  - Sch\u00f6nwetter \u4f60\u597d"));
+  }
+
+  /// <summary>A control character other than CR or LF was dropped as well.</summary>
+  [Test]
+  public void OtherControlCharactersAreEscaped()
+  {
+    List<byte[]> sentBytes = ExecuteAppend("a\tb");
+
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Is.EqualTo(@"<14>TestDomain: INFO  - a\u0009b"));
+  }
+
   /// <summary>Bounded, so an unreachable server cannot grow the queue without limit.</summary>
   [Test]
   public void SendQueueSizeDefaultsTo500()
@@ -154,7 +178,7 @@ public sealed class RemoteSyslogAppenderTest
   
   /// <summary>
   /// Test for the <see cref="RemoteSyslogAppender.NewLineHandling"/>
-  /// with <see cref="RemoteSyslogAppender.SyslogNewLineHandling.Escape"/>
+  /// with <see cref="SyslogNewLineHandling.Escape"/>
   /// </summary>
   /// <remarks>
   /// https://github.com/apache/logging-log4net/issues/274
@@ -171,7 +195,7 @@ public sealed class RemoteSyslogAppenderTest
   
   /// <summary>
   /// Test for the <see cref="RemoteSyslogAppender.NewLineHandling"/>
-  /// with <see cref="RemoteSyslogAppender.SyslogNewLineHandling.Keep"/>
+  /// with <see cref="SyslogNewLineHandling.Keep"/>
   /// </summary>
   /// <remarks>
   /// https://github.com/apache/logging-log4net/issues/274
@@ -180,7 +204,7 @@ public sealed class RemoteSyslogAppenderTest
   public void RemoteSyslogNewLineHandlingKeepTest()
   {
     List<byte[]> sentBytes = ExecuteAppend("Test\r\nmessage",
-      RemoteSyslogAppender.SyslogNewLineHandling.Keep);
+      SyslogNewLineHandling.Keep);
     // ReSharper disable once StringLiteralTypo
     const string expectedData = "<14>TestDomain: INFO  - Test\r\nmessage";
     Assert.That(sentBytes, Has.Count.EqualTo(1));
@@ -189,7 +213,7 @@ public sealed class RemoteSyslogAppenderTest
   
   /// <summary>
   /// Test for the <see cref="RemoteSyslogAppender.NewLineHandling"/>
-  /// with <see cref="RemoteSyslogAppender.SyslogNewLineHandling.Split"/>
+  /// with <see cref="SyslogNewLineHandling.Split"/>
   /// </summary>
   /// <remarks>
   /// https://github.com/apache/logging-log4net/issues/274
@@ -198,7 +222,7 @@ public sealed class RemoteSyslogAppenderTest
   public void RemoteSyslogNewLineHandlingSplitTest()
   {
     List<byte[]> sentBytes = ExecuteAppend("Test\r\nmessage",
-      RemoteSyslogAppender.SyslogNewLineHandling.Split);
+      SyslogNewLineHandling.Split);
     // ReSharper disable once StringLiteralTypo
     Assert.That(sentBytes, Has.Count.EqualTo(2));
     const string expectedData0 = "<14>TestDomain: INFO  - Test";
@@ -266,7 +290,7 @@ public sealed class RemoteSyslogAppenderTest
   }
 
   private static List<byte[]> ExecuteAppend(string message,
-    RemoteSyslogAppender.SyslogNewLineHandling newLineHandling = default,
+    SyslogNewLineHandling newLineHandling = default,
     string? identity = null)
   {
     System.Net.IPAddress ipAddress = new([127, 0, 0, 1]);

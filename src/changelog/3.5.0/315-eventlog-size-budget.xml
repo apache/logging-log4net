@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="315" link="https://github.com/apache/logging-log4net/pull/315"/>
+  <description format="asciidoc">
+    stop `EventLogAppender` truncating to a size the event log then discards. The limit is a whole
+ record budget that the log name, the source and the machine name are spent from, so the fixed
+ 31837 was above the real ceiling: measured on Windows 11 build 26200, a record is stored while
+ `message + logName + applicationName` stays within 31736 characters, and one character beyond
+ that the service stores nothing and reports nothing. The whole event was lost rather than
+ shortened, and `applicationName` defaults to the app domain name, so a consumer with a long
+ assembly name lost more. The limit is now computed, and a truncation is reported through the
+ error handler, which is the only signal available (audit da18b6fd-f030)
+  </description>
+</entry>

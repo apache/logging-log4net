@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 using log4net.Appender.Internal;
@@ -256,27 +257,6 @@ public class RemoteSyslogAppender : UdpAppender
     Local7 = 23
   }
 
-  /// <summary>
-  /// Options for handling newlines (\r or \n) in <see ref="AppendMessage" />
-  /// </summary>
-  public enum SyslogNewLineHandling
-  {
-    /// <summary>
-    /// escape the newlines (\\r for \r and \\n for \n)
-    /// </summary>
-    Escape,
-    
-    /// <summary>
-    /// split the message at new lines
-    /// </summary>
-    Split,
-    
-    /// <summary>
-    /// keep newlines as is (many syslog servers can handle newlines in the message part)
-    /// </summary>
-    Keep
-  }
-  
   private const int CloseTimeoutMillis = 5_000;
   private IUdpConnection? _connection;
   private BackgroundSender<byte[]>? _sender;
@@ -504,6 +484,12 @@ public class RemoteSyslogAppender : UdpAppender
           characterIndex++;
           break;
         }
+      }
+      else
+      {
+        // Escaped, not dropped: content is masked visibly rather than deleted. RFC 3164 allows
+        // only 0x20 to 0x7E here, so the escape itself stays inside that range.
+        builder.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
       }
     }
   }

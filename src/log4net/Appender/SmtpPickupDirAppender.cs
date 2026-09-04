@@ -20,6 +20,9 @@
 using System;
 using System.IO;
 
+using System.Globalization;
+using System.Text;
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -128,10 +131,15 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
       StreamWriter writer;
 
       // Impersonate to open the file
+      // Written under its final name, so a failure mid write leaves a partial mail for the pickup
+      // service. Accepted: no temporary name is safe for every service, and FileExtension is the
+      // operator's to choose.
       string filePath = Path.Combine(PickupDir.EnsureNotNull(), Guid.NewGuid().ToString("N") + _fileExtension);
       using (SecurityContext?.Impersonate(this))
       {
-        writer = File.CreateText(filePath);
+        // Not File.CreateText: its encoding throws on content it cannot encode, which would
+        // abandon the whole batch and leave a truncated mail for the pickup service to send.
+        writer = new StreamWriter(filePath, false, new UTF8Encoding(false));
       }
 
       using (writer)
@@ -142,22 +150,21 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
         writer.WriteLine("Date: " + DateTime.UtcNow.ToString("r"));
         writer.WriteLine();
 
-        string? t = Layout?.Header;
-        if (t is not null)
+        if (Layout?.Header is string header)
         {
-          writer.Write(t);
+          writer.Write(header);
         }
 
         for (int i = 0; i < events.Length; i++)
         {
-          // Render the event and append the text to the buffer
-          RenderLoggingEvent(writer, events[i]);
+          using StringWriter rendered = new(CultureInfo.InvariantCulture);
+          RenderLoggingEvent(rendered, events[i]);
+          writer.Write(ContentEscape.EscapeUnpairedSurrogates(rendered.ToString()));
         }
 
-        t = Layout?.Footer;
-        if (t is not null)
+        if (Layout?.Footer is string footer)
         {
-          writer.Write(t);
+          writer.Write(footer);
         }
 
         writer.WriteLine();
