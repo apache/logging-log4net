@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="318" link="https://github.com/apache/logging-log4net/pull/318"/>
+  <description format="asciidoc">Write to `TelnetAppender` clients from a background thread. Clients
+  were written to under the appender lock, so one that stopped reading blocked every thread that
+  logs for `sendTimeoutMillis`, and the writes are serial, so 20 connected clients cost 20 times
+  that on a single event. Events are queued now, bounded by the new `sendQueueSize` (500), and a
+  logging call waits at most `enqueueTimeoutMillis` (50) for room before the event is dropped from
+  the telnet stream, counted and reported. Only the telnet view is lost, never the log. While the
+  queue stays full, `enqueueTimeoutMillis` caps logging at 20 events per second; set it to 0 to drop
+  immediately instead of waiting (audit da18b6fd-f014, implemented by @FreeAndNil)</description>
+</entry>

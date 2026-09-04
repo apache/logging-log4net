@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -30,6 +31,7 @@ using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender.Internal;
+using log4net.Util;
 using NUnit.Framework;
 
 namespace log4net.Tests.Appender;
@@ -254,6 +256,143 @@ public sealed class TelnetAppenderTest
   public void EveryInterfaceCanBeAskedFor(string address)
     => Assert.That(new TelnetAppender { ListenAddress = IPAddress.Parse(address) }.ListenAddress,
       Is.EqualTo(IPAddress.Parse(address)));
+
+  /// <summary>
+  /// Clients are written to from a background thread, so the queue has to be bounded and the wait
+  /// for room short: it is the only delay a connected client can impose on the application.
+  /// </summary>
+  [Test]
+  public void SendQueueDefaults()
+  {
+    TelnetAppender appender = new();
+
+    Assert.That(appender.SendQueueSize, Is.EqualTo(500));
+    Assert.That(appender.EnqueueTimeoutMillis, Is.EqualTo(50));
+  }
+
+  /// <summary>
+  /// A queue of no size cannot hold anything, and a negative wait has no meaning.
+  /// </summary>
+  [Test]
+  public void SendQueueSettingsRejectMeaninglessValues()
+  {
+    TelnetAppender appender = new();
+
+    Assert.That(() => appender.SendQueueSize = 0, Throws.TypeOf<ArgumentOutOfRangeException>());
+    Assert.That(() => appender.EnqueueTimeoutMillis = -1, Throws.TypeOf<ArgumentOutOfRangeException>());
+
+    appender.EnqueueTimeoutMillis = 0;
+    Assert.That(appender.EnqueueTimeoutMillis, Is.EqualTo(0));
+  }
+
+  /// <summary>
+  /// A client that connects and then stops reading fills its receive window, and writing to it
+  /// used to block the logging thread for the whole send timeout, once per client. Logging must
+  /// now return promptly however badly the client behaves.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void SlowReadersDoNotDelayLogging()
+  {
+    const int deadReaderCount = 4;
+    const int sendTimeoutMillis = 2_000;
+    // A loopback write blocks once roughly 1 MB is outstanding against the client's 1 KB receive
+    // buffer, measured, so send comfortably past that.
+    const int eventCount = 400;
+
+    int port = FindFreeTcpPort();
+    TelnetAppender appender = new()
+    {
+      Port = port,
+      ListenAddress = IPAddress.Loopback,
+      Layout = new PatternLayout("%message%newline"),
+      SendTimeoutMillis = sendTimeoutMillis
+    };
+    appender.ActivateOptions();
+
+    List<SimpleTelnetClient> deadReaders = [];
+    try
+    {
+      for (int i = 0; i < deadReaderCount; i++)
+      {
+        SimpleTelnetClient deadReader = new(_ => { }, port);
+        deadReaders.Add(deadReader);
+        deadReader.ConnectAndStopReading();
+      }
+
+      string message = new('x', 4_096);
+      Stopwatch stopwatch = Stopwatch.StartNew();
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i < eventCount; i++)
+        {
+          appender.DoAppend(CreateEvent(message));
+        }
+      });
+      stopwatch.Stop();
+
+      // Writing synchronously costs SendTimeoutMillis per stalled client before it is evicted,
+      // serially and under the appender lock: 8s here, and 100s with the 20-client cap and the
+      // default timeout. Queueing costs the enqueue wait at worst.
+      Assert.That(stopwatch.Elapsed,
+        Is.LessThan(TimeSpan.FromMilliseconds(deadReaderCount * sendTimeoutMillis / 2)),
+        "logging blocked behind clients that stopped reading");
+    }
+    finally
+    {
+      // Let the pump finish before Close waits for a drain.
+      foreach (SimpleTelnetClient deadReader in deadReaders)
+      {
+        deadReader.Dispose();
+      }
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+  }
+
+  /// <summary>
+  /// A queue that cannot keep up drops, rather than growing or making the logging thread wait.
+  /// The loss costs the telnet stream only, so it is counted and reported once instead of per
+  /// event, which would be a denial of service of its own.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFullQueueDropsAndReportsOnce()
+  {
+    int port = FindFreeTcpPort();
+    RecordingErrorHandler errorHandler = new();
+    TelnetAppender appender = new()
+    {
+      Port = port,
+      ListenAddress = IPAddress.Loopback,
+      Layout = new PatternLayout("%message%newline"),
+      // A queue this small fills as soon as the client stops reading, and nothing waits for room.
+      SendQueueSize = 4,
+      EnqueueTimeoutMillis = 0,
+      ErrorHandler = errorHandler
+    };
+    appender.ActivateOptions();
+
+    using SimpleTelnetClient deadReader = new(_ => { }, port);
+    try
+    {
+      deadReader.ConnectAndStopReading();
+
+      for (int i = 0; i < 200; i++)
+      {
+        appender.DoAppend(CreateEvent(new string('x', 4_096)));
+      }
+
+      Assert.That(errorHandler.Messages.FindAll(m => m.IndexOf("was dropped", StringComparison.Ordinal) >= 0),
+        Has.Count.EqualTo(1), "the drop must be reported exactly once, however many events are lost");
+    }
+    finally
+    {
+      appender.Close();
+    }
+  }
+
+  private static LoggingEvent CreateEvent(string message)
+    => new(new LoggingEventData { Level = Level.Info, Message = message, LoggerName = "TelnetTest" });
 
   /// <summary>
   /// Binding to the loopback address has to keep the port unreachable from other machines, which

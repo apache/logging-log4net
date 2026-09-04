@@ -64,11 +64,24 @@ How long, in milliseconds, a write to a client may block before that client is t
 and disconnected.
 The default is `5000`.
 +
-Clients are written to synchronously while the appender lock is held, so a client that connects
-and then stops reading lets TCP flow control fill its receive window.
-A finite timeout bounds how long that client can hold up the threads that log through this
-appender.
-Setting the value to `0` restores blocking indefinitely and is not recommended.
+Clients are written to from a background thread, so this no longer delays the application: it is
+how long a client that stopped reading holds up the stream before it is dropped.
+`0` blocks indefinitely and is not recommended.
+
+`sendQueueSize`::
+How many rendered events may wait to be written to the clients.
+The default is `500`.
++
+A full queue drops the event from the telnet stream, counted and reported once.
+Only the telnet view is lost; every other appender still receives the event.
+
+`enqueueTimeoutMillis`::
+How long, in milliseconds, a logging call may wait for room in the send queue.
+The default is `50`.
++
+This is the only delay a client can impose on the application.
+While the queue stays full it caps logging at 20 events per second; `0` drops immediately instead
+of waiting.
 
 [#telnetappender-trust]
 == Intended use and trust model

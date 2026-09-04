@@ -41,6 +41,24 @@ internal sealed class SimpleTelnetClient(
   private volatile bool _disposing;
 
   /// <summary>
+  /// Connects, reads the welcome message and then stops reading, so this client's receive window
+  /// fills and writes to it block. The opposite of <see cref="Run"/>, for testing that a client
+  /// which stops reading cannot hold up the threads that log.
+  /// </summary>
+  internal void ConnectAndStopReading()
+  {
+    // The kernel clamps this to its minimum, 2304 bytes on Linux, so asking for less buys nothing:
+    // measured, 1, 128, 512 and 1024 all block the writer after the same 960 KB, while 4096 needs
+    // 1748 KB and 16384 needs 2364 KB. The rest of the threshold is the writer's own send buffer,
+    // which is not reachable from here.
+    _client.ReceiveBufferSize = 1_024;
+    _client.ReceiveTimeout = 30_000;
+    _client.Connect(new IPEndPoint(IPAddress.Loopback, port));
+    // Reading one byte of the welcome message proves the appender accepted the connection.
+    _client.GetStream().Read(new byte[1], 0, 1);
+  }
+
+  /// <summary>
   /// Runs the client (in a task)
   /// </summary>
   /// <param name="log">Callback for unexpected errors - a passing run stays silent</param>
