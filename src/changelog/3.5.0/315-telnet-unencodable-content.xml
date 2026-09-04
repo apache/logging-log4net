@@ -8,6 +8,6 @@
     stop one logging event disconnecting every `TelnetAppender` client. The default writer encoding
  throws on content it cannot encode, such as an unpaired surrogate, and `Send` reads any failure as
  a client that hung up. Unpaired surrogates are now written as a `\uXXXX` escape, as elsewhere
- (audit da18b6fd-f013)
+ (audit da18b6fd-f013, fixed by @FreeAndNil)
   </description>
 </entry>

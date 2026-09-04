@@ -10,6 +10,6 @@
  the layout rendered after it, exception text and trailing fields included (CWE-158). `WriteEntry`
  raises nothing, so the record simply stored short. Measured on Windows 11 build 26200: of a 45
  character message with a NUL at 23, the 23 character prefix was stored and the rest was gone
- (audit da18b6fd-f007)
+ (audit da18b6fd-f007, fixed by @FreeAndNil)
   </description>
 </entry>

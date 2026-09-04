@@ -8,6 +8,6 @@
     stop one logging event destroying a whole `SmtpPickupDirAppender` batch. `File.CreateText`
  throws on content it cannot encode, such as an unpaired surrogate, which abandoned every buffered
  event and left a truncated mail in the pickup directory for the service to send. Such content is
- now written as a `\uXXXX` escape (audit da18b6fd-f011)
+ now written as a `\uXXXX` escape (audit da18b6fd-f011, fixed by @FreeAndNil)
   </description>
 </entry>

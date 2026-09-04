@@ -18,6 +18,7 @@
 //
 #endregion
 
+using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Web;
@@ -53,34 +54,40 @@ internal sealed class AspNetRequestPatternConverter : AspNetPatternLayoutConvert
   /// </remarks>
   protected override void Convert(TextWriter writer, LoggingEvent loggingEvent, HttpContext httpContext)
   {
-    HttpRequest? request = null;
+    object? value;
     try
     {
-      request = httpContext.Request;
+      HttpRequest request = httpContext.Request;
+      // Unvalidated reads past ASP.NET request validation, which throws on content like "<script>".
+      value = Option is null ? GetParameters(request) : request.Unvalidated[Option];
     }
     catch (HttpException)
     {
-      // likely a case of running in IIS integrated mode
-      // when inside an Application_Start event.
-      // treat it like a case of the Request
-      // property returning null
+      // No readable request: IIS integrated mode during Application_Start, an oversized body,
+      // or a client that went away.
+      writer.Write(SystemInfo.NotAvailableText);
+      return;
     }
 
-    if (request is not null)
+    WriteObject(writer, loggingEvent.Repository, value);
+  }
+
+  /// <summary>
+  /// Rebuilds <see cref="HttpRequest.Params"/> from the unvalidated values.
+  /// </summary>
+  private static NameValueCollection GetParameters(HttpRequest request)
+  {
+    UnvalidatedRequestValues unvalidated = request.Unvalidated;
+    NameValueCollection parameters = new();
+    parameters.Add(unvalidated.QueryString);
+    parameters.Add(unvalidated.Form);
+    HttpCookieCollection cookies = unvalidated.Cookies;
+    foreach (string name in cookies.AllKeys)
     {
-      if (Option is not null)
-      {
-        WriteObject(writer, loggingEvent.Repository, httpContext.Request.Params[Option]);
-      }
-      else
-      {
-        WriteObject(writer, loggingEvent.Repository, httpContext.Request.Params);
-      }
+      parameters.Add(name, cookies[name]?.Value);
     }
-    else
-    {
-      writer.Write(SystemInfo.NotAvailableText);
-    }
+    parameters.Add(request.ServerVariables);
+    return parameters;
   }
 }
 

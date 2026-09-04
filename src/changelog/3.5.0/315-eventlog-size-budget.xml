@@ -12,6 +12,6 @@
  that the service stores nothing and reports nothing. The whole event was lost rather than
  shortened, and `applicationName` defaults to the app domain name, so a consumer with a long
  assembly name lost more. The limit is now computed, and a truncation is reported through the
- error handler, which is the only signal available (audit da18b6fd-f030)
+ error handler, which is the only signal available (audit da18b6fd-f030, fixed by @FreeAndNil)
   </description>
 </entry>
