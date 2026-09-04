@@ -51,10 +51,12 @@ The default is `23`, the telnet port.
 
 `listenAddress`::
 The local address to accept connections on.
-The default is `0.0.0.0`, every interface of the machine.
+The default is `127.0.0.1`, the machine the application runs on, which is what diagnostic use
+usually needs.
 +
-Set it to `127.0.0.1` to accept connections only from the machine the application runs on, which is
-what diagnostic use usually needs.
+The stream is unauthenticated and unencrypted, so watching it from another machine is opt-in: set
+this to `0.0.0.0` for every IPv4 interface, or `::` for every IPv6 one, and keep untrusted parties
+away from the port.
 An IPv6 address may be given instead, and the listening socket follows its family.
 
 `sendTimeoutMillis`::
@@ -62,11 +64,24 @@ How long, in milliseconds, a write to a client may block before that client is t
 and disconnected.
 The default is `5000`.
 +
-Clients are written to synchronously while the appender lock is held, so a client that connects
-and then stops reading lets TCP flow control fill its receive window.
-A finite timeout bounds how long that client can hold up the threads that log through this
-appender.
-Setting the value to `0` restores blocking indefinitely and is not recommended.
+Clients are written to from a background thread, so this no longer delays the application: it is
+how long a client that stopped reading holds up the stream before it is dropped.
+`0` blocks indefinitely and is not recommended.
+
+`sendQueueSize`::
+How many rendered events may wait to be written to the clients.
+The default is `500`.
++
+A full queue drops the event from the telnet stream, counted and reported once.
+Only the telnet view is lost; every other appender still receives the event.
+
+`enqueueTimeoutMillis`::
+How long, in milliseconds, a logging call may wait for room in the send queue.
+The default is `50`.
++
+This is the only delay a client can impose on the application.
+While the queue stays full it caps logging at 20 events per second; `0` drops immediately instead
+of waiting.
 
 [#telnetappender-trust]
 == Intended use and trust model
@@ -82,17 +97,17 @@ The appender therefore performs no authentication of its own.
 
 [WARNING]
 ====
-The connection is *unauthenticated* and *unencrypted*, and by default the appender listens on *all
-network interfaces*.
+The connection is *unauthenticated* and *unencrypted*.
 There is no option to require a credential or to enable TLS.
 
 Any client that can reach the port receives the full rendered log stream, including whatever the
 layout renders: user names, session identifiers, request parameters, stack traces.
-Keeping untrusted parties away from the port is the operator's responsibility, exactly as it is
-for a log file:
+The appender listens on `127.0.0.1` only, so that stays on the local machine until you widen
+`listenAddress`, and keeping untrusted parties away from the port is then the operator's
+responsibility, exactly as it is for a log file:
 
-* Set `listenAddress` to `127.0.0.1` unless clients on other machines really have to connect.
-* Only enable this appender on a trusted network.
+* Widen `listenAddress` only if clients on other machines really have to connect.
+* Only do so on a trusted network.
 * Restrict access to the port with a host firewall or network policy.
 * Prefer it for local or short-lived diagnostics rather than as a permanent logging destination.
 ====

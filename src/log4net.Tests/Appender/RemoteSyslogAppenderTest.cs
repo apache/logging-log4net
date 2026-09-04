@@ -51,22 +51,6 @@ public sealed class RemoteSyslogAppenderTest
     internal System.Net.Sockets.UdpClient? InheritedClient => Client;
   }
 
-  /// <summary>Collects reported errors instead of letting them reach the console.</summary>
-  private sealed class RecordingErrorHandler : IErrorHandler
-  {
-    /// <summary>Reported messages.</summary>
-    internal List<string> Messages { get; } = [];
-
-    /// <inheritdoc/>
-    public void Error(string message, Exception? e, ErrorCode errorCode) => Messages.Add(message);
-
-    /// <inheritdoc/>
-    public void Error(string message, Exception e) => Messages.Add(message);
-
-    /// <inheritdoc/>
-    public void Error(string message) => Messages.Add(message);
-  }
-
   private const int FlushTimeoutMillis = 30_000;
 
   /// <summary>

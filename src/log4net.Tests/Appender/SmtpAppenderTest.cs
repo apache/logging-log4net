@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -27,9 +26,9 @@ using System.Threading.Tasks;
 
 using log4net.Appender;
 using log4net.Config;
-using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
+using log4net.Tests.Appender.Internal;
 using log4net.Util;
 
 using NUnit.Framework;
@@ -120,19 +119,4 @@ public class SmtpAppenderTest
     }
   }
 
-  /// <summary>Collects reported errors instead of letting them reach the console.</summary>
-  private sealed class RecordingErrorHandler : IErrorHandler
-  {
-    /// <summary>Reported messages.</summary>
-    internal List<string> Messages { get; } = [];
-
-    /// <inheritdoc/>
-    public void Error(string message, Exception? e, ErrorCode errorCode) => Messages.Add(message);
-
-    /// <inheritdoc/>
-    public void Error(string message, Exception e) => Messages.Add(message);
-
-    /// <inheritdoc/>
-    public void Error(string message) => Messages.Add(message);
-  }
 }

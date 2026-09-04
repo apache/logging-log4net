@@ -24,6 +24,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
@@ -37,10 +38,11 @@ namespace log4net.Appender;
 /// <para>
 /// The TelnetAppender accepts socket connections and streams logging messages back to the client.
 /// The output is provided in a telnet-friendly way so that a log can be monitored over a TCP/IP socket.
-/// This allows simple remote monitoring of application logging.
 /// </para>
 /// <para>
-/// The default <see cref="Port"/> is 23 (the telnet port).
+/// The default <see cref="Port"/> is 23 (the telnet port) and the default
+/// <see cref="ListenAddress"/> is <see cref="IPAddress.Loopback"/>, so monitoring from another
+/// machine has to be turned on deliberately.
 /// </para>
 /// <para>
 /// This appender is a diagnostic tool for trusted networks. As with any other appender
@@ -54,23 +56,79 @@ namespace log4net.Appender;
 /// <author>Nicko Cadell</author>
 public class TelnetAppender : AppenderSkeleton
 {
+  private const int CloseTimeoutMillis = 5_000;
+
   private SocketHandler? _handler;
+  private BackgroundSender<string>? _sender;
   private int _listeningPort = 23;
   private int _sendTimeoutMillis = 5_000;
-  private IPAddress _listenAddress = IPAddress.Any;
+  private int _sendQueueSize = 500;
+  private int _enqueueTimeoutMillis = 50;
+  private IPAddress _listenAddress = IPAddress.Loopback;
+
+  /// <summary>
+  /// Gets or sets how many rendered events may wait to be written to the clients.
+  /// </summary>
+  /// <value>A positive number of events. The default is 500.</value>
+  /// <remarks>
+  /// <para>
+  /// Clients are written to from a background thread, so that a client which stops reading cannot
+  /// hold up the threads that log. Events queue up while that thread works, and are dropped once
+  /// the queue is full, which costs the telnet stream but never the log.
+  /// </para>
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not positive.</exception>
+  public int SendQueueSize
+  {
+    get => _sendQueueSize;
+    set
+    {
+      if (value <= 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for SendQueueSize is not positive.");
+      }
+      _sendQueueSize = value;
+    }
+  }
+
+  /// <summary>
+  /// Gets or sets how long, in milliseconds, a logging call may wait for room in the send queue.
+  /// </summary>
+  /// <value>A number of milliseconds, or 0 to drop immediately. The default is 50.</value>
+  /// <remarks>
+  /// <para>
+  /// This is the only delay a connected client can impose on the application. While the queue
+  /// stays full it caps logging at 20 events per second; 0 drops immediately instead of waiting.
+  /// </para>
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
+  public int EnqueueTimeoutMillis
+  {
+    get => _enqueueTimeoutMillis;
+    set
+    {
+      if (value < 0)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for EnqueueTimeoutMillis is negative.");
+      }
+      _enqueueTimeoutMillis = value;
+    }
+  }
 
   /// <summary>
   /// Gets or sets the address to listen on.
   /// </summary>
   /// <value>
-  /// The local address to accept connections on. The default is <see cref="IPAddress.Any"/>, every
-  /// interface of the machine.
+  /// The local address to accept connections on. The default is <see cref="IPAddress.Loopback"/>,
+  /// the machine the application runs on.
   /// </value>
   /// <remarks>
   /// <para>
-  /// Set this to <see cref="IPAddress.Loopback"/> to accept connections only from the machine the
-  /// application runs on, which is what the diagnostic use this appender is meant for usually
-  /// needs.
+  /// The stream is unauthenticated and unencrypted, so reaching it from another machine is opt-in:
+  /// set this to <see cref="IPAddress.Any"/> or <see cref="IPAddress.IPv6Any"/> for that, and keep
+  /// untrusted parties away from the port.
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentNullException">The value specified is <see langword="null"/>.</exception>
@@ -165,9 +223,20 @@ public class TelnetAppender : AppenderSkeleton
   {
     base.OnClose();
 
+    // Drain on a deadline, so a client that stopped reading cannot hold up shutdown.
+    if (_sender is BackgroundSender<string> sender)
+    {
+      _sender = null;
+      sender.Close(CloseTimeoutMillis);
+      sender.Dispose();
+    }
+
     _handler?.Dispose();
     _handler = null;
   }
+
+  /// <inheritdoc/>
+  public override bool Flush(int millisecondsTimeout) => _sender?.Flush(millisecondsTimeout) ?? true;
 
   /// <summary>
   /// This appender requires a <see cref="Layout"/> to be set.
@@ -183,12 +252,33 @@ public class TelnetAppender : AppenderSkeleton
     try
     {
       LogLog.Debug(_declaringType, $"Creating SocketHandler to listen on [{_listenAddress}]:[{_listeningPort}]");
-      _handler = new SocketHandler(_listenAddress, _listeningPort, _sendTimeoutMillis);
+      _handler = new(_listenAddress, _listeningPort, _sendTimeoutMillis);
+      _sender = new(nameof(TelnetAppender), SendQueueSize, SendToClients, Report);
     }
     catch (Exception ex)
     {
       LogLog.Error(_declaringType, "Failed to create SocketHandler", ex);
       throw;
+    }
+  }
+
+  /// <summary>
+  /// Writes one rendered event to every client, on the background thread.
+  /// </summary>
+  private void SendToClients(string message, CancellationToken cancellationToken) => _handler?.Send(message);
+
+  /// <summary>
+  /// Reports a send failure through the appender's error handler.
+  /// </summary>
+  private void Report(string message, Exception? exception)
+  {
+    if (exception is null)
+    {
+      ErrorHandler.Error(message);
+    }
+    else
+    {
+      ErrorHandler.Error(message, exception);
     }
   }
 
@@ -200,7 +290,8 @@ public class TelnetAppender : AppenderSkeleton
   {
     if (_handler is not null && _handler.HasConnections)
     {
-      _handler.Send(RenderLoggingEvent(loggingEvent));
+      // Queued, not written: a client that stops reading must not hold up the logging thread.
+      _sender?.TryEnqueue(RenderLoggingEvent(loggingEvent), EnqueueTimeoutMillis);
     }
   }
 
@@ -325,11 +416,12 @@ public class TelnetAppender : AppenderSkeleton
     /// block before that client is disconnected, or 0 to block indefinitely</param>
     /// <remarks>
     /// <para>
-    /// Creates a socket handler on the specified local server port.
+    /// Creates a socket handler on the specified local server port, listening on
+    /// <see cref="IPAddress.Loopback"/>.
     /// </para>
     /// </remarks>
     public SocketHandler(int port, int sendTimeoutMillis)
-      : this(IPAddress.Any, port, sendTimeoutMillis)
+      : this(IPAddress.Loopback, port, sendTimeoutMillis)
     { }
 
     /// <summary>

@@ -22,6 +22,7 @@ using System.IO;
 
 using log4net.Appender;
 using log4net.Core;
+using log4net.Tests.Appender.Internal;
 using log4net.Layout;
 
 using NUnit.Framework;
@@ -82,23 +83,8 @@ public class AnsiColorTerminalAppenderTest
       Console.SetOut(previous);
     }
 
-    Assert.That(errorHandler.Message, Is.Empty, "the event must not be dropped");
+    Assert.That(errorHandler.Messages, Is.Empty, "the event must not be dropped");
     Assert.That(captured.ToString(), Is.EqualTo(expected));
   }
 
-  /// <summary>Collects what the appender reports, so a dropped event is visible.</summary>
-  private sealed class RecordingErrorHandler : IErrorHandler
-  {
-    /// <summary>Everything reported so far.</summary>
-    internal string Message { get; private set; } = string.Empty;
-
-    /// <inheritdoc/>
-    public void Error(string message) => Message += message + '\n';
-
-    /// <inheritdoc/>
-    public void Error(string message, Exception e) => Message += message + '\n';
-
-    /// <inheritdoc/>
-    public void Error(string message, Exception? e, ErrorCode errorCode) => Message += message + '\n';
-  }
 }
