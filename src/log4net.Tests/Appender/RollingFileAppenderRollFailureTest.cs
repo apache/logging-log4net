@@ -1,0 +1,349 @@
+#region Apache License
+//
+// Licensed to the Apache Software Foundation (ASF) under one or more
+// contributor license agreements. See the NOTICE file distributed with
+// this work for additional information regarding copyright ownership.
+// The ASF licenses this file to you under the Apache License, Version 2.0
+// (the "License"); you may not use this file except in compliance with
+// the License. You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+#endregion
+
+using System;
+using System.IO;
+using log4net.Appender;
+using log4net.Core;
+using log4net.Layout;
+using log4net.Tests.Integration;
+using log4net.Util;
+
+using NUnit.Framework;
+
+namespace log4net.Tests.Appender;
+
+/// <summary>
+/// What <see cref="RollingFileAppender"/> does when a roll cannot complete. Every test here blocks
+/// the base rename with <see cref="BlockRename"/>, which leaves the archive shift working, so the
+/// state under test is the reported one: a reader holding the log file and nothing else.
+/// </summary>
+[TestFixture]
+public sealed class RollingFileAppenderRollFailureTest
+{
+  private const string Marker = "must survive the failed roll";
+
+  private string _directory = string.Empty;
+  private readonly Internal.RecordingErrorHandler _errors = new();
+
+  [SetUp]
+  public void SetUp()
+  {
+    _directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+    Directory.CreateDirectory(_directory);
+    _errors.Messages.Clear();
+  }
+
+  [TearDown]
+  public void TearDown()
+  {
+    if (Directory.Exists(_directory))
+    {
+      Directory.Delete(_directory, true);
+    }
+  }
+
+  /// <summary>
+  /// A failed rename leaves the file in place, and reopening it without appending destroyed it.
+  /// The archive it shifted on the way must not be shifted a second time.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFailedRollKeepsTheEventsItCouldNotMove()
+  {
+    string file = Path.Combine(_directory, "roll-failure.log");
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      RollingStyle = RollingFileAppender.RollingMode.Size,
+      MaxSizeRollBackups = 3,
+      MaximumFileSize = "200",
+      AppendToFile = true,
+      LockingModel = new FileAppender.MinimalLock(),
+      ErrorHandler = _errors
+    };
+    appender.ActivateOptions();
+
+    try
+    {
+      // Two ordinary rolls, so there is an archive to rotate.
+      appender.DoAppend(CreateEvent(new string('a', 200)));
+      appender.DoAppend(CreateEvent(new string('a', 200)));
+      appender.DoAppend(CreateEvent(new string('a', 200)));
+
+      BlockRename(file + ".1");
+
+      // The file is already over the limit, so this event rolls first and the roll is the one that
+      // fails. What it writes afterwards is the content the failed roll used to destroy.
+      LogLog.ExecuteWithoutEmittingInternalMessages(() => appender.DoAppend(CreateEvent(Marker)));
+      Assert.That(_errors.Messages, Is.Not.Empty, "the roll never failed, so nothing was exercised");
+
+      // That first attempt shifts the archive before failing on the base file, which is
+      // unavoidable. What must not happen is a second shift.
+      string[] afterFirstFailure = Backups(file);
+      Assert.That(afterFirstFailure, Is.Not.Empty, "the fixture needs an archive for the roll to shift");
+      string[] contentAfterFirstFailure = Array.ConvertAll(afterFirstFailure, File.ReadAllText);
+
+      // Events well under MaxFileSize, so a retry per MaxFileSize of growth is measurably rarer
+      // than a retry per event. At 200 bytes each the two cadences would be the same thing.
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i < 20; i++)
+        {
+          appender.DoAppend(CreateEvent(new string('b', 50)));
+        }
+      });
+
+      Assert.That(Backups(file), Is.EqualTo(afterFirstFailure),
+        "the archive was rotated again while the rename kept failing");
+      Assert.That(Array.ConvertAll(afterFirstFailure, File.ReadAllText), Is.EqualTo(contentAfterFirstFailure),
+        "the backup contents were rewritten while the rename kept failing");
+      // Only the base rename is retried, and only once the file has grown another MaxFileSize,
+      // so the attempts are far fewer than the 20 events above.
+      Assert.That(BaseRenameAttempts(file), Is.LessThan(20),
+        "the rename was retried per event instead of per MaxFileSize of growth");
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+
+    Assert.That(File.ReadAllText(file), Does.Contain(Marker),
+      "the roll could not rename the file, so reopening it must not have truncated it");
+  }
+
+  /// <summary>
+  /// The same failure with a dated name, where the file being rolled is not the configured one.
+  /// Testing the base file's existence instead of the one the rename could not move passes here
+  /// and truncates anyway.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFailedRollKeepsTheEventsWhenTheFileNameIsDated()
+  {
+    string file = Path.Combine(_directory, "roll-failure.log");
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      RollingStyle = RollingFileAppender.RollingMode.Composite,
+      DatePattern = "'.'yyyy-MM-dd",
+      StaticLogFileName = false,
+      MaxSizeRollBackups = 3,
+      MaximumFileSize = "200",
+      AppendToFile = true,
+      LockingModel = new FileAppender.MinimalLock(),
+      ErrorHandler = _errors
+    };
+    appender.ActivateOptions();
+
+    // The file that is written and rolled, which is not the configured name.
+    string dated = appender.File!;
+    Assert.That(dated, Is.Not.EqualTo(file), "the fixture needs a name the configured one does not match");
+
+    try
+    {
+      appender.DoAppend(CreateEvent(new string('a', 200)));
+
+      BlockRename(dated + ".1");
+
+      // Rolls first, fails on the dated name, and keeps what the rename could not move.
+      LogLog.ExecuteWithoutEmittingInternalMessages(
+        () => appender.DoAppend(CreateEvent(new string('b', 200))));
+      Assert.That(_errors.Messages, Is.Not.Empty, "the roll never failed, so nothing was exercised");
+
+      // Written into the file the failed rename left behind, so a truncating reopen destroys it.
+      appender.DoAppend(CreateEvent(Marker));
+
+      // Grow past the retry threshold, so the base rename is attempted and fails again.
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i < 20; i++)
+        {
+          appender.DoAppend(CreateEvent(new string('b', 200)));
+        }
+      });
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+
+    Assert.That(File.ReadAllText(dated), Does.Contain(Marker),
+      "the roll could not rename the dated file, so reopening it must not have truncated it");
+  }
+
+  /// <summary>
+  /// A retry that succeeds moves the kept file into the archive, and the next roll has to shift
+  /// that generation rather than overwrite it.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ASuccessfulRetryKeepsTheBackupItRecovered()
+  {
+    string file = Path.Combine(_directory, "roll-failure.log");
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      RollingStyle = RollingFileAppender.RollingMode.Size,
+      // Far more than the run needs, so nothing may be discarded as too old.
+      MaxSizeRollBackups = 10,
+      MaximumFileSize = "200",
+      AppendToFile = true,
+      LockingModel = new FileAppender.MinimalLock(),
+      ErrorHandler = _errors
+    };
+    appender.ActivateOptions();
+
+    try
+    {
+      appender.DoAppend(CreateEvent(new string('a', 200)));
+
+      BlockRename(file + ".1");
+
+      // Rolls first, fails, and is then written into the file the rename could not move.
+      LogLog.ExecuteWithoutEmittingInternalMessages(() => appender.DoAppend(CreateEvent(Marker)));
+      Assert.That(_errors.Messages, Is.Not.Empty, "the roll never failed, so nothing was exercised");
+
+      // The obstruction is gone, so the next retry succeeds.
+      UnblockRename(file + ".1");
+
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i < 20 && !ArchiveHolds(file, Marker); i++)
+        {
+          appender.DoAppend(CreateEvent(new string('b', 200)));
+        }
+      });
+      Assert.That(ArchiveHolds(file, Marker), Is.True,
+        "the retry never moved the kept file into the archive, so nothing was recovered");
+
+      // One ordinary roll on top of the recovered generation.
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i < 2; i++)
+        {
+          appender.DoAppend(CreateEvent(new string('c', 200)));
+        }
+      });
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+
+    Assert.That(ArchiveHolds(file, Marker), Is.True,
+      "the roll after the retry overwrote the backup the retry had just recovered");
+  }
+
+  /// <summary>
+  /// A failed base rename leaves the numbered files one slot higher than the backup count says,
+  /// and the time roll has to take that top one with it.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ATimeRollAfterAFailedRenameTakesEveryBackupWithIt()
+  {
+    string file = Path.Combine(_directory, "roll-failure.log");
+    MockDateTime clock = new(new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Local));
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      RollingStyle = RollingFileAppender.RollingMode.Composite,
+      DatePattern = "'.'yyyy-MM-dd",
+      StaticLogFileName = true,
+      MaxSizeRollBackups = 5,
+      MaximumFileSize = "200",
+      AppendToFile = true,
+      LockingModel = new FileAppender.MinimalLock(),
+      DateTimeStrategy = clock,
+      ErrorHandler = _errors
+    };
+    appender.ActivateOptions();
+
+    try
+    {
+      // Two ordinary rolls, so the marker ends up in the second backup.
+      appender.DoAppend(CreateEvent(Marker + new string('a', 200)));
+      appender.DoAppend(CreateEvent(new string('a', 200)));
+      appender.DoAppend(CreateEvent(new string('a', 200)));
+
+      BlockRename(file + ".1");
+
+      LogLog.ExecuteWithoutEmittingInternalMessages(
+        () => appender.DoAppend(CreateEvent(new string('b', 200))));
+      Assert.That(_errors.Messages, Is.Not.Empty, "the base rename never failed, so nothing was exercised");
+      Assert.That(File.ReadAllText(file + ".3"), Does.Contain(Marker),
+        "the fixture needs the archive shifted a slot beyond the backup count");
+
+      // A day later, so the time roll moves the whole group under the dated name.
+      clock.Now = clock.Now.AddDays(1);
+      LogLog.ExecuteWithoutEmittingInternalMessages(() => appender.DoAppend(CreateEvent("after midnight")));
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+
+    Assert.That(File.Exists(file + ".3"), Is.False,
+      "the backup stayed under the old base name instead of moving with the group");
+  }
+
+  /// <summary>
+  /// Blocks one rename by occupying its target with a directory. <see cref="File.Move(string,string)"/>
+  /// throws when the destination exists, and the appender's own delete of the target skips it,
+  /// because <see cref="File.Exists"/> is false for a directory. Only that rename fails, so the
+  /// archive shift still goes through, which is the reported shape: a reader holding the log file
+  /// without FILE_SHARE_DELETE.
+  /// </summary>
+  private static void BlockRename(string target)
+  {
+    if (File.Exists(target))
+    {
+      File.Delete(target);
+    }
+
+    Directory.CreateDirectory(target);
+  }
+
+  private static void UnblockRename(string target) => Directory.Delete(target, true);
+
+  /// <summary>The numbered backups, excluding the log file itself: a `.*` pattern matches it too.</summary>
+  private string[] Backups(string file)
+    => Array.FindAll(Directory.GetFiles(_directory, "roll-failure.log.*"),
+      f => !string.Equals(f, file, StringComparison.Ordinal));
+
+  /// <summary>
+  /// How often the base rename itself was attempted. A failed attempt can report twice, once for
+  /// the delete of the target and once for the move, so counting messages counts the wrong thing.
+  /// </summary>
+  private int BaseRenameAttempts(string file)
+    => _errors.Messages.FindAll(m => m.IndexOf($"[{file}] ->", StringComparison.Ordinal) >= 0).Count;
+
+  /// <summary>Whether any numbered backup holds <paramref name="content"/>.</summary>
+  private bool ArchiveHolds(string file, string content)
+    => Array.Exists(Backups(file),
+      f => File.ReadAllText(f).IndexOf(content, StringComparison.Ordinal) >= 0);
+
+  private static LoggingEvent CreateEvent(string message)
+    => new(new LoggingEventData { Level = Level.Info, Message = message, LoggerName = "RollFailure" });
+}

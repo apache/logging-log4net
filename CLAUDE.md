@@ -26,6 +26,8 @@ almost always be doing.
   Omit the type wherever the target is known, including `return new(…);` and `=> new(…);`, where
   the enclosing member's return type supplies it. It cannot be omitted when the target type is an
   interface or abstract class, as in `Func<ISmtpTransport> f = () => new MailKitSmtpTransport();`.
+- `x?.Method() ?? false` rather than `x is not null && x.Method()`, and merge nested guards
+  into one condition.
 - Expression-bodied members whenever the body fits on one line, including constructors
   (`resharper_constructor_or_destructor_body = expression_body`).
 - Braces on `if`/`else` bodies even for a single statement.
@@ -149,6 +151,13 @@ almost always be doing.
   the assertion is about control characters, use
   `Contains.Substring(x).Using(StringComparison.Ordinal)`, negated with the `!` operator that
   `Constraint` defines, or assert the whole value with `Is.EqualTo`, which is ordinal.
+- **Order `[TestCase]` attributes shortest to longest by source line**, not by argument length.
+- **If no black-box test can reach a defect, extract the sequence into a small private helper
+  and drive that by reflection.** Do not delete the test and call the defect untestable. The
+  extraction is usually an improvement anyway: `FileAppender.RunWithBestEffortLock` replaced two
+  copies of an acquire/release pair, one of which released a lock it had failed to take.
+- **A test that passes before the fix is worthless.** Revert the production change and watch
+  it fail; if it does not, the test is wrong or the defect is not where you think it is.
 - **Give a `[TestCase]` an explicit `TestName` when an argument holds a control character.**
   Otherwise the whole fixture can become invisible to `dotnet test --filter`, silently: it is
   listed by `--list-tests` and runs in a full pass, but every filter reports "No test matches".
@@ -206,6 +215,9 @@ Every user-visible change gets an entry in `src/changelog/<unreleased version>/`
   `missing attribute: link` otherwise, which is only caught by the Maven site build.
 - Put anything that has no issue number, such as an external finding identifier, in the description
   text rather than inventing an `<issue>` for it.
+- **The description is whitespace-collapsed before the AsciiDoc transform, so block syntax does
+  not survive.** No bullets, no code blocks: `*` ends up mid-sentence as a literal asterisk.
+  Write prose. Bullets are fine in commit messages.
 - Close the description with an attribution in parentheses, crediting both sides: who raised it and
   who did the work, as in `(reported by @viktorgobbi, fixed by @FreeAndNil)`. `implemented by` reads
   better than `fixed by` for an `added` or `changed` entry, and once a pull request exists the house

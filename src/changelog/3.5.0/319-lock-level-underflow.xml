@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="319" link="https://github.com/apache/logging-log4net/pull/319"/>
+  <description format="asciidoc">Stop the file lock counter going negative. Writing the footer,
+  closing the writer and opening the file released the lock even when acquiring it had failed, and a
+  negative count made every later acquisition fail. The footer and close paths share one helper now,
+  which releases only what it took; opening keeps its own acquire, because wrapping an unlocked
+  stream throws. Nothing was lost by this, because the appender reopens the file on the next
+  event (audit da18b6fd-f032, fixed by @FreeAndNil)</description>
+</entry>

@@ -194,6 +194,12 @@ public class FileAppender : TextWriterAppender
     {
       lock (_syncRoot)
       {
+        if (_lockLevel == 0)
+        {
+          // Unmatched release: going negative would strand the model lock.
+          return;
+        }
+
         _lockLevel--;
         if (_lockLevel == 0)
         {
@@ -1094,7 +1100,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    if (_stream is not null && _stream.AcquireLock())
+    if (_stream?.AcquireLock() ?? false)
     {
       try
       {
@@ -1120,7 +1126,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Append(LoggingEvent[] loggingEvents)
   {
-    if (_stream is not null && _stream.AcquireLock())
+    if (_stream?.AcquireLock() ?? false)
     {
       try
       {
@@ -1143,19 +1149,8 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteFooter()
   {
-    if (_stream is not null)
-    {
-      //WriteFooter can be called even before a file is opened
-      _stream.AcquireLock();
-      try
-      {
-        base.WriteFooter();
-      }
-      finally
-      {
-        _stream.ReleaseLock();
-      }
-    }
+    //WriteFooter can be called even before a file is opened
+    RunWithBestEffortLock(base.WriteFooter);
   }
 
   /// <summary>
@@ -1168,18 +1163,15 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteHeader()
   {
-    if (_stream is not null)
+    if (_stream?.AcquireLock() ?? false)
     {
-      if (_stream.AcquireLock())
+      try
       {
-        try
-        {
-          base.WriteHeader();
-        }
-        finally
-        {
-          _stream.ReleaseLock();
-        }
+        base.WriteHeader();
+      }
+      finally
+      {
+        _stream.ReleaseLock();
       }
     }
   }
@@ -1194,18 +1186,8 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void CloseWriter()
   {
-    if (_stream is not null)
-    {
-      _stream.AcquireLock();
-      try
-      {
-        base.CloseWriter();
-      }
-      finally
-      {
-        _stream.ReleaseLock();
-      }
-    }
+    // An already closed writer cannot take the lock.
+    RunWithBestEffortLock(base.CloseWriter);
   }
 
   /// <summary>
@@ -1239,6 +1221,28 @@ public class FileAppender : TextWriterAppender
     catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error($"OpenFile({fileName},{append}) call failed.", e, ErrorCode.FileOpenFailure);
+    }
+  }
+
+  /// <summary>
+  /// Runs <paramref name="action"/> under the file lock if it can be taken, releasing only what it
+  /// took. It runs unlocked too, because closing has to happen: that is what frees the handle.
+  /// <see cref="Append(LoggingEvent)"/> and <see cref="WriteHeader"/> deliberately skip their work
+  /// instead when the lock is refused, so they keep their own acquire.
+  /// </summary>
+  private void RunWithBestEffortLock(Action action)
+  {
+    bool locked = _stream?.AcquireLock() ?? false;
+    try
+    {
+      action();
+    }
+    finally
+    {
+      if (locked)
+      {
+        _stream!.ReleaseLock();
+      }
     }
   }
 
@@ -1289,9 +1293,9 @@ public class FileAppender : TextWriterAppender
       LockingModel.OpenFile(fileName, append, Encoding);
       _stream = new LockingStream(LockingModel);
 
-      if (_stream is not null)
+      // Wrapping an unlocked stream throws, so say why instead of trying.
+      if (_stream.AcquireLock())
       {
-        _stream.AcquireLock();
         try
         {
           SetQWForFiles(_stream);
@@ -1300,6 +1304,10 @@ public class FileAppender : TextWriterAppender
         {
           _stream.ReleaseLock();
         }
+      }
+      else
+      {
+        ErrorHandler.Error($"Could not acquire the lock on {fileName} to open it.");
       }
 
       WriteHeader();
