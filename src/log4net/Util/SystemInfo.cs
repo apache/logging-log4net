@@ -47,6 +47,12 @@ public static class SystemInfo
   /// Is the mono runtime used
   /// </summary>
   internal static bool IsMono { get; } = Type.GetType("Mono.Runtime") is not null;
+
+  /// <summary>
+  /// Is the runtime on Windows
+  /// </summary>
+  /// <remarks>Not <c>RuntimeInformation.IsOSPlatform</c>, which throws below net471.</remarks>
+  internal static bool IsWindows { get; } = Environment.OSVersion.Platform == PlatformID.Win32NT;
   
   /// <summary>
   /// Initialize default values for private static fields.

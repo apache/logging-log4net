@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using log4net.Util;
@@ -759,12 +760,9 @@ public class FileAppender : TextWriterAppender
         {
           if (CurrentAppender.File is not null)
           {
-            string mutexFriendlyFilename = CurrentAppender.File
-              .Replace("\\", "_")
-              .Replace(":", "_")
-              .Replace("/", "_");
-
-            _mutex = new Mutex(false, mutexFriendlyFilename);
+            // No ACL, Global\ prefix or user name here: without a shared ACL a global mutex
+            // throws for whichever process starts second, and a user name splits one session.
+            _mutex = new Mutex(false, MutexNameForPath(CurrentAppender.File, string.Empty));
           }
           else
           {
@@ -1025,16 +1023,20 @@ public class FileAppender : TextWriterAppender
 
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
+    if (_fileName is not null)
+    {
+      using (SecurityContext.Impersonate(this))
+      {
+        // Before the locking model activates, which names its mutex after this path.
+        _fileName = ConvertToFullPath(_fileName.Trim());
+      }
+    }
+
     LockingModel.CurrentAppender = this;
     LockingModel.ActivateOptions();
 
     if (_fileName is not null)
     {
-      using (SecurityContext.Impersonate(this))
-      {
-        _fileName = ConvertToFullPath(_fileName.Trim());
-      }
-
       SafeOpenFile(_fileName, AppendToFile);
     }
     else
@@ -1365,6 +1367,40 @@ public class FileAppender : TextWriterAppender
   /// </para>
   /// </remarks>
   protected static string ConvertToFullPath(string path) => SystemInfo.ConvertToFullPath(path);
+
+  /// <summary>
+  /// Names the mutex that serialises <paramref name="path"/> between processes, with
+  /// <paramref name="suffix"/> telling one mutex over the same file from another.
+  /// </summary>
+  /// <remarks>
+  /// The flattened path, as earlier versions computed it. Only a name the platform rejects is
+  /// hashed: Unix stops at <see cref="MaxMutexNameLength"/>, Windows has no limit. Unprefixed, so
+  /// on Windows it coordinates one session.
+  /// </remarks>
+  internal static string MutexNameForPath(string path, string suffix)
+    => MutexNameForPath(path, suffix, SystemInfo.IsWindows ? null : MaxMutexNameLength);
+
+  /// <summary>Takes the limit rather than deciding it, so both branches are testable anywhere.</summary>
+  private static string MutexNameForPath(string path, string suffix, int? maxLength)
+  {
+    string name = path.EnsureNotNull()
+      .Replace("\\", "_")
+      .Replace(":", "_")
+      .Replace("/", "_") + suffix;
+
+    if (maxLength is null || name.Length <= maxLength)
+    {
+      return name;
+    }
+
+    // TODO use SHA256.HashData and Convert.ToHexString on .net10
+    using SHA256 sha256 = SHA256.Create();
+    byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(path));
+    return "log4net_" + BitConverter.ToString(hash).Replace("-", "") + suffix;
+  }
+
+  /// <summary>The longest mutex name Unix accepts. Windows has no limit. Both measured.</summary>
+  private const int MaxMutexNameLength = 255;
 
   /// <summary>
   /// The name of the log file.

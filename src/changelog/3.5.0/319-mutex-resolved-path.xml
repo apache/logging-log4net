@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="319" link="https://github.com/apache/logging-log4net/pull/319"/>
+  <description format="asciidoc">Let two processes that spell the log path differently share one
+  inter-process file lock. `InterProcessLock` named its mutex after the configured path before that
+  path was resolved, so a relative and an absolute spelling of one file took two different mutexes
+  and excluded nothing. The name comes from the resolved path now. That resolves a relative path and
+  nothing else: symbolic links, hard links, 8.3 short names, letter case and UNC versus mapped-drive
+  spellings still produce different names. The name is also unprefixed, which on Windows makes it
+  per-session, so a service and an interactive process have never coordinated through it (audit
+  da18b6fd-f031, fixed by @FreeAndNil)</description>
+</entry>

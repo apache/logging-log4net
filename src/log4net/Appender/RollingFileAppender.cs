@@ -1059,11 +1059,7 @@ public partial class RollingFileAppender : FileAppender
     }
 
     // initialize the mutex that is used to lock rolling
-    _mutexForRolling = new Mutex(false, _baseFileName
-      .Replace("\\", "_")
-      .Replace(":", "_")
-      .Replace("/", "_") + "_rolling"
-    );
+    _mutexForRolling = new Mutex(false, MutexNameForPath(_baseFileName, "_rolling"));
 
     if (_rollDate && File is not null && _scheduledFilename is null)
     {
