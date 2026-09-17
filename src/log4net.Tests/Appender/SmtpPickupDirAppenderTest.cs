@@ -27,6 +27,8 @@ using log4net.Layout;
 
 using NUnit.Framework;
 
+using PeanutButter.Utils;
+
 namespace log4net.Tests.Appender;
 
 /// <summary>
@@ -35,7 +37,6 @@ namespace log4net.Tests.Appender;
 [TestFixture]
 public class SmtpPickupDirAppenderTest
 {
-  private readonly string _testPickupDir;
 
   private sealed class SilentErrorHandler : IErrorHandler
   {
@@ -51,13 +52,6 @@ public class SmtpPickupDirAppenderTest
       => _buffer.Append(message + '\n' + e?.Message + '\n');
   }
 
-  public SmtpPickupDirAppenderTest()
-    => _testPickupDir = Path.Combine(Directory.GetCurrentDirectory(), "SmtpPickupDirAppenderTest_PickupDir");
-
-  /// <summary>
-  /// Sets up variables used for the tests
-  /// </summary>
-  private void InitializePickupDir() => Directory.CreateDirectory(_testPickupDir);
 
   /// <summary>
   /// Shuts down any loggers in the hierarchy, along
@@ -77,33 +71,13 @@ public class SmtpPickupDirAppenderTest
   /// go here
   /// </summary>
   [SetUp]
-  public void SetUp()
-  {
-    ResetLogger();
-    DeleteTestFiles();
-    InitializePickupDir();
-  }
+  public void SetUp() => ResetLogger();
 
   /// <summary>
   /// Any steps that happen after each test go here
   /// </summary>
   [TearDown]
-  public void TearDown()
-  {
-    ResetLogger();
-    DeleteTestFiles();
-  }
-
-  /// <summary>
-  /// Removes all test files that exist
-  /// </summary>
-  private void DeleteTestFiles()
-  {
-    if (Directory.Exists(_testPickupDir))
-    {
-      Directory.Delete(_testPickupDir, true);
-    }
-  }
+  public void TearDown() => ResetLogger();
 
   /// <summary>
   /// Creates a logger hierarchy, configures a SMTP pickup dir appender and returns an ILogger
@@ -130,17 +104,15 @@ public class SmtpPickupDirAppenderTest
   /// <summary>
   /// Create an appender to use for the logger
   /// </summary>
+  /// <param name="pickupDir">The directory the appender writes its mails to.</param>
   /// <param name="handler">The error handler to use.</param>
   /// <returns></returns>
-  private SmtpPickupDirAppender CreateSmtpPickupDirAppender(IErrorHandler handler)
-  {
-    SmtpPickupDirAppender appender = new()
+  private static SmtpPickupDirAppender CreateSmtpPickupDirAppender(string pickupDir, IErrorHandler handler)
+    => new()
     {
-      PickupDir = _testPickupDir,
+      PickupDir = pickupDir,
       ErrorHandler = handler
     };
-    return appender;
-  }
 
   /// <summary>
   /// Destroys the logger hierarchy created by <see cref="SmtpPickupDirAppenderTest.CreateLogger"/>
@@ -160,16 +132,17 @@ public class SmtpPickupDirAppenderTest
   [Test]
   public void ContentThatCannotBeEncodedDoesNotDestroyTheBatch()
   {
+    using AutoTempFolder pickupDir = new();
     SilentErrorHandler sh = new();
-    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
     ILogger log = CreateLogger(appender);
 
     log.Log(GetType(), Level.Info, "poison" + (char)0xd800 + "event", null);
     log.Log(GetType(), Level.Info, "the event after it", null);
     DestroyLogger();
 
-    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
-    string content = File.ReadAllText(Directory.GetFiles(_testPickupDir)[0]);
+    Assert.That(Directory.GetFiles(pickupDir.Path), Has.Length.EqualTo(1));
+    string content = File.ReadAllText(Directory.GetFiles(pickupDir.Path)[0]);
 
     Assert.That(content, Does.Contain(@"poison\ud800event"));
     Assert.That(content, Does.Contain("the event after it"));
@@ -182,16 +155,17 @@ public class SmtpPickupDirAppenderTest
   [Test]
   public void TestOutputContainsSentDate()
   {
+    using AutoTempFolder pickupDir = new();
     SilentErrorHandler sh = new();
-    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
     ILogger log = CreateLogger(appender);
     DateTime beforeLog = DateTime.UtcNow;
     log.Log(GetType(), Level.Info, "This is a message", null);
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
-    string[] fileContent = File.ReadAllLines((Directory.GetFiles(_testPickupDir)[0]));
+    Assert.That(Directory.GetFiles(pickupDir.Path), Has.Length.EqualTo(1));
+    string[] fileContent = File.ReadAllLines((Directory.GetFiles(pickupDir.Path)[0]));
     bool hasDateHeader = false;
     const string dateHeaderStart = "Date: ";
     foreach (string line in fileContent)
@@ -220,16 +194,17 @@ public class SmtpPickupDirAppenderTest
   public void TestConfigurableFileExtension()
   {
     const string fileExtension = "eml";
+    using AutoTempFolder pickupDir = new();
     SilentErrorHandler sh = new();
-    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
     appender.FileExtension = fileExtension;
     ILogger log = CreateLogger(appender);
     log.Log(GetType(), Level.Info, "This is a message", null);
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
-    FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
+    Assert.That(Directory.GetFiles(pickupDir.Path), Has.Length.EqualTo(1));
+    FileInfo fileInfo = new(Directory.GetFiles(pickupDir.Path)[0]);
     Assert.That(fileInfo.Extension, Is.EqualTo("." + fileExtension));
     Assert.That(Guid.TryParse(fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length), out _));
 
@@ -242,15 +217,16 @@ public class SmtpPickupDirAppenderTest
   [Test]
   public void TestDefaultFileNameIsAGuid()
   {
+    using AutoTempFolder pickupDir = new();
     SilentErrorHandler sh = new();
-    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(sh);
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
     ILogger log = CreateLogger(appender);
     log.Log(GetType(), Level.Info, "This is a message", null);
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    Assert.That(Directory.GetFiles(_testPickupDir), Has.Length.EqualTo(1));
-    FileInfo fileInfo = new(Directory.GetFiles(_testPickupDir)[0]);
+    Assert.That(Directory.GetFiles(pickupDir.Path), Has.Length.EqualTo(1));
+    FileInfo fileInfo = new(Directory.GetFiles(pickupDir.Path)[0]);
     Assert.That(fileInfo.Extension, Is.Empty);
     Assert.That(Guid.TryParse(fileInfo.Name, out _));
 

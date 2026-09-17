@@ -23,6 +23,8 @@ using System.Xml;
 using System;
 using log4net.Appender;
 using NUnit.Framework;
+
+using PeanutButter.Utils;
 using log4net.Repository;
 using log4net.Config;
 using log4net.Util;
@@ -163,7 +165,8 @@ public sealed class FileAppenderTest
   [Test]
   public void InterProcessLock_AcquireLock_ReleasesMutexWhenStreamIsNull()
   {
-    string tempFile = Path.GetTempFileName();
+    using AutoTempFolder folder = new();
+    string tempFile = Path.Combine(folder.Path, "lock-test.log");
     FileAppender appender = new() { File = "log4net_ipl_test" };
     FileAppender.InterProcessLock lockingModel = new() { CurrentAppender = appender };
     lockingModel.ActivateOptions();
@@ -221,7 +224,8 @@ public sealed class FileAppenderTest
   public void AcquireLockGivesUpWhenTheLockIsHeldTooLong()
   {
     const string appenderFile = "log4net_lock_timeout_test";
-    string tempFile = Path.GetTempFileName();
+    using AutoTempFolder folder = new();
+    string tempFile = Path.Combine(folder.Path, "lock-test.log");
     FileAppender appender = new() { File = appenderFile };
     FileAppender.InterProcessLock lockingModel = new()
     {

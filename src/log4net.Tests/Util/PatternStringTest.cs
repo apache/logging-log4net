@@ -28,6 +28,8 @@ using System.IO;
 using System.Reflection;
 using System.Configuration;
 
+using PeanutButter.Utils;
+
 namespace log4net.Tests.Util;
 
 [TestFixture]
@@ -64,11 +66,12 @@ public class PatternStringTest : MarshalByRefObject
         </appSettings>
       </configuration>
       """;
-    string? configurationFileName = null;
+    using AutoTempFolder folder = new();
     AppDomain? appDomain = null;
     try
     {
-      configurationFileName = CreateTempConfigFile(configurationFileContent);
+      string configurationFileName = Path.Combine(folder.Path, "app.config");
+      File.WriteAllText(configurationFileName, configurationFileContent);
       appDomain = CreateConfiguredDomain("AppSettingsTestDomain", configurationFileName);
 
       PatternStringTest pst = (PatternStringTest)appDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, this.GetType().FullName);
@@ -79,10 +82,6 @@ public class PatternStringTest : MarshalByRefObject
       if (appDomain is not null)
       {
         AppDomain.Unload(appDomain);
-      }
-      if (configurationFileName is not null)
-      {
-        File.Delete(configurationFileName);
       }
     }
   }
@@ -104,13 +103,6 @@ public class PatternStringTest : MarshalByRefObject
     evaluatedPattern = patternString.Format();
     Assert.That(evaluatedPattern, Is.EqualTo("(null)"), 
       "Evaluated pattern expected to be \"(null)\" for non-existent appSettings key");
-  }
-
-  private static string CreateTempConfigFile(string configurationFileContent)
-  {
-    string fileName = Path.GetTempFileName();
-    File.WriteAllText(fileName, configurationFileContent);
-    return fileName;
   }
 
   private static AppDomain CreateConfiguredDomain(string domainName, string configurationFileName)
