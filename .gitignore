@@ -227,6 +227,7 @@ src/GeneratedAssemblyInfo.cs
 *.swp
 node
 node_modules
+/package-lock.json
 build-tools
 buildreports
 vs_buildtools.exe
