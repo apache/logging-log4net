@@ -64,7 +64,7 @@ public class PatternLayoutTest
   [TearDown]
   public void TearDown()
   {
-    Utils.RemovePropertyFromAllContexts();
+    TestUtils.RemovePropertyFromAllContexts();
     // restore previous culture
     Thread.CurrentThread.CurrentCulture = _currentCulture!;
     Thread.CurrentThread.CurrentUICulture = _currentUiCulture!;
@@ -92,7 +92,7 @@ public class PatternLayoutTest
   {
     StringAppender stringAppender = new()
     {
-      Layout = NewPatternLayout("%property{" + Utils.PropertyKey + "}")
+      Layout = NewPatternLayout("%property{" + TestUtils.PropertyKey + "}")
     };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
@@ -104,13 +104,13 @@ public class PatternLayoutTest
     Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no thread properties value set");
     stringAppender.Reset();
 
-    ThreadContext.Properties[Utils.PropertyKey] = "val1";
+    ThreadContext.Properties[TestUtils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
     Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test thread properties value set");
     stringAppender.Reset();
 
-    ThreadContext.Properties.Remove(Utils.PropertyKey);
+    ThreadContext.Properties.Remove(TestUtils.PropertyKey);
 
     log1.Info("TestMessage");
     Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test thread properties value removed");
@@ -147,7 +147,7 @@ public class PatternLayoutTest
   {
     StringAppender stringAppender = new()
     {
-      Layout = NewPatternLayout("%property{" + Utils.PropertyKey + "}")
+      Layout = NewPatternLayout("%property{" + TestUtils.PropertyKey + "}")
     };
 
     ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
@@ -159,13 +159,13 @@ public class PatternLayoutTest
     Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test no global properties value set");
     stringAppender.Reset();
 
-    GlobalContext.Properties[Utils.PropertyKey] = "val1";
+    GlobalContext.Properties[TestUtils.PropertyKey] = "val1";
 
     log1.Info("TestMessage");
     Assert.That(stringAppender.GetString(), Is.EqualTo("val1"), "Test global properties value set");
     stringAppender.Reset();
 
-    GlobalContext.Properties.Remove(Utils.PropertyKey);
+    GlobalContext.Properties.Remove(TestUtils.PropertyKey);
 
     log1.Info("TestMessage");
     Assert.That(stringAppender.GetString(), Is.EqualTo(SystemInfo.NullText), "Test global properties value removed");

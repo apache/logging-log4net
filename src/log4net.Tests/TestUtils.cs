@@ -22,7 +22,7 @@ namespace log4net.Tests;
 /// <summary>
 /// Utilities for testing
 /// </summary>
-public static class Utils
+internal static class TestUtils
 {
   /// <summary>
   /// Sample property key

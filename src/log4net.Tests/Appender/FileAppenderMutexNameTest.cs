@@ -30,6 +30,8 @@ using log4net.Util;
 
 using NUnit.Framework;
 
+using PeanutButter.Utils;
+
 namespace log4net.Tests.Appender;
 
 /// <summary>The mutex name the file lock and the rolling lock derive from the log file path.</summary>
@@ -56,24 +58,6 @@ public sealed class FileAppenderMutexNameTest
 
     public override void OnClose()
     { }
-  }
-
-  private string _directory = string.Empty;
-
-  [SetUp]
-  public void SetUp()
-  {
-    _directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-    Directory.CreateDirectory(_directory);
-  }
-
-  [TearDown]
-  public void TearDown()
-  {
-    if (Directory.Exists(_directory))
-    {
-      Directory.Delete(_directory, true);
-    }
   }
 
   /// <summary>
@@ -118,10 +102,12 @@ public sealed class FileAppenderMutexNameTest
   [NonParallelizable]
   public void ADeepPathStillActivates()
   {
+    using AutoTempFolder folder = new();
+
     // Over the 255 character mutex name limit once "_rolling" is added, under the 260 Windows
     // still enforces on net462.
-    string leaf = new('d', 250 - _directory.Length - "roll.log".Length - 2);
-    string directory = Path.Combine(_directory, leaf);
+    string leaf = new('d', 250 - folder.Path.Length - "roll.log".Length - 2);
+    string directory = Path.Combine(folder.Path, leaf);
     Directory.CreateDirectory(directory);
     string file = Path.Combine(directory, "roll.log");
     Assert.That(file, Has.Length.EqualTo(250), "the fixture must exceed the mutex name limit");

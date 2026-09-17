@@ -481,6 +481,14 @@ public partial class RollingFileAppender : FileAppender
   protected override void SetQWForFiles(TextWriter writer) 
     => QuietWriter = new CountingQuietTextWriter(writer, ErrorHandler);
 
+  /// <summary>The writer, which counts what it has written so a size roll can be timed.</summary>
+  /// <remarks>
+  /// Only for the paths reached through <see cref="Append(LoggingEvent)"/>, where
+  /// <see cref="TextWriterAppender.PreAppendCheck"/> has already refused a null writer. A reopen
+  /// that could not take the lock leaves none, so the sites that run after one keep their own check.
+  /// </remarks>
+  private CountingQuietTextWriter CountingWriter => QuietWriter.EnsureIs<CountingQuietTextWriter>();
+
   /// <summary>
   /// Write out a logging event.
   /// </summary>
@@ -566,14 +574,13 @@ public partial class RollingFileAppender : FileAppender
         }
       }
 
-      if (_rollSize && (File is not null)
-        && ((CountingQuietTextWriter)QuietWriter!).Count >= MaxFileSize)
+      if (_rollSize && (File is not null) && CountingWriter.Count >= MaxFileSize)
       {
         if (_pendingRename is null)
         {
           RollOverSize();
         }
-        else if (((CountingQuietTextWriter)QuietWriter).Count >= _pendingRename.RetryAtCount)
+        else if (CountingWriter.Count >= _pendingRename.RetryAtCount)
         {
           RetryFailedRoll();
         }
@@ -1322,7 +1329,7 @@ public partial class RollingFileAppender : FileAppender
   {
     CloseFile(); // keep windows happy.
 
-    LogLog.Debug(_declaringType, $"rolling over count [{((CountingQuietTextWriter)QuietWriter!).Count}]");
+    LogLog.Debug(_declaringType, $"rolling over count [{CountingWriter.Count}]");
     LogLog.Debug(_declaringType, $"maxSizeRollBackups [{MaxSizeRollBackups}]");
     LogLog.Debug(_declaringType, $"curSizeRollBackups [{CurrentSizeRollBackups}]");
     LogLog.Debug(_declaringType, $"countDirection [{CountDirection}]");

@@ -1110,7 +1110,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream.ReleaseLock();
+        _stream?.ReleaseLock();
       }
     }
   }
@@ -1136,7 +1136,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream.ReleaseLock();
+        _stream?.ReleaseLock();
       }
     }
   }
@@ -1173,7 +1173,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream.ReleaseLock();
+        _stream?.ReleaseLock();
       }
     }
   }
@@ -1243,7 +1243,7 @@ public class FileAppender : TextWriterAppender
     {
       if (locked)
       {
-        _stream!.ReleaseLock();
+        _stream?.ReleaseLock();
       }
     }
   }

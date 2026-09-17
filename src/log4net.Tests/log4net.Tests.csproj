@@ -33,6 +33,7 @@
     <PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
     <PackageReference Include="NUnit.Analyzers" Version="$(NUnitAnalyzersPackageVersion)" />
     <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
+    <PackageReference Include="PeanutButter.Utils" Version="$(PeanutButterUtilsPackageVersion)" />
     <PackageReference Include="Quackers.TestLogger" Version="$(QuackersTestLoggerPackageVersion)" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='net462'">
