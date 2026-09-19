@@ -574,16 +574,18 @@ public partial class RollingFileAppender : FileAppender
         }
       }
 
-      if (_rollSize && (File is not null) && CountingWriter.Count >= MaxFileSize)
+      // A pending rename outranks a size roll, and is retried even where size rolling is off: a
+      // failed time rename needs the retry just as much, and MaxFileSize only paces it.
+      if (_pendingRename is not null)
       {
-        if (_pendingRename is null)
-        {
-          RollOverSize();
-        }
-        else if (CountingWriter.Count >= _pendingRename.RetryAtCount)
+        if (CountingWriter.Count >= _pendingRename.RetryAtCount)
         {
           RetryFailedRoll();
         }
+      }
+      else if (_rollSize && (File is not null) && CountingWriter.Count >= MaxFileSize)
+      {
+        RollOverSize();
       }
     }
     finally
@@ -611,6 +613,12 @@ public partial class RollingFileAppender : FileAppender
     lock (LockObj)
     {
       fileName = GetNextOutputFileName(fileName);
+
+      // A rename that failed left its file where it was. Never truncate that one, whatever
+      // AppendToFile says, or the roll destroys what it could not move.
+      append = append
+        || (_pendingRename is not null
+          && string.Equals(fileName, _pendingRename.From, StringComparison.Ordinal));
 
       // Calculate the current size of the file
       long currentCount = 0;
@@ -1171,8 +1179,9 @@ public partial class RollingFileAppender : FileAppender
     }
     else
     {
-      // The startup roll, with no file open to grow, so nothing can trigger a retry. As before.
-      _pendingRename = null;
+      // The startup roll, from ExistingInit, with nothing open yet. A failed rename here leaves the
+      // previous period in the file, so the pending rename stays armed: the open that follows must
+      // not truncate it, and the first append retries the rename.
     }
   }
 

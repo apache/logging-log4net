@@ -10,6 +10,8 @@
   to cause it. The file is appended to now. Only the rename that failed is retried, once per
   `MaxFileSize` of growth, which is the cadence a working rollover would have had, because a full
   retry would shift the numbered backups again and lose the oldest one every time; the file
-  therefore grows past `MaxFileSize` for as long as the rename keeps failing (audit da18b6fd-f036,
+  therefore grows past `MaxFileSize` for as long as the rename keeps failing. The rollover at
+  startup keeps the file too, so a failed rename there no longer empties it where `AppendToFile` is
+  false (audit da18b6fd-f036,
   fixed by @FreeAndNil)</description>
 </entry>

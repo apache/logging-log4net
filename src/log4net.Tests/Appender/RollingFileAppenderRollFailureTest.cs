@@ -299,6 +299,120 @@ public sealed class RollingFileAppenderRollFailureTest
   }
 
   /// <summary>
+  /// A failed time rename is retried too, where size rolling is switched off entirely. Without
+  /// that, the pending rename waits for a size roll that never comes, and the next boundary
+  /// archives the accumulated file under the later period.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFailedTimeRenameIsRetriedWithoutSizeRolling()
+  {
+    using AutoTempFolder folder = new();
+    Internal.RecordingErrorHandler errors = new();
+    string file = Path.Combine(folder.Path, "roll-failure.log");
+    MockDateTime clock = new(new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Local));
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      RollingStyle = RollingFileAppender.RollingMode.Date,
+      DatePattern = "'.'yyyy-MM-dd",
+      StaticLogFileName = true,
+      // Size rolling stays off; this only paces the retry, which is what the defect ignored.
+      MaximumFileSize = "200",
+      AppendToFile = true,
+      LockingModel = new FileAppender.MinimalLock(),
+      DateTimeStrategy = clock,
+      ErrorHandler = errors
+    };
+    appender.ActivateOptions();
+    string dated = file + ".2026-01-01";
+
+    try
+    {
+      appender.DoAppend(CreateEvent(Marker));
+
+      BlockRename(dated);
+
+      // A day on, so the time roll runs and cannot move the file.
+      clock.Now = clock.Now.AddDays(1);
+      LogLog.ExecuteWithoutEmittingInternalMessages(
+        () => appender.DoAppend(CreateEvent(new string('a', 200))));
+      Assert.That(errors.Messages, Is.Not.Empty, "the time rename never failed, so nothing was exercised");
+      Assert.That(File.ReadAllText(file), Does.Contain(Marker), "the failed rename must keep the file");
+
+      UnblockRename(dated);
+
+      // Grow past the retry threshold. With the retry nested under size rolling, nothing happens.
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i < 20 && !File.Exists(dated); i++)
+        {
+          appender.DoAppend(CreateEvent(new string('b', 200)));
+        }
+      });
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+
+    Assert.That(File.Exists(dated), Is.True,
+      "the pending time rename was never retried, so the period was never archived");
+    Assert.That(File.ReadAllText(dated), Does.Contain(Marker));
+  }
+
+  /// <summary>
+  /// The roll ExistingInit performs at startup, before anything is open. Its failed rename used to
+  /// fall through to the configured AppendToFile, so AppendToFile=false destroyed the period the
+  /// rename could not archive.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFailedStartupRollKeepsTheFileItCouldNotMove()
+  {
+    using AutoTempFolder folder = new();
+    Internal.RecordingErrorHandler errors = new();
+    string file = Path.Combine(folder.Path, "roll-failure.log");
+    MockDateTime clock = new(new DateTime(2026, 1, 2, 12, 0, 0, DateTimeKind.Local));
+
+    // Yesterday's log, left behind by the previous run, and its archive name is taken.
+    File.WriteAllText(file, Marker + Environment.NewLine);
+    File.SetLastWriteTime(file, clock.Now.AddDays(-1));
+    string dated = file + ".2026-01-01";
+    BlockRename(dated);
+
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      RollingStyle = RollingFileAppender.RollingMode.Date,
+      DatePattern = "'.'yyyy-MM-dd",
+      StaticLogFileName = true,
+      // The setting that used to decide it: an explicit request for an empty file at startup.
+      AppendToFile = false,
+      LockingModel = new FileAppender.MinimalLock(),
+      DateTimeStrategy = clock,
+      ErrorHandler = errors
+    };
+
+    try
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.ActivateOptions);
+      Assert.That(errors.Messages, Is.Not.Empty, "the startup rename never failed, so nothing was exercised");
+
+      LogLog.ExecuteWithoutEmittingInternalMessages(() => appender.DoAppend(CreateEvent("after startup")));
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+
+    Assert.That(File.ReadAllText(file), Does.Contain(Marker),
+      "the startup roll could not rename the file, so opening it must not have truncated it");
+  }
+
+  /// <summary>
   /// Blocks one rename by occupying its target with a directory. <see cref="File.Move(string,string)"/>
   /// throws when the destination exists, and the appender's own delete of the target skips it,
   /// because <see cref="File.Exists"/> is false for a directory. Only that rename fails, so the
