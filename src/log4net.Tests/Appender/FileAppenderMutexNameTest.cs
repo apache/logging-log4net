@@ -169,6 +169,25 @@ public sealed class FileAppenderMutexNameTest
     mutex.ReleaseMutex();
   }
 
+  /// <summary>
+  /// The limit is on encoded bytes, not characters: a name of 104 characters and 304 bytes is
+  /// already refused, measured, so counting characters lets one through that cannot be created.
+  /// </summary>
+  [Test]
+  public void AMultibytePathIsMeasuredInBytes()
+  {
+    // Well under the limit as characters, well over it as UTF-8.
+    string multibyte = "/" + new string('\u4e2d', 200) + "/app.log";
+    Assert.That(multibyte, Has.Length.LessThan(255), "the point of the fixture is a short-looking name");
+
+    string name = MutexNameForPath(multibyte, "_rolling", 255);
+
+    Assert.That(Encoding.UTF8.GetByteCount(name), Is.LessThanOrEqualTo(255));
+    using Mutex mutex = new(false, name);
+    Assert.That(mutex.WaitOne(0), Is.True);
+    mutex.ReleaseMutex();
+  }
+
   /// <summary>With no limit, which is Windows, the name is left as earlier versions computed it.</summary>
   [Test]
   public void ALongPathIsLeftAloneWhereThePlatformHasNoLimit()

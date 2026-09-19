@@ -1374,21 +1374,22 @@ public class FileAppender : TextWriterAppender
   /// </summary>
   /// <remarks>
   /// The flattened path, as earlier versions computed it. Only a name the platform rejects is
-  /// hashed: Unix stops at <see cref="MaxMutexNameLength"/>, Windows has no limit. Unprefixed, so
+  /// hashed: Unix stops at <see cref="MaxMutexNameBytes"/>, Windows has no limit. Unprefixed, so
   /// on Windows it coordinates one session.
   /// </remarks>
   internal static string MutexNameForPath(string path, string suffix)
-    => MutexNameForPath(path, suffix, SystemInfo.IsWindows ? null : MaxMutexNameLength);
+    => MutexNameForPath(path, suffix, SystemInfo.IsWindows ? null : MaxMutexNameBytes);
 
   /// <summary>Takes the limit rather than deciding it, so both branches are testable anywhere.</summary>
-  private static string MutexNameForPath(string path, string suffix, int? maxLength)
+  private static string MutexNameForPath(string path, string suffix, int? maxBytes)
   {
     string name = path.EnsureNotNull()
       .Replace("\\", "_")
       .Replace(":", "_")
       .Replace("/", "_") + suffix;
 
-    if (maxLength is null || name.Length <= maxLength)
+    // Encoded bytes, not characters: a name of 104 characters and 304 bytes is already refused.
+    if (maxBytes is null || Encoding.UTF8.GetByteCount(name) <= maxBytes)
     {
       return name;
     }
@@ -1399,8 +1400,8 @@ public class FileAppender : TextWriterAppender
     return "log4net_" + BitConverter.ToString(hash).Replace("-", "") + suffix;
   }
 
-  /// <summary>The longest mutex name Unix accepts. Windows has no limit. Both measured.</summary>
-  private const int MaxMutexNameLength = 255;
+  /// <summary>The longest mutex name Unix accepts, in UTF-8 bytes. Windows has no limit. Measured.</summary>
+  private const int MaxMutexNameBytes = 255;
 
   /// <summary>
   /// The name of the log file.

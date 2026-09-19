@@ -6,8 +6,8 @@
   <issue id="319" link="https://github.com/apache/logging-log4net/pull/319"/>
   <description format="asciidoc">Keep logging to a deep path on Unix. Both the rolling lock and the
   inter-process file lock name their mutex after the log file, and Unix rejects a name longer than
-  255 characters, throwing out of `ActivateOptions` and taking the appender with it before anything
-  was written. Such a name is replaced by a hash of the path now. Windows enforces no
+  255 UTF-8 bytes, which a path of 104 characters can already exceed, throwing out of
+  `ActivateOptions` and taking the appender with it before anything was written. Such a name is replaced by a hash of the path now. Windows enforces no
   length limit at all, and names are left alone there, so the only ones that change are the ones
   that used to throw and exclusion against an older version is nowhere affected (audit
   da18b6fd-f010, da18b6fd-f031, fixed by @FreeAndNil)</description>
