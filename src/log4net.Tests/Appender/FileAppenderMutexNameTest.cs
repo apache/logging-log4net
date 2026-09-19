@@ -43,19 +43,25 @@ public sealed class FileAppenderMutexNameTest
   {
     internal string? FileAtActivation { get; private set; }
 
+    /// <inheritdoc/>
     public override void ActivateOptions() => FileAtActivation = CurrentAppender?.File;
 
+    /// <inheritdoc/>
     public override Stream? AcquireLock() => Stream.Null;
 
+    /// <inheritdoc/>
     public override void ReleaseLock()
     { }
 
+    /// <inheritdoc/>
     public override void OpenFile(string filename, bool append, Encoding encoding)
     { }
 
+    /// <inheritdoc/>
     public override void CloseFile()
     { }
 
+    /// <inheritdoc/>
     public override void OnClose()
     { }
   }

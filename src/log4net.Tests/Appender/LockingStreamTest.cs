@@ -39,19 +39,25 @@ public sealed class LockingStreamTest
 
     internal int ReleaseCount { get; private set; }
 
+    /// <inheritdoc/>
     public override Stream? AcquireLock() => CanAcquire ? Stream.Null : null;
 
+    /// <inheritdoc/>
     public override void ReleaseLock() => ReleaseCount++;
 
+    /// <inheritdoc/>
     public override void OpenFile(string filename, bool append, Encoding encoding)
     { }
 
+    /// <inheritdoc/>
     public override void CloseFile()
     { }
 
+    /// <inheritdoc/>
     public override void ActivateOptions()
     { }
 
+    /// <inheritdoc/>
     public override void OnClose()
     { }
   }
