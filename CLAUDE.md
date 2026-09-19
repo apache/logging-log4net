@@ -37,8 +37,11 @@ almost always be doing.
 - **Wrap long string literals with a multi-line raw string (`"""`), never with `+`
   concatenation.** This includes attribute arguments; see the `[Obsolete(...)]` message on
   `log4net.Appender.SmtpAppender`. Raw strings have no line-continuation, so each source line
-  break really is a `\n` in the value, but that is fine here: compiler diagnostics render those
-  newlines as spaces, so a wrapped message still reads as one sentence. Raw strings are constant
+  break really is a `\n` in the value. For a compiler diagnostic that is free, since the tooling
+  renders those newlines as spaces. For a message that is **logged**, through `LogLog` or an
+  `ErrorHandler`, the breaks reach the output: `LogLog` prefixes once per message, so the
+  continuation lines carry no `log4net:ERROR`. That is accepted, and the rule holds there too;
+  do not reintroduce `+` concatenation to keep such a message on one line. Raw strings are constant
   expressions, so they are legal in attributes, and the feature is purely syntactic, so it works on
   `net462`/`netstandard2.0` too.
 - Private fields are `_camelCase`. Private fields and helper methods are commonly placed

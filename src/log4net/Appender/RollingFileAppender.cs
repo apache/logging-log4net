@@ -1363,9 +1363,10 @@ public partial class RollingFileAppender : FileAppender
       ScheduleRollRetry();
       // The failing rename already reported, and OnlyOnceErrorHandler silences the handler after
       // the first report, so this one goes through LogLog to survive.
-      LogLog.Error(_declaringType,
-        $"Rolling {_pendingRename.From} failed, so it is kept and appended to. Only that rename is "
-        + "retried, once per MaxFileSize of growth, so the backups are left alone.");
+      LogLog.Error(_declaringType, $"""
+        Rolling {_pendingRename.From} failed, so it is kept and appended to. Only that rename is
+        retried, once per {MaxFileSize / RetryGrowthDivisor} bytes of growth, so the backups are left alone.
+        """);
     }
   }
 
@@ -1374,15 +1375,18 @@ public partial class RollingFileAppender : FileAppender
     => _pendingRename = new(fromFile, toFile, wasBackupCountReverted);
 
   /// <summary>
-  /// Schedules the next attempt at the failed base rename, one <see cref="MaxFileSize"/> of growth
-  /// away: the cadence a working roll would have had.
+  /// Schedules the next attempt at the failed base rename, a
+  /// <see cref="RetryGrowthDivisor">tenth</see> of <see cref="MaxFileSize"/> of growth away.
   /// </summary>
   private void ScheduleRollRetry()
   {
     // A refused lock leaves no writer, and then the threshold simply stays where it was.
     if (_pendingRename is not null && QuietWriter is CountingQuietTextWriter countingWriter)
     {
-      _pendingRename = _pendingRename with { RetryAtCount = countingWriter.Count + MaxFileSize };
+      _pendingRename = _pendingRename with
+      {
+        RetryAtCount = countingWriter.Count + Math.Max(MaxFileSize / RetryGrowthDivisor, 1)
+      };
     }
   }
 
@@ -1662,6 +1666,12 @@ public partial class RollingFileAppender : FileAppender
   /// <see cref="RollOverRenameFiles"/> override that renames itself bypasses it.
   /// </summary>
   private PendingRename? _pendingRename;
+
+  /// <summary>
+  /// The share of <see cref="MaxFileSize"/> the file grows between retries: soon enough to recover
+  /// from a transient block, rare enough not to attempt the rename on every event.
+  /// </summary>
+  private const long RetryGrowthDivisor = 10;
 
   /// <summary>How many renames have failed, so one call can be told apart.</summary>
   private int _rollFailures;

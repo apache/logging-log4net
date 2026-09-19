@@ -84,14 +84,15 @@ public sealed class RollingFileAppenderRollFailureTest
       string[] afterFirstFailure = Backups(file);
       Assert.That(afterFirstFailure, Is.Not.Empty, "the fixture needs an archive for the roll to shift");
       string[] contentAfterFirstFailure = Array.ConvertAll(afterFirstFailure, File.ReadAllText);
+      int attemptsBeforeGrowth = BaseRenameAttempts(errors, file);
 
-      // Events well under MaxFileSize, so a retry per MaxFileSize of growth is measurably rarer
-      // than a retry per event. At 200 bytes each the two cadences would be the same thing.
+      // Events well under a tenth of MaxFileSize, which is the retry cadence, so the attempts are
+      // measurably rarer than the events. At 20 bytes each the two would be the same thing.
       LogLog.ExecuteWithoutEmittingInternalMessages(() =>
       {
         for (int i = 0; i < 20; i++)
         {
-          appender.DoAppend(CreateEvent(new string('b', 50)));
+          appender.DoAppend(CreateEvent("b"));
         }
       });
 
@@ -99,10 +100,10 @@ public sealed class RollingFileAppenderRollFailureTest
         "the archive was rotated again while the rename kept failing");
       Assert.That(Array.ConvertAll(afterFirstFailure, File.ReadAllText), Is.EqualTo(contentAfterFirstFailure),
         "the backup contents were rewritten while the rename kept failing");
-      // Only the base rename is retried, and only once the file has grown another MaxFileSize,
-      // so the attempts are far fewer than the 20 events above.
-      Assert.That(BaseRenameAttempts(errors, file), Is.LessThan(20),
-        "the rename was retried per event instead of per MaxFileSize of growth");
+      // Only the base rename is retried, once per tenth of MaxFileSize of growth: often enough
+      // that 40 bytes of events bring two attempts, rarely enough that 20 events do not bring 20.
+      Assert.That(BaseRenameAttempts(errors, file) - attemptsBeforeGrowth, Is.InRange(2, 19),
+        "the retry cadence is neither a tenth of MaxFileSize nor anything close to it");
     }
     finally
     {

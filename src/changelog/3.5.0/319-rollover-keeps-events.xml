@@ -7,9 +7,9 @@
   <description format="asciidoc">Keep the log file when a rollover cannot rename it. The failed rename
   was reported and the file then reopened without appending, which destroyed everything it held; a
   reader holding the file without `FILE_SHARE_DELETE`, such as a backup or antivirus agent, is enough
-  to cause it. The file is appended to now. Only the rename that failed is retried, once per
-  `MaxFileSize` of growth, which is the cadence a working rollover would have had, because a full
-  retry would shift the numbered backups again and lose the oldest one every time; the file
+  to cause it. The file is appended to now. Only the rename that failed is retried, once per tenth
+  of `MaxFileSize` of growth, because a full retry would shift the numbered backups again and lose
+  the oldest one every time; the file
   therefore grows past `MaxFileSize` for as long as the rename keeps failing. The rollover at
   startup keeps the file too, so a failed rename there no longer empties it where `AppendToFile` is
   false (audit da18b6fd-f036,
