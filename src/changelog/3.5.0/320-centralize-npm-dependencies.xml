@@ -3,7 +3,7 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="changed">
-  <issue id="321" link="https://github.com/apache/logging-log4net/pull/321"/>
+  <issue id="320" link="https://github.com/apache/logging-log4net/pull/320"/>
   <description format="asciidoc">The site build now takes its Antora dependencies from the `gha/v0`
   branch of `logging-parent`, which is where all Apache Logging projects now manage them. The
   `js-yaml` override and the committed `package-lock.json` are gone with it (reported by
