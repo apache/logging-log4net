@@ -223,9 +223,10 @@ Every user-visible change gets an entry in `src/changelog/<unreleased version>/`
   Write prose. Bullets are fine in commit messages.
 - Close the description with an attribution in parentheses, crediting both sides: who raised it and
   who did the work, as in `(reported by @viktorgobbi, fixed by @FreeAndNil)`. `implemented by` reads
-  better than `fixed by` for an `added` or `changed` entry, and once a pull request exists the house
-  form appends it: `fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/246[#246]`.
-  Take the fixer from the active committers in `STATUS.txt`, whose Apache ids are the GitHub handles
+  better than `fixed by` for an `added` or `changed` entry. **Do not append the pull request link to
+  the attribution**: the `<issue>` element above the description already carries it, and entries
+  that repeat it are the older form. Take the fixer from the active committers in `STATUS.txt`,
+  whose Apache ids are the GitHub handles
   (`freeandnil`, `gdziadkiewicz`, `davydm`), and identify which one from the session's `git config
   user.email`. Ask rather than guess if that does not match a listed committer.
 - `src/changelog/3.3.2/298-fix-interprocesslock-mutex-leak.xml` shows the shape for a change that
