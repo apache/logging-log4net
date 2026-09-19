@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="321" link="https://github.com/apache/logging-log4net/issues/321"/>
+  <issue id="322" link="https://github.com/apache/logging-log4net/pull/322"/>
+  <description format="asciidoc">Stop a reconfiguration from opening a resource the outgoing
+  appender still holds. Since 3.3.1 the new appenders were activated before the old ones were
+  closed, so `ConfigureAndWatch` with a `FileAppender` failed to acquire the lock on its own log
+  file. Activation waits for the swap now (reported by @urs-hart, fixed by @FreeAndNil)</description>
+</entry>

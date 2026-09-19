@@ -149,6 +149,9 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
     // A configuration is about to happen, so we can emit the warning again
     hierarchy.EmittedNoAppenderWarning = false;
 
+    // Activate only after every logger has swapped, so nothing opens what the old appender holds.
+    _deferActivation = true;
+
     /* Building Appender objects, placing them in a local namespace
        for future reference */
 
@@ -205,7 +208,22 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
       }
     }
 
+    ActivatePendingAppenders();
+
     // Done reading config
+  }
+
+  /// <summary>
+  /// Activates the appenders parsed in this pass, in creation order.
+  /// </summary>
+  private void ActivatePendingAppenders()
+  {
+    _deferActivation = false;
+    foreach (IOptionHandler optionHandler in _pendingActivations)
+    {
+      optionHandler.ActivateOptions();
+    }
+    _pendingActivations.Clear();
   }
 
   /// <summary>
@@ -319,7 +337,14 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
 
       if (appender is IOptionHandler optionHandler)
       {
-        optionHandler.ActivateOptions();
+        if (_deferActivation)
+        {
+          _pendingActivations.Add(optionHandler);
+        }
+        else
+        {
+          optionHandler.ActivateOptions();
+        }
       }
 
       LogLog.Debug(_declaringType, $"Created Appender [{appenderName}]");
@@ -406,9 +431,8 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
     log.EnsureNotNull();
     catElement.EnsureNotNull();
 
-    // Phase 1: resolve all new appenders from XML *before* touching the
-    // live logger. This avoids the window where the logger has no appenders.
-    List<IAppender> newAppenders = new();
+    // Phase 1: resolve from XML before touching the live logger, which keeps its appenders.
+    List<IAppender> newAppenders = [];
 
     foreach (XmlNode currentNode in catElement.ChildNodes)
     {
@@ -442,9 +466,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
       }
     }
 
-    // Phase 2: atomic swap — replace all appenders in one writer lock so
-    // the logger is never in a zero-appender state for longer than it takes
-    // to acquire and release the lock (microseconds, not milliseconds).
+    // Phase 2: swap in one writer lock, closing the outgoing appenders.
     log.ReplaceAppenders(newAppenders);
 
     if (log is IOptionHandler optionHandler)
@@ -1051,6 +1073,16 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// key: appenderName, value: appender.
   /// </summary>
   private readonly Dictionary<string, IAppender> _appenderBag = new(StringComparer.Ordinal);
+
+  /// <summary>
+  /// Appenders parsed in this pass and not activated yet.
+  /// </summary>
+  private readonly List<IOptionHandler> _pendingActivations = [];
+
+  /// <summary>
+  /// Set by <see cref="Configure"/> alone: defers activation in <see cref="ParseAppender"/>.
+  /// </summary>
+  private bool _deferActivation;
 
   /// <summary>
   /// The fully qualified type of the XmlHierarchyConfigurator class.
