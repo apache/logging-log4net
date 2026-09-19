@@ -86,8 +86,8 @@ public sealed class RollingFileAppenderRollFailureTest
       string[] contentAfterFirstFailure = Array.ConvertAll(afterFirstFailure, File.ReadAllText);
       int attemptsBeforeGrowth = BaseRenameAttempts(errors, file);
 
-      // Events well under a tenth of MaxFileSize, which is the retry cadence, so the attempts are
-      // measurably rarer than the events. At 20 bytes each the two would be the same thing.
+      // Events much smaller than a tenth of MaxFileSize, which is how far the file must grow before
+      // the next attempt, so there are far fewer attempts than events. At 20 bytes each they match.
       LogLog.ExecuteWithoutEmittingInternalMessages(() =>
       {
         for (int i = 0; i < 20; i++)
@@ -100,10 +100,12 @@ public sealed class RollingFileAppenderRollFailureTest
         "the archive was rotated again while the rename kept failing");
       Assert.That(Array.ConvertAll(afterFirstFailure, File.ReadAllText), Is.EqualTo(contentAfterFirstFailure),
         "the backup contents were rewritten while the rename kept failing");
-      // Only the base rename is retried, once per tenth of MaxFileSize of growth: often enough
-      // that 40 bytes of events bring two attempts, rarely enough that 20 events do not bring 20.
-      Assert.That(BaseRenameAttempts(errors, file) - attemptsBeforeGrowth, Is.InRange(2, 19),
-        "the retry cadence is neither a tenth of MaxFileSize nor anything close to it");
+      // Only the base rename is retried, and only after the file has grown another tenth of
+      // MaxFileSize: two attempts on Unix, three on Windows, because %newline is
+      // Environment.NewLine and these 20 events are 40 bytes on one and 60 on the other. The range
+      // is those two values, not a tolerance.
+      Assert.That(BaseRenameAttempts(errors, file) - attemptsBeforeGrowth, Is.InRange(2, 3),
+        "the rename is not retried after every tenth of MaxFileSize of growth");
     }
     finally
     {

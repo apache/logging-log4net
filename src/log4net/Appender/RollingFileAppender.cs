@@ -1169,6 +1169,9 @@ public partial class RollingFileAppender : FileAppender
     //new scheduled name
     _scheduledFilename = CombinePath(File!, _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
 
+    // Nothing is open during the startup roll, from ExistingInit. A failed rename there leaves the
+    // previous period in the file, and the pending rename stays armed: the open that follows must
+    // not truncate it, and the first append retries the rename.
     if (fileIsOpen)
     {
       // This will also close the file. This is OK since multiple close operations are safe.
@@ -1176,12 +1179,6 @@ public partial class RollingFileAppender : FileAppender
       SafeOpenFile(_baseFileName!, ShouldAppendAfterFailedRoll());
       // Its own threshold, or the one from a size failure would fire a retry immediately.
       ScheduleRollRetry();
-    }
-    else
-    {
-      // The startup roll, from ExistingInit, with nothing open yet. A failed rename here leaves the
-      // previous period in the file, so the pending rename stays armed: the open that follows must
-      // not truncate it, and the first append retries the rename.
     }
   }
 
@@ -1365,7 +1362,7 @@ public partial class RollingFileAppender : FileAppender
       // the first report, so this one goes through LogLog to survive.
       LogLog.Error(_declaringType, $"""
         Rolling {_pendingRename.From} failed, so it is kept and appended to. Only that rename is
-        retried, once per {MaxFileSize / RetryGrowthDivisor} bytes of growth, so the backups are left alone.
+        retried, once per {RetryGrowth} bytes of growth, so the backups are left alone.
         """);
     }
   }
@@ -1385,7 +1382,7 @@ public partial class RollingFileAppender : FileAppender
     {
       _pendingRename = _pendingRename with
       {
-        RetryAtCount = countingWriter.Count + Math.Max(MaxFileSize / RetryGrowthDivisor, 1)
+        RetryAtCount = countingWriter.Count + RetryGrowth
       };
     }
   }
@@ -1672,6 +1669,9 @@ public partial class RollingFileAppender : FileAppender
   /// from a transient block, rare enough not to attempt the rename on every event.
   /// </summary>
   private const long RetryGrowthDivisor = 10;
+
+  /// <summary>How far the file grows between attempts at a failed rename, at least one byte.</summary>
+  private long RetryGrowth => Math.Max(MaxFileSize / RetryGrowthDivisor, 1);
 
   /// <summary>How many renames have failed, so one call can be told apart.</summary>
   private int _rollFailures;

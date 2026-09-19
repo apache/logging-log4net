@@ -1376,6 +1376,12 @@ public class FileAppender : TextWriterAppender
   /// The flattened path, as earlier versions computed it. Only a name the platform rejects is
   /// hashed: Unix stops at <see cref="MaxMutexNameBytes"/>, Windows has no limit. Unprefixed, so
   /// on Windows it coordinates one session.
+  /// <para>
+  /// The suffix can collide, since it is only appended: the lock for <c>/var/log/app_rolling</c> and
+  /// the rolling lock for <c>/var/log/app</c> name one mutex. Two unrelated files then contend on
+  /// it, which costs waiting, not a lost lock or a lost file, and the alternative is renaming every
+  /// mutex and losing exclusion against older versions everywhere.
+  /// </para>
   /// </remarks>
   internal static string MutexNameForPath(string path, string suffix)
     => MutexNameForPath(path, suffix, SystemInfo.IsWindows ? null : MaxMutexNameBytes);
