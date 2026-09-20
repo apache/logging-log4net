@@ -24,8 +24,9 @@ using log4net.Core;
 namespace log4net.Util;
 
 /// <summary>
-/// Delegate type used for LogicalThreadContextStack's callbacks.
+/// Delegate type for an action taking two arguments.
 /// </summary>
+[Obsolete("No longer used by log4net and removed in version 4.")]
 public delegate void TwoArgAction<T1, T2>(T1 t1, T2 t2);
 
 /// <summary>
