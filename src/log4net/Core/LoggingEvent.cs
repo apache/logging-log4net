@@ -1137,16 +1137,14 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   protected virtual void FixVolatileData(FixFlags flags)
   {
-    // Unlock the cache so that new values can be stored
-    // This may not be ideal if we are no longer in the correct context
-    // and someone calls fix. 
-    _cacheUpdatable = true;
-
     // determine the flags that we are actually fixing
     FixFlags updateFlags = (flags ^ _fixFlags) & flags;
 
     if (updateFlags > 0)
     {
+      // Unlocked only while there is something to fix, so a redundant call cannot reopen the cache.
+      _cacheUpdatable = true;
+
       if ((updateFlags & FixFlags.Message) != 0)
       {
         // Force the message to be rendered
@@ -1448,7 +1446,7 @@ public class LoggingEvent : ILog4NetSerializable
   /// This is a separate flag to fixFlags as it allows incremental fixing and simpler
   /// changes in the caching strategy.
   /// </remarks>
-  private bool _cacheUpdatable = true;
+  private volatile bool _cacheUpdatable = true;
 
   /// <summary>
   /// The key into the Properties map for the host name value.
