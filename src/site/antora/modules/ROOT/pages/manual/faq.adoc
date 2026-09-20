@@ -185,6 +185,8 @@ To enable this, set type="log4net.Util.PatternString" on the string property in 
 
 For example, to include the current process ID in a FileAppender filename, use the %processid pattern in the File property.
 
+Note that %property expands context values, which may carry user-supplied data, so a path built from one is only as trustworthy as that value, see the https://logging.apache.org/security/faq.html#path-traversal[security FAQ on path traversal].
+
 [source,xml]
 ----
 <appender name="LogFileAppender" type="log4net.Appender.FileAppender">
