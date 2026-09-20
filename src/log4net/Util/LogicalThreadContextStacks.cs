@@ -63,7 +63,7 @@ public sealed class LogicalThreadContextStacks
       if (propertyValue is null)
       {
         // Stack does not exist, create
-        stack = new(key, RegisterNew);
+        stack = new(key, this);
         _properties[key] = stack;
       }
       else
@@ -84,7 +84,7 @@ public sealed class LogicalThreadContextStacks
 
           LogLog.Error(_declaringType, $"ThreadContextStacks: Request for stack named [{key}] failed because a property with the same name exists which is a [{propertyValue.GetType().Name}] with value [{propertyValueString}]");
 
-          stack = new(key, RegisterNew);
+          stack = new(key, this);
         }
       }
 
@@ -92,8 +92,17 @@ public sealed class LogicalThreadContextStacks
     }
   }
 
-  private void RegisterNew(string stackName, LogicalThreadContextStack stack)
+  /// <summary>
+  /// Registers <paramref name="stack"/> under <paramref name="stackName"/> in the current flow.
+  /// </summary>
+  internal void RegisterNew(string stackName, LogicalThreadContextStack stack)
     => _properties[stackName] = stack;
+
+  /// <summary>
+  /// Gets the stack currently registered under <paramref name="stackName"/> in this flow.
+  /// </summary>
+  internal LogicalThreadContextStack? GetCurrent(string stackName)
+    => _properties[stackName] as LogicalThreadContextStack;
 
   /// <summary>
   /// The fully qualified type of the ThreadContextStacks class.

@@ -344,6 +344,78 @@ public class LogicalThreadContextTest
     return stringAppender.GetString();
   }
 
+  /// <summary>
+  /// A frame disposed after <see cref="LogicalThreadContextStack.Clear"/> must not bring the
+  /// cleared frames back.
+  /// </summary>
+  [Test]
+  public void DisposingAFrameAfterClearKeepsTheStackEmpty()
+  {
+    LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val1");
+    IDisposable inner = LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val2");
+    LogicalThreadContext.Stacks[TestUtils.PropertyKey].Clear();
+
+    inner.Dispose();
+
+    Assert.That(LogicalThreadContext.Stacks[TestUtils.PropertyKey].Count, Is.EqualTo(0));
+  }
+
+  /// <summary>
+  /// A frame disposed after the stack was popped below its depth must not bring the popped frames back.
+  /// </summary>
+  [Test]
+  public void DisposingAFrameAfterPoppingBelowItKeepsTheStackEmpty()
+  {
+    LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val1");
+    IDisposable inner = LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val2");
+    LogicalThreadContext.Stacks[TestUtils.PropertyKey].Pop();
+    LogicalThreadContext.Stacks[TestUtils.PropertyKey].Pop();
+
+    inner.Dispose();
+
+    Assert.That(LogicalThreadContext.Stacks[TestUtils.PropertyKey].Count, Is.EqualTo(0));
+  }
+
+  /// <summary>
+  /// Disposing a frame trims the stack to the depth of that frame, including frames pushed after it.
+  /// </summary>
+  [Test]
+  public void DisposingAFrameTrimsTheStackToItsDepth()
+  {
+    using (LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val1"))
+    {
+      IDisposable inner = LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val2");
+      LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val3");
+
+      inner.Dispose();
+
+      Assert.That(LogicalThreadContext.Stacks[TestUtils.PropertyKey].Count, Is.EqualTo(1));
+    }
+
+    Assert.That(LogicalThreadContext.Stacks[TestUtils.PropertyKey].Count, Is.EqualTo(0));
+  }
+
+  /// <summary>
+  /// A frame disposed in another flow trims that flow only, and does not resurrect its own frames.
+  /// </summary>
+  [Test]
+  public async Task DisposingAFrameInAnotherFlowDoesNotResurrectIt()
+  {
+    LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val1");
+    IDisposable inner = LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push("val2");
+
+    int countInOtherFlow = await Task.Run(() =>
+    {
+      LogicalThreadContext.Stacks[TestUtils.PropertyKey].Clear();
+      inner.Dispose();
+      return LogicalThreadContext.Stacks[TestUtils.PropertyKey].Count;
+    }).ConfigureAwait(false);
+
+    Assert.That(countInOtherFlow, Is.EqualTo(0));
+    Assert.That(LogicalThreadContext.Stacks[TestUtils.PropertyKey].Count, Is.EqualTo(2),
+      "the other flow must not change this one");
+  }
+
   static async Task MoreWorkStack(ILog log, string stackName)
   {
     using (LogicalThreadContext.Stacks[TestUtils.PropertyKey].Push(stackName))
