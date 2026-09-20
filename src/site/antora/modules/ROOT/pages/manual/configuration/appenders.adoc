@@ -48,6 +48,8 @@ log4net ships with the following appenders
 |AspNetTraceAppender
 |Writes logging events to the ASP trace context. These can then be rendered at the end of the ASP page or on the ASP trace page.
 
+Writes to the request current on the appending thread, so it must not be wrapped in a buffering appender.
+
 |xref:manual/configuration/appenders/bufferingforwardingappender.adoc[]
 |Buffers events and then forwards them to attached appenders.
 
