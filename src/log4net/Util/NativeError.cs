@@ -118,39 +118,41 @@ public sealed class NativeError
     int formatMessageIgnoreInserts = 0x00000200;    // Insert sequences in the message definition are to be ignored
     int formatMessageFromSystem = 0x00001000;    // The function should search the system message-table resource(s) for the requested message
 
-    string? msgBuf = "";        // buffer that will receive the message
-    IntPtr sourcePtr = new();  // Location of the message definition, will be ignored
-    IntPtr argumentsPtr = new();  // Pointer to array of values to insert, not supported as it requires unsafe code
+    if (messageId == 0)
+    {
+      return null;
+    }
 
-    if (messageId != 0)
+    IntPtr messageBuffer = IntPtr.Zero;
+    try
     {
       // If the function succeeds, the return value is the number of TCHARs stored in the output buffer, excluding the terminating null character
-      int messageSize =  NativeMethods.FormatMessage(
+      int messageSize = NativeMethods.FormatMessage(
         formatMessageAllocateBuffer | formatMessageFromSystem | formatMessageIgnoreInserts,
-        ref sourcePtr,
+        IntPtr.Zero,  // Location of the message definition, will be ignored
         messageId,
         0,
-        ref msgBuf,
+        out messageBuffer,
         255,
-        argumentsPtr);
+        IntPtr.Zero);  // Pointer to array of values to insert, not supported as it requires unsafe code
 
-      if (messageSize > 0)
+      // A message could not be located.
+      if (messageSize <= 0)
       {
-        // Remove trailing null-terminating characters (\r\n) from the message
-        msgBuf = msgBuf.TrimEnd(_newlines);
+        return null;
       }
-      else
-      {
-        // A message could not be located.
-        msgBuf = null;
-      }
+
+      // Remove trailing null-terminating characters (\r\n) from the message
+      return Marshal.PtrToStringUni(messageBuffer, messageSize)?.TrimEnd(_newlines);
     }
-    else
+    finally
     {
-      msgBuf = null;
+      // FormatMessage allocated it with LocalAlloc, so it is not the marshaller's to release.
+      if (messageBuffer != IntPtr.Zero)
+      {
+        NativeMethods.LocalFree(messageBuffer);
+      }
     }
-
-    return msgBuf;
   }
 
   /// <summary>

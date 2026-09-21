@@ -97,7 +97,7 @@ namespace log4net.Util
     /// <param name="lpSource">Location of the message definition.</param>
     /// <param name="dwMessageId">Message identifier for the requested message.</param>
     /// <param name="dwLanguageId">Language identifier for the requested message.</param>
-    /// <param name="lpBuffer">If <paramref name="dwFlags" /> includes FORMAT_MESSAGE_ALLOCATE_BUFFER, the function allocates a buffer using the <c>LocalAlloc</c> function, and places the pointer to the buffer at the address specified in <paramref name="lpBuffer" />.</param>
+    /// <param name="lpBuffer">If <paramref name="dwFlags" /> includes FORMAT_MESSAGE_ALLOCATE_BUFFER, the function allocates a buffer using the <c>LocalAlloc</c> function and returns it here, so the caller has to release it with <see cref="LocalFree" />.</param>
     /// <param name="nSize">If the FORMAT_MESSAGE_ALLOCATE_BUFFER flag is not set, this parameter specifies the maximum number of TCHARs that can be stored in the output buffer. If FORMAT_MESSAGE_ALLOCATE_BUFFER is set, this parameter specifies the minimum number of TCHARs to allocate for an output buffer.</param>
     /// <param name="arguments">Pointer to an array of values that are used as insert values in the formatted message.</param>
     /// <remarks>
@@ -128,12 +128,21 @@ namespace log4net.Util
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     internal static extern int FormatMessage(
       int dwFlags,
-      ref IntPtr lpSource,
+      IntPtr lpSource,
       int dwMessageId,
       int dwLanguageId,
-      ref string lpBuffer,
+      out IntPtr lpBuffer,
       int nSize,
       IntPtr arguments);
+
+    /// <summary>
+    /// Frees a local memory object, as allocated by <see cref="FormatMessage"/>.
+    /// </summary>
+    /// <param name="memory">Handle to the object.</param>
+    /// <returns><see cref="IntPtr.Zero"/> if the object was freed.</returns>
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    internal static extern IntPtr LocalFree(IntPtr memory);
 
     /// <summary>
     /// Stub for OutputDebugString native method
