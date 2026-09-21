@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Common;
 using System.IO;
 
 using log4net.Util;
@@ -816,74 +815,11 @@ public class AdoNetAppender : BufferingAppenderSkeleton
     catch (Exception e) when (!e.IsFatal())
     {
       // Sadly, your connection string is bad.
-      ErrorHandler.Error($"Could not open database connection [{RedactConnectionString(resolvedConnectionString)}]. Connection string context [{connectionStringContext}].", e);
+      ErrorHandler.Error($"Could not open database connection [{Redact.ConnectionString(resolvedConnectionString)}]. Connection string context [{connectionStringContext}].", e);
 
       Connection = null;
     }
   }
-
-  /// <summary>
-  /// Reduces a connection string to the keywords that identify the server, for a diagnostic message.
-  /// </summary>
-  /// <param name="connectionString">The connection string to redact.</param>
-  /// <returns>The other values replaced, or <see cref="RedactedValue"/> if it could not be parsed.</returns>
-  /// <remarks>
-  /// <para>
-  /// An allowlist, because hiding known secret keywords misses `Extended Properties`: it nests a
-  /// whole connection string that the parser returns as one opaque value.
-  /// </para>
-  /// </remarks>
-  private static string RedactConnectionString(string connectionString)
-  {
-    if (string.IsNullOrEmpty(connectionString))
-    {
-      return connectionString;
-    }
-
-    try
-    {
-      DbConnectionStringBuilder builder = new() { ConnectionString = connectionString };
-
-      List<string> keys = [];
-      foreach (string key in builder.Keys)
-      {
-        keys.Add(key);
-      }
-
-      foreach (string key in keys)
-      {
-        if (!DiagnosticKeywords.Contains(key))
-        {
-          builder[key] = RedactedValue;
-        }
-      }
-
-      return builder.ConnectionString;
-    }
-    catch (Exception e) when (!e.IsFatal())
-    {
-      // The connection string could not be parsed - which is likely, given that it just failed
-      // to connect - so redact all of it rather than risk echoing a password.
-      LogLog.Debug(_declaringType, "Could not parse the connection string in order to redact it", e);
-      return RedactedValue;
-    }
-  }
-
-  /// <summary>
-  /// Keywords whose values are kept: they name the server and account, not the credentials.
-  /// </summary>
-  private static readonly HashSet<string> DiagnosticKeywords = new(StringComparer.OrdinalIgnoreCase)
-  {
-    "provider", "driver", "data source", "server", "address", "addr", "network address",
-    "initial catalog", "database", "port", "user id", "uid", "user", "username",
-    "integrated security", "trusted_connection", "encrypt", "timeout", "connect timeout",
-    "connection timeout", "application name", "workstation id", "pooling",
-  };
-
-  /// <summary>
-  /// Stands in for a value withheld from a diagnostic message.
-  /// </summary>
-  private const string RedactedValue = "*****";
 
   /// <summary>
   /// Cleanup the existing connection.

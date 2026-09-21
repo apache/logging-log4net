@@ -298,6 +298,8 @@ Set `log4net.Util.LogLog.InternalDebugging` to `true` in code as early as possib
 
 Internal debug messages are written to the console and `System.Diagnostics.Trace`. 
 If there's no console, messages are lost unless redirected.
+A configured value whose name reads as a secret, such as `password` or `connectionString`, is
+replaced with `*****` in these messages, so the property is still named but the value is not shown.
 You can capture these messages using a utility like DebugView from  http://www.sysinternals.com[Sysinternals].
 
 To redirect debug messages to a file, add a trace listener in the config file:
