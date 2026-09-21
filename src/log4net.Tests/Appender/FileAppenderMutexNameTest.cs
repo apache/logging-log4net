@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
@@ -19,7 +19,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -220,14 +219,8 @@ public sealed class FileAppenderMutexNameTest
   }
 
   private static string MutexNameForPath(string path, string suffix)
-    => (string)typeof(FileAppender)
-      .GetMethod("MutexNameForPath", BindingFlags.NonPublic | BindingFlags.Static,
-        null, [typeof(string), typeof(string)], null)!
-      .Invoke(null, [path, suffix])!;
+    => typeof(FileAppender).Invoke<string>(nameof(MutexNameForPath), [path, suffix]);
 
   private static string MutexNameForPath(string path, string suffix, int? maxLength)
-    => (string)typeof(FileAppender)
-      .GetMethod("MutexNameForPath", BindingFlags.NonPublic | BindingFlags.Static,
-        null, [typeof(string), typeof(string), typeof(int?)], null)!
-      .Invoke(null, [path, suffix, maxLength])!;
+    => typeof(FileAppender).Invoke<string>(nameof(MutexNameForPath), [path, suffix, maxLength]);
 }

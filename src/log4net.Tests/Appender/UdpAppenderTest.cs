@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -19,7 +19,6 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using log4net.Appender;
 using log4net.Tests.Appender.Internal;
@@ -36,10 +35,8 @@ public sealed class UdpAppenderTest
   private const string Marker = "...[truncated]";
 
   /// <summary>Calls the internal encoder the way <c>Append</c> does.</summary>
-  private static byte[] Encode(UdpAppender appender, string message)
-    => (byte[])typeof(UdpAppender)
-      .GetMethod("GetDatagramBytes", BindingFlags.Instance | BindingFlags.NonPublic)!
-      .Invoke(appender, [message])!;
+  private static byte[] GetDatagramBytes(UdpAppender appender, string message)
+    => appender.Invoke<byte[]>(nameof(GetDatagramBytes), [message]);
 
   /// <summary>The maximum UDP payload of an IPv4 packet, measured as the first size the socket rejects minus one.</summary>
   [Test]
@@ -59,7 +56,7 @@ public sealed class UdpAppenderTest
   {
     UdpAppender appender = new() { Encoding = Encoding.UTF8 };
 
-    Assert.That(Encode(appender, "hello"), Is.EqualTo(Encoding.UTF8.GetBytes("hello")));
+    Assert.That(GetDatagramBytes(appender, "hello"), Is.EqualTo(Encoding.UTF8.GetBytes("hello")));
   }
 
   /// <summary>An event of exactly the limit still fits, so nothing is cut and nothing reported.</summary>
@@ -70,7 +67,7 @@ public sealed class UdpAppenderTest
     RecordingErrorHandler errorHandler = new();
     appender.ErrorHandler = errorHandler;
 
-    byte[] datagram = Encode(appender, new string('a', 512));
+    byte[] datagram = GetDatagramBytes(appender, new string('a', 512));
 
     Assert.That(datagram, Is.EqualTo(Encoding.ASCII.GetBytes(new string('a', 512))));
     Assert.That(errorHandler.Messages, Is.Empty);
@@ -86,7 +83,7 @@ public sealed class UdpAppenderTest
     RecordingErrorHandler errorHandler = new();
     appender.ErrorHandler = errorHandler;
 
-    byte[] datagram = Encode(appender, new string('a', 1000));
+    byte[] datagram = GetDatagramBytes(appender, new string('a', 1000));
 
     Assert.That(datagram, Has.Length.EqualTo(512));
     Assert.That(Encoding.ASCII.GetString(datagram), Does.EndWith(Marker));
@@ -100,7 +97,7 @@ public sealed class UdpAppenderTest
     UdpAppender appender = new() { Encoding = Encoding.UTF8, MaxDatagramSize = 513 };
     appender.ErrorHandler = new RecordingErrorHandler();
 
-    string decoded = Encoding.UTF8.GetString(Encode(appender, new string('\u00e4', 1000)));
+    string decoded = Encoding.UTF8.GetString(GetDatagramBytes(appender, new string('\u00e4', 1000)));
 
     // 513 bytes hold the 14 byte marker and 249 of the two byte characters.
     Assert.That(decoded, Is.EqualTo(new string('\u00e4', 249) + Marker));
@@ -113,7 +110,7 @@ public sealed class UdpAppenderTest
     UdpAppender appender = new() { Encoding = Encoding.UTF8, MaxDatagramSize = 515 };
     appender.ErrorHandler = new RecordingErrorHandler();
 
-    string decoded = Encoding.UTF8.GetString(Encode(appender, string.Concat(Enumerable.Repeat("\U0001f600", 1000))));
+    string decoded = Encoding.UTF8.GetString(GetDatagramBytes(appender, string.Concat(Enumerable.Repeat("\U0001f600", 1000))));
 
     Assert.That(decoded, Does.EndWith(Marker));
     Assert.That(decoded, !Contains.Substring("\ufffd").Using(StringComparison.Ordinal));

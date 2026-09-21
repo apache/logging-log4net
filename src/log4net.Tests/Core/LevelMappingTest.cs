@@ -19,7 +19,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using log4net.Core;
 using log4net.Util;
 using NUnit.Framework;
@@ -77,9 +76,7 @@ public sealed class LevelMappingTest
     List<MappingEntry> withoutDuplicates = unsorted.GroupBy(entry => entry.Level!.Value)
       .Select(group => group.Last()).ToList();
 
-    List<LevelMappingEntry> sorted = (List<LevelMappingEntry>)typeof(LevelMapping)
-      .GetMethod("SortEntries", BindingFlags.NonPublic | BindingFlags.Instance)!
-      .Invoke(mapping, [])!;
+    List<LevelMappingEntry> sorted = mapping.Invoke<List<LevelMappingEntry>>("SortEntries");
 
     Assert.That(sorted, Is.EquivalentTo(withoutDuplicates));
     Assert.That(sorted, Is.Not.EqualTo(withoutDuplicates).AsCollection);

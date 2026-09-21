@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -21,7 +21,6 @@
 #if NET462_OR_GREATER
 
 using System.Diagnostics;
-using System.Reflection;
 
 using log4net.Appender;
 using log4net.Core;
@@ -114,9 +113,7 @@ public sealed class EventLogAppenderTest
     => Assert.That(PrepareEventText("field=1\tfield=2", 100), Is.EqualTo("field=1\tfield=2"));
 
   private static string PrepareEventText(string rendered, int maxSize)
-    => (string)typeof(EventLogAppender)
-      .GetMethod("PrepareEventText", BindingFlags.Static | BindingFlags.NonPublic)!
-      .Invoke(null, [rendered, maxSize])!;
+    => typeof(EventLogAppender).Invoke<string>(nameof(PrepareEventText), [rendered, maxSize]);
 
   /// <summary>
   /// The limit is a whole record budget: the source is spent from it one character for one, so a
@@ -152,9 +149,7 @@ public sealed class EventLogAppenderTest
       Is.EqualTo(0));
 
   private static int GetMaxMessageSize(EventLogAppender appender)
-    => (int)typeof(EventLogAppender)
-      .GetMethod("GetMaxMessageSize", BindingFlags.Instance | BindingFlags.NonPublic)!
-      .Invoke(appender, [])!;
+    => appender.Invoke<int>(nameof(GetMaxMessageSize));
 }
 
 #endif // NET462_OR_GREATER

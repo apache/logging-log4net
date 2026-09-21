@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -19,7 +19,6 @@
 
 using System;
 using System.Globalization;
-using System.Reflection;
 #if NET462_OR_GREATER
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -135,8 +134,7 @@ public sealed class LoggingEventTest
 
     static string ReviseThreadName(string? name)
     {
-      return (string)typeof(LoggingEvent).GetMethod(nameof(ReviseThreadName),
-        BindingFlags.Static | BindingFlags.NonPublic)!.Invoke(null, [name])!;
+      return typeof(LoggingEvent).Invoke<string>(nameof(ReviseThreadName), [name]);
     }
 
     static void AssertIsCurrentThreadId(string name)

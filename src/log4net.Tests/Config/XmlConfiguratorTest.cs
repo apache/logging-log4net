@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -20,7 +20,6 @@
 #if NET8_0_OR_GREATER
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Xml;
 using log4net.Config;
 using log4net.Repository;
@@ -49,9 +48,7 @@ public class XmlConfiguratorTest
       List<LogLog> configurationMessages = [];
 
       using LogLog.LogReceivedAdapter _ = new(configurationMessages);
-      typeof(XmlConfigurator)
-        .GetMethod("InternalConfigure", BindingFlags.NonPublic | BindingFlags.Static, [typeof(ILoggerRepository), getConfigSection.GetType()])!
-        .Invoke(null, [repository, getConfigSection]);
+      typeof(XmlConfigurator).Invoke("InternalConfigure", [repository, getConfigSection]);
 
       Assert.That(configurationMessages, Has.Count.EqualTo(1));
       Assert.That(configurationMessages[0].Message, Contains.Substring(SystemInfo.EntryAssemblyLocation + ".config"));
