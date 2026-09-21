@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="324" link="https://github.com/apache/logging-log4net/pull/324"/>
+  <description format="asciidoc">
+    `SmtpPickupDirAppender` no longer writes a lone dot at the end of the file. The pickup service
+ reads the file to its end, so the terminator was never needed, and it made a logged line that is
+ only a dot look like the end of the mail. Body lines are still written verbatim rather than dot
+ stuffed, so an agent that expects SMTP DATA framing is not a supported consumer (audit
+ da18b6fd-f037, implemented by @FreeAndNil)
+  </description>
+</entry>
