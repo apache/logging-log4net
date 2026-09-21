@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="325" link="https://github.com/apache/logging-log4net/pull/325"/>
+  <description format="asciidoc">
+    stop `LocalSyslogAppender` passing a variadic argument to `syslog(3)`, which on Apple arm64
+ travels differently from a fixed one, so the callee read a pointer the runtime never wrote there
+ and logged stack bytes or crashed. Only the two fixed parameters are declared now, and the record
+ is passed as the format string with its percent signs escaped. The logged text is unchanged
+ (audit da18b6fd-f046, fixed by @FreeAndNil)
+  </description>
+</entry>
