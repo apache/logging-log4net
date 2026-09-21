@@ -174,7 +174,8 @@ almost always be doing.
 - **A test that changes an environment variable takes `using AutoTempEnvironmentVariable v =
   new("NAME", "value");`** from the same package, again as a local. It restores the previous value,
   or removes the variable if there was none, on dispose, so no `try`/`finally` around the
-  assertions. Still `[NonParallelizable]`: the environment is process wide.
+  assertions. Only the process level, so a test that needs `EnvironmentVariableTarget.User` or
+  `.Machine` still cleans up itself.
 - Mark a test `[NonParallelizable]` when it mutates static state (`LogLog.InternalDebugging`, a
   static field on a test double, a process-wide native registration).
 - Wrap expected internal logging in `LogLog.ExecuteWithoutEmittingInternalMessages(...)` and capture

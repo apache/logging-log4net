@@ -198,7 +198,7 @@ public class SystemInfoTest
 
     FieldInfo latch = AppSettingsUnavailableLatch();
     bool originalLatch = (bool)latch.GetValue(null)!;
-    Environment.SetEnvironmentVariable(Key, Value);
+    using AutoTempEnvironmentVariable variable = new(Key, Value);
     try
     {
       latch.SetValue(null, false);
@@ -210,7 +210,6 @@ public class SystemInfoTest
     finally
     {
       latch.SetValue(null, originalLatch);
-      Environment.SetEnvironmentVariable(Key, null);
     }
   }
 

@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using log4net.Util.PatternStringConverters;
 using NUnit.Framework;
+using PeanutButter.Utils;
 
 namespace log4net.Tests.Util;
 
@@ -85,7 +86,7 @@ public sealed class EnvironmentPatternConverterTest
   public void ProcessLevelEnvironmentVariable()
   {
     EnvironmentPatternConverter converter = new();
-    Environment.SetEnvironmentVariable(EnvironmentVariableName, ProcessLevelValue);
+    using AutoTempEnvironmentVariable variable = new(EnvironmentVariableName, ProcessLevelValue);
 
     converter.Option = EnvironmentVariableName;
 
@@ -93,7 +94,5 @@ public sealed class EnvironmentPatternConverterTest
     converter.Convert(sw, null);
 
     Assert.That(sw.ToString(), Is.EqualTo(ProcessLevelValue), "Process level environment variable not expended correctly.");
-
-    Environment.SetEnvironmentVariable(EnvironmentVariableName, null);
   }
 }
