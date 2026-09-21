@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="324" link="https://github.com/apache/logging-log4net/pull/324"/>
+  <description format="asciidoc">
+    stop `UdpAppender` and `RemoteSyslogAppender` losing an event the socket refuses to send. An
+ event over the new `MaxDatagramSize` (default 65507, configurable down to 512) is truncated on a
+ character boundary and marked `...[truncated]`, instead of being dropped with only the first loss
+ reported. The limit is the IPv4 maximum and cannot be raised, an IPv6 packet would carry 20 bytes
+ more (audit da18b6fd-f015, fixed by @FreeAndNil)
+  </description>
+</entry>
