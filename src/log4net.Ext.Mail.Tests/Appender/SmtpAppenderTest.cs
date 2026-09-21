@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Diagnostics;
 using System.Text;
 using log4net.Core;
 using log4net.Ext.Mail.Appender;
@@ -655,21 +654,19 @@ public class SmtpAppenderTest
   [Test]
   public void TheDeadlineCoversTheWholeSendAndNotOneOperation()
   {
+    // Under the timeout per call, over it in sum.
     const int sendTimeoutMillis = 300;
     const int delayMillisPerCall = 200;
-    const int generousBoundMillis = 5_000;
 
     SmtpAppender appender = CreateAppender();
     appender.SendTimeoutMillis = sendTimeoutMillis;
     _transport.DelayMillisPerCall = delayMillisPerCall;
 
-    Stopwatch stopwatch = Stopwatch.StartNew();
     Append(appender);
-    stopwatch.Stop();
 
     Assert.That(_transport.SentMails, Is.Empty);
     Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
-    Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(generousBoundMillis));
+    Assert.That(_transport.CancelledCalls, Is.Not.Empty, "the deadline never stopped the send");
   }
 
   /// <summary>Bounded, so an unreachable server cannot grow the queue without limit.</summary>

@@ -71,6 +71,9 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   /// <summary>When set, every call that takes a token waits this long, honouring it.</summary>
   internal int DelayMillisPerCall { get; set; }
 
+  /// <summary>The calls that found the token cancelled, in order.</summary>
+  internal List<string> CancelledCalls { get; } = [];
+
   public int Timeout { get; set; }
 
   public bool IsConnected { get; private set; }
@@ -81,7 +84,7 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
     CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Connect));
-    Delay(cancellationToken);
+    Delay(nameof(Connect), cancellationToken);
     ConnectedHost = host;
     ConnectedPort = port;
     SecureSocketOptions = secureSocketOptions;
@@ -91,7 +94,7 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   public void Authenticate(ICredentials credentials, CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Authenticate));
-    Delay(cancellationToken);
+    Delay(nameof(Authenticate), cancellationToken);
     Credentials = credentials;
     IsAuthenticated = true;
   }
@@ -99,7 +102,7 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   public void Authenticate(SaslMechanism mechanism, CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Authenticate));
-    Delay(cancellationToken);
+    Delay(nameof(Authenticate), cancellationToken);
     SaslMechanism = mechanism;
     IsAuthenticated = true;
   }
@@ -107,7 +110,7 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   public void Send(MimeMessage message, CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Send));
-    Delay(cancellationToken);
+    Delay(nameof(Send), cancellationToken);
     if (SendException is Exception exception)
     {
       throw exception;
@@ -128,11 +131,16 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
     IsDisposed = true;
   }
 
-  private void Delay(CancellationToken cancellationToken)
+  private void Delay(string call, CancellationToken cancellationToken)
   {
     if (DelayMillisPerCall > 0)
     {
       cancellationToken.WaitHandle.WaitOne(DelayMillisPerCall);
+    }
+
+    if (cancellationToken.IsCancellationRequested)
+    {
+      CancelledCalls.Add(call);
     }
 
     cancellationToken.ThrowIfCancellationRequested();
