@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
@@ -52,17 +53,7 @@ public sealed class RollingFileAppenderRollFailureTest
     using AutoTempFolder folder = new();
     Internal.RecordingErrorHandler errors = new();
     string file = Path.Combine(folder.Path, "roll-failure.log");
-    RollingFileAppender appender = new()
-    {
-      File = file,
-      Layout = new PatternLayout("%message%newline"),
-      RollingStyle = RollingFileAppender.RollingMode.Size,
-      MaxSizeRollBackups = 3,
-      MaximumFileSize = "200",
-      AppendToFile = true,
-      LockingModel = new FileAppender.MinimalLock(),
-      ErrorHandler = errors
-    };
+    RollingFileAppender appender = CreateAppender(file, errors, maxSizeRollBackups: 3);
     appender.ActivateOptions();
 
     try
@@ -128,19 +119,8 @@ public sealed class RollingFileAppenderRollFailureTest
     using AutoTempFolder folder = new();
     Internal.RecordingErrorHandler errors = new();
     string file = Path.Combine(folder.Path, "roll-failure.log");
-    RollingFileAppender appender = new()
-    {
-      File = file,
-      Layout = new PatternLayout("%message%newline"),
-      RollingStyle = RollingFileAppender.RollingMode.Composite,
-      DatePattern = "'.'yyyy-MM-dd",
-      StaticLogFileName = false,
-      MaxSizeRollBackups = 3,
-      MaximumFileSize = "200",
-      AppendToFile = true,
-      LockingModel = new FileAppender.MinimalLock(),
-      ErrorHandler = errors
-    };
+    RollingFileAppender appender = CreateAppender(file, errors, RollingFileAppender.RollingMode.Composite, maxSizeRollBackups: 3,
+      staticLogFileName: false);
     appender.ActivateOptions();
 
     // The file that is written and rolled, which is not the configured name.
@@ -190,18 +170,8 @@ public sealed class RollingFileAppenderRollFailureTest
     using AutoTempFolder folder = new();
     Internal.RecordingErrorHandler errors = new();
     string file = Path.Combine(folder.Path, "roll-failure.log");
-    RollingFileAppender appender = new()
-    {
-      File = file,
-      Layout = new PatternLayout("%message%newline"),
-      RollingStyle = RollingFileAppender.RollingMode.Size,
-      // Far more than the run needs, so nothing may be discarded as too old.
-      MaxSizeRollBackups = 10,
-      MaximumFileSize = "200",
-      AppendToFile = true,
-      LockingModel = new FileAppender.MinimalLock(),
-      ErrorHandler = errors
-    };
+    RollingFileAppender appender = CreateAppender(file, errors,
+      maxSizeRollBackups: 10); // far more than the run needs, so nothing may be discarded as too old
     appender.ActivateOptions();
 
     try
@@ -256,21 +226,9 @@ public sealed class RollingFileAppenderRollFailureTest
     using AutoTempFolder folder = new();
     Internal.RecordingErrorHandler errors = new();
     string file = Path.Combine(folder.Path, "roll-failure.log");
-    MockDateTime clock = new(new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Local));
-    RollingFileAppender appender = new()
-    {
-      File = file,
-      Layout = new PatternLayout("%message%newline"),
-      RollingStyle = RollingFileAppender.RollingMode.Composite,
-      DatePattern = "'.'yyyy-MM-dd",
-      StaticLogFileName = true,
-      MaxSizeRollBackups = 5,
-      MaximumFileSize = "200",
-      AppendToFile = true,
-      LockingModel = new FileAppender.MinimalLock(),
-      DateTimeStrategy = clock,
-      ErrorHandler = errors
-    };
+    MockDateTime clock = new(new(2026, 1, 1, 12, 0, 0, DateTimeKind.Local));
+    RollingFileAppender appender = CreateAppender(file, errors, RollingFileAppender.RollingMode.Composite, maxSizeRollBackups: 5,
+      clock: clock);
     appender.ActivateOptions();
 
     try
@@ -313,21 +271,10 @@ public sealed class RollingFileAppenderRollFailureTest
     using AutoTempFolder folder = new();
     Internal.RecordingErrorHandler errors = new();
     string file = Path.Combine(folder.Path, "roll-failure.log");
-    MockDateTime clock = new(new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Local));
-    RollingFileAppender appender = new()
-    {
-      File = file,
-      Layout = new PatternLayout("%message%newline"),
-      RollingStyle = RollingFileAppender.RollingMode.Date,
-      DatePattern = "'.'yyyy-MM-dd",
-      StaticLogFileName = true,
-      // Size rolling stays off; this only paces the retry, which is what the defect ignored.
-      MaximumFileSize = "200",
-      AppendToFile = true,
-      LockingModel = new FileAppender.MinimalLock(),
-      DateTimeStrategy = clock,
-      ErrorHandler = errors
-    };
+    MockDateTime clock = new(new(2026, 1, 1, 12, 0, 0, DateTimeKind.Local));
+    RollingFileAppender appender = CreateAppender(file, errors,
+      RollingFileAppender.RollingMode.Date, // size rolling off; the shared MaximumFileSize only paces the retry
+      clock: clock);
     appender.ActivateOptions();
     string dated = file + ".2026-01-01";
 
@@ -377,7 +324,7 @@ public sealed class RollingFileAppenderRollFailureTest
     using AutoTempFolder folder = new();
     Internal.RecordingErrorHandler errors = new();
     string file = Path.Combine(folder.Path, "roll-failure.log");
-    MockDateTime clock = new(new DateTime(2026, 1, 2, 12, 0, 0, DateTimeKind.Local));
+    MockDateTime clock = new(new(2026, 1, 2, 12, 0, 0, DateTimeKind.Local));
 
     // Yesterday's log, left behind by the previous run, and its archive name is taken.
     File.WriteAllText(file, Marker + Environment.NewLine);
@@ -385,19 +332,9 @@ public sealed class RollingFileAppenderRollFailureTest
     string dated = file + ".2026-01-01";
     BlockRename(dated);
 
-    RollingFileAppender appender = new()
-    {
-      File = file,
-      Layout = new PatternLayout("%message%newline"),
-      RollingStyle = RollingFileAppender.RollingMode.Date,
-      DatePattern = "'.'yyyy-MM-dd",
-      StaticLogFileName = true,
-      // The setting that used to decide it: an explicit request for an empty file at startup.
-      AppendToFile = false,
-      LockingModel = new FileAppender.MinimalLock(),
-      DateTimeStrategy = clock,
-      ErrorHandler = errors
-    };
+    RollingFileAppender appender = CreateAppender(file, errors, RollingFileAppender.RollingMode.Date,
+      appendToFile: false, // an explicit request for an empty file at startup
+      clock: clock);
 
     try
     {
@@ -405,6 +342,9 @@ public sealed class RollingFileAppenderRollFailureTest
       Assert.That(errors.Messages, Is.Not.Empty, "the startup rename never failed, so nothing was exercised");
 
       LogLog.ExecuteWithoutEmittingInternalMessages(() => appender.DoAppend(CreateEvent("after startup")));
+
+      // The reopen appends, but base.OpenFile assigns that to AppendToFile, which is configuration.
+      Assert.That(appender.AppendToFile, Is.False, "the forced append replaced the configured value");
     }
     finally
     {
@@ -413,6 +353,143 @@ public sealed class RollingFileAppenderRollFailureTest
 
     Assert.That(File.ReadAllText(file), Does.Contain(Marker),
       "the startup roll could not rename the file, so opening it must not have truncated it");
+  }
+
+  /// <summary>
+  /// The rollover ExistingInit performs for AppendToFile=false moved the file out from under a
+  /// pending rename, so the first retry archived the new file under the previous date.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFailedStartupRollLeavesTheArchiveAlone()
+  {
+    using AutoTempFolder folder = new();
+    Internal.RecordingErrorHandler errors = new();
+    string file = Path.Combine(folder.Path, "roll-failure.log");
+    MockDateTime clock = new(new(2026, 1, 2, 12, 0, 0, DateTimeKind.Local));
+
+    File.WriteAllText(file, Marker + Environment.NewLine);
+    File.SetLastWriteTime(file, clock.Now.AddDays(-1));
+    string dated = file + ".2026-01-01";
+    BlockRename(dated);
+
+    RollingFileAppender appender = CreateAppender(file, errors, RollingFileAppender.RollingMode.Composite, maxSizeRollBackups: 3,
+      appendToFile: false, clock: clock);
+
+    try
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.ActivateOptions);
+      Assert.That(errors.Messages, Is.Not.Empty, "the startup rename never failed, so nothing was exercised");
+
+      Assert.That(Backups(file), Is.Empty, "the startup roll moved the file into the archive anyway");
+      Assert.That(File.ReadAllText(file), Does.Contain(Marker), "the startup roll destroyed the file");
+
+      // The pending rename is still the dated one, so the retry archives the period, not a .1.
+      UnblockRename(dated);
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        for (int i = 0; i < 20 && !File.Exists(dated); i++)
+        {
+          appender.DoAppend(CreateEvent(new string('a', 200)));
+        }
+      });
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+
+    Assert.That(File.Exists(dated), Is.True, "the retry did not archive the period the startup roll owed");
+    Assert.That(File.ReadAllText(dated), Does.Contain(Marker));
+  }
+
+  /// <summary>The forced append must not survive an open that throws after taking it.</summary>
+  [Test]
+  [NonParallelizable]
+  public void AFailedOpenLeavesAppendToFileAsConfigured()
+  {
+    using AutoTempFolder folder = new();
+    Internal.RecordingErrorHandler errors = new();
+    string file = Path.Combine(folder.Path, "roll-failure.log");
+    MockDateTime clock = new(new(2026, 1, 2, 12, 0, 0, DateTimeKind.Local));
+
+    File.WriteAllText(file, Marker + Environment.NewLine);
+    File.SetLastWriteTime(file, clock.Now.AddDays(-1));
+    BlockRename(file + ".2026-01-01");
+
+    RollingFileAppender appender =
+      CreateAppender(file, errors, RollingFileAppender.RollingMode.Date, appendToFile: false, clock: clock);
+    appender.LockingModel = new ThrowingLock();
+
+    try
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.ActivateOptions);
+      Assert.That(errors.Messages, Has.Some.Contains("call failed"), "the open never failed, so nothing was exercised");
+      Assert.That(appender.AppendToFile, Is.False, "a throwing open left the forced append behind");
+    }
+    finally
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(appender.Close);
+    }
+  }
+
+  /// <summary>Throws out of every open, as a custom locking model may.</summary>
+  private sealed class ThrowingLock : FileAppender.LockingModelBase
+  {
+    /// <inheritdoc/>
+    public override void OpenFile(string filename, bool append, Encoding encoding)
+      => throw new IOException("staged open failure");
+
+    /// <inheritdoc/>
+    public override Stream? AcquireLock() => null;
+
+    /// <inheritdoc/>
+    public override void ReleaseLock()
+    { }
+
+    /// <inheritdoc/>
+    public override void CloseFile()
+    { }
+
+    /// <inheritdoc/>
+    public override void ActivateOptions()
+    { }
+
+    /// <inheritdoc/>
+    public override void OnClose()
+    { }
+  }
+
+  /// <summary>An appender on <paramref name="file"/> with the settings these tests share.</summary>
+  private static RollingFileAppender CreateAppender(
+    string file,
+    Internal.RecordingErrorHandler errors,
+    RollingFileAppender.RollingMode rollingStyle = RollingFileAppender.RollingMode.Size,
+    int maxSizeRollBackups = 0,
+    bool staticLogFileName = true,
+    bool appendToFile = true,
+    RollingFileAppender.IDateTime? clock = null)
+  {
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      RollingStyle = rollingStyle,
+      DatePattern = "'.'yyyy-MM-dd",
+      StaticLogFileName = staticLogFileName,
+      MaxSizeRollBackups = maxSizeRollBackups,
+      MaximumFileSize = "200",
+      AppendToFile = appendToFile,
+      LockingModel = new FileAppender.MinimalLock(),
+      ErrorHandler = errors
+    };
+
+    if (clock is not null)
+    {
+      appender.DateTimeStrategy = clock;
+    }
+
+    return appender;
   }
 
   /// <summary>

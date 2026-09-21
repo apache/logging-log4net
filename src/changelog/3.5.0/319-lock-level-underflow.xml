@@ -4,10 +4,9 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
   <issue id="319" link="https://github.com/apache/logging-log4net/pull/319"/>
-  <description format="asciidoc">Stop the file lock counter going negative. Writing the footer,
-  closing the writer and opening the file released the lock even when acquiring it had failed, and a
-  negative count made every later acquisition fail. The footer and close paths share one helper now,
-  which releases only what it took; opening keeps its own acquire, because wrapping an unlocked
-  stream throws. Nothing was lost by this, because the appender reopens the file on the next
-  event (audit da18b6fd-f032, fixed by @FreeAndNil)</description>
+  <description format="asciidoc">Stop a lock the appender could not take from
+  disabling it. Writing the footer, closing the writer and opening the file released the file lock
+  even when taking it had failed, and every later attempt then failed too, so the footer and
+  anything still buffered were dropped without a word. Only a lock that was taken is released
+  now (audit da18b6fd-f032, fixed by @FreeAndNil)</description>
 </entry>

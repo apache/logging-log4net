@@ -653,13 +653,19 @@ public partial class RollingFileAppender : FileAppender
       }
 
       // Open the file (call the base class to do it)
-      base.OpenFile(fileName, append);
-
-      // Set the file size onto the counting writer
-      if (QuietWriter is CountingQuietTextWriter countingWriter)
+      // base.OpenFile assigns append to AppendToFile, and can throw after doing so.
+      bool configuredAppend = AppendToFile;
+      try
       {
-        countingWriter.Count = currentCount;
+        base.OpenFile(fileName, append);
       }
+      finally
+      {
+        AppendToFile = configuredAppend;
+      }
+
+      // Set the file size onto the counting writer. A refused lock leaves none.
+      (QuietWriter as CountingQuietTextWriter)?.Count = currentCount;
     }
   }
 
@@ -806,6 +812,12 @@ public partial class RollingFileAppender : FileAppender
   {
     DetermineCurSizeRollBackups();
     RollOverIfDateBoundaryCrossing();
+
+    // Rolling again would overwrite the pending rename, or move its file out from under it.
+    if (_pendingRename is not null)
+    {
+      return;
+    }
 
     // If file exists, and we are not appending then roll it out of the way
     if (AppendToFile)
@@ -1377,13 +1389,10 @@ public partial class RollingFileAppender : FileAppender
   /// </summary>
   private void ScheduleRollRetry()
   {
-    // A refused lock leaves no writer, and then the threshold simply stays where it was.
+    // A refused lock leaves no writer, so not CountingWriter; the threshold stays where it was.
     if (_pendingRename is not null && QuietWriter is CountingQuietTextWriter countingWriter)
     {
-      _pendingRename = _pendingRename with
-      {
-        RetryAtCount = countingWriter.Count + RetryGrowth
-      };
+      _pendingRename = _pendingRename with { RetryAtCount = countingWriter.Count + RetryGrowth };
     }
   }
 
