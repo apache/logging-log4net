@@ -171,6 +171,10 @@ almost always be doing.
   `PeanutButter.Utils`**, as a local in the test method rather than a fixture field. It creates the
   folder and deletes it on dispose, so no `[SetUp]`/`[TearDown]` pair and no NUnit1032. Close the
   repository or appender before the scope ends, or the delete fails on Windows.
+- **A test that changes an environment variable takes `using AutoTempEnvironmentVariable v =
+  new("NAME", "value");`** from the same package, again as a local. It restores the previous value,
+  or removes the variable if there was none, on dispose, so no `try`/`finally` around the
+  assertions. Still `[NonParallelizable]`: the environment is process wide.
 - Mark a test `[NonParallelizable]` when it mutates static state (`LogLog.InternalDebugging`, a
   static field on a test double, a process-wide native registration).
 - Wrap expected internal logging in `LogLog.ExecuteWithoutEmittingInternalMessages(...)` and capture
