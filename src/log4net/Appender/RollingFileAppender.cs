@@ -128,6 +128,16 @@ namespace log4net.Appender;
 // ReSharper disable GrammarMistakeInComment
 public partial class RollingFileAppender : FileAppender
 {
+  /// <summary>A base rename that failed, kept whole so its parts cannot drift apart.</summary>
+  /// <param name="From">The file that could not be moved.</param>
+  /// <param name="To">Where it was heading.</param>
+  /// <param name="WasBackupCountReverted">
+  /// Whether the caller undid a <see cref="CurrentSizeRollBackups"/> increment, which a successful
+  /// retry has to put back. The time roll does not touch the counter, the size roll does.
+  /// </param>
+  /// <param name="RetryAtCount">The size the file must reach before the rename is attempted again.</param>
+  private sealed record PendingRename(string From, string To, bool WasBackupCountReverted, long RetryAtCount = 0);
+
   /// <summary>
   /// Style of rolling to use
   /// </summary>
@@ -471,6 +481,14 @@ public partial class RollingFileAppender : FileAppender
   protected override void SetQWForFiles(TextWriter writer) 
     => QuietWriter = new CountingQuietTextWriter(writer, ErrorHandler);
 
+  /// <summary>The writer, which counts what it has written so a size roll can be timed.</summary>
+  /// <remarks>
+  /// Only for the paths reached through <see cref="Append(LoggingEvent)"/>, where
+  /// <see cref="TextWriterAppender.PreAppendCheck"/> has already refused a null writer. A reopen
+  /// that could not take the lock leaves none, so the sites that run after one keep their own check.
+  /// </remarks>
+  private CountingQuietTextWriter CountingWriter => QuietWriter.EnsureIs<CountingQuietTextWriter>();
+
   /// <summary>
   /// Write out a logging event.
   /// </summary>
@@ -556,7 +574,16 @@ public partial class RollingFileAppender : FileAppender
         }
       }
 
-      if (_rollSize && (File is not null) && ((CountingQuietTextWriter)QuietWriter!).Count >= MaxFileSize)
+      // A pending rename outranks a size roll, and is retried even where size rolling is off: a
+      // failed time rename needs the retry just as much, and MaxFileSize only paces it.
+      if (_pendingRename is not null)
+      {
+        if (CountingWriter.Count >= _pendingRename.RetryAtCount)
+        {
+          RetryFailedRoll();
+        }
+      }
+      else if (_rollSize && (File is not null) && CountingWriter.Count >= MaxFileSize)
       {
         RollOverSize();
       }
@@ -586,6 +613,12 @@ public partial class RollingFileAppender : FileAppender
     lock (LockObj)
     {
       fileName = GetNextOutputFileName(fileName);
+
+      // A rename that failed left its file where it was. Never truncate that one, whatever
+      // AppendToFile says, or the roll destroys what it could not move.
+      append = append
+        || (_pendingRename is not null
+          && string.Equals(fileName, _pendingRename.From, StringComparison.Ordinal));
 
       // Calculate the current size of the file
       long currentCount = 0;
@@ -620,10 +653,19 @@ public partial class RollingFileAppender : FileAppender
       }
 
       // Open the file (call the base class to do it)
-      base.OpenFile(fileName, append);
+      // base.OpenFile assigns append to AppendToFile, and can throw after doing so.
+      bool configuredAppend = AppendToFile;
+      try
+      {
+        base.OpenFile(fileName, append);
+      }
+      finally
+      {
+        AppendToFile = configuredAppend;
+      }
 
-      // Set the file size onto the counting writer
-      ((CountingQuietTextWriter)QuietWriter!).Count = currentCount;
+      // Set the file size onto the counting writer. A refused lock leaves none.
+      (QuietWriter as CountingQuietTextWriter)?.Count = currentCount;
     }
   }
 
@@ -770,6 +812,12 @@ public partial class RollingFileAppender : FileAppender
   {
     DetermineCurSizeRollBackups();
     RollOverIfDateBoundaryCrossing();
+
+    // Rolling again would overwrite the pending rename, or move its file out from under it.
+    if (_pendingRename is not null)
+    {
+      return;
+    }
 
     // If file exists, and we are not appending then roll it out of the way
     if (AppendToFile)
@@ -1001,6 +1049,8 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   public override void ActivateOptions()
   {
+    _pendingRename = null;
+
     if (_rollDate && DatePattern is not null)
     {
       _now = DateTimeStrategy.Now;
@@ -1036,11 +1086,7 @@ public partial class RollingFileAppender : FileAppender
     }
 
     // initialize the mutex that is used to lock rolling
-    _mutexForRolling = new Mutex(false, _baseFileName
-      .Replace("\\", "_")
-      .Replace(":", "_")
-      .Replace("/", "_") + "_rolling"
-    );
+    _mutexForRolling = new Mutex(false, MutexNameForPath(_baseFileName, "_rolling"));
 
     if (_rollDate && File is not null && _scheduledFilename is null)
     {
@@ -1081,6 +1127,15 @@ public partial class RollingFileAppender : FileAppender
   /// </remarks>
   protected void RollOverTime(bool fileIsOpen)
   {
+    if (_pendingRename is { WasBackupCountReverted: true })
+    {
+      // The failed size rename left the numbered files a slot higher than the count says, and the
+      // group move below walks the count. Without this the top backup stays behind.
+      CurrentSizeRollBackups++;
+    }
+
+    // A time roll that renames successfully proves the obstruction is gone.
+    _pendingRename = null;
     if (StaticLogFileName)
     {
       // Compute filename, but only if datePattern is specified
@@ -1114,7 +1169,10 @@ public partial class RollingFileAppender : FileAppender
         RollFile(from, to);
       }
 
-      RollFile(File!, _scheduledFilename!);
+      if (!TryRollFile(File!, _scheduledFilename!))
+      {
+        RecordFailedBaseRename(File!, _scheduledFilename!, wasBackupCountReverted: false);
+      }
     }
 
     //We've cleared out the old date and are ready for the new
@@ -1123,10 +1181,16 @@ public partial class RollingFileAppender : FileAppender
     //new scheduled name
     _scheduledFilename = CombinePath(File!, _now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo));
 
+    // Nothing is open during the startup roll, from ExistingInit. A failed rename there leaves the
+    // previous period in the file, and the pending rename stays armed: the open that follows must
+    // not truncate it, and the first append retries the rename.
     if (fileIsOpen)
     {
       // This will also close the file. This is OK since multiple close operations are safe.
-      SafeOpenFile(_baseFileName!, false);
+      // A failed rename leaves the file in place; appending keeps what it holds.
+      SafeOpenFile(_baseFileName!, ShouldAppendAfterFailedRoll());
+      // Its own threshold, or the one from a size failure would fire a retry immediately.
+      ScheduleRollRetry();
     }
   }
 
@@ -1159,6 +1223,7 @@ public partial class RollingFileAppender : FileAppender
       }
       catch (Exception e) when (!e.IsFatal())
       {
+        _rollFailures++;
         ErrorHandler.Error($"Exception while rolling file [{fromFile}] -> [{toFile}]", e, ErrorCode.GenericFailure);
       }
     }
@@ -1282,11 +1347,12 @@ public partial class RollingFileAppender : FileAppender
   {
     CloseFile(); // keep windows happy.
 
-    LogLog.Debug(_declaringType, $"rolling over count [{((CountingQuietTextWriter)QuietWriter!).Count}]");
+    LogLog.Debug(_declaringType, $"rolling over count [{CountingWriter.Count}]");
     LogLog.Debug(_declaringType, $"maxSizeRollBackups [{MaxSizeRollBackups}]");
     LogLog.Debug(_declaringType, $"curSizeRollBackups [{CurrentSizeRollBackups}]");
     LogLog.Debug(_declaringType, $"countDirection [{CountDirection}]");
 
+    _pendingRename = null;
     if (File is not null)
     {
       RollOverRenameFiles(File);
@@ -1298,7 +1364,73 @@ public partial class RollingFileAppender : FileAppender
     }
 
     // This will also close the file. This is OK since multiple close operations are safe.
-    SafeOpenFile(_baseFileName!, false);
+    // A failed rename leaves the file in place; appending keeps what it holds.
+    SafeOpenFile(_baseFileName!, ShouldAppendAfterFailedRoll());
+
+    if (_pendingRename is not null)
+    {
+      ScheduleRollRetry();
+      // The failing rename already reported, and OnlyOnceErrorHandler silences the handler after
+      // the first report, so this one goes through LogLog to survive.
+      LogLog.Error(_declaringType, $"""
+        Rolling {_pendingRename.From} failed, so it is kept and appended to. Only that rename is
+        retried, once per {RetryGrowth} bytes of growth, so the backups are left alone.
+        """);
+    }
+  }
+
+  /// <summary>Remembers the base rename to retry, without touching the archive again.</summary>
+  private void RecordFailedBaseRename(string fromFile, string toFile, bool wasBackupCountReverted)
+    => _pendingRename = new(fromFile, toFile, wasBackupCountReverted);
+
+  /// <summary>
+  /// Schedules the next attempt at the failed base rename, a
+  /// <see cref="RetryGrowthDivisor">tenth</see> of <see cref="MaxFileSize"/> of growth away.
+  /// </summary>
+  private void ScheduleRollRetry()
+  {
+    // A refused lock leaves no writer, so not CountingWriter; the threshold stays where it was.
+    if (_pendingRename is not null && QuietWriter is CountingQuietTextWriter countingWriter)
+    {
+      _pendingRename = _pendingRename with { RetryAtCount = countingWriter.Count + RetryGrowth };
+    }
+  }
+
+  /// <summary>
+  /// Retries only the base rename, never the archive shift, so the backups are not rotated twice.
+  /// When the shift succeeded the target slot is still free. When it failed too, the target may be
+  /// occupied and <see cref="RollFile"/> deletes it, which is what that call has always done.
+  /// </summary>
+  private void RetryFailedRoll()
+  {
+    CloseFile();
+    PendingRename pending = _pendingRename!;
+    if (TryRollFile(pending.From, pending.To))
+    {
+      if (pending.WasBackupCountReverted)
+      {
+        // The slot the failed rename left empty is filled now, so the backup it gave up is real
+        // again. Without this the next roll shifts nothing and overwrites what was just recovered.
+        CurrentSizeRollBackups++;
+      }
+
+      _pendingRename = null;
+    }
+
+    SafeOpenFile(_baseFileName!, ShouldAppendAfterFailedRoll());
+    ScheduleRollRetry();
+  }
+
+  /// <summary>Whether a rename failed and left the file, so it must be appended to.</summary>
+  private bool ShouldAppendAfterFailedRoll()
+    => _pendingRename is not null && FileExists(_pendingRename.From);
+
+  /// <summary>Renames as <see cref="RollFile"/> does, reporting whether it worked.</summary>
+  private bool TryRollFile(string fromFile, string toFile)
+  {
+    int failuresBefore = _rollFailures;
+    RollFile(fromFile, toFile);
+    return _rollFailures == failuresBefore;
   }
 
   /// <summary>
@@ -1353,7 +1485,11 @@ public partial class RollingFileAppender : FileAppender
       CurrentSizeRollBackups++;
 
       // Rename fileName to fileName.1
-      RollFile(baseFileName, CombinePath(baseFileName, ".1"));
+      if (!TryRollFile(baseFileName, CombinePath(baseFileName, ".1")))
+      {
+        CurrentSizeRollBackups--;
+        RecordFailedBaseRename(baseFileName, CombinePath(baseFileName, ".1"), wasBackupCountReverted: true);
+      }
     }
     else
     {
@@ -1402,7 +1538,12 @@ public partial class RollingFileAppender : FileAppender
       if (StaticLogFileName)
       {
         CurrentSizeRollBackups++;
-        RollFile(baseFileName, CombinePath(baseFileName, "." + CurrentSizeRollBackups));
+        if (!TryRollFile(baseFileName, CombinePath(baseFileName, "." + CurrentSizeRollBackups)))
+        {
+          CurrentSizeRollBackups--;
+          RecordFailedBaseRename(baseFileName, CombinePath(baseFileName, "." + (CurrentSizeRollBackups + 1)),
+            wasBackupCountReverted: true);
+        }
       }
     }
   }
@@ -1525,6 +1666,24 @@ public partial class RollingFileAppender : FileAppender
   /// Cache flag set if we are rolling by date.
   /// </summary>
   private bool _rollDate = true;
+
+  /// <summary>
+  /// The base rename waiting to be retried, or null when none is. A
+  /// <see cref="RollOverRenameFiles"/> override that renames itself bypasses it.
+  /// </summary>
+  private PendingRename? _pendingRename;
+
+  /// <summary>
+  /// The share of <see cref="MaxFileSize"/> the file grows between retries: soon enough to recover
+  /// from a transient block, rare enough not to attempt the rename on every event.
+  /// </summary>
+  private const long RetryGrowthDivisor = 10;
+
+  /// <summary>How far the file grows between attempts at a failed rename, at least one byte.</summary>
+  private long RetryGrowth => Math.Max(MaxFileSize / RetryGrowthDivisor, 1);
+
+  /// <summary>How many renames have failed, so one call can be told apart.</summary>
+  private int _rollFailures;
 
   /// <summary>
   /// Cache flag set if we are rolling by size.

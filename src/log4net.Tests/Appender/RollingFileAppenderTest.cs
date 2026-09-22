@@ -234,6 +234,7 @@ public class RollingFileAppenderTest
       _root.Log(Level.Debug, s.ToString(), null);
     }
 
+    Assert.That(roller.AppendToFile, Is.True, "an ordinary roll replaced the configured value");
     VerifyFileCount(2, true);
   }
 

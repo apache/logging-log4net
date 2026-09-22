@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using log4net.Util;
@@ -194,6 +195,12 @@ public class FileAppender : TextWriterAppender
     {
       lock (_syncRoot)
       {
+        if (_lockLevel == 0)
+        {
+          // Unmatched release: going negative would strand the model lock.
+          return;
+        }
+
         _lockLevel--;
         if (_lockLevel == 0)
         {
@@ -753,12 +760,9 @@ public class FileAppender : TextWriterAppender
         {
           if (CurrentAppender.File is not null)
           {
-            string mutexFriendlyFilename = CurrentAppender.File
-              .Replace("\\", "_")
-              .Replace(":", "_")
-              .Replace("/", "_");
-
-            _mutex = new Mutex(false, mutexFriendlyFilename);
+            // No ACL, Global\ prefix or user name here: without a shared ACL a global mutex
+            // throws for whichever process starts second, and a user name splits one session.
+            _mutex = new Mutex(false, MutexNameForPath(CurrentAppender.File, string.Empty));
           }
           else
           {
@@ -1019,16 +1023,20 @@ public class FileAppender : TextWriterAppender
 
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
+    if (_fileName is not null)
+    {
+      using (SecurityContext.Impersonate(this))
+      {
+        // Before the locking model activates, which names its mutex after this path.
+        _fileName = ConvertToFullPath(_fileName.Trim());
+      }
+    }
+
     LockingModel.CurrentAppender = this;
     LockingModel.ActivateOptions();
 
     if (_fileName is not null)
     {
-      using (SecurityContext.Impersonate(this))
-      {
-        _fileName = ConvertToFullPath(_fileName.Trim());
-      }
-
       SafeOpenFile(_fileName, AppendToFile);
     }
     else
@@ -1094,7 +1102,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    if (_stream is not null && _stream.AcquireLock())
+    if (_stream?.AcquireLock() ?? false)
     {
       try
       {
@@ -1102,7 +1110,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream.ReleaseLock();
+        _stream?.ReleaseLock();
       }
     }
   }
@@ -1120,7 +1128,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Append(LoggingEvent[] loggingEvents)
   {
-    if (_stream is not null && _stream.AcquireLock())
+    if (_stream?.AcquireLock() ?? false)
     {
       try
       {
@@ -1128,7 +1136,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream.ReleaseLock();
+        _stream?.ReleaseLock();
       }
     }
   }
@@ -1143,19 +1151,8 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteFooter()
   {
-    if (_stream is not null)
-    {
-      //WriteFooter can be called even before a file is opened
-      _stream.AcquireLock();
-      try
-      {
-        base.WriteFooter();
-      }
-      finally
-      {
-        _stream.ReleaseLock();
-      }
-    }
+    //WriteFooter can be called even before a file is opened
+    RunWithBestEffortLock(base.WriteFooter);
   }
 
   /// <summary>
@@ -1168,18 +1165,15 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteHeader()
   {
-    if (_stream is not null)
+    if (_stream?.AcquireLock() ?? false)
     {
-      if (_stream.AcquireLock())
+      try
       {
-        try
-        {
-          base.WriteHeader();
-        }
-        finally
-        {
-          _stream.ReleaseLock();
-        }
+        base.WriteHeader();
+      }
+      finally
+      {
+        _stream?.ReleaseLock();
       }
     }
   }
@@ -1194,18 +1188,8 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void CloseWriter()
   {
-    if (_stream is not null)
-    {
-      _stream.AcquireLock();
-      try
-      {
-        base.CloseWriter();
-      }
-      finally
-      {
-        _stream.ReleaseLock();
-      }
-    }
+    // An already closed writer cannot take the lock.
+    RunWithBestEffortLock(base.CloseWriter);
   }
 
   /// <summary>
@@ -1239,6 +1223,28 @@ public class FileAppender : TextWriterAppender
     catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error($"OpenFile({fileName},{append}) call failed.", e, ErrorCode.FileOpenFailure);
+    }
+  }
+
+  /// <summary>
+  /// Runs <paramref name="action"/> under the file lock if it can be taken, releasing only what it
+  /// took. It runs unlocked too, because closing has to happen: that is what frees the handle.
+  /// <see cref="Append(LoggingEvent)"/> and <see cref="WriteHeader"/> deliberately skip their work
+  /// instead when the lock is refused, so they keep their own acquire.
+  /// </summary>
+  private void RunWithBestEffortLock(Action action)
+  {
+    bool locked = _stream?.AcquireLock() ?? false;
+    try
+    {
+      action();
+    }
+    finally
+    {
+      if (locked)
+      {
+        _stream?.ReleaseLock();
+      }
     }
   }
 
@@ -1289,9 +1295,9 @@ public class FileAppender : TextWriterAppender
       LockingModel.OpenFile(fileName, append, Encoding);
       _stream = new LockingStream(LockingModel);
 
-      if (_stream is not null)
+      // Wrapping an unlocked stream throws, so say why instead of trying.
+      if (_stream.AcquireLock())
       {
-        _stream.AcquireLock();
         try
         {
           SetQWForFiles(_stream);
@@ -1300,6 +1306,10 @@ public class FileAppender : TextWriterAppender
         {
           _stream.ReleaseLock();
         }
+      }
+      else
+      {
+        ErrorHandler.Error($"Could not acquire the lock on {fileName} to open it.");
       }
 
       WriteHeader();
@@ -1357,6 +1367,47 @@ public class FileAppender : TextWriterAppender
   /// </para>
   /// </remarks>
   protected static string ConvertToFullPath(string path) => SystemInfo.ConvertToFullPath(path);
+
+  /// <summary>
+  /// Names the mutex that serialises <paramref name="path"/> between processes, with
+  /// <paramref name="suffix"/> telling one mutex over the same file from another.
+  /// </summary>
+  /// <remarks>
+  /// The flattened path, as earlier versions computed it. Only a name the platform rejects is
+  /// hashed: Unix stops at <see cref="MaxMutexNameBytes"/>, Windows has no limit. Unprefixed, so
+  /// on Windows it coordinates one session.
+  /// <para>
+  /// The suffix can collide, since it is only appended: the lock for <c>/var/log/app_rolling</c> and
+  /// the rolling lock for <c>/var/log/app</c> name one mutex. Two unrelated files then contend on
+  /// it, which costs waiting, not a lost lock or a lost file, and the alternative is renaming every
+  /// mutex and losing exclusion against older versions everywhere.
+  /// </para>
+  /// </remarks>
+  internal static string MutexNameForPath(string path, string suffix)
+    => MutexNameForPath(path, suffix, SystemInfo.IsWindows ? null : MaxMutexNameBytes);
+
+  /// <summary>Takes the limit rather than deciding it, so both branches are testable anywhere.</summary>
+  private static string MutexNameForPath(string path, string suffix, int? maxBytes)
+  {
+    string name = path.EnsureNotNull()
+      .Replace("\\", "_")
+      .Replace(":", "_")
+      .Replace("/", "_") + suffix;
+
+    // Encoded bytes, not characters: a name of 104 characters and 304 bytes is already refused.
+    if (maxBytes is null || Encoding.UTF8.GetByteCount(name) <= maxBytes)
+    {
+      return name;
+    }
+
+    // TODO use SHA256.HashData and Convert.ToHexString on .net10
+    using SHA256 sha256 = SHA256.Create();
+    byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(path));
+    return "log4net_" + BitConverter.ToString(hash).Replace("-", "") + suffix;
+  }
+
+  /// <summary>The longest mutex name Unix accepts, in UTF-8 bytes. Windows has no limit. Measured.</summary>
+  private const int MaxMutexNameBytes = 255;
 
   /// <summary>
   /// The name of the log file.
