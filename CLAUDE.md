@@ -167,6 +167,10 @@ almost always be doing.
   Reproduced with `[TestCase("one", "\x1b[0m")]`; a single argument holding the same escape is
   fine, so it takes two arguments and an escape character. `AnsiColorTerminalAppenderTest` names
   all ten of its cases for that reason, and a filtered run there is 54 ms against 9 s for the suite.
+- **A test that needs a folder takes `using AutoTempFolder folder = new();` from
+  `PeanutButter.Utils`**, as a local in the test method rather than a fixture field. It creates the
+  folder and deletes it on dispose, so no `[SetUp]`/`[TearDown]` pair and no NUnit1032. Close the
+  repository or appender before the scope ends, or the delete fails on Windows.
 - Mark a test `[NonParallelizable]` when it mutates static state (`LogLog.InternalDebugging`, a
   static field on a test double, a process-wide native registration).
 - Wrap expected internal logging in `LogLog.ExecuteWithoutEmittingInternalMessages(...)` and capture
