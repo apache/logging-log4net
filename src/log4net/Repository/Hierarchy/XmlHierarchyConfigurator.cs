@@ -219,11 +219,62 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   private void ActivatePendingAppenders()
   {
     _deferActivation = false;
-    foreach (IOptionHandler optionHandler in _pendingActivations)
+    foreach (IAppender appender in _pendingActivations)
     {
-      optionHandler.ActivateOptions();
+      try
+      {
+        appender.EnsureIs<IOptionHandler>().ActivateOptions();
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        LogLog.Error(_declaringType, $"Could not activate Appender [{appender.Name}]. Reported error follows.", e);
+        DiscardAppender(appender);
+      }
     }
     _pendingActivations.Clear();
+  }
+
+  /// <summary>
+  /// Detaches <paramref name="appender"/> from everything this pass attached it to and closes it.
+  /// </summary>
+  private void DiscardAppender(IAppender appender)
+  {
+    try
+    {
+      _appenderBag.Remove(appender.Name);
+
+      hierarchy.Root.RemoveAppender(appender);
+      foreach (Logger logger in hierarchy.GetCurrentLoggers().OfType<Logger>())
+      {
+        logger.RemoveAppender(appender);
+      }
+      foreach (IAppenderAttachable container in _appenderBag.Values.OfType<IAppenderAttachable>())
+      {
+        container.RemoveAppender(appender);
+      }
+
+      // Closing a container closes its children, which a logger may still hold.
+      if (appender is IAppenderAttachable attachable)
+      {
+        foreach (IAppender child in attachable.Appenders.ToArray())
+        {
+          attachable.RemoveAppender(child);
+        }
+      }
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      LogLog.Error(_declaringType, "Could not detach an Appender that failed to activate.", e);
+    }
+
+    try
+    {
+      appender.Close();
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      LogLog.Error(_declaringType, "Could not close an Appender that failed to activate.", e);
+    }
   }
 
   /// <summary>
@@ -339,7 +390,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
       {
         if (_deferActivation)
         {
-          _pendingActivations.Add(optionHandler);
+          _pendingActivations.Add(appender);
         }
         else
         {
@@ -1077,7 +1128,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
   /// <summary>
   /// Appenders parsed in this pass and not activated yet.
   /// </summary>
-  private readonly List<IOptionHandler> _pendingActivations = [];
+  private readonly List<IAppender> _pendingActivations = [];
 
   /// <summary>
   /// Set by <see cref="Configure"/> alone: defers activation in <see cref="ParseAppender"/>.
