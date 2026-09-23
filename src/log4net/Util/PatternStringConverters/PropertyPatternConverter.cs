@@ -61,6 +61,8 @@ internal sealed class PropertyPatternConverter : PatternConverter
   /// </remarks>
   public override void Convert(TextWriter writer, object? state)
   {
+    // Context values may hold user-supplied data, so building a path from %property is the
+    // operator's choice: https://logging.apache.org/security/faq.html#path-traversal
     CompositeProperties compositeProperties = new();
 
     if (LogicalThreadContext.Properties.GetProperties(false) is PropertiesDictionary logicalThreadProperties)

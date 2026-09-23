@@ -47,6 +47,9 @@ namespace log4net.Appender;
 /// <see cref="TraceContext.Warn(string)"/> method depending on the level of the logging event.
 /// The event's logger name is the default value for the category parameter of the Write/Warn method. 
 /// </para>
+/// <para>
+/// Writes to the request current on the appending thread, so it must not be wrapped in a buffering appender.
+/// </para>
 /// </remarks>
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>

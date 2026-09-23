@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="323" link="https://github.com/apache/logging-log4net/pull/323"/>
+  <description format="asciidoc">Stop a disposed `LogicalThreadContext.Stacks` frame from bringing removed
+  frames back. Disposing the object returned by `Push` rebuilt the stack from the copy taken at push
+  time, so a frame disposed after `Clear`, or after the stack had been popped below its depth,
+  reinstated the earlier frames in the current flow. Disposing now trims the stack registered in the
+  flow and never grows it (audit da18b6fd-f044, fixed by @FreeAndNil)</description>
+</entry>

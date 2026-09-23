@@ -24,8 +24,9 @@ using log4net.Core;
 namespace log4net.Util;
 
 /// <summary>
-/// Delegate type used for LogicalThreadContextStack's callbacks.
+/// Delegate type for an action taking two arguments.
 /// </summary>
+[Obsolete("No longer used by log4net and removed in version 4.")]
 public delegate void TwoArgAction<T1, T2>(T1 t1, T2 t2);
 
 /// <summary>
@@ -47,10 +48,9 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   private readonly string _propertyKey;
 
   /// <summary>
-  /// The callback used to let the <see cref="LogicalThreadContextStacks"/> register a
-  /// new instance of a <see cref="LogicalThreadContextStack"/>.
+  /// The owning stacks.
   /// </summary>
-  private readonly TwoArgAction<string, LogicalThreadContextStack> _registerNew;
+  private readonly LogicalThreadContextStacks _owner;
 
   /// <summary>
   /// Internal constructor
@@ -60,10 +60,10 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// Initializes a new instance of the <see cref="LogicalThreadContextStack" /> class. 
   /// </para>
   /// </remarks>
-  internal LogicalThreadContextStack(string propertyKey, TwoArgAction<string, LogicalThreadContextStack> registerNew)
+  internal LogicalThreadContextStack(string propertyKey, LogicalThreadContextStacks owner)
   {
     _propertyKey = propertyKey;
-    _registerNew = registerNew;
+    _owner = owner;
   }
 
   /// <summary>
@@ -93,7 +93,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// syntax.
   /// </para>
   /// </remarks>
-  public void Clear() => _registerNew(_propertyKey, new LogicalThreadContextStack(_propertyKey, _registerNew));
+  public void Clear() => _owner.RegisterNew(_propertyKey, new(_propertyKey, _owner));
 
   /// <summary>
   /// Removes the top context from this stack.
@@ -115,8 +115,8 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     {
       result = stack.Pop().Message;
     }
-    LogicalThreadContextStack ltcs = new(_propertyKey, _registerNew) { _stack = stack };
-    _registerNew(_propertyKey, ltcs);
+    LogicalThreadContextStack ltcs = new(_propertyKey, _owner) { _stack = stack };
+    _owner.RegisterNew(_propertyKey, ltcs);
     return result;
   }
 
@@ -147,10 +147,10 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   {
     // do modifications on a copy
     Stack<StackFrame> stack = new(new Stack<StackFrame>(_stack));
-    stack.Push(new StackFrame(message, (stack.Count > 0) ? stack.Peek() : null));
+    stack.Push(new(message, (stack.Count > 0) ? stack.Peek() : null));
 
-    LogicalThreadContextStack contextStack = new(_propertyKey, _registerNew) { _stack = stack };
-    _registerNew(_propertyKey, contextStack);
+    LogicalThreadContextStack contextStack = new(_propertyKey, _owner) { _stack = stack };
+    _owner.RegisterNew(_propertyKey, contextStack);
     return new AutoPopStackFrame(contextStack, stack.Count - 1);
   }
 
@@ -313,19 +313,25 @@ public sealed class LogicalThreadContextStack : IFixingRequired
     /// </remarks>
     public void Dispose()
     {
-      if (_frameDepth >= 0)
+      if (_frameDepth < 0)
       {
-        Stack<StackFrame> local = new(new Stack<StackFrame>(_logicalThreadContextStack._stack));
-        while (local.Count > _frameDepth)
-        {
-          local.Pop();
-        }
-        LogicalThreadContextStack ltcs = new(_logicalThreadContextStack._propertyKey, _logicalThreadContextStack._registerNew)
-        {
-          _stack = local
-        };
-        _logicalThreadContextStack._registerNew(_logicalThreadContextStack._propertyKey, ltcs);
+        return;
       }
+      // Trim the stack registered in this flow, never restore the copy captured by Push.
+      string propertyKey = _logicalThreadContextStack._propertyKey;
+      LogicalThreadContextStacks owner = _logicalThreadContextStack._owner;
+      if (owner.GetCurrent(propertyKey) is not LogicalThreadContextStack current
+          || current._stack.Count <= _frameDepth)
+      {
+        return;
+      }
+
+      Stack<StackFrame> local = new(new Stack<StackFrame>(current._stack));
+      while (local.Count > _frameDepth)
+      {
+        local.Pop();
+      }
+      owner.RegisterNew(propertyKey, new(propertyKey, owner) { _stack = local });
     }
   }
 }

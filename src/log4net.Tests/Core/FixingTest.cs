@@ -19,7 +19,9 @@
 
 using System;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 
 using log4net.Core;
 using log4net.Util;
@@ -208,6 +210,45 @@ public class FixingTest
 
     Assert.That(loggingEvent.UserName, Is.EqualTo(expected));
     Assert.That(loggingEvent.UserName, Is.Not.EqualTo(SystemInfo.NotAvailableText));
+  }
+
+  /// <summary>
+  /// A redundant Fix must not reopen the cache: a thread reading a field the event never captured
+  /// would otherwise store its own principal in it. 500000 calls, the defect hit within 63000.
+  /// </summary>
+  [Test]
+  public void ARedundantFixDoesNotLetAnotherThreadCacheItsIdentity()
+  {
+    LoggingEvent loggingEvent = CreateEvent();
+    // Partial leaves Identity out, so it stays null unless the cache reopens.
+    loggingEvent.Fix = FixFlags.Partial;
+
+    bool stop = false;
+    long spins = 0;
+    TaskCompletionSource<bool> running = new();
+    Thread reader = new(() =>
+    {
+      Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity("Intruder"), null);
+      running.TrySetResult(true);
+      while (!Volatile.Read(ref stop) && loggingEvent.Identity is null)
+      {
+        Interlocked.Increment(ref spins);
+      }
+    })
+    { IsBackground = true };
+    reader.Start();
+    Assert.That(running.Task.Wait(TimeSpan.FromSeconds(10)), Is.True);
+
+    for (int i = 0; i < 500_000; i++)
+    {
+      loggingEvent.Fix = FixFlags.Partial;
+    }
+    Volatile.Write(ref stop, true);
+    Assert.That(reader.Join(TimeSpan.FromSeconds(10)), Is.True);
+
+    // A reader that never got scheduled would pass the identity assertion for the wrong reason.
+    Assert.That(Interlocked.Read(ref spins), Is.GreaterThan(0));
+    Assert.That(loggingEvent.Identity, Is.Null);
   }
 
   /// <summary>

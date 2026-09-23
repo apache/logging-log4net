@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="323" link="https://github.com/apache/logging-log4net/pull/323"/>
+  <description format="asciidoc">Stop a repeated `LoggingEvent.Fix` from reopening the value cache of an
+  already fixed event. The cache was unlocked before the fields still to fix were determined, so a
+  redundant call reopened it even when there was nothing to do, and another thread reading a field
+  the event never captured stored its own thread name, identity or location in it. It is now
+  unlocked only while fields are actually being fixed (audit da18b6fd-f039, fixed by
+  @FreeAndNil)</description>
+</entry>
