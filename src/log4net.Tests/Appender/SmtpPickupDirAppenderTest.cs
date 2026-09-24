@@ -150,6 +150,29 @@ public class SmtpPickupDirAppenderTest
   }
 
   /// <summary>
+  /// The appender used to close the file with a lone dot, so a logged line that is only a dot was
+  /// indistinguishable from it and ended the mail early for an agent honouring the terminator.
+  /// </summary>
+  [Test]
+  public void ALoggedDotIsTheOnlyDotLineInTheFile()
+  {
+    using AutoTempFolder pickupDir = new();
+    SilentErrorHandler sh = new();
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
+    ILogger log = CreateLogger(appender);
+
+    log.Log(GetType(), Level.Info, ".", null);
+    log.Log(GetType(), Level.Info, "the event after it", null);
+    DestroyLogger();
+
+    string[] lines = File.ReadAllLines(Directory.GetFiles(pickupDir.Path)[0]);
+
+    Assert.That(Array.FindAll(lines, line => line == "."), Has.Length.EqualTo(1));
+    Assert.That(lines, Does.Contain("the event after it"));
+    Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
+  }
+
+  /// <summary>
   /// Tests if the sent message contained the date header.
   /// </summary>
   [Test]

@@ -34,3 +34,9 @@ The following example shows how to configure the `UdpAppender` to send events to
   </layout>
 </appender>
 ----
+
+An event that does not fit one datagram is truncated and marked with `...[truncated]` rather than
+dropped: the socket rejects a payload above `MaxDatagramSize` (default 65507, the maximum UDP
+payload of an IPv4 packet), and that used to cost the whole event. Lower `MaxDatagramSize`, down to
+512, to match a receiver that accepts less. It cannot be raised: an IPv6 packet would carry 20 bytes
+more, which is not worth a second limit.

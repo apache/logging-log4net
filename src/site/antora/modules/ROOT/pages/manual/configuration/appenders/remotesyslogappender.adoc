@@ -44,6 +44,7 @@ You can also specify:
 * Identity (default: application name)
 * SendQueueSize (default: 500), how many datagrams may wait to be sent
 * EnqueueTimeoutMillis (default: 5000), how long a logging call waits for room in a full queue
+* MaxDatagramSize (default: 65507), the largest datagram sent, inherited from the xref:./udpappender.adoc[]
 
 RFC 3164 allows only the visible ASCII characters and space in the message, so anything else is
 written as a `\uXXXX` escape rather than dropped: a message in a non-Latin script reaches the

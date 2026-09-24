@@ -67,6 +67,21 @@ public sealed class RemoteSyslogAppenderTest
       Is.EqualTo(@"<14>TestDomain: INFO  - Sch\u00f6nwetter \u4f60\u597d"));
   }
 
+  /// <summary>
+  /// A datagram over the limit is rejected by the socket, which used to cost the whole record.
+  /// </summary>
+  [Test]
+  public void AnOversizeRecordIsTruncatedInsteadOfLost()
+  {
+    List<byte[]> sentBytes = [];
+    LogLog.ExecuteWithoutEmittingInternalMessages(
+      () => sentBytes = ExecuteAppend(new string('a', 1000), maxDatagramSize: 512));
+
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    Assert.That(sentBytes[0], Has.Length.EqualTo(512));
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Does.EndWith("...[truncated]"));
+  }
+
   /// <summary>A control character other than CR or LF was dropped as well.</summary>
   [Test]
   public void OtherControlCharactersAreEscaped()
@@ -275,7 +290,8 @@ public sealed class RemoteSyslogAppenderTest
 
   private static List<byte[]> ExecuteAppend(string message,
     SyslogNewLineHandling newLineHandling = default,
-    string? identity = null)
+    string? identity = null,
+    int? maxDatagramSize = null)
   {
     System.Net.IPAddress ipAddress = new([127, 0, 0, 1]);
     RemoteAppender appender = new()
@@ -285,6 +301,10 @@ public sealed class RemoteSyslogAppenderTest
       NewLineHandling = newLineHandling,
       Identity = identity is null ? null : new PatternLayout(identity)
     };
+    if (maxDatagramSize is int size)
+    {
+      appender.MaxDatagramSize = size;
+    }
     appender.ActivateOptions();
     LoggingEvent loggingEvent = new(new()
     {

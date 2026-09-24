@@ -367,7 +367,7 @@ public class RemoteSyslogAppender : UdpAppender
         AppendMessage(message, ref i, builder);
 
         // Grab as a byte array
-        byte[] buffer = Encoding.GetBytes(builder.ToString());
+        byte[] buffer = GetDatagramBytes(builder.ToString());
 
         // A full queue is reported by the sender itself.
         _sender?.TryEnqueue(buffer, EnqueueTimeoutMillis);

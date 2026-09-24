@@ -770,7 +770,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
           if (propInfo is not null)
           {
             // Got a converted result
-            LogLog.Debug(_declaringType, $"Setting Property [{propInfo.Name}] to {convertedValue.GetType().Name} value [{convertedValue}]");
+            LogLog.Debug(_declaringType, $"Setting Property [{propInfo.Name}] to {convertedValue.GetType().Name} value [{Redact.Value(name, convertedValue)}]");
 
             try
             {
@@ -779,13 +779,13 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
             }
             catch (TargetInvocationException targetInvocationEx)
             {
-              LogLog.Error(_declaringType, $"Failed to set parameter [{propInfo.Name}] on object [{target}] using value [{convertedValue}]", targetInvocationEx.InnerException);
+              LogLog.Error(_declaringType, $"Failed to set parameter [{propInfo.Name}] on object [{target}] using value [{Redact.Value(name, convertedValue)}]", targetInvocationEx.InnerException);
             }
           }
           else
           {
             // Got a converted result
-            LogLog.Debug(_declaringType, $"Setting Collection Property [{methInfo!.Name}] to {convertedValue.GetType().Name} value [{convertedValue}]");
+            LogLog.Debug(_declaringType, $"Setting Collection Property [{methInfo!.Name}] to {convertedValue.GetType().Name} value [{Redact.Value(name, convertedValue)}]");
 
             try
             {
@@ -794,13 +794,13 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
             }
             catch (TargetInvocationException targetInvocationEx)
             {
-              LogLog.Error(_declaringType, $"Failed to set parameter [{name}] on object [{target}] using value [{convertedValue}]", targetInvocationEx.InnerException);
+              LogLog.Error(_declaringType, $"Failed to set parameter [{name}] on object [{target}] using value [{Redact.Value(name, convertedValue)}]", targetInvocationEx.InnerException);
             }
           }
         }
         else
         {
-          LogLog.Warn(_declaringType, $"Unable to set property [{name}] on object [{target}] using value [{propertyValue}] (with acceptable conversion types)");
+          LogLog.Warn(_declaringType, $"Unable to set property [{name}] on object [{target}] using value [{Redact.Value(name, propertyValue)}] (with acceptable conversion types)");
         }
       }
       else
@@ -837,7 +837,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
           if (propInfo is not null)
           {
             // Got a converted result
-            LogLog.Debug(_declaringType, $"Setting Property [{propInfo.Name}] to object [{createdObject}]");
+            LogLog.Debug(_declaringType, $"Setting Property [{propInfo.Name}] to object [{Redact.Value(name, createdObject)}]");
 
             try
             {
@@ -846,13 +846,13 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
             }
             catch (TargetInvocationException targetInvocationEx)
             {
-              LogLog.Error(_declaringType, $"Failed to set parameter [{propInfo.Name}] on object [{target}] using value [{createdObject}]", targetInvocationEx.InnerException);
+              LogLog.Error(_declaringType, $"Failed to set parameter [{propInfo.Name}] on object [{target}] using value [{Redact.Value(name, createdObject)}]", targetInvocationEx.InnerException);
             }
           }
           else
           {
             // Got a converted result
-            LogLog.Debug(_declaringType, $"Setting Collection Property [{methInfo!.Name}] to object [{createdObject}]");
+            LogLog.Debug(_declaringType, $"Setting Collection Property [{methInfo!.Name}] to object [{Redact.Value(name, createdObject)}]");
 
             try
             {
@@ -861,7 +861,7 @@ public class XmlHierarchyConfigurator(Hierarchy hierarchy)
             }
             catch (TargetInvocationException targetInvocationEx)
             {
-              LogLog.Error(_declaringType, $"Failed to set parameter [{methInfo.Name}] on object [{target}] using value [{createdObject}]", targetInvocationEx.InnerException);
+              LogLog.Error(_declaringType, $"Failed to set parameter [{methInfo.Name}] on object [{target}] using value [{Redact.Value(name, createdObject)}]", targetInvocationEx.InnerException);
             }
           }
         }

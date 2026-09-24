@@ -258,6 +258,30 @@ public class UdpAppender : AppenderSkeleton
   public Encoding Encoding { get; set; } = Encoding.Default;
 
   /// <summary>
+  /// Gets or sets the largest datagram this appender sends, in bytes.
+  /// </summary>
+  /// <value>A value from 512 to 65507, the maximum UDP payload of an IPv4 packet. Default 65507.</value>
+  /// <remarks>
+  /// The socket rejects a larger datagram, so a longer event is truncated to fit instead of lost.
+  /// Lower the value to match a receiver that accepts less. IPv6 would carry 20 bytes more, which
+  /// is not worth a second limit.
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is outside 512 to 65507.</exception>
+  public int MaxDatagramSize
+  {
+    get => _maxDatagramSize;
+    set
+    {
+      if (value is < MinDatagramSize or > MaxIPv4DatagramSize)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          $"The value specified is less than {MinDatagramSize} or greater than {MaxIPv4DatagramSize}.");
+      }
+      _maxDatagramSize = value;
+    }
+  }
+
+  /// <summary>
   /// Gets or sets the underlying <see cref="UdpClient" />.
   /// </summary>
   /// <value>
@@ -348,7 +372,7 @@ public class UdpAppender : AppenderSkeleton
 
     try
     {
-      byte[] buffer = Encoding.GetBytes(RenderLoggingEvent(loggingEvent).ToCharArray());
+      byte[] buffer = GetDatagramBytes(RenderLoggingEvent(loggingEvent));
       Client.Send(buffer, buffer.Length, RemoteEndPoint);
     }
     catch (Exception e) when (!e.IsFatal())
@@ -357,6 +381,49 @@ public class UdpAppender : AppenderSkeleton
         $"Unable to send logging event to remote host {RemoteAddress} on port {RemotePort}.",
         e, ErrorCode.WriteFailure);
     }
+  }
+
+  /// <summary>
+  /// Encodes a rendered event for one datagram, truncated to <see cref="MaxDatagramSize"/>.
+  /// </summary>
+  /// <param name="message">The rendered event.</param>
+  /// <returns>The bytes to send, ending in <c>...[truncated]</c> when the event did not fit.</returns>
+  /// <remarks>
+  /// An oversize datagram is rejected by the socket, which used to cost the whole event.
+  /// </remarks>
+  private protected byte[] GetDatagramBytes(string message)
+  {
+    byte[] datagram = Encoding.GetBytes(message.EnsureNotNull());
+    if (datagram.Length <= MaxDatagramSize)
+    {
+      return datagram;
+    }
+
+    byte[] result = GetTruncatedBytes(message, datagram);
+
+    ErrorHandler.Error(
+      $"Truncated a logging event from {datagram.Length} to {result.Length} bytes for {RemoteAddress} on port {RemotePort}.");
+    return result;
+  }
+
+  /// <summary>Encodes as much of <paramref name="message"/> as fits, ending in the marker.</summary>
+  /// <param name="message">The rendered event.</param>
+  /// <param name="datagram">The whole encoded event, reused as the encoder's output.</param>
+  /// <returns>The bytes to send, of at most <see cref="MaxDatagramSize"/> length.</returns>
+  private byte[] GetTruncatedBytes(string message, byte[] datagram)
+  {
+    int markerLength = Encoding.GetByteCount(TruncationMarker);
+
+    // Convert fills the budget without splitting a character, and unflushed it holds back a
+    // trailing high surrogate rather than encoding it as the replacement character. It writes
+    // into the oversize encoding, which is the one buffer already long enough.
+    Encoding.GetEncoder().Convert(message.ToCharArray(), 0, message.Length,
+      datagram, 0, MaxDatagramSize - markerLength, flush: false, out _, out int written, out _);
+
+    byte[] result = new byte[written + markerLength];
+    Buffer.BlockCopy(datagram, 0, result, 0, written);
+    Encoding.GetBytes(TruncationMarker, 0, TruncationMarker.Length, result, written);
+    return result;
   }
 
   /// <summary>
@@ -419,4 +486,24 @@ public class UdpAppender : AppenderSkeleton
   /// The TCP port number from which the <see cref="UdpClient" /> will communicate.
   /// </summary>
   private int _localPort;
+
+  /// <summary>
+  /// The largest datagram this appender sends.
+  /// </summary>
+  private int _maxDatagramSize = MaxIPv4DatagramSize;
+
+  /// <summary>
+  /// The maximum UDP payload of an IPv4 packet.
+  /// </summary>
+  private const int MaxIPv4DatagramSize = 65507;
+
+  /// <summary>
+  /// The smallest datagram size an operator may configure.
+  /// </summary>
+  private const int MinDatagramSize = 512;
+
+  /// <summary>
+  /// Marks a datagram that could not carry the whole event.
+  /// </summary>
+  private const string TruncationMarker = "...[truncated]";
 }

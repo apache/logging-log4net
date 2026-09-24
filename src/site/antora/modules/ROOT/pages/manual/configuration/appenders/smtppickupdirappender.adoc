@@ -27,6 +27,10 @@ It is therefore unaffected by the deprecation of `System.Net.Mail.SmtpClient`, a
 The `PickupDir` parameter is a path that must exist and the code executing the appender must have permission to create new files and write to them in this directory.
 The path is relative to the application's base directory (AppDomain.BaseDirectory).
 
+Each file is a plain RFC 822 message, read to its end by the pickup service, and carries no SMTP
+DATA terminator. Body lines are written verbatim and are not dot stuffed, so an agent that expects
+SMTP DATA framing is not a supported consumer.
+
 The following example shows how to configure the SmtpPickupDirAppender to deliver log events via SMTP email.
 The `To`, `From`, `Subject` and `PickupDir` are required parameters.
 This example shows how to deliver only significant events.

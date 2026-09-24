@@ -167,8 +167,9 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
           writer.Write(footer);
         }
 
+        // No SMTP DATA terminator: the pickup service reads the file to its end, and ours only
+        // made a logged line that is only a dot look like one.
         writer.WriteLine();
-        writer.WriteLine(".");
       }
     }
     catch (Exception e) when (!e.IsFatal())
