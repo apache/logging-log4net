@@ -18,7 +18,6 @@
 #endregion
 
 using System;
-using System.Reflection;
 using log4net.Util;
 using NUnit.Framework;
 
@@ -112,8 +111,7 @@ public class TransformTest
   /// Resolves the private static <see cref="CountSubstrings"/> method once for all tests
   /// </summary>
   private static Func<string, string, int> CountSubstrings { get; } = (Func<string, string, int>)Delegate.CreateDelegate(
-    typeof(Func<string, string, int>), typeof(Transform).GetMethod(nameof(CountSubstrings), BindingFlags.NonPublic | BindingFlags.Static)
-    ?? throw new MissingMethodException(nameof(Transform), nameof(CountSubstrings)));
+    typeof(Func<string, string, int>), typeof(Transform).NonPublicMethod(nameof(CountSubstrings)));
 
   /// <summary>
   /// Verifies that an empty text returns zero regardless of the substring.

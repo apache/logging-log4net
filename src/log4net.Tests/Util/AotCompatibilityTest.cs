@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
@@ -143,18 +143,11 @@ public class AotCompatibilityTest
   }
 
   private static Dictionary<string, ConverterInfo> GlobalRules(Type owner)
-  {
-    FieldInfo field = owner.GetField("_sGlobalRulesRegistry", BindingFlags.Static | BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException($"{owner.Name}._sGlobalRulesRegistry no longer exists - update this test along with it.");
-    return (Dictionary<string, ConverterInfo>)field.GetValue(null)!;
-  }
+    => owner.GetFieldValue<Dictionary<string, ConverterInfo>>("_sGlobalRulesRegistry");
 
   private static ParameterInfo Parameter(Type owner, string methodName, params Type[] signature)
-  {
-    MethodInfo method = owner.GetMethod(methodName, signature)
-      ?? throw new InvalidOperationException($"{owner.Name}.{methodName} no longer has the expected signature.");
-    return method.GetParameters().Single(p => p.ParameterType == typeof(Type));
-  }
+    => owner.NonPublicMethod(methodName, signature).GetParameters()
+        .Single(p => p.ParameterType == typeof(Type));
 
   private static void AssertAnnotated(ParameterInfo parameter)
     => Assert.That(IsAnnotated(parameter.GetCustomAttributesData()), Is.True,

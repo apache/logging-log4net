@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -174,7 +174,7 @@ public class SystemInfoTest
   [Test]
   [Platform(Include = "Win,Linux,MacOsX")]
   public void IsAndroid()
-    => Assert.That(typeof(SystemInfo).GetProperty("IsAndroid", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null), Is.False);
+    => Assert.That(typeof(SystemInfo).GetPropertyValue<bool>("IsAndroid"), Is.False);
 
   /// <summary>
   /// <see cref="SystemInfo.GetAppSetting"/> falls back to environment variables once the
@@ -196,20 +196,19 @@ public class SystemInfoTest
     const string Key = "log4net.Tests.AppSettingFallback";
     const string Value = "from-the-environment";
 
-    FieldInfo latch = AppSettingsUnavailableLatch();
-    bool originalLatch = (bool)latch.GetValue(null)!;
+    bool original = AppSettingsUnavailable;
     using AutoTempEnvironmentVariable variable = new(Key, Value);
     try
     {
-      latch.SetValue(null, false);
+      AppSettingsUnavailable = false;
       Assert.That(SystemInfo.GetAppSetting(Key), Is.Null);
 
-      latch.SetValue(null, true);
+      AppSettingsUnavailable = true;
       Assert.That(SystemInfo.GetAppSetting(Key), Is.EqualTo(Value));
     }
     finally
     {
-      latch.SetValue(null, originalLatch);
+      AppSettingsUnavailable = original;
     }
   }
 
@@ -222,16 +221,15 @@ public class SystemInfoTest
   [NonParallelizable]
   public void GetAppSettingReturnsNullForAnUnsetEnvironmentVariable()
   {
-    FieldInfo latch = AppSettingsUnavailableLatch();
-    bool originalLatch = (bool)latch.GetValue(null)!;
+    bool original = AppSettingsUnavailable;
     try
     {
-      latch.SetValue(null, true);
+      AppSettingsUnavailable = true;
       Assert.That(SystemInfo.GetAppSetting("log4net.Tests.NoSuchSettingAnywhere"), Is.Null);
     }
     finally
     {
-      latch.SetValue(null, originalLatch);
+      AppSettingsUnavailable = original;
     }
   }
 
@@ -316,20 +314,20 @@ public class SystemInfoTest
   }
 
   private static bool IsAndroidCore()
-  {
-    MethodInfo method = typeof(SystemInfo).GetMethod("IsAndroidCore", BindingFlags.Static | BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException("SystemInfo.IsAndroidCore no longer exists - update this test along with it.");
-    return (bool)method.Invoke(null, [])!;
-  }
+    => typeof(SystemInfo).Invoke<bool>(nameof(IsAndroidCore));
 
   private static bool IsMissingConfigurationSystem(Exception exception)
+    => typeof(SystemInfo).Invoke<bool>(nameof(IsMissingConfigurationSystem), [exception]);
+
+  /// <summary>
+  /// The flag that makes <see cref="SystemInfo.GetAppSetting"/> read the environment instead of the
+  /// configuration file.
+  /// </summary>
+  private static bool AppSettingsUnavailable
   {
-    MethodInfo method = typeof(SystemInfo).GetMethod("IsMissingConfigurationSystem", BindingFlags.Static | BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException("SystemInfo.IsMissingConfigurationSystem no longer exists - update this test along with it.");
-    return (bool)method.Invoke(null, [exception])!;
+    get => typeof(SystemInfo).GetFieldValue<bool>(FlagField);
+    set => typeof(SystemInfo).SetFieldValue(FlagField, value);
   }
 
-  private static FieldInfo AppSettingsUnavailableLatch()
-    => typeof(SystemInfo).GetField("_configurationSystemUnavailable", BindingFlags.Static | BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException("SystemInfo._configurationSystemUnavailable no longer exists - update this test along with it.");
+  private const string FlagField = "_configurationSystemUnavailable";
 }

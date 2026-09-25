@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more 
 // contributor license agreements. See the NOTICE file distributed with
@@ -17,7 +17,6 @@
 //
 #endregion
 
-using System.Reflection;
 
 using log4net.Appender;
 
@@ -66,8 +65,7 @@ public class ContentEscapeTest
     => Assert.That(EscapeUnpairedSurrogates(message), Is.EqualTo(message));
 
   private static string EscapeUnpairedSurrogates(string message)
-    => (string)typeof(TelnetAppender).Assembly
-      .GetType("log4net.Appender.Internal.ContentEscape")!
-      .GetMethod("EscapeUnpairedSurrogates", BindingFlags.Static | BindingFlags.NonPublic)!
-      .Invoke(null, [message])!;
+    => typeof(TelnetAppender).Assembly
+      .NonPublicType("log4net.Appender.Internal.ContentEscape")
+      .Invoke<string>(nameof(EscapeUnpairedSurrogates), [message]);
 }

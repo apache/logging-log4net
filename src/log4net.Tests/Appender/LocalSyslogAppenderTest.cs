@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
@@ -82,9 +82,7 @@ public class LocalSyslogAppenderTest
   [Test]
   public void TheIdentityHandleBelongsToTheProcess()
   {
-    FieldInfo field = typeof(LocalSyslogAppender)
-      .GetField("_handleToIdentity", BindingFlags.Static | BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException("LocalSyslogAppender._handleToIdentity is missing");
+    FieldInfo field = typeof(LocalSyslogAppender).NonPublicField("_handleToIdentity");
 
     Assert.That(field.IsStatic, Is.True);
   }
@@ -112,9 +110,7 @@ public class LocalSyslogAppenderTest
   }
 
   private static IntPtr CurrentIdentityHandle()
-    => (IntPtr)typeof(LocalSyslogAppender)
-      .GetField("_handleToIdentity", BindingFlags.Static | BindingFlags.NonPublic)!
-      .GetValue(null)!;
+    => typeof(LocalSyslogAppender).GetFieldValue<IntPtr>("_handleToIdentity");
 
   /// <summary>
   /// A newline ends the record for a daemon that writes the message through to a line oriented
@@ -173,9 +169,8 @@ public class LocalSyslogAppenderTest
   public void TheSyslogDeclarationPassesNoVariadicArgument()
   {
     MethodInfo syslog = typeof(LocalSyslogAppender).Assembly
-      .GetType("log4net.Util.NativeMethods")!
-      .GetMethod("syslog", BindingFlags.Static | BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException("NativeMethods.syslog no longer exists - update this test along with it.");
+      .NonPublicType("log4net.Util.NativeMethods")
+      .NonPublicMethod("syslog");
 
     Assert.That(syslog.GetParameters().Select(parameter => parameter.ParameterType),
       Is.EqualTo(new[] { typeof(int), typeof(string) }));
@@ -206,23 +201,16 @@ public class LocalSyslogAppenderTest
   }
 
   private static string EscapePercent(string message)
-    => (string)typeof(LocalSyslogAppender)
-      .GetMethod("EscapePercent", BindingFlags.Static | BindingFlags.NonPublic)!
-      .Invoke(null, [message])!;
+    => typeof(LocalSyslogAppender).Invoke<string>(nameof(EscapePercent), [message]);
 
   private static string EscapeNewLines(string message)
-    => (string)typeof(LocalSyslogAppender)
-      .GetMethod("EscapeNewLines", BindingFlags.Static | BindingFlags.NonPublic)!
-      .Invoke(null, [message])!;
+    => typeof(LocalSyslogAppender).Invoke<string>(nameof(EscapeNewLines), [message]);
 
   private static string[] SplitLines(string message)
-    => (string[])typeof(LocalSyslogAppender)
-      .GetMethod("SplitLines", BindingFlags.Static | BindingFlags.NonPublic)!
-      .Invoke(null, [message])!;
+    => typeof(LocalSyslogAppender).Invoke<string[]>(nameof(SplitLines), [message]);
 
   private static string EscapeNulCharacters(string message)
-    => (string)typeof(LocalSyslogAppender).Assembly
-      .GetType("log4net.Appender.Internal.ContentEscape")!
-      .GetMethod("EscapeNulCharacters", BindingFlags.Static | BindingFlags.NonPublic)!
-      .Invoke(null, [message])!;
+    => typeof(LocalSyslogAppender).Assembly
+      .NonPublicType("log4net.Appender.Internal.ContentEscape")
+      .Invoke<string>(nameof(EscapeNulCharacters), [message]);
 }

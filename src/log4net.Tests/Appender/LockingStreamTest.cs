@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
@@ -19,7 +19,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 
 using log4net.Appender;
@@ -73,14 +72,14 @@ public sealed class LockingStreamTest
     object stream = NewLockingStream(model);
 
     // What the footer, close and open paths used to do.
-    Assert.That(Invoke<bool>(stream, "AcquireLock"), Is.False, "the model was set up to refuse");
-    Invoke(stream, "ReleaseLock");
+    Assert.That(stream.Invoke<bool>("AcquireLock"), Is.False, "the model was set up to refuse");
+    stream.Invoke("ReleaseLock");
 
     model.CanAcquire = true;
 
-    Assert.That(Invoke<bool>(stream, "AcquireLock"), Is.True,
+    Assert.That(stream.Invoke<bool>("AcquireLock"), Is.True,
       "the counter went negative, so the stream could never be locked again");
-    Invoke(stream, "ReleaseLock");
+    stream.Invoke("ReleaseLock");
     Assert.That(model.ReleaseCount, Is.EqualTo(1), "the model lock must be released exactly once");
   }
 
@@ -91,12 +90,12 @@ public sealed class LockingStreamTest
     SwitchableLock model = new() { CanAcquire = true };
     object stream = NewLockingStream(model);
 
-    Assert.That(Invoke<bool>(stream, "AcquireLock"), Is.True);
-    Assert.That(Invoke<bool>(stream, "AcquireLock"), Is.True);
-    Invoke(stream, "ReleaseLock");
+    Assert.That(stream.Invoke<bool>("AcquireLock"), Is.True);
+    Assert.That(stream.Invoke<bool>("AcquireLock"), Is.True);
+    stream.Invoke("ReleaseLock");
     Assert.That(model.ReleaseCount, Is.EqualTo(0), "still held by the outer acquisition");
 
-    Invoke(stream, "ReleaseLock");
+    stream.Invoke("ReleaseLock");
     Assert.That(model.ReleaseCount, Is.EqualTo(1));
   }
 
@@ -126,24 +125,11 @@ public sealed class LockingStreamTest
 
 
   private static void SetStream(FileAppender appender, object stream)
-    => typeof(FileAppender).GetField("_stream", BindingFlags.Instance | BindingFlags.NonPublic)!
-      .SetValue(appender, stream);
+    => appender.SetFieldValue("_stream", stream);
 
   private static void RunWithBestEffortLock(FileAppender appender, Action action)
-    => typeof(FileAppender).GetMethod("RunWithBestEffortLock", BindingFlags.Instance | BindingFlags.NonPublic)!
-      .Invoke(appender, [action]);
+    => appender.Invoke(nameof(RunWithBestEffortLock), [action]);
 
   private static object NewLockingStream(FileAppender.LockingModelBase model)
-  {
-    Type type = typeof(FileAppender).GetNestedType("LockingStream", BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException("FileAppender.LockingStream is gone");
-    return Activator.CreateInstance(type, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
-      null, [model], null)
-      ?? throw new InvalidOperationException("could not construct a LockingStream");
-  }
-
-  private static void Invoke(object target, string method) => Invoke<object?>(target, method);
-
-  private static T Invoke<T>(object target, string method)
-    => (T)target.GetType().GetMethod(method)!.Invoke(target, null)!;
+    => typeof(FileAppender).NonPublicNestedType("LockingStream").Construct<object>([model]);
 }

@@ -1,4 +1,4 @@
-#region Apache License
+﻿#region Apache License
 //
 // Licensed to the Apache Software Foundation (ASF) under one or more
 // contributor license agreements. See the NOTICE file distributed with
@@ -17,8 +17,6 @@
 //
 #endregion
 
-using System;
-using System.Reflection;
 using System.Security.Principal;
 
 using log4net.Core;
@@ -146,23 +144,19 @@ public class UserNameFixingTest
   [Test]
   public void ImpersonationDoesNotSeedTheProcessUserName()
   {
-    FieldInfo field = typeof(LoggingEvent).GetField(
-        "_processUserName",
-        BindingFlags.Static | BindingFlags.NonPublic)
-      ?? throw new InvalidOperationException("LoggingEvent._processUserName is missing");
-    object? saved = field.GetValue(null);
+    string? saved = typeof(LoggingEvent).GetFieldValue<string?>("_processUserName");
     try
     {
-      field.SetValue(null, null);
+      typeof(LoggingEvent).SetFieldValue("_processUserName", null);
       using WindowsIdentity identity = WindowsIdentity.GetCurrent();
 
       WindowsIdentity.RunImpersonated(identity.AccessToken, () => CreateEvent().UserName);
 
-      Assert.That(field.GetValue(null), Is.Null);
+      Assert.That(typeof(LoggingEvent).GetFieldValue<string?>("_processUserName"), Is.Null);
     }
     finally
     {
-      field.SetValue(null, saved);
+      typeof(LoggingEvent).SetFieldValue("_processUserName", saved);
     }
   }
 
