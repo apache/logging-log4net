@@ -21,7 +21,8 @@ function Write-HashAndSignature
   $File.FullName
   $ComputedHash = (Get-FileHash -Algorithm 'SHA512' $File).Hash.ToLowerInvariant()
   $ComputedHash
-  Set-Content -Path "$($File.FullName).sha512" -Value "$ComputedHash *./$($File.Name)"
+  # LF on every platform: the macOS sha512sum reads a CR from a Windows build as part of the file name.
+  Set-Content -NoNewline -Path "$($File.FullName).sha512" -Value "$ComputedHash *./$($File.Name)`n"
   gpg --armor --output "$($File.FullName).asc" --detach-sig $File.FullName
 }
 
