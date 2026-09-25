@@ -34,7 +34,7 @@ pushd $PSScriptRoot/..
 git archive --format=zip --output $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip master
 popd
 'compressing binaries ...'
-Copy-Item $PSScriptRoot/verify-release.* $PSScriptRoot/../build/artifacts/
+Copy-Item $PSScriptRoot/verify-release.ps1, $PSScriptRoot/verify-release.sh $PSScriptRoot/../build/artifacts/
 Copy-Item $PSScriptRoot/../LICENSE $PSScriptRoot/../build/Release/
 Copy-Item $PSScriptRoot/../NOTICE $PSScriptRoot/../build/Release/
 pushd $PSScriptRoot/../build/Release

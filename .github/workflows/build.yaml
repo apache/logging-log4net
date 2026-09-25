@@ -62,8 +62,13 @@ jobs:
       - name: Release script tests
         shell: pwsh
         run: |
-            $result = Invoke-Pester ./scripts/verify-release.Tests.ps1 -Output Detailed -PassThru
+            $result = Invoke-Pester ./scripts -Output Detailed -PassThru
             if ($result.FailedCount -ne 0) { exit 1 }
+
+      # From pwsh, as build-release.ps1 calls it: mvnw.cmd 3.2.0 failed its checksum there on Windows.
+      - name: Maven wrapper
+        shell: pwsh
+        run: ./mvnw -v
 
       # Runs the same probes twice, JIT compiled and published with Native AOT, so that a
       # difference between the two is caused by AOT rather than by the platform. The project
@@ -74,12 +79,10 @@ jobs:
         env:
           "log4net.AotEnvironmentProbe": from-environment
         run: |
+            $PSNativeCommandUseErrorActionPreference = $true
             dotnet run --project ./src/log4net.Tests.Aot/log4net.Tests.Aot.csproj -c Release
-            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             dotnet publish ./src/log4net.Tests.Aot/log4net.Tests.Aot.csproj -c Release -o ./aot-probes
-            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             & "./aot-probes/log4net.Tests.Aot$($IsWindows ? '.exe' : '')"
-            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       # A process that hosts the runtime natively has no entry assembly, so the configuration
       # system cannot work out where the config file is (issue #162). The check owns the process
@@ -93,6 +96,4 @@ jobs:
       # makes it a green that cannot fail for the reason the check exists.
       - name: AOT probes, no entry assembly
         shell: pwsh
-        run: |
-            dotnet run --project ./src/log4net.Tests.Aot/log4net.Tests.Aot.csproj -c Release -- --no-entry-assembly
-            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        run: dotnet run --project ./src/log4net.Tests.Aot/log4net.Tests.Aot.csproj -c Release -- --no-entry-assembly
