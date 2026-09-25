@@ -86,32 +86,41 @@ public static class SystemInfo
     NullText = nullText;
   }
 
-  private static bool IsAndroidCore() // https://stackoverflow.com/questions/47521008/how-can-i-distinguish-between-unix-and-android-on-netstandard-2-0
+  /// <summary>
+  /// Decides whether this is Android, without starting a process.
+  /// </summary>
+  private static bool IsAndroidCore()
   {
     if (Environment.OSVersion.Platform != PlatformID.Unix)
-      return false;
-    using System.Diagnostics.Process process = new()
     {
-      StartInfo = new()
-      {
-        FileName = "getprop",
-        Arguments = "ro.build.user",
-        RedirectStandardOutput = true,
-        UseShellExecute = false,
-        CreateNoWindow = true
-      }
-    };
+      return false;
+    }
 
+    // A file Android always has, asked first because it cannot throw.
+    if (File.Exists("/system/bin/getprop"))
+    {
+      return true;
+    }
+
+#if NET
+    // How .NET reports Android from .NET 5 on.
+    return OperatingSystem.IsAndroid();
+#elif NETFRAMEWORK
+    // RuntimeInformation is not in net462, and Android does not run that asset.
+    return false;
+#else
     try
     {
-      process.Start();
-      string output = process.StandardOutput.ReadToEnd();
-      return !string.IsNullOrEmpty(output);
+      // The same answer for netstandard2.0.
+      return System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(
+        System.Runtime.InteropServices.OSPlatform.Create("ANDROID"));
     }
-    catch (Exception ex) when (!ex.IsFatal())
+    catch (Exception e) when (!e.IsFatal())
     {
+      // IsOSPlatform throws below net471.
       return false;
     }
+#endif
   }
 
   /// <summary>

@@ -356,12 +356,11 @@ public class LocalSyslogAppender : AppenderSkeleton
     int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
     string message = ContentEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
 
-    // The second argument is a printf style format string.
     if (NewLineHandling == SyslogNewLineHandling.Split)
     {
       foreach (string line in SplitLines(message))
       {
-        NativeMethods.syslog(priority, "%s", line);
+        NativeMethods.syslog(priority, EscapePercent(line));
       }
 
       return;
@@ -372,8 +371,17 @@ public class LocalSyslogAppender : AppenderSkeleton
       message = EscapeNewLines(message);
     }
 
-    NativeMethods.syslog(priority, "%s", message);
+    NativeMethods.syslog(priority, EscapePercent(message));
   }
+
+  /// <summary>
+  /// Doubles every <c>%</c>, so that the record libc takes as a printf format string renders as
+  /// the text the layout produced.
+  /// </summary>
+  /// <param name="message">The rendered message.</param>
+  /// <returns>The message with every percent sign escaped.</returns>
+  private static string EscapePercent(string message)
+    => message.IndexOf('%') < 0 ? message : message.Replace("%", "%%");
 
   /// <summary>
   /// What to do with the newlines in logged content. Defaults to

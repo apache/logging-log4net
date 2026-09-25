@@ -23,6 +23,8 @@ using log4net.Util;
 
 using NUnit.Framework;
 
+using PeanutButter.Utils;
+
 using System.Configuration;
 using System.IO;
 using System.Linq.Expressions;
@@ -196,7 +198,7 @@ public class SystemInfoTest
 
     FieldInfo latch = AppSettingsUnavailableLatch();
     bool originalLatch = (bool)latch.GetValue(null)!;
-    Environment.SetEnvironmentVariable(Key, Value);
+    using AutoTempEnvironmentVariable variable = new(Key, Value);
     try
     {
       latch.SetValue(null, false);
@@ -208,7 +210,6 @@ public class SystemInfoTest
     finally
     {
       latch.SetValue(null, originalLatch);
-      Environment.SetEnvironmentVariable(Key, null);
     }
   }
 
@@ -286,6 +287,40 @@ public class SystemInfoTest
         new ConfigurationErrorsException("Configuration system failed to initialize",
           new PlatformNotSupportedException("Operation is not supported on this platform."))),
       Is.True);
+
+  /// <summary>
+  /// Android is detected from the file system, not by starting <c>getprop</c> from <c>PATH</c>:
+  /// that spawned a process at type initialisation on every Unix host, and let the first match on
+  /// the path decide the answer.
+  /// </summary>
+  [Test]
+  [Platform("Linux,MacOsX")]
+  [NonParallelizable]
+  public void AndroidDetectionDoesNotRunGetpropFromThePath()
+  {
+    using AutoTempFolder folder = new();
+    string marker = Path.Combine(folder.Path, "marker");
+    string getprop = Path.Combine(folder.Path, "getprop");
+    File.WriteAllText(getprop, $"#!/bin/sh\ntouch '{marker}'\necho ro.build.user\n");
+#if NET
+    if (!OperatingSystem.IsWindows())
+    {
+      File.SetUnixFileMode(getprop, UnixFileMode.UserRead | UnixFileMode.UserExecute);
+    }
+#endif
+    using AutoTempEnvironmentVariable path = new("PATH",
+      folder.Path + Path.PathSeparator + Environment.GetEnvironmentVariable("PATH"));
+
+    Assert.That(IsAndroidCore(), Is.False);
+    Assert.That(File.Exists(marker), Is.False, "getprop was started from PATH");
+  }
+
+  private static bool IsAndroidCore()
+  {
+    MethodInfo method = typeof(SystemInfo).GetMethod("IsAndroidCore", BindingFlags.Static | BindingFlags.NonPublic)
+      ?? throw new InvalidOperationException("SystemInfo.IsAndroidCore no longer exists - update this test along with it.");
+    return (bool)method.Invoke(null, [])!;
+  }
 
   private static bool IsMissingConfigurationSystem(Exception exception)
   {

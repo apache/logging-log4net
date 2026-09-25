@@ -20,7 +20,10 @@
 using System;
 using System.Reflection;
 
+using System.Linq;
+
 using log4net.Appender;
+using log4net.Core;
 using log4net.Layout;
 
 using NUnit.Framework;
@@ -144,6 +147,68 @@ public class LocalSyslogAppenderTest
   [Test]
   public void SplittingDropsTheEmptyLines()
     => Assert.That(SplitLines("first\r\nsecond\n\nthird\r"), Is.EqualTo(new[] { "first", "second", "third" }));
+
+  /// <summary>
+  /// The record is the printf format string libc parses, so a percent sign in content would make
+  /// the callee read an argument that was never passed.
+  /// </summary>
+  [TestCase("%s", "%%s")]
+  [TestCase("100%", "100%%")]
+  [TestCase("%d%n", "%%d%%n")]
+  [TestCase("rate=%s of %d", "rate=%%s of %%d")]
+  public void EveryPercentSignIsEscaped(string message, string expected)
+    => Assert.That(EscapePercent(message), Is.EqualTo(expected));
+
+  /// <summary>A message without a percent sign takes the fast path and comes through untouched.</summary>
+  [Test]
+  public void MessagesWithoutPercentSignsAreUnchanged()
+    => Assert.That(EscapePercent("field=1 field=2"), Is.EqualTo("field=1 field=2"));
+
+  /// <summary>
+  /// Only the two fixed parameters of the variadic libc function may be declared. A variadic
+  /// argument travels differently from a fixed one on Apple arm64, where the callee then reads the
+  /// wrong slot.
+  /// </summary>
+  [Test]
+  public void TheSyslogDeclarationPassesNoVariadicArgument()
+  {
+    MethodInfo syslog = typeof(LocalSyslogAppender).Assembly
+      .GetType("log4net.Util.NativeMethods")!
+      .GetMethod("syslog", BindingFlags.Static | BindingFlags.NonPublic)
+      ?? throw new InvalidOperationException("NativeMethods.syslog no longer exists - update this test along with it.");
+
+    Assert.That(syslog.GetParameters().Select(parameter => parameter.ParameterType),
+      Is.EqualTo(new[] { typeof(int), typeof(string) }));
+  }
+
+  /// <summary>
+  /// Content that looks like a printf conversion reaches libc as the format string, so the
+  /// escaping has to hold on the real call.
+  /// </summary>
+  [Test]
+  [Platform("Linux")]
+  [NonParallelizable]
+  public void ContentThatLooksLikeAFormatStringIsLogged()
+  {
+    LocalSyslogAppender appender = new()
+    {
+      Identity = "log4net-test-format",
+      Layout = new PatternLayout("%message")
+    };
+    appender.ActivateOptions();
+
+    Assert.DoesNotThrow(() => appender.DoAppend(new LoggingEvent(new LoggingEventData
+    {
+      Level = Level.Info,
+      Message = "%s %n %x %99999$s",
+      LoggerName = "FormatString"
+    })));
+  }
+
+  private static string EscapePercent(string message)
+    => (string)typeof(LocalSyslogAppender)
+      .GetMethod("EscapePercent", BindingFlags.Static | BindingFlags.NonPublic)!
+      .Invoke(null, [message])!;
 
   private static string EscapeNewLines(string message)
     => (string)typeof(LocalSyslogAppender)
