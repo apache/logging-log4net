@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -429,12 +430,51 @@ public sealed class TelnetAppenderTest
       }
 
       using Socket external = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-      Assert.That(() => external.Connect(new IPEndPoint(routable!, port)), Throws.TypeOf<SocketException>());
+      SocketException? refused = null;
+      try
+      {
+        external.Connect(new IPEndPoint(routable!, port));
+      }
+      catch (SocketException e)
+      {
+        refused = e;
+      }
+      Assert.That(refused, Is.Not.Null, () => DescribeUnexpectedConnection(external, port));
     }
     finally
     {
       appender.Close();
     }
+  }
+
+  /// <summary>
+  /// Collects what a reviewer needs to tell who accepted a connection that should have been refused.
+  /// </summary>
+  private static string DescribeUnexpectedConnection(Socket connected, int port)
+  {
+    StringBuilder text = new();
+    text.AppendLine($"connected from {connected.LocalEndPoint} to {connected.RemoteEndPoint}");
+    text.AppendLine($"host name {Dns.GetHostName()} resolves to [{string.Join(", ", (object[])Dns.GetHostAddresses(Dns.GetHostName()))}]");
+    foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+    {
+      string[] addresses = Array.ConvertAll([.. nic.GetIPProperties().UnicastAddresses], a => a.Address.ToString());
+      text.AppendLine($"interface {nic.Name} ({nic.NetworkInterfaceType}, {nic.OperationalStatus}): {string.Join(", ", addresses)}");
+    }
+    IPEndPoint[] listeners = Array.FindAll(IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners(), l => l.Port == port);
+    text.AppendLine($"listeners on port {port}: [{string.Join(", ", (object[])listeners)}]");
+    // The appender greets every client, so its welcome line identifies it as the peer.
+    try
+    {
+      connected.ReceiveTimeout = 2_000;
+      byte[] buffer = new byte[256];
+      int read = connected.Receive(buffer);
+      text.AppendLine($"peer sent: {Encoding.ASCII.GetString(buffer, 0, read).Trim()}");
+    }
+    catch (SocketException e)
+    {
+      text.AppendLine($"peer sent nothing: {e.SocketErrorCode}");
+    }
+    return text.ToString();
   }
 
   /// <summary>

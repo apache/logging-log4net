@@ -62,4 +62,15 @@ Describe 'build-release.ps1' {
     $artifacts.Name | Should -HaveCount 6
     $artifacts | Where-Object { !(Test-Path "$($_.FullName).sha512") } | Should -BeNullOrEmpty
   }
+
+  It 'writes every hash as one LF-terminated line' {
+    Invoke-InScratchTree -Root $script:Root -Script 'build-release.ps1' | Out-Null
+
+    $hashes = Get-ChildItem (Join-Path $script:Root 'build' 'artifacts') -Filter '*.sha512'
+    $hashes | Should -HaveCount 6
+    foreach ($hash in $hashes)
+    {
+      [System.IO.File]::ReadAllText($hash.FullName) | Should -MatchExactly '^[0-9a-f]{128} \*\./\S+\n\z'
+    }
+  }
 }
