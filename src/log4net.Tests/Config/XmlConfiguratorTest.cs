@@ -48,7 +48,9 @@ public class XmlConfiguratorTest
       List<LogLog> configurationMessages = [];
 
       using LogLog.LogReceivedAdapter _ = new(configurationMessages);
-      typeof(XmlConfigurator).Invoke("InternalConfigure", [repository, getConfigSection]);
+      // The adapter is fed either way, so this only keeps it off the console.
+      LogLog.ExecuteWithoutEmittingInternalMessages(
+        () => typeof(XmlConfigurator).Invoke("InternalConfigure", [repository, getConfigSection]));
 
       Assert.That(configurationMessages, Has.Count.EqualTo(1));
       Assert.That(configurationMessages[0].Message, Contains.Substring(SystemInfo.EntryAssemblyLocation + ".config"));

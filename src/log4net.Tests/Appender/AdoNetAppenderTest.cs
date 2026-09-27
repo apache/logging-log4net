@@ -47,12 +47,17 @@ public class AdoNetAppenderTest
       BufferSize = -1,
       ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
     };
-    adoNetAppender.ActivateOptions();
+    // No CommandText and no Layout, both warned about on purpose.
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      adoNetAppender.ActivateOptions();
 
-    BasicConfigurator.Configure(rep, adoNetAppender);
+      BasicConfigurator.Configure(rep, adoNetAppender);
 
-    ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
-    log.Debug("Message");
+      ILog log = LogManager.GetLogger(rep.Name, "NoBufferingTest");
+      log.Debug("Message");
+    });
+
     Assert.That(Log4NetCommand.MostRecentInstance, Is.Not.Null);
     Assert.That(Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount, Is.EqualTo(1));
   }
@@ -69,17 +74,22 @@ public class AdoNetAppenderTest
       BufferSize = bufferSize,
       ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!
     };
-    adoNetAppender.ActivateOptions();
-
-    BasicConfigurator.Configure(rep, adoNetAppender);
-
-    ILog log = LogManager.GetLogger(rep.Name, "BufferingTest");
-    for (int i = 0; i < bufferSize; i++)
+    // No CommandText and no Layout, both warned about on purpose.
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
     {
+      adoNetAppender.ActivateOptions();
+
+      BasicConfigurator.Configure(rep, adoNetAppender);
+
+      ILog log = LogManager.GetLogger(rep.Name, "BufferingTest");
+      for (int i = 0; i < bufferSize; i++)
+      {
+        log.Debug("Message");
+        Assert.That(Log4NetCommand.MostRecentInstance, Is.Null);
+      }
       log.Debug("Message");
-      Assert.That(Log4NetCommand.MostRecentInstance, Is.Null);
-    }
-    log.Debug("Message");
+    });
+
     Assert.That(Log4NetCommand.MostRecentInstance, Is.Not.Null);
     Assert.That(Log4NetCommand.MostRecentInstance.ExecuteNonQueryCount, Is.EqualTo(bufferSize + 1));
   }

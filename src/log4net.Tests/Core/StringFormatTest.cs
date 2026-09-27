@@ -24,6 +24,7 @@ using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
+using log4net.Util;
 using log4net.Tests.Appender;
 
 using NUnit.Framework;
@@ -105,7 +106,9 @@ public class StringFormatTest
     stringAppender.Reset();
 
     // ***
-    log1.InfoFormat("IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}", "Middle", "End");
+    // Provoked on purpose, so keep it off the console.
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      log1.InfoFormat("IGNORE THIS WARNING - EXCEPTION EXPECTED Before {0} After {1} {2}", "Middle", "End"));
     Assert.That(stringAppender.GetString(), Is.EqualTo(StringFormatError), "Test formatting error");
     stringAppender.Reset();
 
