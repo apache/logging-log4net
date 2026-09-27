@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="329" link="https://github.com/apache/logging-log4net/pull/329"/>
+  <description format="asciidoc">
+    require transport security by default in the `log4net.Ext.Mail` `SmtpAppender`: its
+ `TransportSecurity` now defaults to `Required` instead of `None`, so body and credentials no
+ longer cross the network in cleartext (CWE-319). A relay without `STARTTLS` stops working on
+ upgrade; set `transportSecurity` to `None`, or `enableSsl` to `false`, to keep the old behaviour
+ (audit da18b6fd-f026, implemented by @FreeAndNil)
+  </description>
+</entry>

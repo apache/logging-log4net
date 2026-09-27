@@ -201,30 +201,38 @@ public class SmtpAppenderTest
     Assert.That(_transport.SaslMechanism!.Credentials.GetCredential(null, null).UserName, Is.EqualTo("user"));
   }
 
+  /// <summary>An operator who configures nothing must not get a cleartext session.</summary>
   [Test]
-  public void EnableSslOffConnectsWithoutTransportSecurity()
-  {
-    SmtpAppender appender = CreateAppender();
+  public void TransportSecurityDefaultsToRequired()
+    => Assert.That(CreateAppender().TransportSecurity, Is.EqualTo(SmtpTransportSecurity.Required));
 
-    Append(appender);
-
-    Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.None));
-  }
+  /// <summary>The shorthand follows the default of the property it stands for.</summary>
+  [Test]
+  public void EnableSslDefaultsToTrue()
+    => Assert.That(CreateAppender().EnableSsl, Is.True);
 
   /// <summary>
-  /// SecureSocketOptions.Auto is opportunistic away from port 465, so an attacker who strips
-  /// STARTTLS from the EHLO response downgrades the session to plaintext. Asking for SSL has to
-  /// mean mandatory STARTTLS.
+  /// The default port is 25, so the default must mean mandatory STARTTLS, not the downgradable Auto.
   /// </summary>
   [Test]
-  public void EnableSslOnRequiresStartTls()
+  public void TheDefaultConnectionRequiresStartTls()
   {
     SmtpAppender appender = CreateAppender();
-    appender.EnableSsl = true;
 
     Append(appender);
 
     Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.StartTls));
+  }
+
+  [Test]
+  public void EnableSslOffConnectsWithoutTransportSecurity()
+  {
+    SmtpAppender appender = CreateAppender();
+    appender.EnableSsl = false;
+
+    Append(appender);
+
+    Assert.That(_transport.SecureSocketOptions, Is.EqualTo(SecureSocketOptions.None));
   }
 
   /// <summary>
@@ -281,8 +289,8 @@ public class SmtpAppenderTest
   {
     SmtpAppender appender = CreateAppender();
 
+    appender.EnableSsl = false;
     Assert.That(appender.TransportSecurity, Is.EqualTo(SmtpTransportSecurity.None));
-    Assert.That(appender.EnableSsl, Is.False);
 
     appender.EnableSsl = true;
     Assert.That(appender.TransportSecurity, Is.EqualTo(SmtpTransportSecurity.Required));
@@ -290,8 +298,8 @@ public class SmtpAppenderTest
     appender.TransportSecurity = SmtpTransportSecurity.StartTlsWhenAvailable;
     Assert.That(appender.EnableSsl, Is.True);
 
-    appender.EnableSsl = false;
-    Assert.That(appender.TransportSecurity, Is.EqualTo(SmtpTransportSecurity.None));
+    appender.TransportSecurity = SmtpTransportSecurity.None;
+    Assert.That(appender.EnableSsl, Is.False);
   }
 
   [Test]
@@ -619,7 +627,7 @@ public class SmtpAppenderTest
     Assert.That(appender.Authentication, Is.EqualTo(SmtpAppender.SmtpAuthentication.None));
     Assert.That(appender.SubjectEncoding, Is.EqualTo(Encoding.UTF8));
     Assert.That(appender.BodyEncoding, Is.EqualTo(Encoding.UTF8));
-    Assert.That(appender.EnableSsl, Is.False);
+    Assert.That(appender.EnableSsl, Is.True);
   }
 
   /// <summary>An unbounded send stalls every thread logging through the appender.</summary>
