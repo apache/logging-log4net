@@ -2,7 +2,8 @@
 
 param(
   $Version = '3.5.0',
-  $Preview = '1'
+  [ValidateRange('Positive')]
+  [int]$Preview = 1
 )
 
 Set-StrictMode -Version Latest

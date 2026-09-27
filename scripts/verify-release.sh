@@ -37,6 +37,64 @@ for file in "${artifacts[@]}"; do
   sha512sum --check "$file.sha512"
 done
 
+# One file records the commit and the artifact set, and is signed with them.
+manifests=(*.manifest)
+if test ${#manifests[@]} -ne 1; then
+  echo "expected one .manifest file describing the release, found ${#manifests[@]}" >&2
+  exit 1
+fi
+manifest="${manifests[0]}"
+
+# The hash and signature loops only see the files that are there, so without the listed set an
+# artifact removed together with its .sha512 and .asc would pass.
+listed=()
+while IFS= read -r name; do listed+=("$name"); done < <(sed -n 's/^artifact=//p' "$manifest")
+if test ${#listed[@]} -eq 0; then
+  echo "$manifest: lists no artifact" >&2
+  exit 1
+fi
+
+for name in "${listed[@]}"; do
+  if test ! -f "$name"; then
+    echo "$manifest: listed but not in the release, $name" >&2
+    exit 1
+  fi
+done
+
+for file in "${artifacts[@]}"; do
+  found=0
+  for name in "${listed[@]}"; do
+    if test "$file" = "$name"; then found=1; break; fi
+  done
+  if test "$found" -eq 0; then
+    echo "$manifest: in the release but not listed, $file" >&2
+    exit 1
+  fi
+done
+echo "$manifest: all ${#listed[@]} artifacts present"
+
+# The manifest and the comment git archive writes into the zip are two independent records of the
+# same commit.
+recorded="$(sed -n 's/^commit=//p' "$manifest" | tr -d '[:space:]')"
+if test -z "$recorded"; then
+  echo "$manifest: no commit line" >&2
+  exit 1
+fi
+
+sources=(*source*.zip)
+if test ${#sources[@]} -ne 1; then
+  echo "expected one source archive, found ${#sources[@]}" >&2
+  exit 1
+fi
+
+# -qq, or the "Archive:" banner lands in the comparison.
+archived="$(unzip -z -qq "${sources[0]}" | tr -d '[:space:]')"
+if test "$recorded" != "$archived"; then
+  echo "${sources[0]}: built from commit $archived but the release records $recorded" >&2
+  exit 1
+fi
+echo "${sources[0]}: commit $archived ok"
+
 # A home of its own, so only the downloaded KEYS can verify. Not --keyring: gpg ignores that where
 # common.conf sets use-keyboxd. Assigned before exporting, or a failed mktemp would go unnoticed
 # and an empty GNUPGHOME means the reviewer's own home.

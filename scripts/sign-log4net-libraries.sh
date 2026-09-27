@@ -1,10 +1,15 @@
 #!/bin/bash
 # see https://infra.apache.org/release-signing#openpgp-ascii-detach-sig
+set -euo pipefail
+
+# Without nullglob an empty directory iterates the patterns, so the guard below never fires.
+shopt -s nullglob
+
 DID_SOMETHING=0
 for f in *log4net*.nupkg *log4net*.zip; do
   DID_SOMETHING=1
   echo "signing: $f"
-  gpg --armor --output $f.asc --detach-sig $f
+  gpg --armor --output "$f.asc" --detach-sig "$f"
 done
 
 if test "$DID_SOMETHING" = "0"; then

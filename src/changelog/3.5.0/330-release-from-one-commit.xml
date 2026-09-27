@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="330" link="https://github.com/apache/logging-log4net/pull/330"/>
+  <description format="asciidoc">
+    bind a release to a single commit. `build-release.ps1` built the binaries from the working tree
+ but archived the local `master` ref, so the signed source zip need not match the signed binaries.
+ It now refuses an unclean working tree, archives `HEAD`, and ships a signed `.manifest` recording
+ that commit and the artifact set, which the verification scripts check against the zip archive
+ comment and against the files present (audit da18b6fd-f025, fixed by @FreeAndNil)
+  </description>
+</entry>
