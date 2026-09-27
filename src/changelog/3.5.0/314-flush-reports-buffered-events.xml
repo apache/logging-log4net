@@ -7,6 +7,6 @@
   <description format="asciidoc">
     report a buffering appender that is still holding events from `Flush`. It returned `true`
  unconditionally, including for a `lossy` appender, where flushing deliberately does nothing and
- every buffered event stays where it was (implemented by @FreeAndNil)
+ every buffered event stays where it was (fixed by @FreeAndNil)
   </description>
 </entry>

@@ -9,6 +9,6 @@
  written. Retrying after a rolled back transaction was added in 3.4.0 to save the events around
  the one the database rejected, but a batch that fails outright, such as a missing table or a
  missing permission, then cost one round trip per event: 513 instead of 1 for a full buffer. It
- now gives up after five consecutive failures (implemented by @FreeAndNil)
+ now gives up after five consecutive failures (fixed by @FreeAndNil)
   </description>
 </entry>
