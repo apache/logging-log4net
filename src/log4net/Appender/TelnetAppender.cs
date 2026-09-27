@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.IO;
 using System.Linq;
@@ -339,7 +340,7 @@ public class TelnetAppender : AppenderSkeleton
         try
         {
           // Belt and braces. Send escapes what cannot be encoded; this keeps a future gap costing
-          // one character rather than every client, since Send reads a throw as a hung up client.
+          // one character rather than failing the write.
           _writer = new(new NetworkStream(socket), new UTF8Encoding(false));
         }
         catch (Exception e) when (!e.IsFatal())
@@ -461,19 +462,27 @@ public class TelnetAppender : AppenderSkeleton
       }
 
       // Send outside lock.
+      ExceptionDispatchInfo? failure = null;
       foreach (SocketClient client in localClients)
       {
         try
         {
           client.Send(message);
         }
-        catch (Exception e) when (!e.IsFatal())
+        catch (Exception e) when (e is SocketException or IOException or ObjectDisposedException)
         {
-          // The client has closed the connection, remove it from our list
+          // Only these mean the client is gone.
           client.Dispose();
           RemoveClient(client);
         }
+        catch (Exception e) when (!e.IsFatal())
+        {
+          // Our own bug. Serve the rest, then let the background sender report it.
+          failure ??= ExceptionDispatchInfo.Capture(e);
+        }
       }
+
+      failure?.Throw();
     }
 
     /// <summary>

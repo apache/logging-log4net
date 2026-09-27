@@ -18,8 +18,10 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -434,6 +436,101 @@ public sealed class TelnetAppenderTest
     finally
     {
       appender.Close();
+    }
+  }
+
+  /// <summary>
+  /// A write can fail for a reason that is not a dead client, which once cost every client at once.
+  /// </summary>
+  [Test]
+  public void AnUnexpectedSendFailureKeepsTheClientConnected()
+  {
+    int port = FindFreeTcpPort();
+    Type handlerType = typeof(TelnetAppender).NonPublicNestedType("SocketHandler");
+    using IDisposable handler = handlerType.Construct<IDisposable>([IPAddress.Loopback, port, 0]);
+
+    using TcpClient first = new();
+    using TcpClient second = new();
+    first.Connect(IPAddress.Loopback, port);
+    second.Connect(IPAddress.Loopback, port);
+    WaitForClients(2);
+
+    // Only the first client fails, so the second one shows the loop ran to the end.
+    object firstClient = Clients()[0]!;
+    using UnflushableStream poison = new();
+    using StreamWriter poisonedWriter = new(poison);
+    firstClient.SetFieldValue("_writer", poisonedWriter);
+
+    const string payload = "the second client must still get this";
+    try
+    {
+      Assert.That(() => handler.Invoke("Send", [payload]),
+        Throws.InnerException.TypeOf<NotSupportedException>());
+      Assert.That(ReadFrom(second), Does.Contain(payload), "the failing client stopped the send");
+      Assert.That(Clients(), Has.Count.EqualTo(2), "a client was dropped over our own bug");
+    }
+    finally
+    {
+      // Or disposing the writer below throws and hides whichever assertion failed.
+      poison.FailOnFlush = false;
+    }
+
+    IList Clients() => handler.GetFieldValue<IList>("_clients");
+
+    string ReadFrom(TcpClient client)
+    {
+      StringBuilder text = new();
+      client.ReceiveTimeout = (int)_receiveTimeout.TotalMilliseconds;
+      byte[] buffer = new byte[512];
+      Stopwatch stopwatch = Stopwatch.StartNew();
+      while (!text.ToString().Contains(payload, StringComparison.Ordinal) && stopwatch.Elapsed < _receiveTimeout)
+      {
+        int read;
+        try
+        {
+          read = client.GetStream().Read(buffer, 0, buffer.Length);
+        }
+        catch (IOException)
+        {
+          // Nothing arrived, so return what did and let the assertion say what was missing.
+          break;
+        }
+
+        if (read == 0)
+        {
+          // The peer closed, so no more is coming.
+          break;
+        }
+
+        text.Append(Encoding.UTF8.GetString(buffer, 0, read));
+      }
+      return text.ToString();
+    }
+
+    void WaitForClients(int expected)
+    {
+      Stopwatch stopwatch = Stopwatch.StartNew();
+      while (Clients().Count < expected && stopwatch.Elapsed < _receiveTimeout)
+      {
+        Thread.Sleep(10);
+      }
+      Assert.That(Clients(), Has.Count.EqualTo(expected), "the clients did not connect");
+    }
+  }
+
+  /// <summary>A stream that takes writes and refuses to flush them while armed.</summary>
+  private sealed class UnflushableStream : MemoryStream
+  {
+    /// <summary>Whether a flush fails. Disarm before disposing the writer that holds it.</summary>
+    internal bool FailOnFlush { get; set; } = true;
+
+    /// <inheritdoc/>
+    public override void Flush()
+    {
+      if (FailOnFlush)
+      {
+        throw new NotSupportedException();
+      }
     }
   }
 

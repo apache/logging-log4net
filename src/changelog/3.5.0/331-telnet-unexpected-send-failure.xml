@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="331" link="https://github.com/apache/logging-log4net/pull/331"/>
+  <description format="asciidoc">
+    report an unexpected failure while writing to a Telnet client instead of disconnecting it.
+ `TelnetAppender` read every non-fatal exception as a hung up connection, so a defect in what was
+ written cost the connection of every client in turn. Only `SocketException`, `IOException` and
+ `ObjectDisposedException` disconnect now; anything else is raised once the remaining clients have
+ been served and is reported through the error handler. `SocketHandler` is protected, so a subclass
+ calling `Send` sees those exceptions where it saw none (fixed by @FreeAndNil)
+  </description>
+</entry>
