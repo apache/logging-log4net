@@ -64,10 +64,10 @@ Then configure log4net in your code:
 | Feature | Built-in | log4net.Ext.Mail.Appender.SmtpAppender |
 |---------|----------|----------------------------------------|
 | SMTP Client | `System.Net.Mail.SmtpClient` (deprecated) | MailKit |
-| TLS Support | Limited | Full (Auto, Explicit, Implicit) |
+| TLS Support | Limited | Required, ImplicitTls, StartTls, StartTlsWhenAvailable |
 | Modern Servers | Often fails | ✓ Recommended |
 | `smtpHost` | Optional | Required |
-| `enableSsl` | true/false | true/false (negotiates Auto/None) |
+| `enableSsl` | true/false (default: false) | true/false (default: true) |
 | `Ntlm` auth | Uses Windows logon | Requires explicit credentials |
 
 ## Configuration Options
@@ -83,7 +83,8 @@ Then configure log4net in your code:
 - `bcc` - blind carbon copy recipients
 - `replyTo` - reply-to address
 - `port` - SMTP port (default: 25)
-- `enableSsl` - negotiate TLS/STARTTLS (true/false, default: false)
+- `enableSsl` - require TLS/STARTTLS (true/false, default: true)
+- `transportSecurity` - `None`, `Required` (default), `ImplicitTls`, `StartTls` or `StartTlsWhenAvailable`
 - `authentication` - `None`, `Basic`, or `Ntlm` (default: `None`)
 - `username` - username for authentication
 - `password` - password for authentication

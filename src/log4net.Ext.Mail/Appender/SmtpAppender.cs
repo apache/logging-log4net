@@ -252,11 +252,11 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// are the same setting, so the one assigned last wins.
   /// </para>
   /// <para>
-  /// When <see langword="true"/>, transport security is required: implicit TLS on port 465 and
-  /// <c>STARTTLS</c> on every other port. Connecting fails if the server does not offer TLS,
-  /// rather than continuing unencrypted, which matches the behaviour of
-  /// <see cref="System.Net.Mail.SmtpClient.EnableSsl"/>. Use <see cref="TransportSecurity"/> when
-  /// the server needs something else.
+  /// When <see langword="true"/>, which is the default, transport security is required: implicit
+  /// TLS on port 465 and <c>STARTTLS</c> on every other port. Connecting fails if the server does
+  /// not offer TLS, rather than continuing unencrypted, which matches the behaviour, though not
+  /// the default, of <see cref="System.Net.Mail.SmtpClient.EnableSsl"/>. Use
+  /// <see cref="TransportSecurity"/> when the server needs something else.
   /// </para>
   /// </remarks>
   public bool EnableSsl
@@ -270,7 +270,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </summary>
   /// <value>
   /// One of the <see cref="SmtpTransportSecurity"/> values. The default is
-  /// <see cref="SmtpTransportSecurity.None"/>.
+  /// <see cref="SmtpTransportSecurity.Required"/>; set it to
+  /// <see cref="SmtpTransportSecurity.None"/> to allow a cleartext connection.
   /// </value>
   /// <remarks>
   /// <para>
@@ -279,7 +280,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <c>STARTTLS</c> is possible.
   /// </para>
   /// </remarks>
-  public SmtpTransportSecurity TransportSecurity { get; set; } = SmtpTransportSecurity.None;
+  public SmtpTransportSecurity TransportSecurity { get; set; } = SmtpTransportSecurity.Required;
 
   /// <summary>
   /// Gets or sets the reply-to e-mail address.
