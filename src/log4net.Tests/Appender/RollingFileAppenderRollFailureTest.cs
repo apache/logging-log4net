@@ -91,11 +91,10 @@ public sealed class RollingFileAppenderRollFailureTest
         "the archive was rotated again while the rename kept failing");
       Assert.That(Array.ConvertAll(afterFirstFailure, File.ReadAllText), Is.EqualTo(contentAfterFirstFailure),
         "the backup contents were rewritten while the rename kept failing");
-      // Only the base rename is retried, and only after the file has grown another tenth of
-      // MaxFileSize: two attempts on Unix, three on Windows, because %newline is
-      // Environment.NewLine and these 20 events are 40 bytes on one and 60 on the other. The range
-      // is those two values, not a tolerance.
-      Assert.That(BaseRenameAttempts(errors, file) - attemptsBeforeGrowth, Is.InRange(2, 3),
+      // Only the base rename is retried, and only after every further tenth of MaxFileSize: %newline
+      // makes these 20 events 40 bytes with LF and 60 with CRLF.
+      int expectedAttempts = Environment.NewLine == "\n" ? 2 : 3;
+      Assert.That(BaseRenameAttempts(errors, file) - attemptsBeforeGrowth, Is.EqualTo(expectedAttempts),
         "the rename is not retried after every tenth of MaxFileSize of growth");
     }
     finally
