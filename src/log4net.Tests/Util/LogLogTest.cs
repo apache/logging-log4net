@@ -58,6 +58,7 @@ public class LogLogTest
     TraceListenerCounter listTraceListener = new();
     Trace.Listeners.Clear();
     Trace.Listeners.Add(listTraceListener);
+    // Emitting is the subject here, so these two reach the console by design.
     LogLog.Error(GetType(), "Hello");
     LogLog.Error(GetType(), "World");
     Trace.Flush();
@@ -86,9 +87,13 @@ public class LogLogTest
     List<LogLog> messages = [];
 
     using LogLog.LogReceivedAdapter _ = new(messages);
-    LogLog.Debug(GetType(), "Won't be recorded");
-    LogLog.Error(GetType(), "This will be recorded.");
-    LogLog.Error(GetType(), "This will be recorded.");
+    // The adapter is fed either way, so this only keeps it off the console.
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      LogLog.Debug(GetType(), "Won't be recorded");
+      LogLog.Error(GetType(), "This will be recorded.");
+      LogLog.Error(GetType(), "This will be recorded.");
+    });
 
     Assert.That(messages, Has.Count.EqualTo(2));
   }
