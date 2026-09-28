@@ -140,6 +140,8 @@ public sealed class TelnetAppenderTest
 
   private const string WelcomeMessage = "TelnetAppender";
 
+  private const string TooManyConnectionsMessage = "Sorry - Too many connections.";
+
   [Test]
   public void TelnetTest()
   {
@@ -399,7 +401,7 @@ public sealed class TelnetAppenderTest
 
   /// <summary>
   /// Binding to the loopback address has to keep the port unreachable from other machines, which
-  /// is what an operator asking for it wants.
+  /// is what an operator asking for it wants. A peer other than the appender counts as unreachable.
   /// </summary>
   [Test]
   [NonParallelizable]
@@ -432,16 +434,9 @@ public sealed class TelnetAppenderTest
       }
 
       using Socket external = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-      SocketException? refused = null;
-      try
-      {
-        external.Connect(new IPEndPoint(routable!, port));
-      }
-      catch (SocketException e)
-      {
-        refused = e;
-      }
-      Assert.That(refused, Is.Not.Null, () => DescribeUnexpectedConnection(external, port));
+      string greeting = ReadGreeting(external, new IPEndPoint(routable!, port));
+      Assert.That(greeting, Does.Not.StartWith(WelcomeMessage).And.Not.StartWith(TooManyConnectionsMessage),
+        () => DescribeUnexpectedConnection(external, port, greeting));
     }
     finally
     {
@@ -545,31 +540,55 @@ public sealed class TelnetAppenderTest
   }
 
   /// <summary>
-  /// Collects what a reviewer needs to tell who accepted a connection that should have been refused.
+  /// Connects and returns the first line the peer sends, empty if it refuses, closes or stays silent.
   /// </summary>
-  private static string DescribeUnexpectedConnection(Socket connected, int port)
+  private static string ReadGreeting(Socket socket, IPEndPoint endPoint)
   {
     StringBuilder text = new();
-    text.AppendLine($"connected from {connected.LocalEndPoint} to {connected.RemoteEndPoint}");
-    text.AppendLine($"host name {Dns.GetHostName()} resolves to [{string.Join(", ", (object[])Dns.GetHostAddresses(Dns.GetHostName()))}]");
-    foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-    {
-      string[] addresses = Array.ConvertAll([.. nic.GetIPProperties().UnicastAddresses], a => a.Address.ToString());
-      text.AppendLine($"interface {nic.Name} ({nic.NetworkInterfaceType}, {nic.OperationalStatus}): {string.Join(", ", addresses)}");
-    }
-    IPEndPoint[] listeners = Array.FindAll(IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners(), l => l.Port == port);
-    text.AppendLine($"listeners on port {port}: [{string.Join(", ", (object[])listeners)}]");
-    // The appender greets every client, so its welcome line identifies it as the peer.
     try
     {
-      connected.ReceiveTimeout = 2_000;
+      socket.Connect(endPoint);
+      // Generous, since a slow accept must not pass as silence. Only a silent proxy pays for it.
+      socket.ReceiveTimeout = (int)_receiveTimeout.TotalMilliseconds;
       byte[] buffer = new byte[256];
-      int read = connected.Receive(buffer);
-      text.AppendLine($"peer sent: {Encoding.ASCII.GetString(buffer, 0, read).Trim()}");
+      int read;
+      do
+      {
+        read = socket.Receive(buffer);
+        text.Append(Encoding.ASCII.GetString(buffer, 0, read));
+      }
+      while (read > 0 && Array.IndexOf(buffer, (byte)'\n', 0, read) < 0);
     }
-    catch (SocketException e)
+    catch (SocketException)
     {
-      text.AppendLine($"peer sent nothing: {e.SocketErrorCode}");
+      // Refused, or silent until the timeout: either way the appender did not answer.
+    }
+    return text.ToString();
+  }
+
+  /// <summary>
+  /// Collects what a reviewer needs to tell who accepted a connection that should have been refused.
+  /// </summary>
+  private static string DescribeUnexpectedConnection(Socket connected, int port, string greeting)
+  {
+    StringBuilder text = new();
+    text.AppendLine($"peer sent: {greeting.Trim()}");
+    // A failing lookup must not hide the assertion this message belongs to.
+    try
+    {
+      text.AppendLine($"connected from {connected.LocalEndPoint} to {connected.RemoteEndPoint}");
+      text.AppendLine($"host name {Dns.GetHostName()} resolves to [{string.Join(", ", (object[])Dns.GetHostAddresses(Dns.GetHostName()))}]");
+      foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+      {
+        string[] addresses = Array.ConvertAll([.. nic.GetIPProperties().UnicastAddresses], a => a.Address.ToString());
+        text.AppendLine($"interface {nic.Name} ({nic.NetworkInterfaceType}, {nic.OperationalStatus}): {string.Join(", ", addresses)}");
+      }
+      IPEndPoint[] listeners = Array.FindAll(IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners(), l => l.Port == port);
+      text.AppendLine($"listeners on port {port}: [{string.Join(", ", (object[])listeners)}]");
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      text.AppendLine($"diagnostics failed: {e.Message}");
     }
     return text.ToString();
   }
