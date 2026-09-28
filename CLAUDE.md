@@ -252,6 +252,18 @@ The manual lives in `src/site/antora/modules/ROOT/pages/`. A new appender page n
 not one: the page itself, an `xref` line in `nav.adoc` (kept alphabetical), and the appender table
 in `manual/configuration/appenders.adoc`.
 
+## Release scripts
+
+- **Every file `build-release.ps1` writes gets LF on every platform.** `Set-Content` writes
+  `[Environment]::NewLine`; use `-NoNewline` with the lines joined by `` `n ``. A CR is invisible in
+  an editor, and `sha512sum` on macOS reads it as part of the file name.
+- **Each release ships the verifier built with it**, so never add backward compatibility to
+  `verify-release.ps1` or `.sh`: a compatibility skip path is a hole, not a courtesy.
+- The scripts are tested with Pester through `scripts/FakeCommands.TestHelper.ps1`, which shadows
+  `dotnet`, `git`, `gpg`, `zip` and `mvnw` with shims on a prepended `PATH`, because Pester `Mock`
+  intercepts only functions and cmdlets. CI runs the suite on macOS, Ubuntu and Windows, so keep
+  the helper's `$IsWindows` branch working and put byte-level assertions where all three see them.
+
 ## Security findings
 
 **[AGENTS.md](AGENTS.md) decides whether something is in scope and whether it is a vulnerability.**

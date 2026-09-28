@@ -1,7 +1,9 @@
 #Requires -Version 7.4
 
 param(
-  $Version = '3.5.0'
+  $Version = '3.5.0',
+  [ValidateRange('Positive')]
+  [int]$Rc = 1
 )
 
 Set-StrictMode -Version Latest
@@ -10,6 +12,89 @@ $ErrorActionPreference = 'Stop'
 # only set $LASTEXITCODE, so without this a failing build would still be packaged and signed.
 # Only honored from PowerShell 7.4, hence the #Requires above.
 $PSNativeCommandUseErrorActionPreference = $true
+
+$Root = "$PSScriptRoot/.."
+$ArtifactDirectory = "$Root/build/artifacts"
+$ManifestName = "apache-log4net-$Version.manifest"
+$ArtifactNames = @(
+  "apache-log4net.$Version.nupkg",
+  "apache-log4net.Ext.Mail.$Version.nupkg",
+  "apache-log4net-source-$Version.zip",
+  "apache-log4net-binaries-$Version.zip",
+  'verify-release.ps1',
+  'verify-release.sh',
+  $ManifestName)
+
+# Paired, so a throw inside cannot leave the caller in the wrong directory.
+function Invoke-InDirectory
+{
+  param
+  (
+    [Parameter(Mandatory=$true, HelpMessage='The directory to run in.')]
+    [string]$Directory,
+    [Parameter(Mandatory=$true, HelpMessage='What to run there.')]
+    [scriptblock]$Action
+  )
+
+  Push-Location $Directory
+  try
+  {
+    & $Action
+  }
+  finally
+  {
+    Pop-Location
+  }
+}
+
+# The binaries come from the working tree, the source archive from a git ref, and both are signed
+# as one release, so they must come from one commit.
+function Get-ReleaseCommit
+{
+  Invoke-InDirectory $Root {
+    $GitStatus = git status --porcelain
+    if ($GitStatus)
+    {
+      throw "the working tree is not clean, so the binaries and the source archive would not match:$([Environment]::NewLine)$($GitStatus -join [Environment]::NewLine)"
+    }
+
+    git rev-parse --verify HEAD
+  }
+}
+
+# Records the commit and the artifact set, and is signed with them. Without the set a missing
+# artifact goes unnoticed, since the verifiers can only check the files that are there.
+function Write-Manifest
+{
+  param
+  (
+    [Parameter(Mandatory=$true, HelpMessage='The commit the release was built from.')]
+    [string]$Commit,
+    [Parameter(Mandatory=$true, HelpMessage='The artifact names, the manifest included.')]
+    [string[]]$Names
+  )
+
+  # LF on every platform: Set-Content would write CRLF on Windows and the artifact names would then
+  # carry a trailing CR into the comparison in verify-release.sh.
+  $Lines = @("commit=$Commit") + ($Names | ForEach-Object { "artifact=$_" })
+  Set-Content -Path $ArtifactDirectory/$ManifestName -NoNewline -Value (($Lines -join "`n") + "`n")
+}
+
+# Tested rather than silenced: -ErrorAction SilentlyContinue would also swallow a delete that
+# failed, leaving a stale artifact behind for whoever copies the directory to dist.
+function Remove-Directory
+{
+  param
+  (
+    [Parameter(Mandatory=$true, HelpMessage='The directory to remove if it exists.')]
+    [string]$Directory
+  )
+
+  if (Test-Path $Directory)
+  {
+    Remove-Item $Directory -Force -Recurse
+  }
+}
 
 function Write-HashAndSignature
 {
@@ -21,42 +106,49 @@ function Write-HashAndSignature
   $File.FullName
   $ComputedHash = (Get-FileHash -Algorithm 'SHA512' $File).Hash.ToLowerInvariant()
   $ComputedHash
-  Set-Content -Path "$($File.FullName).sha512" -Value "$ComputedHash *./$($File.Name)"
+  # LF on every platform: the macOS sha512sum reads a CR from a Windows build as part of the file name.
+  Set-Content -NoNewline -Path "$($File.FullName).sha512" -Value "$ComputedHash *./$($File.Name)`n"
   gpg --armor --output "$($File.FullName).asc" --detach-sig $File.FullName
 }
 
-"cleaning $PSScriptRoot/../build/ ..." 
-Remove-Item $PSScriptRoot/../build/ -Force -Recurse -ErrorAction SilentlyContinue
+"cleaning $Root/build/ ..."
+Remove-Directory $Root/build/
+
+'verifying release tree ...'
+$CommitHash = Get-ReleaseCommit
+
 'building ...'
-dotnet test -c Release "-p:GeneratePackages=true;PackageVersion=$Version" $PSScriptRoot/../src/log4net.sln
+dotnet test -c Release "-p:GeneratePackages=true;PackageVersion=$Version" $Root/src/log4net.sln
+
 'compressing source ...'
-pushd $PSScriptRoot/..
-git archive --format=zip --output $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip master
-popd
+Invoke-InDirectory $Root {
+  git archive --format=zip --output $ArtifactDirectory/apache-log4net-source-$Version.zip $CommitHash
+}
+
 'compressing binaries ...'
-Copy-Item $PSScriptRoot/verify-release.ps1, $PSScriptRoot/verify-release.sh $PSScriptRoot/../build/artifacts/
-Copy-Item $PSScriptRoot/../LICENSE $PSScriptRoot/../build/Release/
-Copy-Item $PSScriptRoot/../NOTICE $PSScriptRoot/../build/Release/
-pushd $PSScriptRoot/../build/Release
-zip -r $PSScriptRoot/../build/artifacts/apache-log4net-binaries-$Version.zip .
-popd
+Copy-Item $PSScriptRoot/verify-release.ps1, $PSScriptRoot/verify-release.sh $ArtifactDirectory/
+Copy-Item $Root/LICENSE, $Root/NOTICE $Root/build/Release/
+Invoke-InDirectory $Root/build/Release {
+  zip -r $ArtifactDirectory/apache-log4net-binaries-$Version.zip .
+}
+
 'signing ...'
-Move-Item $PSScriptRoot/../build/artifacts/log4net.$Version.nupkg $PSScriptRoot/../build/artifacts/apache-log4net.$Version.nupkg
-Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net.$Version.nupkg
-Move-Item $PSScriptRoot/../build/artifacts/log4net.Ext.Mail.$Version.nupkg $PSScriptRoot/../build/artifacts/apache-log4net.Ext.Mail.$Version.nupkg
-Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net.Ext.Mail.$Version.nupkg
-Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net-source-$Version.zip
-Write-HashAndSignature $PSScriptRoot/../build/artifacts/apache-log4net-binaries-$Version.zip
-Write-HashAndSignature $PSScriptRoot/../build/artifacts/verify-release.ps1
-Write-HashAndSignature $PSScriptRoot/../build/artifacts/verify-release.sh
+Move-Item $ArtifactDirectory/log4net.$Version.nupkg $ArtifactDirectory/apache-log4net.$Version.nupkg
+Move-Item $ArtifactDirectory/log4net.Ext.Mail.$Version.nupkg $ArtifactDirectory/apache-log4net.Ext.Mail.$Version.nupkg
+Write-Manifest -Commit $CommitHash -Names $ArtifactNames
+foreach ($ArtifactName in $ArtifactNames)
+{
+  Write-HashAndSignature $ArtifactDirectory/$ArtifactName
+}
+
 'cleaning site ...'
-Remove-Item $PSScriptRoot/../target/ -Force -Recurse -ErrorAction SilentlyContinue
+Remove-Directory $Root/target/
+
 'building site ...'
-pushd $PSScriptRoot/..
-./mvnw site
-popd
+Invoke-InDirectory $Root { ./mvnw site }
+
 'creating tag ...'
 pause
-git tag "rc/$Version-rc1"
+git tag "rc/$Version-rc$Rc"
 'pushing tag ...'
 git push --tags
