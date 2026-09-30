@@ -220,6 +220,24 @@ private static readonly ILog log = LogManager.GetLogger(typeof(Foo));
 
 Here, typeof(Foo) provides the type, and LogManager.GetLogger accepts a Type instance, which is commonly used.
 
+[#default-repository]
+=== How do I configure log4net without naming a repository?
+
+Use the overloads without a repository argument; they pick the default repository for you.
+
+[source,csharp]
+----
+XmlConfigurator.Configure(new FileInfo("log4net.config"));
+----
+
+`LogManager.GetRepository()` returns that same repository.
+To target the repository of a specific assembly, pass a type known at compile time:
+
+[source,csharp]
+----
+ILoggerRepository repository = LogManager.GetRepository(typeof(Program).Assembly);
+----
+
 [#performance]
 === What is the fastest way to (not) log?
 
