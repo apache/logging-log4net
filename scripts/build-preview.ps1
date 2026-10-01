@@ -1,7 +1,7 @@
 #Requires -Version 7.4
 
 param(
-  $Version = '3.5.0',
+  $Version = '3.5.1',
   [ValidateRange('Positive')]
   [int]$Preview = 1
 )
