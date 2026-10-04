@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to coding agents when working with code in this repository.
 
 See [SECURITY.md](SECURITY.md) for the threat model and security boundaries.
 
