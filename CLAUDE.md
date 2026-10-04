@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-See [AGENTS.md](AGENTS.md) for the threat model and security boundaries.
+See [SECURITY.md](SECURITY.md) for the threat model and security boundaries.
 
 ## C# code style
 
@@ -266,7 +266,7 @@ in `manual/configuration/appenders.adoc`.
 
 ## Security findings
 
-**[AGENTS.md](AGENTS.md) decides whether something is in scope and whether it is a vulnerability.**
+**[SECURITY.md](SECURITY.md) decides whether something is in scope and whether it is a vulnerability.**
 Read it before triaging a report, and describe a finding in commit messages and changelog entries
 the way it comes out of that assessment: a correctness bug, a reliability defect or hardening is
 none the worse for being called one.
