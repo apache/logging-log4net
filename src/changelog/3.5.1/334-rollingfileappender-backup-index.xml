@@ -4,14 +4,7 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
   <issue id="334" link="https://github.com/apache/logging-log4net/pull/334"/>
-  <description format="asciidoc">
-    count only the current date's backups when `RollingFileAppender` starts. A date pattern without
- separators (`.yyyyMMdd`) was read as a backup number, a date pattern supplying the extension with
- `PreserveLogFileNameExtension` lost the current date's backups on restart, and backups of earlier dates
- raised the current count. With a static file name, a date pattern that formats as a short number
- (`.dd`, `.MM`, `.HH`, `.yyyy`) names dated files exactly like numbered backups, so no numbered backups
- are made for it: size rolling is switched off, the existing file is appended to at start-up, and a
- `FATAL` line explains why. The new `IgnoreDateWarnings` property keeps the configured behaviour
- (fixed by @Snotface in https://github.com/apache/logging-log4net/pull/334[#334])
-  </description>
+  <description format="asciidoc">Count only the current date's backups when `RollingFileAppender`
+  starts. A date pattern without separators (`.yyyyMMdd`) no longer counts as a backup number, and
+  backups of earlier dates no longer raise the count (reported by @Snotface, fixed by @FreeAndNil)</description>
 </entry>

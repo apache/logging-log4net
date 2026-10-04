@@ -1672,7 +1672,8 @@ public class RollingFileAppenderTest
   [TestCase(5, -1)]
   [TestCase(-1, 1)]
   [TestCase(-1, -1)]
-  public void TestInitializeRollBackupsIgnoresDateWithoutDashes(int maxSizeRollBackups, int countDirection)
+  public void TestInitializeRollBackupsIgnoresDateWithoutDashes(int maxSizeRollBackups,
+    int countDirection)
   {
     const string baseFile = "LogFile.log";
     List<string> files = ["LogFile.log", "LogFile.log.20261003", "LogFile.log.1", "LogFile.log.2"];
@@ -1775,71 +1776,27 @@ public class RollingFileAppenderTest
   }
 
   /// <summary>
-  /// Tests that a short date pattern does not hide backups when the date is part of
-  /// the file name before the index (staticLogFileName false)
+  /// Tests that the current date's file of a non-static name is not mistaken for a backup index
+  /// when the date pattern has no separators
   /// </summary>
-  [Test]
-  public void TestInitializeRollBackupsShortDatePatternNotStatic()
+  [TestCase("log.txt", ".yyyyMMdd", false, "log.txt.20261004", "log.txt.20261004.1")]
+  [TestCase("log", ".yyyyMMdd'.log'", true, "log.20261004.log", "log.20261004.1.log")]
+  public void TestInitializeRollBackupsNotStaticDateWithoutDashes(string baseFile,
+    string datePattern, bool preserveExtension, string datedFile, string backupFile)
   {
-    const string baseFile = "log.txt";
-    List<string> files = ["log.txt.04", "log.txt.04.10", "log.txt.04.11", "log.txt.03.12"];
-
     RollingFileAppender rfa = new()
     {
       RollingStyle = RollingFileAppender.RollingMode.Composite,
-      DatePattern = ".dd",
+      DatePattern = datePattern,
       DateTimeStrategy = new Integration.MockDateTime(new DateTime(2026, 10, 4, 9, 0, 0)),
       StaticLogFileName = false,
+      PreserveLogFileNameExtension = preserveExtension,
       MaxSizeRollBackups = -1,
       CurrentSizeRollBackups = 0
     };
-    rfa.InitializeRollBackups(baseFile, files);
+    rfa.InitializeRollBackups(baseFile, [datedFile, backupFile]);
 
-    Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(11));
-  }
-
-  /// <summary>
-  /// Tests that a short date pattern with a static file name switches off size rolling,
-  /// and writes why at the top of the file even when the filters would drop it
-  /// </summary>
-  [Test]
-  public void TestShortDatePatternSwitchesOffSizeRolling()
-  {
-    string[] lines = LogWithDatePattern(".dd", out int fileCount);
-
-    Assert.That(fileCount, Is.EqualTo(1), "no size backups");
-    Assert.That(lines, Has.Length.EqualTo(101));
-    Assert.That(lines[0], Does.StartWith("FATAL ").And.Contain("size rolling has been switched off"));
-  }
-
-  /// <summary>
-  /// Tests that a short date pattern with appendToFile false appends at start-up instead of
-  /// rolling the previous file to a numbered backup, for both styles that roll by date
-  /// </summary>
-  [TestCase(RollingFileAppender.RollingMode.Date)]
-  [TestCase(RollingFileAppender.RollingMode.Composite)]
-  public void TestShortDatePatternAppendsInsteadOfRollingAtStartup(RollingFileAppender.RollingMode rollingStyle)
-  {
-    string[] lines = LogWithDatePattern(".dd", out int fileCount, rollingStyle: rollingStyle, appendToFile: false, runs: 2);
-
-    Assert.That(fileCount, Is.EqualTo(1), "no numbered backups");
-    Assert.That(lines, Has.Length.EqualTo(202), "both runs kept");
-    Assert.That(lines[0], Does.StartWith("FATAL ").And.Contain("appended to at start-up"));
-    Assert.That(lines[101], Does.StartWith("FATAL "));
-  }
-
-  /// <summary>
-  /// Tests that rolling by date only, appending, with a short date pattern makes no numbered
-  /// backups, so it writes no warning
-  /// </summary>
-  [Test]
-  public void TestShortDatePatternDateStyleAppendingHasNoWarning()
-  {
-    string[] lines = LogWithDatePattern(".dd", out int fileCount, rollingStyle: RollingFileAppender.RollingMode.Date);
-
-    Assert.That(fileCount, Is.EqualTo(1));
-    Assert.That(lines, Has.Length.EqualTo(100));
-    Assert.That(lines[0], Does.StartWith("ERROR "));
+    Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(1));
   }
 
   /// <summary>
@@ -1862,77 +1819,6 @@ public class RollingFileAppenderTest
     rfa.InitializeRollBackups(baseFile, files);
 
     Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(10));
-  }
-
-  /// <summary>
-  /// Tests that a long date pattern keeps size rolling and writes no warning
-  /// </summary>
-  [Test]
-  public void TestLongDatePatternKeepsSizeRolling()
-  {
-    string[] lines = LogWithDatePattern(".yyyy-MM-dd", out int fileCount);
-
-    Assert.That(fileCount, Is.GreaterThan(1), "size backups");
-    Assert.That(lines[0], Does.StartWith("ERROR "));
-  }
-
-  /// <summary>
-  /// Tests that IgnoreDateWarnings keeps size rolling for a short date pattern, without a warning
-  /// </summary>
-  [Test]
-  public void TestShortDatePatternIgnoreDateWarnings()
-  {
-    string[] lines = LogWithDatePattern(".dd", out int fileCount, ignoreDateWarnings: true);
-
-    Assert.That(fileCount, Is.GreaterThan(1), "size backups");
-    Assert.That(lines[0], Does.StartWith("ERROR "));
-  }
-
-  /// <summary>
-  /// Logs 100 lines of about 100 bytes per run through a static, date rolling appender
-  /// limited to 1KB, whose filters accept only ERROR. Each run is a new appender, as at start-up.
-  /// </summary>
-  /// <returns>the lines of the current log file</returns>
-  private static string[] LogWithDatePattern(string datePattern, out int fileCount, bool ignoreDateWarnings = false,
-    RollingFileAppender.RollingMode rollingStyle = RollingFileAppender.RollingMode.Composite,
-    bool appendToFile = true, int runs = 1)
-  {
-    string dir = Path.Combine(Path.GetTempPath(), "l4n-datepattern-" + Guid.NewGuid().ToString("N"));
-    try
-    {
-      for (int run = 0; run < runs; run++)
-      {
-        RollingFileAppender rfa = new()
-        {
-          File = Path.Combine(dir, "log.txt"),
-          AppendToFile = appendToFile,
-          RollingStyle = rollingStyle,
-          DatePattern = datePattern,
-          MaximumFileSize = "1KB",
-          MaxSizeRollBackups = -1,
-          IgnoreDateWarnings = ignoreDateWarnings,
-          Layout = new PatternLayout("%level %message%newline")
-        };
-        rfa.AddFilter(new log4net.Filter.LevelMatchFilter { LevelToMatch = Level.Error });
-        rfa.AddFilter(new log4net.Filter.DenyAllFilter());
-        rfa.ActivateOptions();
-        for (int i = 0; i < 100; i++)
-        {
-          rfa.DoAppend(new LoggingEvent(typeof(RollingFileAppenderTest), null, "x", Level.Error, $"line {i:D3} " + new string('x', 80), null));
-        }
-        rfa.Close();
-      }
-
-      fileCount = Directory.GetFiles(dir).Length;
-      return File.ReadAllLines(Path.Combine(dir, "log.txt"));
-    }
-    finally
-    {
-      if (Directory.Exists(dir))
-      {
-        Directory.Delete(dir, true);
-      }
-    }
   }
 
   /// <summary>
