@@ -463,6 +463,26 @@ public partial class RollingFileAppender : FileAppender
   public bool StaticLogFileName { get; set; } = true;
 
   /// <summary>
+  /// Gets or sets a value indicating whether to keep making numbered backups when the
+  /// <see cref="DatePattern"/> makes dated files and numbered backups share names.
+  /// </summary>
+  /// <value>
+  /// <see langword="true"/> to roll as configured regardless, otherwise <see langword="false"/>. The default is <see langword="false"/>.
+  /// </value>
+  /// <remarks>
+  /// <para>
+  /// With <see cref="StaticLogFileName"/> set, a short numeric date pattern such as <c>.dd</c> names
+  /// the dated file <c>file.log.10</c>, which is also the name of numbered backup 10, so one roll
+  /// overwrites the other. Numbered backups are made by size rolls, and at start-up when
+  /// <see cref="FileAppender.AppendToFile"/> is false. By default neither happens for such a
+  /// configuration: size rolling is switched off, the existing file is appended to, and the reason is
+  /// written at the top of each log file. Set this to <see langword="true"/> to accept the risk: the
+  /// appender rolls as configured and no warning is written.
+  /// </para>
+  /// </remarks>
+  public bool IgnoreDateWarnings { get; set; }
+
+  /// <summary>
   /// The fully qualified type of the RollingFileAppender class.
   /// </summary>
   /// <remarks>
@@ -503,6 +523,7 @@ public partial class RollingFileAppender : FileAppender
   protected override void Append(LoggingEvent loggingEvent)
   {
     AdjustFileBeforeAppend();
+    AppendSizeRollConflict();
     base.Append(loggingEvent);
   }
 
@@ -520,7 +541,25 @@ public partial class RollingFileAppender : FileAppender
   protected override void Append(LoggingEvent[] loggingEvents)
   {
     AdjustFileBeforeAppend();
+    AppendSizeRollConflict();
     base.Append(loggingEvents);
+  }
+
+  /// <summary>
+  /// Writes the reason numbered backups were switched off at the top of a newly opened file.
+  /// </summary>
+  /// <remarks>
+  /// Written past the filters and threshold, so it reaches the file whatever the configuration.
+  /// </remarks>
+  private void AppendSizeRollConflict()
+  {
+    if (_sizeRollConflict is null || !_sizeRollConflictPending)
+    {
+      return;
+    }
+
+    _sizeRollConflictPending = false;
+    base.Append(new LoggingEvent(_declaringType, null, _declaringType.FullName, Level.Fatal, _sizeRollConflict, null));
   }
 
   /// <summary>
@@ -583,7 +622,7 @@ public partial class RollingFileAppender : FileAppender
           RetryFailedRoll();
         }
       }
-      else if (_rollSize && (File is not null) && CountingWriter.Count >= MaxFileSize)
+      else if (_rollSize && _sizeRollConflict is null && (File is not null) && CountingWriter.Count >= MaxFileSize)
       {
         RollOverSize();
       }
@@ -618,7 +657,9 @@ public partial class RollingFileAppender : FileAppender
       // AppendToFile says, or the roll destroys what it could not move.
       append = append
         || (_pendingRename is not null
-          && string.Equals(fileName, _pendingRename.From, StringComparison.Ordinal));
+          && string.Equals(fileName, _pendingRename.From, StringComparison.Ordinal))
+        // nothing can be rolled out of the way, see GetSizeRollConflict
+        || _sizeRollConflict is not null;
 
       // Calculate the current size of the file
       long currentCount = 0;
@@ -666,6 +707,8 @@ public partial class RollingFileAppender : FileAppender
 
       // Set the file size onto the counting writer. A refused lock leaves none.
       (QuietWriter as CountingQuietTextWriter)?.Count = currentCount;
+
+      _sizeRollConflictPending = true;
     }
   }
 
@@ -707,6 +750,12 @@ public partial class RollingFileAppender : FileAppender
   private void DetermineCurSizeRollBackups()
   {
     CurrentSizeRollBackups = 0;
+
+    if (_sizeRollConflict is not null)
+    {
+      // no numbered backups are made, and a numbered name may be a dated file, see GetSizeRollConflict
+      return;
+    }
 
     string? fullPath;
     string? fileName;
@@ -819,8 +868,9 @@ public partial class RollingFileAppender : FileAppender
       return;
     }
 
-    // If file exists, and we are not appending then roll it out of the way
-    if (AppendToFile)
+    // If file exists, and we are not appending then roll it out of the way,
+    // unless that would make a numbered backup named like a dated file
+    if (AppendToFile || _sizeRollConflict is not null)
     {
       return;
     }
@@ -860,113 +910,194 @@ public partial class RollingFileAppender : FileAppender
   /// <param name="curFileName"></param>
   private void InitializeFromOneFile(string baseFile, string curFileName)
   {
-    curFileName = curFileName.ToLowerInvariant();
-    baseFile = baseFile.ToLowerInvariant();
-    string dir = string.IsNullOrEmpty(baseFile) ? "" : Path.GetDirectoryName(baseFile);
-    string baseFileWithoutExtension = Path.Combine(dir ?? "", Path.GetFileNameWithoutExtension(baseFile));
-    
-    if (curFileName.StartsWith(baseFileWithoutExtension) == false)
-    {
-      return; // This is not a log file, so ignore
-    }
+    // Bump the counter up to the highest count seen so far
+    int backup = GetBackupIndex(baseFile, curFileName);
 
-    if (curFileName.Equals(baseFile, StringComparison.Ordinal))
+    if (backup > CurrentSizeRollBackups)
     {
-      return; // Base log file is not an incremented logfile (.1 or .2, etc.)
-    }
-
-    // Only look for files in the current roll point
-    if (_rollDate && !StaticLogFileName)
-    {
-      string date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLowerInvariant();
-      string prefix = (PreserveLogFileNameExtension
-        ? Path.GetFileNameWithoutExtension(baseFile) + date
-        : baseFile + date).ToLowerInvariant();
-      string suffix = PreserveLogFileNameExtension
-        ? Path.GetExtension(baseFile).ToLowerInvariant()
-        : "";
-      string curFileNameWithoutDir = Path.GetFileName(curFileName);
-      if (!curFileNameWithoutDir.StartsWith(prefix) || !curFileNameWithoutDir.EndsWith(suffix))
+      if (0 == MaxSizeRollBackups)
       {
-        LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
-        return;
+        // Stay at zero when zero backups are desired
       }
-    }
-
-    try
-    {
-      // Bump the counter up to the highest count seen so far
-      int backup = GetBackupIndex(curFileName);
-
-      // caution: we might get a false positive when certain
-      // date patterns such as yyyyMMdd are used...those are
-      // valid number but aren't the kind of back up index
-      // we're looking for
-      if (backup > CurrentSizeRollBackups)
+      else if (-1 == MaxSizeRollBackups)
       {
-        if (0 == MaxSizeRollBackups)
+        // Infinite backups, so go as high as the highest value
+        CurrentSizeRollBackups = backup;
+      }
+      else
+      {
+        // Backups limited to a finite number
+        if (CountDirection >= 0)
         {
-          // Stay at zero when zero backups are desired
-        }
-        else if (-1 == MaxSizeRollBackups)
-        {
-          // Infinite backups, so go as high as the highest value
+          // Go with the highest file when counting up
           CurrentSizeRollBackups = backup;
         }
         else
         {
-          // Backups limited to a finite number
-          if (CountDirection >= 0)
+          // Clip to the limit when counting down
+          if (backup <= MaxSizeRollBackups)
           {
-            // Go with the highest file when counting up
             CurrentSizeRollBackups = backup;
           }
-          else
-          {
-            // Clip to the limit when counting down
-            if (backup <= MaxSizeRollBackups)
-            {
-              CurrentSizeRollBackups = backup;
-            }
-          }
         }
-        LogLog.Debug(_declaringType, $"File name [{curFileName}] moves current count to [{CurrentSizeRollBackups}]");
       }
-    }
-    catch (FormatException)
-    {
-      //this happens when file.log -> file.log.yyyy-MM-dd which is normal
-      //when staticLogFileName == false
-      LogLog.Debug(_declaringType, $"Encountered a backup file not ending in .x [{curFileName}]");
+      LogLog.Debug(_declaringType, $"File name [{curFileName}] moves current count to [{CurrentSizeRollBackups}]");
     }
   }
 
   /// <summary>
-  /// Attempts to extract a number from the end of the file name that indicates
-  /// the number of the times the file has been rolled over.
+  /// Gets the size backup index of <paramref name="curFileName"/> within the current roll point.
   /// </summary>
+  /// <param name="baseFile">the base log file name</param>
+  /// <param name="curFileName">the existing file to examine</param>
+  /// <returns>the backup index, or -1 when the file is not a size backup of the current roll point</returns>
   /// <remarks>
-  /// Certain date pattern extensions like yyyyMMdd will be parsed as valid backup indexes.
+  /// <para>
+  /// A size backup is named <c>CombinePath(group, ".N")</c>, where the group is the base file,
+  /// or the base file plus the current date when <see cref="StaticLogFileName"/> is false.
+  /// Only files of exactly that shape count, so files from other date periods are ignored.
+  /// </para>
+  /// <para>
+  /// A date in a pattern without separators (e.g. <c>.yyyyMMdd</c>) also looks like <c>.N</c>,
+  /// so a suffix that parses as a date in <see cref="DatePattern"/> is not taken as an index.
+  /// </para>
   /// </remarks>
-  private int GetBackupIndex(string curFileName)
+  private int GetBackupIndex(string baseFile, string curFileName)
   {
-    int result = -1;
-    string fileName = curFileName;
-
-    if (PreserveLogFileNameExtension)
+    string fileName = Path.GetFileName(curFileName).ToLowerInvariant();
+    string group = Path.GetFileName(baseFile).ToLowerInvariant();
+    if (_rollDate && !StaticLogFileName)
     {
-      fileName = Path.GetFileNameWithoutExtension(fileName);
+      group = CombinePath(group, DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLowerInvariant());
     }
 
-    int index = fileName.LastIndexOf(".", StringComparison.Ordinal);
-    if (index > 0)
+    // CombinePath puts the suffix before the extension when it is preserved
+    string extension = PreserveLogFileNameExtension ? Path.GetExtension(group) : string.Empty;
+    string head = group.Substring(0, group.Length - extension.Length);
+    if (fileName.Length <= group.Length
+      || !fileName.StartsWith(head, StringComparison.Ordinal)
+      || !fileName.EndsWith(extension, StringComparison.Ordinal))
     {
-      // if the "yyyy-MM-dd" component of file.log.yyyy-MM-dd is passed to TryParse
-      // it will gracefully fail and return backUpIndex will be 0
-      _ = SystemInfo.TryParse(fileName.Substring(index + 1), out result);
+      return -1;
     }
 
+    string suffix = fileName.Substring(head.Length, fileName.Length - head.Length - extension.Length);
+
+    // only a static name puts the date where the index goes; otherwise the date is part of the group.
+    // A short numeric date (.dd) cannot be told from an index at all, so its suffixes count as
+    // indexes; no numbered files are made with one unless IgnoreDateWarnings is set.
+    if (_rollDate && StaticLogFileName && GetShortNumericDate() is null && IsDateSuffix(suffix))
+    {
+      LogLog.Debug(_declaringType, $"File name [{curFileName}] ends in a date, not a backup index");
+      return -1;
+    }
+
+    if (suffix.Length < 2 || suffix[0] != '.'
+      || !int.TryParse(suffix.Substring(1), NumberStyles.None, CultureInfo.InvariantCulture, out int result))
+    {
+      return -1;
+    }
+
+    // no check against MaxSizeRollBackups: counting up, real indexes keep climbing past it
     return result;
+  }
+
+  /// <summary>
+  /// Determines whether <paramref name="suffix"/> is a date written with <see cref="DatePattern"/>.
+  /// </summary>
+  private bool IsDateSuffix(string suffix)
+    => DatePattern is not null
+      && DateTime.TryParseExact(suffix, DatePattern, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out _);
+
+  /// <summary>
+  /// Checks whether dated files and numbered backups can end up with the same name.
+  /// </summary>
+  /// <returns>
+  /// a message explaining the conflict, or null when there is none or <see cref="IgnoreDateWarnings"/> is set
+  /// </returns>
+  /// <remarks>
+  /// <para>
+  /// With a static file name, a dated file is <c>CombinePath(file, date)</c> and a numbered backup is
+  /// <c>CombinePath(file, ".N")</c>. A short numeric date such as <c>.dd</c> makes the two identical:
+  /// <c>log.txt.10</c> is both the 10th and backup 10, so rolling one overwrites the other.
+  /// Numbered backups are made by size rolls, and at start-up when <see cref="FileAppender.AppendToFile"/>
+  /// is false. For such configurations neither happens: size rolling is switched off, the existing
+  /// file is appended to, and the reason is written to each file. When <see cref="IgnoreDateWarnings"/>
+  /// is set the appender rolls as configured and the conflict is only noted in the internal debug output.
+  /// </para>
+  /// </remarks>
+  private string? GetSizeRollConflict()
+  {
+    if (!StaticLogFileName || !_rollDate || MaxSizeRollBackups == 0 || (!_rollSize && AppendToFile))
+    {
+      return null;
+    }
+
+    string? date = GetShortNumericDate();
+    if (date is null)
+    {
+      return null;
+    }
+
+    string fileName = Path.GetFileName(File?.Trim() ?? "log.txt");
+    if (IgnoreDateWarnings)
+    {
+      LogLog.Debug(_declaringType, $"RollingFileAppender [{Name}]: datePattern [{DatePattern}] names dated files like"
+        + $" [{CombinePath(fileName, date)}], the name of numbered backup {date.Substring(1)}; rolling as configured, as ignoreDateWarnings is set.");
+      return null;
+    }
+
+    return $"RollingFileAppender [{Name}]: datePattern [{DatePattern}] names dated files like"
+      + $" [{CombinePath(fileName, date)}], which is also the name of numbered backup {date.Substring(1)}."
+      + " So that no log files are overwritten, no numbered backups are made:"
+      + (_rollSize ? " size rolling has been switched off and maximumFileSize is ignored," : string.Empty)
+      + (AppendToFile ? string.Empty : " the existing file is appended to at start-up although appendToFile is false,")
+      + " and each file grows until the date rolls over. To roll as configured, use a longer date"
+      + " pattern (e.g. .yyyy-MM-dd) or set staticLogFileName to false. To roll as configured anyway and"
+      + " accept the risk, set ignoreDateWarnings to true.";
+  }
+
+  /// <summary>
+  /// The short numeric date <see cref="DatePattern"/> can write, cached per pattern.
+  /// See <see cref="FindShortNumericDate"/>.
+  /// </summary>
+  private string? GetShortNumericDate()
+  {
+    if (DatePattern is null)
+    {
+      return null;
+    }
+
+    if (!string.Equals(_shortNumericDatePattern, DatePattern, StringComparison.Ordinal))
+    {
+      _shortNumericDate = FindShortNumericDate(DatePattern);
+      _shortNumericDatePattern = DatePattern;
+    }
+    return _shortNumericDate;
+  }
+
+  /// <summary>
+  /// Finds a date that <paramref name="datePattern"/> writes as a dot and a short number
+  /// without a leading zero, the same text as a size backup suffix.
+  /// </summary>
+  /// <returns>the formatted date, e.g. <c>.10</c>, or null when the pattern never writes one</returns>
+  private static string? FindShortNumericDate(string datePattern)
+  {
+    // single-letter tokens (d, M, H, m, s) vary in width, so sample every day at several times
+    TimeSpan[] times = [TimeSpan.Zero, new(10, 10, 10), new(23, 59, 59)];
+    for (DateTime day = new(2024, 1, 1); day.Year == 2024; day = day.AddDays(1))
+    {
+      foreach (TimeSpan time in times)
+      {
+        string date = (day + time).ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
+        if (date.Length >= 2 && date.Length <= ShortDateDigits + 1 && date[0] == '.' && date[1] != '0'
+          && date.Skip(1).All(c => c is >= '0' and <= '9'))
+        {
+          return date;
+        }
+      }
+    }
+    return null;
   }
 
   /// <summary>
@@ -1070,6 +1201,12 @@ public partial class RollingFileAppender : FileAppender
       {
         ErrorHandler.Error($"Either DatePattern or rollingStyle options are not set for [{Name}].");
       }
+    }
+
+    _sizeRollConflict = GetSizeRollConflict();
+    if (_sizeRollConflict is not null)
+    {
+      LogLog.Warn(_declaringType, _sizeRollConflict);
     }
 
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
@@ -1689,6 +1826,32 @@ public partial class RollingFileAppender : FileAppender
   /// Cache flag set if we are rolling by size.
   /// </summary>
   private bool _rollSize = true;
+
+  /// <summary>
+  /// Why numbered backups were switched off for this configuration, or null when they were not
+  /// (including when <see cref="IgnoreDateWarnings"/> is set). See <see cref="GetSizeRollConflict"/>.
+  /// </summary>
+  private string? _sizeRollConflict;
+
+  /// <summary>
+  /// Set when a file is opened, so <see cref="_sizeRollConflict"/> is written at the top of each file.
+  /// </summary>
+  private bool _sizeRollConflictPending;
+
+  /// <summary>
+  /// Date suffixes of at most this many digits are close enough to backup indexes to collide.
+  /// </summary>
+  private const int ShortDateDigits = 4;
+
+  /// <summary>
+  /// The <see cref="DatePattern"/> that <see cref="_shortNumericDate"/> was found for.
+  /// </summary>
+  private string? _shortNumericDatePattern;
+
+  /// <summary>
+  /// Cached result of <see cref="FindShortNumericDate"/>. See <see cref="GetShortNumericDate"/>.
+  /// </summary>
+  private string? _shortNumericDate;
 
   /// <summary>
   /// FileName provided in configuration.  Used for rolling properly
