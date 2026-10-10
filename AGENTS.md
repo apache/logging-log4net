@@ -28,6 +28,10 @@ almost always be doing.
   interface or abstract class, as in `Func<ISmtpTransport> f = () => new MailKitSmtpTransport();`.
 - `x?.Method() ?? false` rather than `x is not null && x.Method()`, and merge nested guards
   into one condition.
+- In a method whose conditions are hard to follow, give their parts names: small local functions
+  such as `IsBaseFileRolledByDate()` or `HasNumberedBackups()`, even one-liners and even chained,
+  so the `if` reads as a sentence. See `RollingFileAppender.DoesDatePatternCollideWithBackupNames`.
+  In review, do not suggest inlining them to save lines. A simple guard stays inline.
 - Expression-bodied members whenever the body fits on one line, including constructors
   (`resharper_constructor_or_destructor_body = expression_body`).
 - Braces on `if`/`else` bodies even for a single statement.

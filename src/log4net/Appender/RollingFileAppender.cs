@@ -873,38 +873,15 @@ public partial class RollingFileAppender : FileAppender
     string dir = string.IsNullOrEmpty(baseFile) ? "" : Path.GetDirectoryName(baseFile);
     string baseFileWithoutExtension = Path.Combine(dir ?? "", Path.GetFileNameWithoutExtension(baseFile));
     
-    if (curFileName.StartsWith(baseFileWithoutExtension) == false)
+    if (!IsLogFile() || IsBaseFile())
     {
-      return; // This is not a log file, so ignore
-    }
-
-    if (curFileName.Equals(baseFile, StringComparison.Ordinal))
-    {
-      return; // Base log file is not an incremented logfile (.1 or .2, etc.)
+      return;
     }
 
     // Only look for files in the current roll point
-    if (_rollDate && !StaticLogFileName)
+    if (_rollDate && !StaticLogFileName && !IsBackupOfDatedFile(Path.GetFileName(curFileName)))
     {
-      string date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLowerInvariant();
-      // the date pattern may supply the extension, so take it from the dated name
-      string dated = Path.GetFileName(CombinePath(baseFile, date));
-      string suffix = PreserveLogFileNameExtension ? Path.GetExtension(dated) : "";
-      string prefix = dated.Substring(0, dated.Length - suffix.Length);
-      string curFileNameWithoutDir = Path.GetFileName(curFileName);
-      // the dot keeps log.txt.11 out of the scan for log.txt.1
-      if (!curFileNameWithoutDir.StartsWith(prefix + ".")
-        || !curFileNameWithoutDir.EndsWith(suffix))
-      {
-        LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
-        return;
-      }
-
-      // the dated file itself has no index, and a date like .yyyyMMdd would parse as one
-      if (curFileNameWithoutDir.Length <= dated.Length)
-      {
-        return;
-      }
+      return;
     }
 
     try
@@ -948,6 +925,31 @@ public partial class RollingFileAppender : FileAppender
       //this happens when file.log -> file.log.yyyy-MM-dd which is normal
       //when staticLogFileName == false
       LogLog.Debug(_declaringType, $"Encountered a backup file not ending in .x [{curFileName}]");
+    }
+
+    bool IsLogFile() => curFileName.StartsWith(baseFileWithoutExtension);
+
+    // the base log file is not an incremented log file (.1 or .2, etc.)
+    bool IsBaseFile() => curFileName.Equals(baseFile, StringComparison.Ordinal);
+
+    bool IsBackupOfDatedFile(string fileName)
+    {
+      string date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)
+        .ToLowerInvariant();
+      // the date pattern may supply the extension, so take it from the dated name
+      string dated = Path.GetFileName(CombinePath(baseFile, date));
+      string suffix = PreserveLogFileNameExtension ? Path.GetExtension(dated) : "";
+      string prefix = dated.Substring(0, dated.Length - suffix.Length);
+      // the dot keeps log.txt.11 out of the scan for log.txt.1
+      if (!fileName.StartsWith(prefix + ".") || !fileName.EndsWith(suffix))
+      {
+        LogLog.Debug(_declaringType,
+          $"Ignoring file [{curFileName}] because it is from a different date period");
+        return false;
+      }
+
+      // the dated file itself has no index, and a date like .yyyyMMdd would parse as one
+      return fileName.Length > dated.Length;
     }
   }
 
