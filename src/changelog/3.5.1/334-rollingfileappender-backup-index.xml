@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="334" link="https://github.com/apache/logging-log4net/pull/334"/>
+  <description format="asciidoc">Count only the current date's backups when `RollingFileAppender`
+  starts. A date pattern without separators (`.yyyyMMdd`) no longer counts as a backup number, and
+  backups of earlier dates no longer raise the count (reported by @Snotface, fixed by @FreeAndNil)</description>
+</entry>

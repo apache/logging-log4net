@@ -879,16 +879,20 @@ public partial class RollingFileAppender : FileAppender
     if (_rollDate && !StaticLogFileName)
     {
       string date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLowerInvariant();
-      string prefix = (PreserveLogFileNameExtension
-        ? Path.GetFileNameWithoutExtension(baseFile) + date
-        : baseFile + date).ToLowerInvariant();
-      string suffix = PreserveLogFileNameExtension
-        ? Path.GetExtension(baseFile).ToLowerInvariant()
-        : "";
+      // the date pattern may supply the extension, so take it from the dated name
+      string dated = Path.GetFileName(CombinePath(baseFile, date));
+      string suffix = PreserveLogFileNameExtension ? Path.GetExtension(dated) : "";
+      string prefix = dated.Substring(0, dated.Length - suffix.Length);
       string curFileNameWithoutDir = Path.GetFileName(curFileName);
       if (!curFileNameWithoutDir.StartsWith(prefix) || !curFileNameWithoutDir.EndsWith(suffix))
       {
         LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
+        return;
+      }
+
+      // the dated file itself has no index, and a date like .yyyyMMdd would parse as one
+      if (curFileNameWithoutDir.Length <= dated.Length)
+      {
         return;
       }
     }
@@ -896,12 +900,8 @@ public partial class RollingFileAppender : FileAppender
     try
     {
       // Bump the counter up to the highest count seen so far
-      int backup = GetBackupIndex(curFileName);
+      int backup = GetBackupIndex(baseFile, curFileName);
 
-      // caution: we might get a false positive when certain
-      // date patterns such as yyyyMMdd are used...those are
-      // valid number but aren't the kind of back up index
-      // we're looking for
       if (backup > CurrentSizeRollBackups)
       {
         if (0 == MaxSizeRollBackups)
@@ -945,10 +945,7 @@ public partial class RollingFileAppender : FileAppender
   /// Attempts to extract a number from the end of the file name that indicates
   /// the number of the times the file has been rolled over.
   /// </summary>
-  /// <remarks>
-  /// Certain date pattern extensions like yyyyMMdd will be parsed as valid backup indexes.
-  /// </remarks>
-  private int GetBackupIndex(string curFileName)
+  private int GetBackupIndex(string baseFile, string curFileName)
   {
     int result = -1;
     string fileName = curFileName;
@@ -956,11 +953,20 @@ public partial class RollingFileAppender : FileAppender
     if (PreserveLogFileNameExtension)
     {
       fileName = Path.GetFileNameWithoutExtension(fileName);
+      baseFile = Path.GetFileNameWithoutExtension(baseFile);
     }
 
     int index = fileName.LastIndexOf(".", StringComparison.Ordinal);
     if (index > 0)
     {
+      // with a static name, log.txt.20261003.1 is a backup of an earlier date
+      if (StaticLogFileName
+        && (!string.Equals(fileName.Substring(0, index), baseFile, StringComparison.Ordinal)
+          || IsDateSuffix(fileName.Substring(index))))
+      {
+        return -1;
+      }
+
       // if the "yyyy-MM-dd" component of file.log.yyyy-MM-dd is passed to TryParse
       // it will gracefully fail and return backUpIndex will be 0
       _ = SystemInfo.TryParse(fileName.Substring(index + 1), out result);
@@ -968,6 +974,16 @@ public partial class RollingFileAppender : FileAppender
 
     return result;
   }
+
+  /// <summary>
+  /// Determines whether <paramref name="suffix"/> is a date longer than four characters after
+  /// the dot, such as <c>.yyyyMMdd</c>. Shorter dates (<c>.dd</c> writes <c>.10</c>) cannot be
+  /// told from a backup index and keep counting as one.
+  /// </summary>
+  private bool IsDateSuffix(string suffix)
+    => _rollDate && DatePattern is not null && suffix.Length > 5
+      && DateTime.TryParseExact(suffix, DatePattern, DateTimeFormatInfo.InvariantInfo,
+        DateTimeStyles.None, out _);
 
   /// <summary>
   /// Takes a list of files and a base file name, and looks for 'incremented' versions of the base file.
