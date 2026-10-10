@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="335" link="https://github.com/apache/logging-log4net/issues/335"/>
+  <description format="asciidoc">With `StaticLogFileName` a `DatePattern` such as `.dd` named dated
+  files like numbered backups, so a roll could overwrite one with the other. Such an appender is now
+  reported when activated and uses the dated file name as with `StaticLogFileName` false, so its
+  backups are numbered after the date, and an existing static file is left untouched, including
+  its numbered backups. Use a
+  `DatePattern` with a separator or at least five digits to keep the static name (reported by
+  @Snotface, fixed by @FreeAndNil)</description>
+</entry>

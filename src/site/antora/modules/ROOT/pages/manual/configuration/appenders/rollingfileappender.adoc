@@ -88,6 +88,13 @@ For each day only the last 10 files of 1MB will be kept.
 </appender>
 ----
 
+[NOTE]
+====
+With `staticLogFileName` a `datePattern` that formats as a dot and up to four digits, such as `.dd`, names dated files like numbered backups.
+Such an appender is reported when activated and uses the dated file name as with `staticLogFileName` false, so its backups are numbered after the date.
+Use a pattern with a separator or at least five digits to keep the static name.
+====
+
 This example show how to configure the `RollingFileAppender` to roll log files once per program execution.
 
 The `appendToFile` property is set to false to prevent the appender from overwriting the existing files.

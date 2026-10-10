@@ -87,7 +87,9 @@ namespace log4net.Appender;
 /// <note type="caution">
 /// <para>
 /// Changing <see cref="StaticLogFileName"/> or <see cref="CountDirection"/> without clearing
-/// the log file directory of backup files will cause unexpected and unwanted side effects.  
+/// the log file directory of backup files will cause unexpected and unwanted side effects.
+/// The appender itself sets <see cref="StaticLogFileName"/> to <see langword="false"/> when the
+/// <see cref="DatePattern"/> names dated files like numbered backups, see there.
 /// </para>
 /// </note>
 /// 
@@ -270,6 +272,12 @@ public partial class RollingFileAppender : FileAppender
   /// <para>
   /// This property determines the rollover schedule when rolling over
   /// on date.
+  /// </para>
+  /// <para>
+  /// With <see cref="StaticLogFileName"/> a pattern that formats as a dot and up to four digits,
+  /// such as <c>.dd</c>, names dated files like numbered backups. Such an appender is reported
+  /// when activated and then reads <see cref="StaticLogFileName"/> as false, so the live file
+  /// is the dated one and its backups are numbered after the date.
   /// </para>
   /// </remarks>
   public string? DatePattern { get; set; } = ".yyyy-MM-dd";
@@ -865,36 +873,15 @@ public partial class RollingFileAppender : FileAppender
     string dir = string.IsNullOrEmpty(baseFile) ? "" : Path.GetDirectoryName(baseFile);
     string baseFileWithoutExtension = Path.Combine(dir ?? "", Path.GetFileNameWithoutExtension(baseFile));
     
-    if (curFileName.StartsWith(baseFileWithoutExtension) == false)
+    if (!IsLogFile() || IsBaseFile())
     {
-      return; // This is not a log file, so ignore
-    }
-
-    if (curFileName.Equals(baseFile, StringComparison.Ordinal))
-    {
-      return; // Base log file is not an incremented logfile (.1 or .2, etc.)
+      return;
     }
 
     // Only look for files in the current roll point
-    if (_rollDate && !StaticLogFileName)
+    if (_rollDate && !StaticLogFileName && !IsBackupOfDatedFile(Path.GetFileName(curFileName)))
     {
-      string date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo).ToLowerInvariant();
-      // the date pattern may supply the extension, so take it from the dated name
-      string dated = Path.GetFileName(CombinePath(baseFile, date));
-      string suffix = PreserveLogFileNameExtension ? Path.GetExtension(dated) : "";
-      string prefix = dated.Substring(0, dated.Length - suffix.Length);
-      string curFileNameWithoutDir = Path.GetFileName(curFileName);
-      if (!curFileNameWithoutDir.StartsWith(prefix) || !curFileNameWithoutDir.EndsWith(suffix))
-      {
-        LogLog.Debug(_declaringType, $"Ignoring file [{curFileName}] because it is from a different date period");
-        return;
-      }
-
-      // the dated file itself has no index, and a date like .yyyyMMdd would parse as one
-      if (curFileNameWithoutDir.Length <= dated.Length)
-      {
-        return;
-      }
+      return;
     }
 
     try
@@ -938,6 +925,31 @@ public partial class RollingFileAppender : FileAppender
       //this happens when file.log -> file.log.yyyy-MM-dd which is normal
       //when staticLogFileName == false
       LogLog.Debug(_declaringType, $"Encountered a backup file not ending in .x [{curFileName}]");
+    }
+
+    bool IsLogFile() => curFileName.StartsWith(baseFileWithoutExtension);
+
+    // the base log file is not an incremented log file (.1 or .2, etc.)
+    bool IsBaseFile() => curFileName.Equals(baseFile, StringComparison.Ordinal);
+
+    bool IsBackupOfDatedFile(string fileName)
+    {
+      string date = DateTimeStrategy.Now.ToString(DatePattern, DateTimeFormatInfo.InvariantInfo)
+        .ToLowerInvariant();
+      // the date pattern may supply the extension, so take it from the dated name
+      string dated = Path.GetFileName(CombinePath(baseFile, date));
+      string suffix = PreserveLogFileNameExtension ? Path.GetExtension(dated) : "";
+      string prefix = dated.Substring(0, dated.Length - suffix.Length);
+      // the dot keeps log.txt.11 out of the scan for log.txt.1
+      if (!fileName.StartsWith(prefix + ".") || !fileName.EndsWith(suffix))
+      {
+        LogLog.Debug(_declaringType,
+          $"Ignoring file [{curFileName}] because it is from a different date period");
+        return false;
+      }
+
+      // the dated file itself has no index, and a date like .yyyyMMdd would parse as one
+      return fileName.Length > dated.Length;
     }
   }
 
@@ -998,6 +1010,37 @@ public partial class RollingFileAppender : FileAppender
     {
       InitializeFromOneFile(baseFileLower, curFileName.ToLowerInvariant());
     }
+  }
+
+  /// <summary>
+  /// With a static name, a date that formats as a dot and up to four digits (<c>.dd</c> writes
+  /// <c>.10</c>) is also the name of backup 10. Counting down to a limit below the smallest such
+  /// name never reaches it.
+  /// </summary>
+  private bool DoesDatePatternCollideWithBackupNames()
+  {
+    if (DatePattern is not string datePattern || !IsBaseFileRolledByDate() || !HasNumberedBackups())
+    {
+      return false;
+    }
+
+    string sample = _sDate1970.ToString(datePattern, DateTimeFormatInfo.InvariantInfo);
+    return IsDotAndUpToFourDigits(sample) && CanBackupNumberEqualDate(sample);
+
+    bool IsBaseFileRolledByDate() => _rollDate && StaticLogFileName;
+
+    bool HasNumberedBackups() => MaxSizeRollBackups != 0 && DoesRollBySizeOrAtStart();
+
+    bool DoesRollBySizeOrAtStart() => _rollSize || !AppendToFile;
+
+    static bool IsDotAndUpToFourDigits(string sample)
+      => sample.Length is >= 2 and <= 5 && sample[0] == '.'
+        && sample.Skip(1).All(c => c is >= '0' and <= '9');
+
+    // 1970-01-01 00:00 writes every field at its narrowest, so dated names start at 10^(digits - 1)
+    bool CanBackupNumberEqualDate(string sample)
+      => CountDirection >= 0 || MaxSizeRollBackups < 0
+        || MaxSizeRollBackups >= (int)Math.Pow(10, sample.Length - 2);
   }
 
   /// <summary>
@@ -1086,6 +1129,17 @@ public partial class RollingFileAppender : FileAppender
       {
         ErrorHandler.Error($"Either DatePattern or rollingStyle options are not set for [{Name}].");
       }
+    }
+
+    if (DoesDatePatternCollideWithBackupNames())
+    {
+      // LogLog, not ErrorHandler: OnlyOnceErrorHandler would report nothing after this one
+      LogLog.Warn(_declaringType, $"""
+        DatePattern [{DatePattern}] of [{Name}] names dated files like numbered backups, so the
+        appender uses a dated file name as with StaticLogFileName false. Use a DatePattern with
+        a separator or more digits, such as .yyyyMMdd, to keep the static name.
+        """);
+      StaticLogFileName = false;
     }
 
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
