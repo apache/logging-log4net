@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="added">
+  <issue id="337" link="https://github.com/apache/logging-log4net/pull/337"/>
+  <description format="asciidoc">Publish a generated API reference for `log4net` and
+  `log4net.Ext.Mail` at `api/` on the site, built with DocFX from the XML documentation comments
+  and checked in CI with warnings as errors. The references of the published versions were
+  regenerated the same way, with the old links kept valid (implemented by @FreeAndNil)</description>
+</entry>

@@ -23,6 +23,7 @@ release version 3.2.1:
                     - people who suggested code that was implemented
 2. Build release artifacts with `scripts/build-release.ps1`
    - the scripts works on Linux and Windows
+   - it also builds the API reference into `target/site/api`, restoring docfx from nuget.org first
    - Prerequisites
      - PowerShell
        - https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows
@@ -31,7 +32,7 @@ release version 3.2.1:
 3. Clone out the log4net doc repo (https://github.com/apache/logging-log4net-site)
     - check out the `asf-staging` branch
     - create a folder which includes the version, eg `log4net-3.2.1`
-4. Copy the contents of `target/site` from this repo into the folder created in (4)
+4. Copy the contents of `target/site` from this repo into the folder created in (3)
 5. Update the symlinks in the base of the docs repo, ie:
     - 3.2.x -> 3.2.1
     - 3.x -> 3.2.1

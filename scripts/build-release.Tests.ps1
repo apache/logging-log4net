@@ -54,7 +54,21 @@ Describe 'build-release.ps1' {
     $result.Output | Should -BeLike '*NonInteractive*'
     $result.Calls | Should -Be @('git status', 'git rev-parse', 'dotnet test', 'git archive', 'zip -r',
       'gpg --armor', 'gpg --armor', 'gpg --armor', 'gpg --armor', 'gpg --armor', 'gpg --armor',
-      'gpg --armor', 'mvnw site')
+      'gpg --armor', 'mvnw site', 'dotnet tool', 'dotnet docfx')
+  }
+
+  It 'names the release version in the API reference title' {
+    $result = Invoke-InScratchTree -Root $script:Root -Script 'build-release.ps1'
+
+    @($result.Lines | Where-Object { $_ -like 'dotnet docfx *' })[0] | Should -BeLike '*_appTitle=Apache log4net 3.5.1 API Reference*'
+  }
+
+  It 'asks for no tag when the API reference build fails' {
+    $result = Invoke-InScratchTree -Root $script:Root -Script 'build-release.ps1' -Fail 'dotnet docfx'
+
+    $result.ExitCode | Should -Not -Be 0
+    $result.Output | Should -Not -BeLike '*NonInteractive*'
+    $result.Calls[-1] | Should -Be 'dotnet docfx'
   }
 
   It 'ships no artifact without a hash' {

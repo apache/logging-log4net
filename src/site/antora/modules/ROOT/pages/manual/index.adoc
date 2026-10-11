@@ -39,6 +39,7 @@ log4net runs on net462 or higher and any framework supporting netstandard2.0.
 == Is there example code for using log4net?
 
 You can find many examples in https://github.com/apache/logging-log4net/tree/master/examples[log4net/examples].
+The link:../api/index.html[API reference] documents every public type and member.
 
 == What does log4net offer?
 

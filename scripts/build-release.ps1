@@ -13,6 +13,8 @@ $ErrorActionPreference = 'Stop'
 # Only honored from PowerShell 7.4, hence the #Requires above.
 $PSNativeCommandUseErrorActionPreference = $true
 
+Import-Module $PSScriptRoot/Common.psm1 -Force
+
 $Root = "$PSScriptRoot/.."
 $ArtifactDirectory = "$Root/build/artifacts"
 $ManifestName = "apache-log4net-$Version.manifest"
@@ -24,28 +26,6 @@ $ArtifactNames = @(
   'verify-release.ps1',
   'verify-release.sh',
   $ManifestName)
-
-# Paired, so a throw inside cannot leave the caller in the wrong directory.
-function Invoke-InDirectory
-{
-  param
-  (
-    [Parameter(Mandatory=$true, HelpMessage='The directory to run in.')]
-    [string]$Directory,
-    [Parameter(Mandatory=$true, HelpMessage='What to run there.')]
-    [scriptblock]$Action
-  )
-
-  Push-Location $Directory
-  try
-  {
-    & $Action
-  }
-  finally
-  {
-    Pop-Location
-  }
-}
 
 # The binaries come from the working tree, the source archive from a git ref, and both are signed
 # as one release, so they must come from one commit.
@@ -78,22 +58,6 @@ function Write-Manifest
   # carry a trailing CR into the comparison in verify-release.sh.
   $Lines = @("commit=$Commit") + ($Names | ForEach-Object { "artifact=$_" })
   Set-Content -Path $ArtifactDirectory/$ManifestName -NoNewline -Value (($Lines -join "`n") + "`n")
-}
-
-# Tested rather than silenced: -ErrorAction SilentlyContinue would also swallow a delete that
-# failed, leaving a stale artifact behind for whoever copies the directory to dist.
-function Remove-Directory
-{
-  param
-  (
-    [Parameter(Mandatory=$true, HelpMessage='The directory to remove if it exists.')]
-    [string]$Directory
-  )
-
-  if (Test-Path $Directory)
-  {
-    Remove-Item $Directory -Force -Recurse
-  }
 }
 
 function Write-HashAndSignature
@@ -146,6 +110,10 @@ Remove-Directory $Root/target/
 
 'building site ...'
 Invoke-InDirectory $Root { ./mvnw site }
+
+# After the site: target/ was removed above and ./mvnw site writes into it.
+'building API reference ...'
+& $PSScriptRoot/build-api-docs.ps1 -Version $Version
 
 'creating tag ...'
 pause

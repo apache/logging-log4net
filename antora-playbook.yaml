@@ -116,6 +116,9 @@ ui:
             </div>
             <div id="topbar-nav" class="navbar-menu">
               <div class="navbar-end">
+                <a class="navbar-item" href="{{{siteRootPath}}}/api/index.html">API Reference</a>
+              </div>
+              <div class="navbar-end">
                 <a class="navbar-item" href="https://github.com/apache/logging-log4net">GitHub</a>
               </div>
               <div class="navbar-end">
