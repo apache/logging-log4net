@@ -61,7 +61,7 @@ namespace log4net.Appender;
 /// When configuring the colored console appender, mappings should be
 /// specified to map logging levels to colors. For example:
 /// </para>
-/// <code lang="XML" escaped="true">
+/// <code language="xml"><![CDATA[
 /// <mapping>
 ///  <level value="ERROR" />
 ///  <foreColor value="DarkRed" />
@@ -79,7 +79,7 @@ namespace log4net.Appender;
 ///  <level value="DEBUG" />
 ///  <foreColor value="Blue" />
 /// </mapping>
-/// </code>
+/// ]]></code>
 /// <para>
 /// The Level is the standard log4net logging level while
 /// ForeColor and BackColor are the values of <see cref="ConsoleColor"/>

@@ -188,17 +188,17 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// configuration. If this file is also a .NET .config file then you must specify 
   /// a configuration section for the <c>log4net</c> element otherwise .NET will 
   /// complain. Set the type for the section handler to <see cref="System.Configuration.IgnoreSectionHandler"/>, for example:
-  /// <code lang="XML" escaped="true">
+  /// <code language="xml"><![CDATA[
   /// <configSections>
   ///    <section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
   ///  </configSections>
-  /// </code>
+  /// ]]></code>
   /// </para>
   /// <example>
   /// The following example configures log4net using a configuration file, of which the 
   /// location is stored in the application's configuration file :
   /// </example>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// using log4net.Config;
   /// using System.IO;
   /// using System.Configuration;
@@ -210,13 +210,13 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// <para>
   /// In the <c>.config</c> file, the path to the log4net can be specified like this :
   /// </para>
-  /// <code lang="XML" escaped="true">
+  /// <code language="xml"><![CDATA[
   /// <configuration>
   ///    <appSettings>
   ///      <add key="log4net-config-file" value="log.config"/>
   ///    </appSettings>
   ///  </configuration>
-  /// </code>
+  /// ]]></code>
   /// </remarks>
   public static ICollection Configure(FileInfo configFile)
   {
@@ -339,17 +339,17 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// configuration. If this file is also a .NET .config file then you must specify 
   /// a configuration section for the <c>log4net</c> element otherwise .NET will 
   /// complain. Set the type for the section handler to <see cref="System.Configuration.IgnoreSectionHandler"/>, for example:
-  /// <code lang="XML" escaped="true">
+  /// <code language="xml"><![CDATA[
   /// <configSections>
   ///    <section name="log4net" type="System.Configuration.IgnoreSectionHandler" />
   ///  </configSections>
-  /// </code>
+  /// ]]></code>
   /// </para>
   /// <example>
   /// The following example configures log4net using a configuration file, of which the 
   /// location is stored in the application's configuration file :
   /// </example>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// using log4net.Config;
   /// using System.IO;
   /// using System.Configuration;
@@ -361,13 +361,13 @@ The configuration section should look like: <section name=""log4net"" type=""log
   /// <para>
   /// In the <c>.config</c> file, the path to the log4net can be specified like this :
   /// </para>
-  /// <code lang="XML" escaped="true">
+  /// <code language="xml"><![CDATA[
   /// <configuration>
   ///    <appSettings>
   ///      <add key="log4net-config-file" value="log.config"/>
   ///    </appSettings>
   ///  </configuration>
-  /// </code>
+  /// ]]></code>
   /// </remarks>
   public static ICollection Configure(ILoggerRepository repository, FileInfo configFile)
   {

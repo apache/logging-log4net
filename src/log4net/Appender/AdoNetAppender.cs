@@ -65,7 +65,7 @@ namespace log4net.Appender;
 /// </remarks>
 /// <example>
 /// An example of a SQL Server table that could be logged to:
-/// <code lang="SQL">
+/// <code language="sql">
 /// create table dbo.Log
 /// (
 ///   Id bigint identity (1, 1) not null,
@@ -81,7 +81,7 @@ namespace log4net.Appender;
 /// </example>
 /// <example>
 /// An example configuration to log to the above table:
-/// <code lang="XML" escaped="true">
+/// <code language="xml"><![CDATA[
 /// <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
 ///   <bufferSize value="100"/>
 /// 	<connectionType value="Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient"/>
@@ -131,7 +131,7 @@ namespace log4net.Appender;
 ///     <layout type="log4net.Layout.ExceptionLayout"/>
 ///   </parameter>
 /// </appender>
-/// </code>
+/// ]]></code>
 /// </example>
 /// <author>Julian Biddle</author>
 /// <author>Nicko Cadell</author>
@@ -166,13 +166,16 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// See <see cref="ConnectionType"/> for more information.
   /// </para>
   /// </remarks>
-  /// <example>Connection string for MS Access via ODBC:
+  /// <example>
+  /// Connection string for MS Access via ODBC:
   /// <code>"DSN=MS Access Database;UID=admin;PWD=;SystemDB=C:\data\System.mdw;SafeTransactions = 0;FIL=MS Access;DriverID = 25;DBQ=C:\data\train33.mdb"</code>
   /// </example>
-  /// <example>Another connection string for MS Access via ODBC:
+  /// <example>
+  /// Another connection string for MS Access via ODBC:
   /// <code>"Driver={Microsoft Access Driver (*.mdb)};DBQ=C:\Work\cvs_root\log4net-1.2\access.mdb;UID=;PWD=;"</code>
   /// </example>
-  /// <example>Connection string for MS Access via OLE DB:
+  /// <example>
+  /// Connection string for MS Access via OLE DB:
   /// <code>"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Work\cvs_root\log4net-1.2\access.mdb;User Id=;Password=;"</code>
   /// </example>
   public string? ConnectionString { get; set; }
@@ -202,19 +205,23 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// The default is to use the OLE DB provider.
   /// </para>
   /// </remarks>
-  /// <example>Use the OLE DB Provider. This is the default value.
+  /// <example>
+  /// Use the OLE DB Provider. This is the default value.
   /// <code>System.Data.OleDb.OleDbConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</code>
   /// </example>
-  /// <example>Use the MS SQL Server Provider. 
+  /// <example>
+  /// Use the MS SQL Server Provider. 
   /// <code>System.Data.SqlClient.SqlConnection, System.Data, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</code>
   /// </example>
-  /// <example>Use the ODBC Provider. 
+  /// <example>
+  /// Use the ODBC Provider. 
   /// <code>Microsoft.Data.Odbc.OdbcConnection,Microsoft.Data.Odbc,version=1.0.3300.0,publicKeyToken=b77a5c561934e089,culture=neutral</code>
   /// This is an optional package that you can download from 
   /// <a href="http://msdn.microsoft.com/downloads">http://msdn.microsoft.com/downloads</a> 
   /// search for <b>ODBC .NET Data Provider</b>.
   /// </example>
-  /// <example>Use the Oracle Provider. 
+  /// <example>
+  /// Use the Oracle Provider. 
   /// <code>System.Data.OracleClient.OracleConnection, System.Data.OracleClient, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</code>
   /// This is an optional package that you can download from 
   /// <a href="http://msdn.microsoft.com/downloads">http://msdn.microsoft.com/downloads</a> 

@@ -56,7 +56,7 @@ public interface ILayout
   /// event to be formatted as a <see cref="string"/> then the following
   /// code can be used to format the event into a <see cref="StringWriter"/>.
   /// </para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// StringWriter writer = new StringWriter();
   /// Layout.Format(writer, loggingEvent);
   /// string formattedEvent = writer.ToString();

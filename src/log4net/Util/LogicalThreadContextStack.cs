@@ -89,7 +89,7 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// You do not need to use this method if you always guarantee to call
   /// the <see cref="IDisposable.Dispose"/> method of the <see cref="IDisposable"/>
   /// returned from <see cref="Push"/> even in exceptional circumstances,
-  /// for example by using the <c>using(log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))</c> 
+  /// for example by using the <c>using (log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))</c> 
   /// syntax.
   /// </para>
   /// </remarks>
@@ -135,12 +135,13 @@ public sealed class LogicalThreadContextStack : IFixingRequired
   /// context.
   /// </para>
   /// </remarks>
-  /// <example>Simple example of using the <see cref="Push"/> method with the <see langword="using"/> keyword.
-  /// <code lang="C#">
-  /// using(log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))
+  /// <example>
+  /// Simple example of using the <see cref="Push"/> method with the <see langword="using"/> keyword.
+  /// <code language="csharp">
+  /// using (log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))
   /// {
-  ///    log.Warn("This should have an ThreadContext Stack message");
-  ///  }
+  ///   log.Warn("This should have an ThreadContext Stack message");
+  /// }
   /// </code>
   /// </example>
   public IDisposable Push(string? message)
