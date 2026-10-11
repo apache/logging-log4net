@@ -1137,7 +1137,7 @@ public partial class RollingFileAppender : FileAppender
       LogLog.Warn(_declaringType, $"""
         DatePattern [{DatePattern}] of [{Name}] names dated files like numbered backups, so the
         appender uses a dated file name as with StaticLogFileName false. Use a DatePattern with
-        a separator or more digits, such as .yyyyMMdd, to keep the static name.
+        a separator, such as the default .yyyy-MM-dd, to keep the static name.
         """);
       StaticLogFileName = false;
     }

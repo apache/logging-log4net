@@ -8,7 +8,6 @@
   files like numbered backups, so a roll could overwrite one with the other. Such an appender is now
   reported when activated and uses the dated file name as with `StaticLogFileName` false, so its
   backups are numbered after the date, and an existing static file is left untouched, including
-  its numbered backups. Use a
-  `DatePattern` with a separator or at least five digits to keep the static name (reported by
-  @Snotface, fixed by @FreeAndNil)</description>
+  its numbered backups. Use a `DatePattern` with a separator, such as the default `.yyyy-MM-dd`,
+  to keep the static name (reported by @Snotface, fixed by @FreeAndNil)</description>
 </entry>
