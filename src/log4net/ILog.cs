@@ -46,8 +46,9 @@ namespace log4net;
 /// do things differently.
 /// </para>
 /// </remarks>
-/// <example>Simple example of logging messages
-/// <code lang="C#">
+/// <example>
+/// Simple example of logging messages
+/// <code language="csharp">
 /// ILog log = LogManager.GetLogger("application-log");
 /// 
 /// log.Info("Application Start");
@@ -842,7 +843,7 @@ public interface ILog : ILoggerWrapper
   /// disabled log debug statements.
   /// </para>
   /// <para> For some ILog interface <c>log</c>, when you write:</para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// log.Debug("This is entry number: " + i );
   /// </code>
   /// <para>
@@ -852,7 +853,7 @@ public interface ILog : ILoggerWrapper
   /// <para>
   /// If you are worried about speed (who isn't), then you should write:
   /// </para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// if (log.IsDebugEnabled)
   /// { 
   ///     log.Debug("This is entry number: " + i );
@@ -871,13 +872,13 @@ public interface ILog : ILoggerWrapper
   /// <para>Alternatively if your logger is available statically then the is debug
   /// enabled state can be stored in a static variable like this:
   /// </para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// private static readonly bool isDebugEnabled = log.IsDebugEnabled;
   /// </code>
   /// <para>
   /// Then when you come to log you can write:
   /// </para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// if (isDebugEnabled)
   /// { 
   ///     log.Debug("This is entry number: " + i );

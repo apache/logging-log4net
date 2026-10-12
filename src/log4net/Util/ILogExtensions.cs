@@ -34,8 +34,9 @@ namespace log4net.Util;
 /// configuration.
 /// </para>
 /// </remarks>
-/// <example>Simple example of logging messages
-/// <code lang="C#">
+/// <example>
+/// Simple example of logging messages
+/// <code language="csharp">
 /// using log4net.Util;
 /// 
 /// ILog log = LogManager.GetLogger("application-log");

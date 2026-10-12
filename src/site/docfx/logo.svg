@@ -1,0 +1,17 @@
+<svg width="360" height="140" viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg">
+  <rect width="360" height="140" fill="black"/>
+  
+  <!-- log4net text -->
+  <text x="20" y="85" font-family="sans-serif" font-size="36.4" font-weight="bold"
+        fill="white" stroke="white" stroke-width="2.2">log4net</text>
+  
+  <!-- Terminal-style box -->
+  <rect x="190" y="30" width="130" height="90" fill="none" stroke="white" stroke-width="2"/>
+  
+  <!-- Log lines -->
+  <line x1="200" y1="50" x2="290" y2="50" stroke="white" stroke-width="2"/>
+  <line x1="200" y1="65" x2="285" y2="65" stroke="white" stroke-width="2"/>
+  <line x1="200" y1="80" x2="280" y2="80" stroke="white" stroke-width="2"/>
+  <line x1="200" y1="95" x2="275" y2="95" stroke="white" stroke-width="2"/>
+</svg>
+

@@ -1,0 +1,73 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../..",
+          "files": [
+            "log4net/log4net.csproj"
+          ]
+        }
+      ],
+      "dest": "log4net",
+      "properties": {
+        "TargetFramework": "net462"
+      },
+      "namespaceLayout": "nested",
+      "memberLayout": "samePage",
+      "disableGitFeatures": true
+    },
+    {
+      "src": [
+        {
+          "src": "../..",
+          "files": [
+            "log4net.Ext.Mail/log4net.Ext.Mail.csproj"
+          ]
+        }
+      ],
+      "dest": "log4net.Ext.Mail",
+      "properties": {
+        "TargetFramework": "netstandard2.0",
+        "ProduceReferenceAssembly": "true"
+      },
+      "namespaceLayout": "nested",
+      "memberLayout": "samePage",
+      "disableGitFeatures": true
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "index.md",
+          "manual.md",
+          "toc.yml",
+          "log4net/**/*.yml",
+          "log4net.Ext.Mail/**/*.yml"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "logo.svg"
+        ]
+      }
+    ],
+    "dest": "../../../target/site/api",
+    "template": [
+      "default",
+      "modern",
+      "template"
+    ],
+    "globalMetadata": {
+      "_appTitle": "Apache log4net API Reference",
+      "_appName": "Apache log4net",
+      "_appLogoPath": "logo.svg",
+      "_appFaviconPath": "logo.svg",
+      "_enableSearch": true,
+      "_disableContribution": true
+    }
+  }
+}

@@ -43,7 +43,7 @@ namespace log4net.Layout;
 /// the <see cref="XmlLayout" /> output goes, then a well-formed XML file would 
 /// be:
 /// </para>
-/// <code lang="XML">
+/// <code language="xml">
 /// &lt;?xml version="1.0" ?&gt;
 /// 
 /// &lt;!DOCTYPE log4net:events SYSTEM "log4net-events.dtd" [&lt;!ENTITY data SYSTEM "abc"&gt;]&gt;

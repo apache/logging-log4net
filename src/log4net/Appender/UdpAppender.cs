@@ -49,7 +49,7 @@ namespace log4net.Appender;
 /// This example shows how to log receive logging events that are sent 
 /// on IP address 244.0.0.1 and port 8080 to the console. The event is 
 /// encoded in the packet as a unicode string and it is decoded as such. 
-/// <code lang="C#">
+/// <code language="csharp">
 /// IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
 /// UdpClient udpClient;
 /// byte[] buffer;
@@ -71,7 +71,7 @@ namespace log4net.Appender;
 ///     Console.WriteLine(e.ToString());
 /// }
 /// </code>
-/// <code lang="Visual Basic">
+/// <code language="vbnet">
 /// Dim remoteEndPoint as IPEndPoint
 /// Dim udpClient as UdpClient
 /// Dim buffer as Byte()
@@ -94,13 +94,13 @@ namespace log4net.Appender;
 /// An example configuration section to log information using this appender to the 
 /// IP 224.0.0.1 on port 8080:
 /// </para>
-/// <code lang="XML" escaped="true">
+/// <code language="xml"><![CDATA[
 /// <appender name="UdpAppender" type="log4net.Appender.UdpAppender">
 ///     <remoteAddress value="224.0.0.1" />
 ///     <remotePort value="8080" />
 ///     <layout type="log4net.Layout.PatternLayout" value="%-5level %logger [%ndc] - %message%newline" />
 /// </appender>
-/// </code>
+/// ]]></code>
 /// </example>
 /// <author>Gert Driesen</author>
 /// <author>Nicko Cadell</author>

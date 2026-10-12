@@ -76,6 +76,14 @@ You can build and view the website as follows:
 
 You can view the generated website with a browser by pointing it to `target/site` directory.
 
+The link:api/index.html[API reference] is generated next to it, under `target/site/api`, from the
+XML documentation comments:
+
+[source,bash/powershell]
+----
+./scripts/build-api-docs.ps1
+----
+
 [#release-instructions]
 == Release instructions
 

@@ -176,13 +176,13 @@ public sealed class LogLog
   /// The following example enables internal debugging using the 
   /// application configuration file :
   /// </para>
-  /// <code lang="XML" escaped="true">
+  /// <code language="xml"><![CDATA[
   /// <configuration>
   ///    <appSettings>
   ///      <add key="log4net.Internal.Debug" value="true" />
   ///    </appSettings>
   /// </configuration>
-  /// </code>
+  /// ]]></code>
   /// </example>
   public static bool InternalDebugging { get; set; }
 
@@ -212,13 +212,13 @@ public sealed class LogLog
   /// <example>
   /// The following example disables internal logging using the 
   /// application configuration file :
-  /// <code lang="XML" escaped="true">
+  /// <code language="xml"><![CDATA[
   /// <configuration>
   ///    <appSettings>
   ///      <add key="log4net.Internal.Quiet" value="true" />
   ///    </appSettings>
   /// </configuration>
-  /// </code>
+  /// ]]></code>
   /// </example>
   public static bool QuietMode { get; set; }
 

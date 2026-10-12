@@ -303,7 +303,7 @@ public static class OptionConverter
   /// For example, if props contains <c>key=value</c>, then the call
   /// </para>
   /// <para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// string s = OptionConverter.SubstituteVariables("Value of key is ${key}.");
   /// </code>
   /// </para>
@@ -319,7 +319,7 @@ public static class OptionConverter
   /// "nonExistentKey", then the call
   /// </para>
   /// <para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// string s = OptionConverter.SubstituteVariables("Value of nonExistentKey is [${nonExistentKey}]");
   /// </code>
   /// </para>

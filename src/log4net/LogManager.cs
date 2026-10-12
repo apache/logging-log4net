@@ -40,8 +40,9 @@ namespace log4net;
 /// See the <see cref="ILog"/> interface for more details.
 /// </para>
 /// </remarks>
-/// <example>Simple example of logging messages
-/// <code lang="C#">
+/// <example>
+/// Simple example of logging messages
+/// <code language="csharp">
 /// ILog log = LogManager.GetLogger("application-log");
 /// 
 /// log.Info("Application Start");

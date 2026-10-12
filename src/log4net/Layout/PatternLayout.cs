@@ -67,7 +67,7 @@ namespace log4net.Layout;
 /// that the log4net environment was set to use a PatternLayout. Then the
 /// statements
 /// </para>
-/// <code lang="C#">
+/// <code language="csharp">
 /// ILog log = LogManager.GetLogger(typeof(TestApp));
 /// log.Debug("Message 1");
 /// log.Warn("Message 2");   

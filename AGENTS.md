@@ -256,15 +256,28 @@ The manual lives in `src/site/antora/modules/ROOT/pages/`. A new appender page n
 not one: the page itself, an `xref` line in `nav.adoc` (kept alphabetical), and the appender table
 in `manual/configuration/appenders.adoc`.
 
+The API reference is DocFX output from the XML doc comments, built by `scripts/build-api-docs.ps1`
+into `target/site/api` and in CI with warnings as errors, so an unresolved `cref` or a missing
+public doc comment fails the PR. The configuration is in `src/site/docfx/`; the `log4net` and
+`log4net.Ext.Mail` folders generated there are ignored. `log4net` is documented as `net462`, since
+the `NET462_OR_GREATER` types exist only there. The Ext.Mail entry sets `ProduceReferenceAssembly`,
+without which Roslyn cannot match its project reference to log4net and warns.
+
 ## Release scripts
 
+- **Before writing a helper function in a script, grep `scripts/` for its name and its idiom**
+  (`Push-Location`, `Remove-Item`, `Get-Date`). A function two scripts need lives in
+  `scripts/Common.psm1`, imported with `Import-Module $PSScriptRoot/Common.psm1 -Force`, not
+  copied into the second script. A module takes its preferences from the global scope, so the
+  module sets `$ErrorActionPreference` itself.
 - **Every file `build-release.ps1` writes gets LF on every platform.** `Set-Content` writes
   `[Environment]::NewLine`; use `-NoNewline` with the lines joined by `` `n ``. A CR is invisible in
   an editor, and `sha512sum` on macOS reads it as part of the file name.
 - **Each release ships the verifier built with it**, so never add backward compatibility to
   `verify-release.ps1` or `.sh`: a compatibility skip path is a hole, not a courtesy.
 - The scripts are tested with Pester through `scripts/FakeCommands.TestHelper.ps1`, which shadows
-  `dotnet`, `git`, `gpg`, `zip` and `mvnw` with shims on a prepended `PATH`, because Pester `Mock`
+  `dotnet`, `git`, `gpg`, `zip`, `mvnw` and `curl` with shims on a prepended `PATH` (`FAKE_FAIL` names a
+  command, or a command and its first argument such as `dotnet docfx`), because Pester `Mock`
   intercepts only functions and cmdlets. CI runs the suite on macOS, Ubuntu and Windows, so keep
   the helper's `$IsWindows` branch working and put byte-level assertions where all three see them.
 

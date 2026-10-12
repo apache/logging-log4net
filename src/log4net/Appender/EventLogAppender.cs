@@ -53,7 +53,7 @@ namespace log4net.Appender;
 /// When configuring the EventLogAppender a mapping can be
 /// specified to map a logging level to an event log entry type. For example:
 /// </para>
-/// <code lang="XML">
+/// <code language="xml">
 /// &lt;mapping&gt;
 ///   &lt;level value="ERROR" /&gt;
 ///   &lt;eventLogEntryType value="Error" /&gt;

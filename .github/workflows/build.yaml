@@ -58,6 +58,14 @@ jobs:
         run: |
             dotnet test ./src/log4net.sln
 
+      # Recompiles both shipping projects through docfx with warnings as errors, so a broken doc
+      # comment or cref fails the pull request rather than the release build. The script itself
+      # is covered on all three runners by the Pester suite below; the real docfx run needs one.
+      - name: API reference
+        if: matrix.os == 'ubuntu-latest'
+        shell: pwsh
+        run: ./scripts/build-api-docs.ps1
+
       # Pester 5.9 ships on all three runner images, so nothing is installed here.
       - name: Release script tests
         shell: pwsh

@@ -1153,7 +1153,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <para>
   /// For some <c>log</c> Logger object, when you write:
   /// </para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// log.Debug("This is entry number: " + i );
   /// </code>
   /// <para>
@@ -1163,7 +1163,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <para>
   /// If you are worried about speed, then you should write:
   /// </para>
-  /// <code lang="C#">
+  /// <code language="csharp">
   /// if (log.IsDebugEnabled())
   /// { 
   ///   log.Debug("This is entry number: " + i );
