@@ -66,7 +66,8 @@ reliability defect or hardening, and say so. That is more useful to us than a se
 - **Critical**: code execution, or reading/writing arbitrary files, driven by untrusted content alone.
 - **High**: untrusted content that breaks the structure of XML or RFC 3164 syslog output, so that it
   forges or hides records for a parser that consumes the document as log4net emitted it; or that
-  crashes the host process (an unhandled exception on a background thread, a stack overflow).
+  crashes the host process through log4net's own code (an unhandled exception on a background
+  thread, a stack overflow from recursion driven by content).
 - **Medium**: denial of service from content within normal size limits (unbounded memory, CPU, or a
   hang of the logging call), or an event or part of a record silently lost because of its content.
 - **Low**: resource leaks, missing escapes with no demonstrated parser impact, defense in depth.
