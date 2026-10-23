@@ -45,6 +45,9 @@ Less important or out of scope:
   `examples/`, `scripts/`, the site under `src/site`: tooling and tests, not shipped code.
 - `PatternLayout` and other unstructured layouts make **no** injection guarantee: CR/LF in the output
   of a plain-text layout is by design (FAQ, CWE-93).
+- A logged object's own `ToString()` is application code: one that recurses or never terminates is
+  not a log4net defect. One that throws is caught while rendering (`RendererMap.FindAndRender`); a
+  path where that exception still reaches the logging caller is in scope.
 
 ## How to exercise it
 
