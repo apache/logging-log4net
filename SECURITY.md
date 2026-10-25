@@ -81,3 +81,8 @@ Assess the finding:
 - Reproduction steps must be minimal and self-contained.
 - Do not include unrelated findings in the same report: one issue per report.
 - If unsure about severity, say so explicitly rather than guessing.
+
+## Reporting a vulnerability
+
+Report privately to security@logging.apache.org, following
+https://logging.apache.org/security.html#reporting.
