@@ -38,6 +38,12 @@ namespace log4net.Tests.Appender;
 [TestFixture]
 public sealed class RollingFileAppenderShortDatePatternTest
 {
+  private sealed class RollingFileAppenderForTest : RollingFileAppender
+  {
+    internal new List<string> GetExistingFiles(string baseFilePath)
+      => base.GetExistingFiles(baseFilePath);
+  }
+
   /// <summary>
   /// With a static name, .dd names the file of the 10th like backup 10, so the appender is
   /// reported and uses the dated name instead, with its backups numbered after the date.
@@ -151,6 +157,30 @@ public sealed class RollingFileAppenderShortDatePatternTest
       ["log.txt.1", "log.txt.1.2", "log.txt.11", "log.txt.11.7"]);
 
     Assert.That(appender.CurrentSizeRollBackups, Is.EqualTo(2));
+  }
+
+  /// <summary>
+  /// An unrelated sibling whose name starts with the base file must not set the size-roll index.
+  /// </summary>
+  [Test]
+  public void SizeOnlyRollingIgnoresPrefixSibling()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "log.txt");
+    File.WriteAllText(file + ".unrelated.5", "synthetic fixture");
+    RollingFileAppenderForTest appender = new()
+    {
+      File = file,
+      RollingStyle = RollingFileAppender.RollingMode.Size,
+      StaticLogFileName = false,
+      MaxSizeRollBackups = -1,
+      CountDirection = 1
+    };
+
+    List<string> files = appender.GetExistingFiles(file);
+    appender.InitializeRollBackups(Path.GetFileName(file), files);
+
+    Assert.That(appender.CurrentSizeRollBackups, Is.Zero);
   }
 
   private static readonly DateTime _mockedNow = new(2026, 10, 4, 9, 0, 0);

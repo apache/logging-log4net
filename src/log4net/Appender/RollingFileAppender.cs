@@ -971,6 +971,13 @@ public partial class RollingFileAppender : FileAppender
     int index = fileName.LastIndexOf(".", StringComparison.Ordinal);
     if (index > 0)
     {
+      // Non-static size-only backups must have the base name immediately before the index.
+      if (!StaticLogFileName && !_rollDate
+        && !string.Equals(fileName.Substring(0, index), baseFile, StringComparison.Ordinal))
+      {
+        return -1;
+      }
+
       // with a static name, log.txt.20261003.1 is a backup of an earlier date
       if (StaticLogFileName
         && (!string.Equals(fileName.Substring(0, index), baseFile, StringComparison.Ordinal)
