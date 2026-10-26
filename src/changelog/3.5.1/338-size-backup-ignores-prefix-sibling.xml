@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="338" link="https://github.com/apache/logging-log4net/issues/338"/>
+  <issue id="339" link="https://github.com/apache/logging-log4net/pull/339"/>
+  <description format="asciidoc">Without date rolling, a `RollingFileAppender` with `StaticLogFileName`
+  false counted a file such as `log.txt.errors.3` as backup 3 of `log.txt` when it started. Only
+  files whose name is the base name followed by the index count as backups now (reported by
+  @dajiaohuang, fixed by @dajiaohuang)</description>
+</entry>
