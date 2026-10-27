@@ -133,13 +133,7 @@ public class BufferingForwardingAppender : BufferingAppenderSkeleton, IAppenderA
     }
   }
 
-  /// <summary>
-  /// Looks for the appender with the specified name.
-  /// </summary>
-  /// <param name="name">The name of the appender to lookup.</param>
-  /// <returns>
-  /// The appender with the specified name, or <see langword="null"/>.
-  /// </returns>
+  /// <inheritdoc/>
   public virtual IAppender? GetAppender(string? name)
   {
     lock (LockObj)
@@ -195,16 +189,7 @@ public class BufferingForwardingAppender : BufferingAppenderSkeleton, IAppenderA
     return null;
   }
 
-  /// <summary>
-  /// Removes the appender with the specified name from the list of appenders.
-  /// </summary>
-  /// <param name="name">The name of the appender to remove.</param>
-  /// <returns>The appender removed from the list</returns>
-  /// <remarks>
-  /// The appender removed is not closed.
-  /// If you are discarding the appender you must call
-  /// <see cref="IAppender.Close"/> on the appender removed.
-  /// </remarks>
+  /// <inheritdoc/>
   public virtual IAppender? RemoveAppender(string? name)
   {
     lock (LockObj)

@@ -206,19 +206,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
     }
   }
 
-  /// <summary>
-  /// Gets an attached appender with the specified name.
-  /// </summary>
-  /// <param name="name">The name of the appender to get.</param>
-  /// <returns>
-  /// The appender with the name specified, or <see langword="null"/> if no appender with the
-  /// specified name is found.
-  /// </returns>
-  /// <remarks>
-  /// <para>
-  /// Lookup an attached appender by name.
-  /// </para>
-  /// </remarks>
+  /// <inheritdoc/>
   public IAppender? GetAppender(string? name)
   {
     if (_appenderList is not null && name is not null)
@@ -288,18 +276,7 @@ public class AppenderAttachedImpl : IAppenderAttachable
     return appender;
   }
 
-  /// <summary>
-  /// Removes the appender with the specified name from the list of appenders.
-  /// </summary>
-  /// <param name="name">The name of the appender to remove.</param>
-  /// <returns>The appender removed from the list</returns>
-  /// <remarks>
-  /// <para>
-  /// The appender removed is not closed.
-  /// If you are discarding the appender you must call
-  /// <see cref="IAppender.Close"/> on the appender removed.
-  /// </para>
-  /// </remarks>
+  /// <inheritdoc/>
   public IAppender? RemoveAppender(string name) => RemoveAppender(GetAppender(name));
 
   /// <summary>

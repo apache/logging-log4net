@@ -69,7 +69,7 @@ public interface IAppender
   /// </summary>
   /// <value>The name of the appender.</value>
   /// <remarks>
-  /// <para>The name uniquely identifies the appender.</para>
+  /// <para>Used to look the appender up by name. Uniqueness is not enforced, and a lookup returns the first match.</para>
   /// </remarks>
   string Name { get; set; }
 }
