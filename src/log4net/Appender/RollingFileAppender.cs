@@ -971,8 +971,8 @@ public partial class RollingFileAppender : FileAppender
     int index = fileName.LastIndexOf(".", StringComparison.Ordinal);
     if (index > 0)
     {
-      // with a static name, log.txt.20261003.1 is a backup of an earlier date
-      if (StaticLogFileName
+      // without dates log.txt.errors.3 is another file (#338)
+      if ((StaticLogFileName || !_rollDate)
         && (!string.Equals(fileName.Substring(0, index), baseFile, StringComparison.Ordinal)
           || IsDateSuffix(fileName.Substring(index))))
       {
