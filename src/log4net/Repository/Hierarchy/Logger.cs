@@ -218,11 +218,7 @@ public abstract class Logger(string name) : IHierarchyNode, IAppenderAttachable,
     }
   }
 
-  /// <summary>
-  /// Look for the appender named as <paramref name="name"/>
-  /// </summary>
-  /// <param name="name">The name of the appender to lookup</param>
-  /// <returns>The appender with the name specified, or <see langword="null"/>.</returns>
+  /// <inheritdoc/>
   public virtual IAppender? GetAppender(string? name)
   {
     _appenderLock.AcquireReaderLock();
@@ -295,18 +291,7 @@ public abstract class Logger(string name) : IHierarchyNode, IAppenderAttachable,
     return null;
   }
 
-  /// <summary>
-  /// Remove the appender passed as parameter form the list of appenders.
-  /// </summary>
-  /// <param name="name">The name of the appender to remove</param>
-  /// <returns>The appender removed from the list</returns>
-  /// <remarks>
-  /// <para>
-  /// The appender removed is not closed.
-  /// If you are discarding the appender you must call
-  /// <see cref="IAppender.Close"/> on the appender removed.
-  /// </para>
-  /// </remarks>
+  /// <inheritdoc/>
   public virtual IAppender? RemoveAppender(string? name)
   {
     _appenderLock.AcquireWriterLock();

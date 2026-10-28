@@ -179,7 +179,7 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   }
 
   /// <summary>
-  /// Gets or sets the name that uniquely identifies this appender.
+  /// Gets or sets the name of this appender.
   /// </summary>
   public string Name { get; set; } = string.Empty;
 

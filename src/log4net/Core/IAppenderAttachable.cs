@@ -74,6 +74,7 @@ public interface IAppenderAttachable
   /// Returns an attached appender with the <paramref name="name"/> specified.
   /// If no appender with the specified name is found <see langword="null"/> will be
   /// returned.
+  /// If several attached appenders share the name, the first one attached is returned.
   /// </para>
   /// </remarks>
   IAppender? GetAppender(string? name);
@@ -109,6 +110,7 @@ public interface IAppenderAttachable
   /// <returns>The appender removed from the list</returns>
   /// <remarks>
   /// <para>
+  /// If several attached appenders share the name, only the first one attached is removed.
   /// The appender removed is not closed.
   /// If you are discarding the appender you must call
   /// <see cref="IAppender.Close"/> on the appender removed.
