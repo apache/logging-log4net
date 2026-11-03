@@ -133,7 +133,7 @@ ui:
         <footer class="footer">
           <p>
             Copyright © 2007-{{{year}}} <a href="https://www.apache.org/">The Apache Software Foundation</a>.
-            Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+            Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
             Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
           </p>
           <p>

@@ -54,7 +54,7 @@ function Get-ApiDocsFooter
 {
   @"
 Copyright &copy; 2007-$((Get-Date).Year) <a href="https://www.apache.org/">The Apache Software Foundation</a>.
-Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.
 Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
 <br/>Apache, log4net, and the Apache logo are trademarks or registered trademarks of The Apache Software Foundation.
 Other names may be trademarks of their respective owners.
