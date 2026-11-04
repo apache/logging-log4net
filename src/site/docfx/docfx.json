@@ -51,7 +51,8 @@
     "resource": [
       {
         "files": [
-          "logo.svg"
+          "logo.svg",
+          "favicon.svg"
         ]
       }
     ],
@@ -65,7 +66,7 @@
       "_appTitle": "Apache log4net API Reference",
       "_appName": "Apache log4net",
       "_appLogoPath": "logo.svg",
-      "_appFaviconPath": "logo.svg",
+      "_appFaviconPath": "favicon.svg",
       "_enableSearch": true,
       "_disableContribution": true
     }

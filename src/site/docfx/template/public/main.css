@@ -22,3 +22,8 @@
   width: auto;
   margin-right: 0.75rem;
 }
+
+/* logo.svg has no background, and an image cannot inherit the text color of the page. */
+[data-bs-theme="dark"] #logo {
+  filter: invert(1);
+}
