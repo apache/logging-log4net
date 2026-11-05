@@ -1800,6 +1800,30 @@ public class RollingFileAppenderTest
   }
 
   /// <summary>
+  /// Tests that without date rolling a sibling such as log.txt.errors.3 is not counted as a backup
+  /// of a non-static name
+  /// </summary>
+  [TestCase(true, "log.5.txt", 5)]
+  [TestCase(false, "log.txt.5", 5)]
+  [TestCase(true, "log.errors.3.txt", 0)]
+  [TestCase(false, "log.txt.errors.3", 0)]
+  public void TestInitializeRollBackupsSizeIgnoresPrefixSibling(bool preserveExtension,
+    string file, int expected)
+  {
+    RollingFileAppender rfa = new()
+    {
+      RollingStyle = RollingFileAppender.RollingMode.Size,
+      StaticLogFileName = false,
+      PreserveLogFileNameExtension = preserveExtension,
+      MaxSizeRollBackups = -1,
+      CurrentSizeRollBackups = 0
+    };
+    rfa.InitializeRollBackups("log.txt", [file]);
+
+    Assert.That(rfa.CurrentSizeRollBackups, Is.EqualTo(expected));
+  }
+
+  /// <summary>
   /// Tests that with a short date pattern the suffixes of a static file name count as backup
   /// indexes, as a date like .10 cannot be told apart from backup 10
   /// </summary>
