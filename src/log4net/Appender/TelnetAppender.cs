@@ -356,7 +356,7 @@ public class TelnetAppender : AppenderSkeleton
       /// <param name="message">string to send</param>
       public void Send(string message)
       {
-        _writer.Write(ContentEscape.EscapeUnpairedSurrogates(message.EnsureNotNull()));
+        _writer.Write(message.EnsureNotNull().EscapeUnpairedSurrogates());
         _writer.Flush();
       }
 

@@ -28,84 +28,88 @@ namespace log4net.Appender.Internal;
 /// </summary>
 internal static class ContentEscape
 {
-  /// <summary>
-  /// Replaces NUL characters with a visible <c>\0</c> escape.
-  /// </summary>
-  /// <param name="message">The rendered message.</param>
-  /// <returns>The message with every NUL character escaped.</returns>
-  /// <remarks>
-  /// <para>
-  /// A NUL ends the string for the native sink, dropping everything the layout rendered after it,
-  /// trailing fields and exception text included. Logged content is not trusted and may well
-  /// contain a NUL, so the character is escaped rather than passed through.
-  /// </para>
-  /// </remarks>
-  internal static string EscapeNulCharacters(string message)
-    => message.IndexOf('\0') < 0 ? message : message.Replace("\0", "\\0");
-
-  /// <summary>
-  /// Replaces the surrogates that are not part of a pair with a visible <c>\uXXXX</c> escape.
-  /// </summary>
-  /// <param name="message">The rendered message.</param>
-  /// <returns>The message with every unpaired surrogate escaped.</returns>
-  /// <remarks>
-  /// An unpaired surrogate is a legal <see cref="string"/> but cannot be encoded, and an encoder
-  /// that throws costs the whole event, so it is escaped rather than left to fail.
-  /// </remarks>
-  internal static string EscapeUnpairedSurrogates(string message)
-  {
-    if (!ContainsUnpairedSurrogate(message))
-    {
-      return message;
-    }
-
-    StringBuilder builder = new(message.Length);
-    for (int i = 0; i < message.Length; i++)
-    {
-      char c = message[i];
-      if (char.IsHighSurrogate(c) && i + 1 < message.Length && char.IsLowSurrogate(message[i + 1]))
-      {
-        builder.Append(c).Append(message[i + 1]);
-        i++;
-      }
-      else if (char.IsSurrogate(c))
-      {
-        builder.Append(Escape(c));
-      }
-      else
-      {
-        builder.Append(c);
-      }
-    }
-
-    return builder.ToString();
-  }
-
-  /// <summary>
-  /// Returns a copy of <paramref name="encoding"/> that writes what it cannot carry as <c>\uXXXX</c>.
-  /// </summary>
-  /// <param name="encoding">The configured encoding.</param>
-  /// <returns>The encoding to write rendered content with.</returns>
-  /// <remarks>
-  /// A best fit fallback runs after the layout has escaped the text, and writes U+FF1C as <c>&lt;</c>.
-  /// </remarks>
-  internal static Encoding WithEscapingFallback(Encoding encoding)
-  {
-    Encoding escaping = encoding.EnsureNotNull().Clone().EnsureIs<Encoding>();
-    escaping.EncoderFallback = EscapingEncoderFallback.Instance;
-    return escaping;
-  }
-
-  /// <summary>
-  /// Escapes what <paramref name="encoding"/> cannot carry, for a sink that takes a string and an encoding.
-  /// </summary>
   /// <param name="message">The rendered content.</param>
-  /// <param name="encoding">The configured encoding.</param>
-  /// <returns>The content with every unencodable character escaped.</returns>
-  internal static string EscapeUnencodableText(string message, Encoding encoding)
+  extension(string message)
   {
-    Encoding escaping = WithEscapingFallback(encoding);
-    return escaping.GetString(escaping.GetBytes(message));
+    /// <summary>
+    /// Replaces NUL characters with a visible <c>\0</c> escape.
+    /// </summary>
+    /// <returns>The message with every NUL character escaped.</returns>
+    /// <remarks>
+    /// <para>
+    /// A NUL ends the string for the native sink, dropping everything the layout rendered after it,
+    /// trailing fields and exception text included. Logged content is not trusted and may well
+    /// contain a NUL, so the character is escaped rather than passed through.
+    /// </para>
+    /// </remarks>
+    internal string EscapeNulCharacters()
+      => message.IndexOf('\0') < 0 ? message : message.Replace("\0", "\\0");
+
+    /// <summary>
+    /// Replaces the surrogates that are not part of a pair with a visible <c>\uXXXX</c> escape.
+    /// </summary>
+    /// <returns>The message with every unpaired surrogate escaped.</returns>
+    /// <remarks>
+    /// An unpaired surrogate is a legal <see cref="string"/> but cannot be encoded, and an encoder
+    /// that throws costs the whole event, so it is escaped rather than left to fail.
+    /// </remarks>
+    internal string EscapeUnpairedSurrogates()
+    {
+      if (!ContainsUnpairedSurrogate(message))
+      {
+        return message;
+      }
+
+      StringBuilder builder = new(message.Length);
+      for (int i = 0; i < message.Length; i++)
+      {
+        char c = message[i];
+        if (char.IsHighSurrogate(c) && i + 1 < message.Length && char.IsLowSurrogate(message[i + 1]))
+        {
+          builder.Append(c).Append(message[i + 1]);
+          i++;
+        }
+        else if (char.IsSurrogate(c))
+        {
+          builder.Append(Escape(c));
+        }
+        else
+        {
+          builder.Append(c);
+        }
+      }
+
+      return builder.ToString();
+    }
+
+    /// <summary>
+    /// Escapes what <paramref name="encoding"/> cannot carry, for a sink that takes a string and an encoding.
+    /// </summary>
+    /// <param name="encoding">The configured encoding.</param>
+    /// <returns>The content with every unencodable character escaped.</returns>
+    internal string EscapeUnencodableText(Encoding encoding)
+    {
+      Encoding escaping = encoding.WithEscapingFallback();
+      return escaping.GetString(escaping.GetBytes(message));
+    }
+  }
+
+  /// <param name="encoding">The configured encoding.</param>
+  extension(Encoding encoding)
+  {
+    /// <summary>
+    /// Returns a copy of the encoding that writes what it cannot carry as <c>\uXXXX</c>.
+    /// </summary>
+    /// <returns>The encoding to write rendered content with.</returns>
+    /// <remarks>
+    /// A best fit fallback runs after the layout has escaped the text, and writes U+FF1C as <c>&lt;</c>.
+    /// </remarks>
+    internal Encoding WithEscapingFallback()
+    {
+      Encoding escaping = encoding.EnsureNotNull().Clone().EnsureIs<Encoding>();
+      escaping.EncoderFallback = EscapingEncoderFallback.Instance;
+      return escaping;
+    }
   }
 
   private static string Escape(char c) => "\\u" + ((int)c).ToString("x4", CultureInfo.InvariantCulture);

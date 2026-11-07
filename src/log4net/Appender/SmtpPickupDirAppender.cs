@@ -159,7 +159,7 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
         {
           using StringWriter rendered = new(CultureInfo.InvariantCulture);
           RenderLoggingEvent(rendered, events[i]);
-          writer.Write(ContentEscape.EscapeUnpairedSurrogates(rendered.ToString()));
+          writer.Write(rendered.ToString().EscapeUnpairedSurrogates());
         }
 
         if (Layout?.Footer is string footer)

@@ -1338,7 +1338,7 @@ public class FileAppender : TextWriterAppender
   protected virtual void SetQWForFiles(Stream fileStream)
   {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-    StreamWriter writer = new(fileStream, ContentEscape.WithEscapingFallback(Encoding));
+    StreamWriter writer = new(fileStream, this.Encoding.WithEscapingFallback());
 #pragma warning restore CA2000 // Dispose objects before losing scope
     SetQWForFiles(writer);
   }

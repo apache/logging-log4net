@@ -18,6 +18,7 @@
 #endregion
 
 
+using System;
 using System.Text;
 
 using log4net.Appender;
@@ -32,6 +33,9 @@ namespace log4net.Tests.Appender;
 [TestFixture]
 public class ContentEscapeTest
 {
+  private static readonly Type _contentEscape =
+    typeof(TelnetAppender).Assembly.NonPublicType("log4net.Appender.Internal.ContentEscape");
+
   /// <summary>
   /// An unpaired surrogate cannot be encoded, and an encoder that throws costs the event. The
   /// input is built here rather than in the attribute: an attribute argument lives in metadata as
@@ -100,17 +104,11 @@ public class ContentEscapeTest
       Is.EqualTo("\u3042 \uff1c\\ud83d\\ude00"));
 
   private static Encoding WithEscapingFallback(Encoding encoding)
-    => typeof(TelnetAppender).Assembly
-      .NonPublicType("log4net.Appender.Internal.ContentEscape")
-      .Invoke<Encoding>(nameof(WithEscapingFallback), [encoding]);
+    => _contentEscape.Invoke<Encoding>(nameof(WithEscapingFallback), [encoding]);
 
   private static string EscapeUnencodableText(string message, Encoding encoding)
-    => typeof(TelnetAppender).Assembly
-      .NonPublicType("log4net.Appender.Internal.ContentEscape")
-      .Invoke<string>(nameof(EscapeUnencodableText), [message, encoding]);
+    => _contentEscape.Invoke<string>(nameof(EscapeUnencodableText), [message, encoding]);
 
   private static string EscapeUnpairedSurrogates(string message)
-    => typeof(TelnetAppender).Assembly
-      .NonPublicType("log4net.Appender.Internal.ContentEscape")
-      .Invoke<string>(nameof(EscapeUnpairedSurrogates), [message]);
+    => _contentEscape.Invoke<string>(nameof(EscapeUnpairedSurrogates), [message]);
 }

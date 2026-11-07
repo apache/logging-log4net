@@ -571,7 +571,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     };
 
     TextPart body = new(TextFormat.Plain);
-    body.SetText(ContentEscape.WithEscapingFallback(BodyEncoding), messageBody);
+    body.SetText(BodyEncoding.WithEscapingFallback(), messageBody);
     message.Body = body;
 
     return message;

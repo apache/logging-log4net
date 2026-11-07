@@ -350,7 +350,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     }
 
     using MailMessage mailMessage = new();
-    FillMailMessage(mailMessage, messageBody);
+    FillMailMessage(mailMessage, messageBody.EnsureNotNull());
 
     // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
     smtpClient.Send(mailMessage);
@@ -358,7 +358,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
 
   private void FillMailMessage(MailMessage mailMessage, string messageBody)
   {
-    mailMessage.Body = ContentEscape.EscapeUnencodableText(messageBody, BodyEncoding);
+    mailMessage.Body = messageBody.EscapeUnencodableText(BodyEncoding);
     mailMessage.BodyEncoding = BodyEncoding;
     mailMessage.From = new MailAddress(From.EnsureNotNull());
     mailMessage.To.Add(_to.EnsureNotNull());

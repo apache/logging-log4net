@@ -354,7 +354,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   protected override void Append(LoggingEvent loggingEvent)
   {
     int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
-    string message = ContentEscape.EscapeNulCharacters(RenderLoggingEvent(loggingEvent));
+    string message = RenderLoggingEvent(loggingEvent).EscapeNulCharacters();
 
     if (NewLineHandling == SyslogNewLineHandling.Split)
     {

@@ -262,12 +262,12 @@ public class UdpAppender : AppenderSkeleton
     set
     {
       _encoding = value.EnsureNotNull();
-      _escapingEncoding = ContentEscape.WithEscapingFallback(value);
+      _escapingEncoding = value.WithEscapingFallback();
     }
   }
 
   private Encoding _encoding = Encoding.Default;
-  private Encoding _escapingEncoding = ContentEscape.WithEscapingFallback(Encoding.Default);
+  private Encoding _escapingEncoding = Encoding.Default.WithEscapingFallback();
 
   /// <summary>
   /// Gets or sets the largest datagram this appender sends, in bytes.
