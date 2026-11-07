@@ -31,3 +31,5 @@ The following example shows how to configure the `TraceAppender` to log messages
   </layout>
 </appender>
 ----
+
+A NUL character in the message or the category shows as `\0`: the default listener ends in a native call that would stop at it.

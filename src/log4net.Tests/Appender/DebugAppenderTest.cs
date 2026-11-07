@@ -144,6 +144,80 @@ public class DebugAppenderTest
     Debug.Listeners.Remove(categoryTraceListener);
   }
 
+  /// <summary>
+  /// The default listener hands the text to a native API that stops at a NUL, which would drop
+  /// whatever the layout rendered after it.
+  /// </summary>
+  [Test]
+  public void NulCharactersAreEscaped()
+  {
+    CategoryTraceListener categoryTraceListener = new();
+    Debug.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    DebugAppender debugAppender = new() { Layout = new PatternLayout("%message tail") };
+    debugAppender.ActivateOptions();
+
+    BasicConfigurator.Configure(rep, debugAppender);
+
+    LogManager.GetLogger(rep.Name, GetType()).Debug("before\0after");
+
+    Assert.That(categoryTraceListener.Message, Is.EqualTo(@"before\0after tail"));
+
+    Debug.Listeners.Remove(categoryTraceListener);
+  }
+
+  /// <summary>Without a category the appender takes a different <c>Debug.Write</c> overload.</summary>
+  /// <param name="categoryPattern">The category pattern, <see langword="null"/> for no category.</param>
+  [TestCase(null, TestName = "NoCategory")]
+  [TestCase("", TestName = "EmptyCategory")]
+  public void NulCharactersAreEscapedWithoutACategory(string? categoryPattern)
+  {
+    CategoryTraceListener categoryTraceListener = new();
+    Debug.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    PatternLayout? category = categoryPattern is null ? null : new(categoryPattern);
+    category?.ActivateOptions();
+    DebugAppender debugAppender = new() { Layout = new PatternLayout("%message tail"), Category = category };
+    debugAppender.ActivateOptions();
+
+    BasicConfigurator.Configure(rep, debugAppender);
+
+    LogManager.GetLogger(rep.Name, GetType()).Debug("before\0after");
+
+    Assert.That(categoryTraceListener.Message, Is.EqualTo(@"before\0after tail"));
+
+    Debug.Listeners.Remove(categoryTraceListener);
+  }
+
+  /// <summary>A category that renders content reaches the same native call, ahead of the message.</summary>
+  [Test]
+  public void NulCharactersInTheCategoryAreEscaped()
+  {
+    CategoryTraceListener categoryTraceListener = new();
+    Debug.Listeners.Add(categoryTraceListener);
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+
+    PatternLayout category = new("%property{cat}");
+    category.ActivateOptions();
+    DebugAppender debugAppender = new() { Layout = new SimpleLayout(), Category = category };
+    debugAppender.ActivateOptions();
+
+    BasicConfigurator.Configure(rep, debugAppender);
+
+    ThreadContext.Properties["cat"] = "a\0b";
+    LogManager.GetLogger(rep.Name, GetType()).Debug("Message");
+    ThreadContext.Properties.Remove("cat");
+
+    Assert.That(categoryTraceListener.Category, Is.EqualTo(@"a\0b"));
+
+    Debug.Listeners.Remove(categoryTraceListener);
+  }
+
   private sealed class TestErrorHandler : IErrorHandler
   {
     public bool ErrorOccured { get; private set; }

@@ -19,6 +19,7 @@
 
 #define TRACE
 
+using log4net.Appender.Internal;
 using log4net.Layout;
 using log4net.Core;
 
@@ -81,6 +82,9 @@ public class TraceAppender : AppenderSkeleton
   /// Defaults to %logger which will use the logger name of the current 
   /// <see cref="LoggingEvent"/> as the category parameter.
   /// </para>
+  /// <para>
+  /// A NUL character in the message or the category is written as <c>\0</c>.
+  /// </para>
   /// </remarks>
   public PatternLayout Category { get; set; } = new("%logger");
 
@@ -90,7 +94,10 @@ public class TraceAppender : AppenderSkeleton
   /// <param name="loggingEvent">The event to log.</param>
   protected override void Append(LoggingEvent loggingEvent)
   {
-    System.Diagnostics.Trace.Write(RenderLoggingEvent(loggingEvent), Category.Format(loggingEvent));
+    // The default listener ends in OutputDebugString or syslog(3), where a NUL ends the record.
+    string message = RenderLoggingEvent(loggingEvent).EscapeNulCharacters();
+    string category = Category.Format(loggingEvent).EscapeNulCharacters();
+    System.Diagnostics.Trace.Write(message, category);
 
     if (ImmediateFlush)
     {
