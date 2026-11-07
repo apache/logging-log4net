@@ -45,6 +45,12 @@ Each parameter in the prepared statement or stored procedure is defined with:
 * `Name`: The name of the parameter.
 * `DbType`: The database type for the parameter.
 * `Layout`: The layout used to render the value for the parameter.
+* `Size`: The maximum length of the value, in UTF-16 code units, when `DbType` is a string type. A longer value is cut, without splitting a surrogate pair.
+
+In text values, a NUL character shows as `\0` and a lone surrogate as `\uXXXX`, because a database such as PostgreSQL would reject them and the event with them.
+
+Use a UTF-8 database.
+A database with another encoding can reject a character it cannot store, which loses the event, and log4net does not know the encoding of the database.
 
 The following examples illustrate how to configure the `AdoNetAppender` for different databases.
 

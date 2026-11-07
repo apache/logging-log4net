@@ -23,6 +23,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 
+using log4net.Appender.Internal;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
@@ -998,6 +999,10 @@ public class AdoNetAppenderParameter
   /// <para>
   /// For BLOB data types like VARCHAR(max) it may be impossible to infer the value automatically, use -1 as the size in this case.
   /// </para>
+  /// <para>
+  /// When <see cref="DbType"/> is a string type, a longer value is cut to this many UTF-16 code units,
+  /// after escaping, without splitting a surrogate pair.
+  /// </para>
   /// </remarks>
   /// <seealso cref="IDbDataParameter.Size" />
   public int Size { get; set; }
@@ -1083,11 +1088,42 @@ public class AdoNetAppenderParameter
     // Format the value
     object? formattedValue = Layout?.Format(loggingEvent);
 
+    if (formattedValue is string rendered)
+    {
+      formattedValue = PrepareText(rendered);
+    }
+
     // If the value is null then convert to a DBNull
     formattedValue ??= DBNull.Value;
 
     param.Value = formattedValue;
   }
+
+  /// <summary>
+  /// Escapes what a database such as PostgreSQL rejects along with the event, then cuts to
+  /// <see cref="Size"/>, because a provider cutting inside a surrogate pair loses the event too.
+  /// </summary>
+  /// <param name="text">The rendered value.</param>
+  /// <returns>The value to bind.</returns>
+  private string PrepareText(string text)
+  {
+    text = text.EscapeNulCharacters().EscapeUnpairedSurrogates();
+
+    // A size of -1 means no limit to some providers, and is no length on a non-text type.
+    if (Size <= 0 || text.Length <= Size || !IsTextParameter)
+    {
+      return text;
+    }
+
+    return text.Substring(0, char.IsHighSurrogate(text[Size - 1]) ? Size - 1 : Size);
+  }
+
+  /// <summary>
+  /// Whether the provider treats a string value as text. An inferred parameter reads as
+  /// <see cref="DbType.AnsiString"/>, the zero of the enum.
+  /// </summary>
+  private bool IsTextParameter
+    => DbType is DbType.String or DbType.AnsiString or DbType.StringFixedLength or DbType.AnsiStringFixedLength;
 
   /// <summary>
   /// The database type for this parameter.

@@ -513,6 +513,149 @@ public class AdoNetAppenderTest
   }
 
   /// <summary>
+  /// A database that cannot store a NUL or an unpaired surrogate in a text value (PostgreSQL)
+  /// rejects the insert and with it the event, so both are escaped before the value is bound.
+  /// </summary>
+  [Test]
+  public void NulAndUnpairedSurrogateAreEscapedBeforeBinding()
+  {
+    AdoNetAppenderParameter messageParam = new()
+    {
+      ParameterName = "@message",
+      DbType = DbType.String,
+      Size = 4000,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    AdoNetAppender appender = new()
+    {
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+      BufferSize = -1,
+      CommandText = "INSERT INTO Log ([Message]) VALUES (@message)"
+    };
+    appender.AddParameter(messageParam);
+    appender.ActivateOptions();
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, appender);
+    ILog log = LogManager.GetLogger(rep.Name, "NulAndUnpairedSurrogateAreEscapedBeforeBinding");
+
+    log.Debug("login failed for user mallory\0 \ud800 \U0001F600");
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.That(command, Is.Not.Null);
+
+    IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
+    Assert.That(param.Value, Is.EqualTo("login failed for user mallory\\0 \\ud800 \U0001F600"));
+  }
+
+  /// <summary>A provider cutting inside a surrogate pair loses the event, so the value arrives cut.</summary>
+  /// <param name="message">The logged message.</param>
+  /// <param name="size">The parameter size.</param>
+  /// <param name="expected">The bound value.</param>
+  [TestCase("abcde", 5, "abcde", TestName = "ExactlySize")]
+  [TestCase("abcdefgh", 0, "abcdefgh", TestName = "NoSize")]
+  [TestCase("abcdefgh", 5, "abcde", TestName = "LongerThanSize")]
+  [TestCase("ab\U0001F600", 3, "ab", TestName = "SizeInsideAPair")]
+  [TestCase("abcdefgh", -1, "abcdefgh", TestName = "UnlimitedSize")]
+  [TestCase("ab\0cd", 5, @"ab\0c", TestName = "EscapesCountTowardsSize")]
+  [TestCase("ab\U0001F600", 4, "ab\U0001F600", TestName = "SizeAfterAPair")]
+  public void TextIsCutToSize(string message, int size, string expected)
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      DbType = DbType.String,
+      Size = size,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, message), Is.EqualTo(expected));
+  }
+
+  /// <summary>Every text type gets the cut.</summary>
+  /// <param name="dbType">The parameter type.</param>
+  [TestCase(DbType.String)]
+  [TestCase(DbType.AnsiString)]
+  [TestCase(DbType.StringFixedLength)]
+  [TestCase(DbType.AnsiStringFixedLength)]
+  public void TextTypesAreCutToSize(DbType dbType)
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      DbType = dbType,
+      Size = 3,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, "abcdefgh"), Is.EqualTo("abc"));
+  }
+
+  /// <summary>A parameter without a <c>DbType</c> is text to the provider when the value is.</summary>
+  [Test]
+  public void TextIsCutToSizeWhenTheTypeIsInferred()
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      Size = 3,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, "abcdefgh"), Is.EqualTo("abc"));
+  }
+
+  /// <summary>On a non-text type <c>Size</c> is no length: a rendered number stays whole.</summary>
+  [Test]
+  public void SizeDoesNotCutANonTextParameter()
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      DbType = DbType.Int32,
+      Size = 2,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, "12345"), Is.EqualTo("12345"));
+  }
+
+  /// <summary>Only strings are escaped and cut, a raw value reaches the provider as it is.</summary>
+  [Test]
+  public void SizeDoesNotTouchARawValue()
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@date",
+      DbType = DbType.DateTime,
+      Size = 1,
+      Layout = new RawTimeStampLayout()
+    };
+
+    Assert.That(BoundValue(parameter, "Message"), Is.TypeOf<DateTime>());
+  }
+
+  private static object? BoundValue(AdoNetAppenderParameter parameter, string message)
+  {
+    AdoNetAppender appender = new()
+    {
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+      BufferSize = -1,
+      CommandText = "INSERT INTO Log ([Message]) VALUES (" + parameter.ParameterName + ")"
+    };
+    appender.AddParameter(parameter);
+    appender.ActivateOptions();
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, appender);
+    LogManager.GetLogger(rep.Name, "BoundValue").Debug(message);
+
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.That(command, Is.Not.Null);
+    return ((IDbDataParameter)command.Parameters[parameter.ParameterName!]).Value;
+  }
+
+  /// <summary>
   /// Retrying one by one exists to save the events around the one the database rejected. When
   /// every one of them fails, the batch is not the problem and each further round trip only
   /// learns that again.
