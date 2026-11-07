@@ -116,6 +116,29 @@ public sealed class XmlLayoutTest
     Assert.That(writer.ToString(), Is.EqualTo(expected));
   }
 
+  /// <summary>
+  /// Verifies that the message stays in its event through the writer of the current target.
+  /// A real marker followed by a combining mark is missed by a linguistic search, and then
+  /// throws only on net462: XmlWriter.Create splits the section itself on the other targets.
+  /// </summary>
+  [TestCase("<a><b><c>]\u00AD]>")]
+  [TestCase("]]>\u0301<<<<<<<<<<")]
+  [TestCase("<a><b><c>]\U000E0020]>")]
+  [TestCase("<a><b><c>]\U000E0100]>")]
+  public void TestCDataEndInMessageStaysInEvent(string message)
+  {
+    using StringWriter writer = new();
+    LoggingEventData evt = CreateBaseEvent();
+    evt.Message = message;
+
+    new XmlLayout().Format(writer, new LoggingEvent(evt));
+
+    XmlDocument document = new();
+    document.LoadXml($"<events>{writer}</events>");
+    // net462 writes no prefix before ActivateOptions, see CreateEventNode
+    Assert.That(document.SelectSingleNode("//*[local-name()='message']")!.InnerText, Is.EqualTo(message));
+  }
+
   [Test]
   public void TestIllegalCharacterMasking()
   {
