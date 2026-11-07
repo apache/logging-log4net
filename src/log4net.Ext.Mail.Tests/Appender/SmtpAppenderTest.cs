@@ -302,6 +302,19 @@ public class SmtpAppenderTest
     Assert.That(appender.EnableSsl, Is.False);
   }
 
+  /// <summary>A best fit fallback turns U+FF1C into <c>&lt;</c> after the layout. The charset stays.</summary>
+  [Test]
+  public void BodyEscapesWhatTheEncodingCannotCarry()
+  {
+    SmtpAppender appender = CreateAppender();
+    appender.BodyEncoding = Encoding.GetEncoding("iso-8859-1");
+
+    Append(appender, "a\uff1cb\u00e4");
+
+    Assert.That(_transport.SentMails[0].Body, Does.StartWith("a\\uff1cb\u00e4"));
+    Assert.That(_transport.SentMails[0].BodyCharset, Is.EqualTo("iso-8859-1"));
+  }
+
   [Test]
   public void BodyContainsTheRenderedEvent()
   {

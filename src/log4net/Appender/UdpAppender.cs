@@ -252,10 +252,22 @@ public class UdpAppender : AppenderSkeleton
   /// </value>
   /// <remarks>
   /// <para>
-  /// The <see cref="Encoding"/> used to write the packets.
+  /// The <see cref="Encoding"/> used to write the packets. A character it cannot represent
+  /// is written as a <c>\uXXXX</c> escape.
   /// </para>
   /// </remarks>
-  public Encoding Encoding { get; set; } = Encoding.Default;
+  public Encoding Encoding
+  {
+    get => _encoding;
+    set
+    {
+      _encoding = value.EnsureNotNull();
+      _escapingEncoding = ContentEscape.WithEscapingFallback(value);
+    }
+  }
+
+  private Encoding _encoding = Encoding.Default;
+  private Encoding _escapingEncoding = ContentEscape.WithEscapingFallback(Encoding.Default);
 
   /// <summary>
   /// Gets or sets the largest datagram this appender sends, in bytes.
@@ -393,7 +405,7 @@ public class UdpAppender : AppenderSkeleton
   /// </remarks>
   private protected byte[] GetDatagramBytes(string message)
   {
-    byte[] datagram = Encoding.GetBytes(message.EnsureNotNull());
+    byte[] datagram = _escapingEncoding.GetBytes(message.EnsureNotNull());
     if (datagram.Length <= MaxDatagramSize)
     {
       return datagram;
@@ -412,17 +424,17 @@ public class UdpAppender : AppenderSkeleton
   /// <returns>The bytes to send, of at most <see cref="MaxDatagramSize"/> length.</returns>
   private byte[] GetTruncatedBytes(string message, byte[] datagram)
   {
-    int markerLength = Encoding.GetByteCount(TruncationMarker);
+    int markerLength = _escapingEncoding.GetByteCount(TruncationMarker);
 
-    // Convert fills the budget without splitting a character, and unflushed it holds back a
-    // trailing high surrogate rather than encoding it as the replacement character. It writes
-    // into the oversize encoding, which is the one buffer already long enough.
-    Encoding.GetEncoder().Convert(message.ToCharArray(), 0, message.Length,
+    // Convert fills the budget and may cut an escape, and unflushed it holds back a trailing
+    // high surrogate rather than escaping half of a pair. It writes into the oversize encoding,
+    // which is the one buffer already long enough.
+    _escapingEncoding.GetEncoder().Convert(message.ToCharArray(), 0, message.Length,
       datagram, 0, MaxDatagramSize - markerLength, flush: false, out _, out int written, out _);
 
     byte[] result = new byte[written + markerLength];
     Buffer.BlockCopy(datagram, 0, result, 0, written);
-    Encoding.GetBytes(TruncationMarker, 0, TruncationMarker.Length, result, written);
+    _escapingEncoding.GetBytes(TruncationMarker, 0, TruncationMarker.Length, result, written);
     return result;
   }
 

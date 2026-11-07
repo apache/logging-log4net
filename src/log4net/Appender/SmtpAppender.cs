@@ -22,6 +22,7 @@ using System.IO;
 using System.Text;
 
 using System.Net.Mail;
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -249,7 +250,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// Gets or sets the body encoding to be used.
   /// </summary>
   /// <remarks>
-  /// The default encoding is the operating system's current ANSI codepage.
+  /// The default encoding is UTF-8.
+  /// A character it cannot represent is written as a <c>\uXXXX</c> escape.
   /// </remarks>
   public Encoding BodyEncoding { get; set; } = Encoding.UTF8;
 
@@ -348,7 +350,15 @@ public class SmtpAppender : BufferingAppenderSkeleton
     }
 
     using MailMessage mailMessage = new();
-    mailMessage.Body = messageBody;
+    FillMailMessage(mailMessage, messageBody);
+
+    // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
+    smtpClient.Send(mailMessage);
+  }
+
+  private void FillMailMessage(MailMessage mailMessage, string messageBody)
+  {
+    mailMessage.Body = ContentEscape.EscapeUnencodableText(messageBody, BodyEncoding);
     mailMessage.BodyEncoding = BodyEncoding;
     mailMessage.From = new MailAddress(From.EnsureNotNull());
     mailMessage.To.Add(_to.EnsureNotNull());
@@ -367,9 +377,6 @@ public class SmtpAppender : BufferingAppenderSkeleton
     mailMessage.Subject = Subject;
     mailMessage.SubjectEncoding = SubjectEncoding;
     mailMessage.Priority = Priority;
-
-    // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
-    smtpClient.Send(mailMessage);
   }
 
   private int _sendTimeoutMillis = 15_000;

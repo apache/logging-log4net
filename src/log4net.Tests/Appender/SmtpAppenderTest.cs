@@ -20,7 +20,9 @@
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Mail;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,6 +49,23 @@ public class SmtpAppenderTest
   [Test]
   public void SendTimeoutMillisDefaultsToFifteenSeconds()
     => Assert.That(new SmtpAppender().SendTimeoutMillis, Is.EqualTo(15_000));
+
+  /// <summary>
+  /// A best fit fallback turns U+FF1C into <c>&lt;</c> after the layout. The configured encoding
+  /// object stays on the message: a clone would change the transfer encoding it picks.
+  /// </summary>
+  [Test]
+  public void BodyEscapesWhatTheEncodingCannotCarry()
+  {
+    Encoding latin1 = Encoding.GetEncoding("iso-8859-1");
+    SmtpAppender appender = new() { From = "from@example.com", To = "to@example.com", BodyEncoding = latin1 };
+
+    using MailMessage message = new();
+    appender.Invoke<object?>("FillMailMessage", [message, "a\uff1cb\u00e4"]);
+
+    Assert.That(message.Body, Is.EqualTo("a\\uff1cb\u00e4"));
+    Assert.That(message.BodyEncoding, Is.SameAs(latin1));
+  }
 
   /// <summary><see cref="System.Net.Mail.SmtpClient"/> treats 0 as "do not wait".</summary>
   [TestCase(0)]

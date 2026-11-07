@@ -40,3 +40,6 @@ dropped: the socket rejects a payload above `MaxDatagramSize` (default 65507, th
 payload of an IPv4 packet), and that used to cost the whole event. Lower `MaxDatagramSize`, down to
 512, to match a receiver that accepts less. It cannot be raised: an IPv6 packet would carry 20 bytes
 more, which is not worth a second limit.
+
+A character `Encoding` cannot represent is written as a `\uXXXX` escape, never as a best fit
+substitute or `?`.

@@ -25,6 +25,7 @@ using System.Net.Mail;
 using System.Text;
 
 using log4net.Appender;
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Ext.Mail.Appender.Internal;
 using log4net.Util;
@@ -300,6 +301,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// </summary>
   /// <remarks>
   /// The default encoding is <see cref="Encoding.UTF8"/>.
+  /// A character it cannot represent is written as a <c>\uXXXX</c> escape.
   /// </remarks>
   public Encoding BodyEncoding { get; set; } = Encoding.UTF8;
 
@@ -569,7 +571,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     };
 
     TextPart body = new(TextFormat.Plain);
-    body.SetText(BodyEncoding, messageBody);
+    body.SetText(ContentEscape.WithEscapingFallback(BodyEncoding), messageBody);
     message.Body = body;
 
     return message;

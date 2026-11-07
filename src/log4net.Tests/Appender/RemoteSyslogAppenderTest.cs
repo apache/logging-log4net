@@ -53,6 +53,15 @@ public sealed class RemoteSyslogAppenderTest
 
   private const int FlushTimeoutMillis = 30_000;
 
+  /// <summary>A configured encoding changes nothing: the appender has already escaped the content.</summary>
+  [Test]
+  public void AConfiguredEncodingLeavesTheEscapesAlone()
+  {
+    List<byte[]> sentBytes = ExecuteAppend("a\uff1cb", encoding: Encoding.GetEncoding("iso-8859-1"));
+
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Is.EqualTo(@"<14>TestDomain: INFO  - a\uff1cb"));
+  }
+
   /// <summary>
   /// Content outside the RFC 3164 range used to be deleted with no marker, so a message written
   /// in a non-Latin script reached the audit trail empty.
@@ -291,7 +300,8 @@ public sealed class RemoteSyslogAppenderTest
   private static List<byte[]> ExecuteAppend(string message,
     SyslogNewLineHandling newLineHandling = default,
     string? identity = null,
-    int? maxDatagramSize = null)
+    int? maxDatagramSize = null,
+    Encoding? encoding = null)
   {
     System.Net.IPAddress ipAddress = new([127, 0, 0, 1]);
     RemoteAppender appender = new()
@@ -304,6 +314,10 @@ public sealed class RemoteSyslogAppenderTest
     if (maxDatagramSize is int size)
     {
       appender.MaxDatagramSize = size;
+    }
+    if (encoding is not null)
+    {
+      appender.Encoding = encoding;
     }
     appender.ActivateOptions();
     LoggingEvent loggingEvent = new(new()

@@ -217,7 +217,7 @@ See xref:#mailkit-smtpappender-transport-security[].
 |The encoding of the subject line, for example `utf-8`. Defaults to `utf-8`.
 
 |`bodyEncoding`
-|The encoding of the message body, for example `utf-8`. Defaults to `utf-8`.
+|The encoding of the message body, for example `utf-8`. Defaults to `utf-8`. A character it cannot represent is written as a `\uXXXX` escape.
 
 |`sendQueueSize`
 |How many rendered mails may wait to be sent. Defaults to `500`.

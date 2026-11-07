@@ -19,6 +19,7 @@
 
 using System.Globalization;
 using System.Text;
+using log4net.Util;
 
 namespace log4net.Appender.Internal;
 
@@ -69,7 +70,7 @@ internal static class ContentEscape
       }
       else if (char.IsSurrogate(c))
       {
-        builder.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
+        builder.Append(Escape(c));
       }
       else
       {
@@ -79,6 +80,35 @@ internal static class ContentEscape
 
     return builder.ToString();
   }
+
+  /// <summary>
+  /// Returns a copy of <paramref name="encoding"/> that writes what it cannot carry as <c>\uXXXX</c>.
+  /// </summary>
+  /// <param name="encoding">The configured encoding.</param>
+  /// <returns>The encoding to write rendered content with.</returns>
+  /// <remarks>
+  /// A best fit fallback runs after the layout has escaped the text, and writes U+FF1C as <c>&lt;</c>.
+  /// </remarks>
+  internal static Encoding WithEscapingFallback(Encoding encoding)
+  {
+    Encoding escaping = encoding.EnsureNotNull().Clone().EnsureIs<Encoding>();
+    escaping.EncoderFallback = EscapingEncoderFallback.Instance;
+    return escaping;
+  }
+
+  /// <summary>
+  /// Escapes what <paramref name="encoding"/> cannot carry, for a sink that takes a string and an encoding.
+  /// </summary>
+  /// <param name="message">The rendered content.</param>
+  /// <param name="encoding">The configured encoding.</param>
+  /// <returns>The content with every unencodable character escaped.</returns>
+  internal static string EscapeUnencodableText(string message, Encoding encoding)
+  {
+    Encoding escaping = WithEscapingFallback(encoding);
+    return escaping.GetString(escaping.GetBytes(message));
+  }
+
+  private static string Escape(char c) => "\\u" + ((int)c).ToString("x4", CultureInfo.InvariantCulture);
 
   private static bool ContainsUnpairedSurrogate(string message)
   {
@@ -99,5 +129,55 @@ internal static class ContentEscape
     }
 
     return false;
+  }
+
+  /// <summary>Writes an unencodable character as <c>\uXXXX</c>, a surrogate pair as two escapes.</summary>
+  private sealed class EscapingEncoderFallback : EncoderFallback
+  {
+    internal static EscapingEncoderFallback Instance { get; } = new();
+
+    /// <inheritdoc/>
+    public override int MaxCharCount => 12;
+
+    /// <inheritdoc/>
+    public override EncoderFallbackBuffer CreateFallbackBuffer() => new Buffer();
+
+    private sealed class Buffer : EncoderFallbackBuffer
+    {
+      private string _escape = string.Empty;
+      private int _position;
+
+      /// <inheritdoc/>
+      public override int Remaining => _escape.Length - _position;
+
+      /// <inheritdoc/>
+      public override bool Fallback(char charUnknown, int index) => Start(Escape(charUnknown));
+
+      /// <inheritdoc/>
+      public override bool Fallback(char charUnknownHigh, char charUnknownLow, int index)
+        => Start(Escape(charUnknownHigh) + Escape(charUnknownLow));
+
+      /// <inheritdoc/>
+      public override char GetNextChar() => Remaining > 0 ? _escape[_position++] : '\0';
+
+      /// <inheritdoc/>
+      public override bool MovePrevious()
+      {
+        if (_position == 0)
+        {
+          return false;
+        }
+
+        _position--;
+        return true;
+      }
+
+      private bool Start(string escape)
+      {
+        _escape = escape;
+        _position = 0;
+        return true;
+      }
+    }
   }
 }

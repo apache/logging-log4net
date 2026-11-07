@@ -38,6 +38,50 @@ public sealed class UdpAppenderTest
   private static byte[] GetDatagramBytes(UdpAppender appender, string message)
     => appender.Invoke<byte[]>(nameof(GetDatagramBytes), [message]);
 
+  /// <summary>A character the encoding cannot carry is escaped, not replaced by a best fit.</summary>
+  [Test]
+  public void UnencodableCharactersAreEscaped()
+  {
+    Encoding latin1 = Encoding.GetEncoding("iso-8859-1");
+    UdpAppender appender = new() { Encoding = latin1 };
+
+    Assert.That(latin1.GetString(GetDatagramBytes(appender, "a\uff1cb\u00e4\U0001f600")),
+      Is.EqualTo("a\\uff1cb\u00e4\\ud83d\\ude00"));
+  }
+
+  /// <summary>The escapes count towards the limit. At 513 .NET cuts into one, net462 stops before it.</summary>
+  [TestCase(512)]
+  [TestCase(513)]
+  public void TruncationCountsTheEscapes(int maxDatagramSize)
+  {
+    Encoding latin1 = Encoding.GetEncoding("iso-8859-1");
+    UdpAppender appender = new() { Encoding = latin1, MaxDatagramSize = maxDatagramSize };
+    appender.ErrorHandler = new RecordingErrorHandler();
+
+    string datagram = latin1.GetString(GetDatagramBytes(appender, new string('\uff1c', 1000)));
+
+    Assert.That(datagram.Length, Is.InRange(512, maxDatagramSize));
+    Assert.That(datagram, Does.StartWith(@"\uff1c\uff1c").And.EndWith(Marker));
+    Assert.That(datagram, !Contains.Substring("<").Using(StringComparison.Ordinal));
+  }
+
+  /// <summary>The property keeps the configured object, and a later set takes effect.</summary>
+  [Test]
+  public void TheConfiguredEncodingIsKeptAndCanChange()
+  {
+    Encoding latin1 = Encoding.GetEncoding("iso-8859-1");
+    UdpAppender appender = new() { Encoding = latin1 };
+
+    Assert.That(appender.Encoding, Is.SameAs(latin1));
+    appender.Encoding = Encoding.UTF8;
+    Assert.That(GetDatagramBytes(appender, "\u00e4"), Is.EqualTo(Encoding.UTF8.GetBytes("\u00e4")));
+  }
+
+  /// <summary>A null encoding fails where it is set, not on the first event.</summary>
+  [Test]
+  public void ANullEncodingIsRejected()
+    => Assert.That(() => new UdpAppender().Encoding = null!, Throws.ArgumentNullException);
+
   /// <summary>The maximum UDP payload of an IPv4 packet, measured as the first size the socket rejects minus one.</summary>
   [Test]
   public void MaxDatagramSizeDefaultsTo65507()
