@@ -61,9 +61,9 @@ public class SmtpAppenderTest
     SmtpAppender appender = new() { From = "from@example.com", To = "to@example.com", BodyEncoding = latin1 };
 
     using MailMessage message = new();
-    appender.Invoke<object?>("FillMailMessage", [message, "a\uff1cb\u00e4"]);
+    appender.Invoke<object?>("FillMailMessage", [message, "a\uff1cb\u00e4\ud800"]);
 
-    Assert.That(message.Body, Is.EqualTo("a\\uff1cb\u00e4"));
+    Assert.That(message.Body, Is.EqualTo("a\\uff1cb\u00e4\\ud800"));
     Assert.That(message.BodyEncoding, Is.SameAs(latin1));
   }
 

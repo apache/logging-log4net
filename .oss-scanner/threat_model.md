@@ -30,6 +30,8 @@ Matters most:
 - `log4net.Appender.Internal.ContentEscape` and `RemoteSyslogAppender.AppendMessage`: the shared
   escapes are `\0` for NUL, `\r` and `\n`, and `\uXXXX` for anything else. A sink that cannot carry a
   character escapes it visibly; it never drops the character, the rest of the record, or the event.
+  `AppenderSkeleton.RenderLoggingEvent` escapes lone surrogates for every appender, so a sink needs no
+  call of its own for them. NUL stays per sink.
 - Anything where untrusted content reaches pattern converters, format expansion, or the appenders
   that send it on: `UdpAppender`, `RemoteSyslogAppender`, `TelnetAppender`, and the mail appenders,
   `SmtpAppender` and `SmtpPickupDirAppender` in core and `SmtpAppender` in `log4net.Ext.Mail`.

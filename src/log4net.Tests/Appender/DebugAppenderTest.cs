@@ -27,11 +27,13 @@ using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
+using log4net.Tests.Appender.Internal;
 using NUnit.Framework;
 
 namespace log4net.Tests.Appender;
 
 [TestFixture]
+[NonParallelizable]
 public class DebugAppenderTest
 {
   [Test]
@@ -216,6 +218,27 @@ public class DebugAppenderTest
     Assert.That(categoryTraceListener.Category, Is.EqualTo(@"a\0b"));
 
     Debug.Listeners.Remove(categoryTraceListener);
+  }
+
+  /// <summary>A listener that cannot be flushed must not reach the caller of <c>Flush</c>.</summary>
+  [Test]
+  public void FlushReportsAFailingListener()
+  {
+    UnflushableTraceListener listener = new();
+    Debug.Listeners.Add(listener);
+    try
+    {
+      RecordingErrorHandler errorHandler = new();
+      DebugAppender debugAppender = new() { Layout = new SimpleLayout(), ImmediateFlush = false, ErrorHandler = errorHandler };
+      debugAppender.ActivateOptions();
+
+      Assert.That(debugAppender.Flush(1000), Is.False);
+      Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+    }
+    finally
+    {
+      Debug.Listeners.Remove(listener);
+    }
   }
 
   private sealed class TestErrorHandler : IErrorHandler

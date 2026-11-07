@@ -373,6 +373,8 @@ public sealed class TelnetAppenderTest
       // A queue this small fills as soon as the client stops reading, and nothing waits for room.
       SendQueueSize = 4,
       EnqueueTimeoutMillis = 0,
+      // Only bounds Close, where the sender is still stuck on this client.
+      SendTimeoutMillis = 1_000,
       ErrorHandler = errorHandler
     };
     appender.ActivateOptions();
@@ -382,9 +384,10 @@ public sealed class TelnetAppenderTest
     {
       deadReader.ConnectAndStopReading();
 
+      // More than the socket buffers hold, so the sender blocks whatever its speed.
       for (int i = 0; i < 200; i++)
       {
-        appender.DoAppend(CreateEvent(new string('x', 4_096)));
+        appender.DoAppend(CreateEvent(new string('x', 65_536)));
       }
 
       Assert.That(errorHandler.Messages.FindAll(m => m.IndexOf("was dropped", StringComparison.Ordinal) >= 0),

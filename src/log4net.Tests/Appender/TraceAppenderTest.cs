@@ -21,16 +21,19 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Layout;
 using log4net.Repository;
+using log4net.Tests.Appender.Internal;
 using NUnit.Framework;
 
 namespace log4net.Tests.Appender;
 
 [TestFixture]
+[NonParallelizable]
 public class TraceAppenderTest
 {
   [Test]
@@ -129,6 +132,42 @@ public class TraceAppenderTest
 
     Assert.That(listener.Category, Is.EqualTo(@"a\0b"));
   }
+
+  /// <summary>A listener that cannot be flushed must not reach the caller of <c>Flush</c>.</summary>
+  [Test]
+  public void FlushReportsAFailingListener()
+  {
+    Trace.Listeners.Clear();
+    Trace.Listeners.Add(new UnflushableTraceListener());
+    try
+    {
+      RecordingErrorHandler errorHandler = new();
+      TraceAppender traceAppender = new() { Layout = new SimpleLayout(), ImmediateFlush = false, ErrorHandler = errorHandler };
+      traceAppender.ActivateOptions();
+
+      Assert.That(traceAppender.Flush(1000), Is.False);
+      Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+    }
+    finally
+    {
+      Trace.Listeners.Clear();
+    }
+  }
+}
+
+/// <summary>Stands in for a listener whose stream has failed.</summary>
+public sealed class UnflushableTraceListener : TraceListener
+{
+  /// <inheritdoc/>
+  public override void Write(string? message)
+  { }
+
+  /// <inheritdoc/>
+  public override void WriteLine(string? message)
+  { }
+
+  /// <inheritdoc/>
+  public override void Flush() => throw new IOException("Simulated failure to flush");
 }
 
 /// <summary>Records what the trace and debug appenders hand to a listener.</summary>

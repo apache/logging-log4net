@@ -83,6 +83,10 @@ public class TextWriterAppender : AppenderSkeleton
   /// <para>
   /// <b>Note:</b> Logging to an unopened <see cref="TextWriter"/> will fail.
   /// </para>
+  /// <para>
+  /// A lone surrogate is written as <c>\uXXXX</c>. log4net does not control the encoding of this
+  /// writer, so for XML output use <see cref="FileAppender"/> or <see cref="RollingFileAppender"/>.
+  /// </para>
   /// </remarks>
   public virtual TextWriter? Writer
   {

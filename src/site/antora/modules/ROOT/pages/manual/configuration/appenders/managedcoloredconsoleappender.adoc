@@ -24,6 +24,9 @@ It provides more control over the colors used for different log levels.
 The following example shows how to configure the `ManagedColoredConsoleAppender` to log messages to the console.
 By default the messages are sent to the console standard output stream.
 
+A lone surrogate shows as `\uXXXX`, so a writer set with `Console.SetOut` that cannot encode it keeps working.
+For XML output, use `FileAppender` or `RollingFileAppender`: log4net does not control the encoding of such a writer.
+
 This example shows how to highlight error messages.
 
 [source,xml]

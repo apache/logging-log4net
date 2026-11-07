@@ -19,6 +19,8 @@
 
 using System.Globalization;
 using System.Text;
+using log4net.Core;
+using log4net.Layout;
 using log4net.Util;
 
 namespace log4net.Appender.Internal;
@@ -112,7 +114,20 @@ internal static class ContentEscape
     }
   }
 
-  private static string Escape(char c) => "\\u" + ((int)c).ToString("x4", CultureInfo.InvariantCulture);
+  /// <param name="layout">A layout other than <see cref="AppenderSkeleton.Layout"/>, such as a category.</param>
+  extension(LayoutSkeleton layout)
+  {
+    /// <summary>
+    /// Formats the layout with unpaired surrogates escaped, since it does not pass the escape in
+    /// <c>RenderLoggingEvent</c>.
+    /// </summary>
+    /// <param name="loggingEvent">The event to format.</param>
+    /// <returns>The formatted text with every unpaired surrogate escaped.</returns>
+    internal string FormatWithEscapedSurrogates(LoggingEvent loggingEvent)
+      => layout.Format(loggingEvent).EscapeUnpairedSurrogates();
+  }
+
+  internal static string Escape(char c) => "\\u" + ((int)c).ToString("x4", CultureInfo.InvariantCulture);
 
   private static bool ContainsUnpairedSurrogate(string message)
   {

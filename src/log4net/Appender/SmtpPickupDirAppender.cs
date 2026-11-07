@@ -20,9 +20,7 @@
 using System;
 using System.IO;
 
-using System.Globalization;
 using System.Text;
-using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -157,9 +155,7 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
 
         for (int i = 0; i < events.Length; i++)
         {
-          using StringWriter rendered = new(CultureInfo.InvariantCulture);
-          RenderLoggingEvent(rendered, events[i]);
-          writer.Write(rendered.ToString().EscapeUnpairedSurrogates());
+          RenderLoggingEvent(writer, events[i]);
         }
 
         if (Layout?.Footer is string footer)

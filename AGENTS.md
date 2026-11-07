@@ -303,6 +303,9 @@ What that leaves for this file is where the answers live in the code:
   `RemoteSyslogAppender.AppendMessage`. Put new ones in `ContentEscape` rather than in the
   appender: four appenders have needed the same two so far. Escaping before a length limit, not
   after, since an escape is longer than what it replaces.
+- **Lone surrogates are the exception to escaping per sink.** `AppenderSkeleton.RenderLoggingEvent`
+  escapes them for every appender and has no opt-out, so a sink adds no call of its own. Only text
+  rendered around it needs one, such as the category of `TraceAppender`. NUL stays per sink.
 - Deliberate secure-default choices belong in the changelog with their opt-out named, so that an
   upgrade surprise is searchable. See the entries for `SendTimeoutMillis`, `MatchTimeoutMillis` and
   `LockTimeoutMillis`.

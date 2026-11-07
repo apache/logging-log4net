@@ -26,7 +26,6 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -356,7 +355,7 @@ public class TelnetAppender : AppenderSkeleton
       /// <param name="message">string to send</param>
       public void Send(string message)
       {
-        _writer.Write(message.EnsureNotNull().EscapeUnpairedSurrogates());
+        _writer.Write(message.EnsureNotNull());
         _writer.Flush();
       }
 

@@ -156,8 +156,15 @@ public abstract class PatternConverter
         len = buf.Length;
         if (len > _max)
         {
-          msg = buf.ToString(len - _max, _max);
-          len = _max;
+          // Cutting inside a surrogate pair would turn well-formed content into a lone surrogate.
+          int start = len - _max;
+          if (start < len && char.IsLowSurrogate(buf[start]) && char.IsHighSurrogate(buf[start - 1]))
+          {
+            start++;
+          }
+
+          msg = buf.ToString(start, len - start);
+          len -= start;
         }
         else
         {

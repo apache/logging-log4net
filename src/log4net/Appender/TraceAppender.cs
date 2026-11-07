@@ -19,9 +19,12 @@
 
 #define TRACE
 
+using System;
+
 using log4net.Appender.Internal;
 using log4net.Layout;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -96,7 +99,8 @@ public class TraceAppender : AppenderSkeleton
   {
     // The default listener ends in OutputDebugString or syslog(3), where a NUL ends the record.
     string message = RenderLoggingEvent(loggingEvent).EscapeNulCharacters();
-    string category = Category.Format(loggingEvent).EscapeNulCharacters();
+    // A listener writes the category to the same stream.
+    string category = Category.FormatWithEscapedSurrogates(loggingEvent).EscapeNulCharacters();
     System.Diagnostics.Trace.Write(message, category);
 
     if (ImmediateFlush)
@@ -124,7 +128,15 @@ public class TraceAppender : AppenderSkeleton
     }
 
     // System.Diagnostics.Trace and System.Diagnostics.Debug are thread-safe, so no need for lock.
-    System.Diagnostics.Trace.Flush();
-    return true;
+    try
+    {
+      System.Diagnostics.Trace.Flush();
+      return true;
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      ErrorHandler.Error($"Failed to flush appender [{Name}].", e, ErrorCode.FlushFailure);
+      return false;
+    }
   }
 }

@@ -22,6 +22,8 @@ using System;
 using System.Text;
 
 using log4net.Appender;
+using log4net.Core;
+using log4net.Layout;
 
 using NUnit.Framework;
 
@@ -103,6 +105,18 @@ public class ContentEscapeTest
     => Assert.That(EscapeUnencodableText("\u3042 \uff1c\U0001f600", TestEncodings.Get("iso-2022-jp")),
       Is.EqualTo("\u3042 \uff1c\\ud83d\\ude00"));
 
+  /// <summary>An extra layout such as a category gets the same escape as the main layout.</summary>
+  [Test]
+  public void AnExtraLayoutEscapesUnpairedSurrogates()
+  {
+    PatternLayout layout = new("[%message]");
+    layout.ActivateOptions();
+    LoggingEvent loggingEvent = new(typeof(ContentEscapeTest), null, nameof(ContentEscapeTest), Level.Info,
+      "a\ud83db \U0001F600", null);
+
+    Assert.That(FormatWithEscapedSurrogates(layout, loggingEvent), Is.EqualTo("[a\\ud83db \U0001F600]"));
+  }
+
   private static Encoding WithEscapingFallback(Encoding encoding)
     => _contentEscape.Invoke<Encoding>(nameof(WithEscapingFallback), [encoding]);
 
@@ -111,4 +125,7 @@ public class ContentEscapeTest
 
   private static string EscapeUnpairedSurrogates(string message)
     => _contentEscape.Invoke<string>(nameof(EscapeUnpairedSurrogates), [message]);
+
+  private static string FormatWithEscapedSurrogates(LayoutSkeleton layout, LoggingEvent loggingEvent)
+    => _contentEscape.Invoke<string>(nameof(FormatWithEscapedSurrogates), [layout, loggingEvent]);
 }

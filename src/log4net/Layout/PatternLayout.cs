@@ -657,7 +657,8 @@ namespace log4net.Layout;
 /// example, it the maximum field width is eight and the data item is
 /// ten characters long, then the first two characters of the data item
 /// are dropped. This behavior deviates from the printf function in C
-/// where truncation is done from the end.
+/// where truncation is done from the end. A surrogate pair is never split, so the result
+/// can be one character shorter than the maximum.
 /// </para>
 /// <para>
 /// Below are various format modifier examples for the logger
