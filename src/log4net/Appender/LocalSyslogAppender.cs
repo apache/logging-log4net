@@ -19,6 +19,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 using log4net.Appender.Internal;
 using log4net.Core;
@@ -354,25 +355,66 @@ public class LocalSyslogAppender : AppenderSkeleton
   protected override void Append(LoggingEvent loggingEvent)
   {
     int priority = GeneratePriority(Facility, GetSeverity(loggingEvent.EnsureNotNull().Level));
-    string message = RenderLoggingEvent(loggingEvent).EscapeNulCharacters();
-
-    if (NewLineHandling == SyslogNewLineHandling.Split)
+    foreach (string record in GetRecords(RenderLoggingEvent(loggingEvent).EscapeNulCharacters()))
     {
-      foreach (string line in SplitLines(message))
-      {
-        NativeMethods.syslog(priority, EscapePercent(line));
-      }
-
-      return;
+      // glibc folds %% back, so the record is cut before the doubling: the socket carries the cut text.
+      NativeMethods.syslog(priority, EscapePercent(record));
     }
-
-    if (NewLineHandling == SyslogNewLineHandling.Escape)
-    {
-      message = EscapeNewLines(message);
-    }
-
-    NativeMethods.syslog(priority, EscapePercent(message));
   }
+
+  /// <summary>
+  /// Turns a rendered event into the records to send: newlines handled as configured, each record
+  /// cut to <see cref="MaxRecordSize"/> and the cut reported.
+  /// </summary>
+  /// <param name="message">The rendered event, NUL already escaped.</param>
+  /// <returns>The records, before <see cref="EscapePercent"/>.</returns>
+  private string[] GetRecords(string message)
+  {
+    string[] records = NewLineHandling switch
+    {
+      SyslogNewLineHandling.Split => SplitLines(message),
+      SyslogNewLineHandling.Escape => [EscapeNewLines(message)],
+      _ => [message]
+    };
+
+    for (int i = 0; i < records.Length; i++)
+    {
+      int length = Encoding.UTF8.GetByteCount(records[i]);
+      if (length > MaxRecordSize)
+      {
+        records[i] = records[i].TruncateToBytes(Encoding.UTF8, MaxRecordSize, out int cut);
+        ErrorHandler.Error($"Truncated a syslog record from {length} to {cut} bytes.");
+      }
+    }
+
+    return records;
+  }
+
+  /// <summary>
+  /// Gets or sets the largest record this appender passes to <c>syslog(3)</c>, in UTF-8 bytes.
+  /// </summary>
+  /// <value>At least 512. Default 204800.</value>
+  /// <remarks>
+  /// glibc drops a record larger than the socket send buffer (212960 bytes with the default
+  /// <c>net.core.wmem_default</c>) without a word, and the default leaves room for its prefix. A longer
+  /// record is cut, marked <c>...[truncated]</c> and reported, per line in <see cref="SyslogNewLineHandling.Split"/> mode.
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is less than 512.</exception>
+  public int MaxRecordSize
+  {
+    get;
+    set
+    {
+      if (value < MinRecordSize)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          $"The value specified is less than {MinRecordSize}.");
+      }
+      field = value;
+    }
+  } = 204800;
+
+  private const int MinRecordSize = 512;
 
   /// <summary>
   /// Doubles every <c>%</c>, so that the record libc takes as a printf format string renders as

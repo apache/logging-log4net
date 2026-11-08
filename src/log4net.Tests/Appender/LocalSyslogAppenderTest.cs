@@ -25,6 +25,7 @@ using System.Linq;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
+using log4net.Tests.Appender.Internal;
 
 using NUnit.Framework;
 
@@ -199,6 +200,96 @@ public class LocalSyslogAppenderTest
       LoggerName = "FormatString"
     })));
   }
+
+  /// <summary>The default leaves room for glibc's prefix under the 212960 byte datagram.</summary>
+  [Test]
+  public void MaxRecordSizeDefaultsTo204800()
+    => Assert.That(new LocalSyslogAppender().MaxRecordSize, Is.EqualTo(204800));
+
+  /// <summary>Below 512 a record could not hold much more than the marker.</summary>
+  [TestCase(0)]
+  [TestCase(511)]
+  public void MaxRecordSizeRejectsValuesBelow512(int value)
+    => Assert.That(() => new LocalSyslogAppender().MaxRecordSize = value,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>A record of exactly the limit is sent as it is, and nothing is reported.</summary>
+  [Test]
+  public void ARecordOfExactlyTheLimitIsUnchanged()
+  {
+    LocalSyslogAppender appender = new() { MaxRecordSize = 512, NewLineHandling = SyslogNewLineHandling.Keep };
+    RecordingErrorHandler errorHandler = new();
+    appender.ErrorHandler = errorHandler;
+
+    Assert.That(GetRecords(appender, new string('a', 512)), Is.EqualTo(new[] { new string('a', 512) }));
+    Assert.That(errorHandler.Messages, Is.Empty);
+  }
+
+  /// <summary>glibc drops a datagram over its send buffer silently: the record is cut and reported instead.</summary>
+  [Test]
+  public void AnOversizeRecordIsCutAndReported()
+  {
+    LocalSyslogAppender appender = new() { MaxRecordSize = 512, NewLineHandling = SyslogNewLineHandling.Keep };
+    RecordingErrorHandler errorHandler = new();
+    appender.ErrorHandler = errorHandler;
+
+    string[] records = GetRecords(appender, new string('a', 1000));
+
+    Assert.That(records, Is.EqualTo(new[] { new string('a', 498) + "...[truncated]" }));
+    Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+  }
+
+  /// <summary>The limit counts UTF-8 bytes, and a cut keeps characters whole.</summary>
+  [Test]
+  public void TheLimitCountsUtf8Bytes()
+  {
+    LocalSyslogAppender appender = new() { MaxRecordSize = 512, NewLineHandling = SyslogNewLineHandling.Keep };
+    appender.ErrorHandler = new RecordingErrorHandler();
+
+    Assert.That(GetRecords(appender, new string('\u3042', 500)),
+      Is.EqualTo(new[] { new string('\u3042', 166) + "...[truncated]" }));
+  }
+
+  /// <summary>
+  /// The cut comes before the percent signs are doubled: glibc folds them back, and a cut after
+  /// doubling could leave a lone percent sign.
+  /// </summary>
+  [Test]
+  public void PercentSignsAreCountedOnce()
+  {
+    LocalSyslogAppender appender = new() { MaxRecordSize = 512, NewLineHandling = SyslogNewLineHandling.Keep };
+    appender.ErrorHandler = new RecordingErrorHandler();
+
+    Assert.That(GetRecords(appender, new string('%', 1000)), Is.EqualTo(new[] { new string('%', 498) + "...[truncated]" }));
+  }
+
+  /// <summary>Escaped newlines are longer than the newlines, so the escape comes before the cut.</summary>
+  [Test]
+  public void EscapedNewLinesCountAgainstTheLimit()
+  {
+    LocalSyslogAppender appender = new() { MaxRecordSize = 512, NewLineHandling = SyslogNewLineHandling.Escape };
+    appender.ErrorHandler = new RecordingErrorHandler();
+
+    string expected = string.Concat(Enumerable.Repeat("\\n", 249)) + "...[truncated]";
+    Assert.That(GetRecords(appender, new string('\n', 300)), Is.EqualTo(new[] { expected }));
+  }
+
+  /// <summary>In split mode the limit applies to each line on its own.</summary>
+  [Test]
+  public void SplitModeCutsEachLine()
+  {
+    LocalSyslogAppender appender = new() { MaxRecordSize = 512, NewLineHandling = SyslogNewLineHandling.Split };
+    RecordingErrorHandler errorHandler = new();
+    appender.ErrorHandler = errorHandler;
+
+    string[] records = GetRecords(appender, "short\n" + new string('a', 1000));
+
+    Assert.That(records, Is.EqualTo(new[] { "short", new string('a', 498) + "...[truncated]" }));
+    Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+  }
+
+  private static string[] GetRecords(LocalSyslogAppender appender, string message)
+    => appender.Invoke<string[]>(nameof(GetRecords), [message]);
 
   private static string EscapePercent(string message)
     => typeof(LocalSyslogAppender).Invoke<string>(nameof(EscapePercent), [message]);
