@@ -46,49 +46,17 @@ namespace log4net.Appender;
 /// </para>
 /// </remarks>
 /// <example>
-/// This example shows how to log receive logging events that are sent 
-/// on IP address 244.0.0.1 and port 8080 to the console. The event is 
-/// encoded in the packet as a unicode string and it is decoded as such. 
+/// This example receives the events sent to the multicast group 224.0.0.1 on port 8080 and writes
+/// them to the console. It decodes with UTF-8, the <see cref="Encoding"/> set in the configuration below.
 /// <code language="csharp">
-/// IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-/// UdpClient udpClient;
-/// byte[] buffer;
-/// string loggingEvent;
-/// 
-/// try 
+/// IPEndPoint remoteEndPoint = new(IPAddress.Any, 0);
+/// using UdpClient udpClient = new(8080);
+/// udpClient.JoinMulticastGroup(IPAddress.Parse("224.0.0.1"));
+/// while (true)
 /// {
-///     udpClient = new UdpClient(8080);
-///     
-///     while(true) 
-///     {
-///         buffer = udpClient.Receive(ref remoteEndPoint);
-///         loggingEvent = System.Text.Encoding.Unicode.GetString(buffer);
-///         Console.WriteLine(loggingEvent);
-///     }
-/// } 
-/// catch(Exception e) 
-/// {
-///     Console.WriteLine(e.ToString());
+///     byte[] buffer = udpClient.Receive(ref remoteEndPoint);
+///     Console.WriteLine(Encoding.UTF8.GetString(buffer));
 /// }
-/// </code>
-/// <code language="vbnet">
-/// Dim remoteEndPoint as IPEndPoint
-/// Dim udpClient as UdpClient
-/// Dim buffer as Byte()
-/// Dim loggingEvent as String
-/// 
-/// Try 
-///     remoteEndPoint = new IPEndPoint(IPAddress.Any, 0)
-///     udpClient = new UdpClient(8080)
-///
-///     While True
-///         buffer = udpClient.Receive(ByRef remoteEndPoint)
-///         loggingEvent = System.Text.Encoding.Unicode.GetString(buffer)
-///         Console.WriteLine(loggingEvent)
-///     Wend
-/// Catch e As Exception
-///     Console.WriteLine(e.ToString())
-/// End Try
 /// </code>
 /// <para>
 /// An example configuration section to log information using this appender to the 
@@ -98,6 +66,7 @@ namespace log4net.Appender;
 /// <appender name="UdpAppender" type="log4net.Appender.UdpAppender">
 ///     <remoteAddress value="224.0.0.1" />
 ///     <remotePort value="8080" />
+///     <encoding value="utf-8" />
 ///     <layout type="log4net.Layout.PatternLayout" value="%-5level %logger [%ndc] - %message%newline" />
 /// </appender>
 /// ]]></code>
@@ -255,6 +224,11 @@ public class UdpAppender : AppenderSkeleton
   /// The <see cref="Encoding"/> used to write the packets. A character it cannot represent
   /// is written as a <c>\uXXXX</c> escape.
   /// </para>
+  /// <para>
+  /// The default encoding is the system's ANSI code page on .NET Framework and UTF-8 on .NET. A
+  /// receiver decodes with the same encoding, so set it explicitly when the two run on different
+  /// runtimes or hosts.
+  /// </para>
   /// </remarks>
   public Encoding Encoding
   {
@@ -411,30 +385,10 @@ public class UdpAppender : AppenderSkeleton
       return datagram;
     }
 
-    byte[] result = GetTruncatedBytes(message, datagram);
+    byte[] result = _escapingEncoding.GetBytes(message.TruncateToBytes(_escapingEncoding, MaxDatagramSize, out _));
 
     ErrorHandler.Error(
       $"Truncated a logging event from {datagram.Length} to {result.Length} bytes for {RemoteAddress} on port {RemotePort}.");
-    return result;
-  }
-
-  /// <summary>Encodes as much of <paramref name="message"/> as fits, ending in the marker.</summary>
-  /// <param name="message">The rendered event.</param>
-  /// <param name="datagram">The whole encoded event, reused as the encoder's output.</param>
-  /// <returns>The bytes to send, of at most <see cref="MaxDatagramSize"/> length.</returns>
-  private byte[] GetTruncatedBytes(string message, byte[] datagram)
-  {
-    int markerLength = _escapingEncoding.GetByteCount(TruncationMarker);
-
-    // Convert fills the budget and may cut an escape, and unflushed it holds back a trailing
-    // high surrogate rather than escaping half of a pair. It writes into the oversize encoding,
-    // which is the one buffer already long enough.
-    _escapingEncoding.GetEncoder().Convert(message.ToCharArray(), 0, message.Length,
-      datagram, 0, MaxDatagramSize - markerLength, flush: false, out _, out int written, out _);
-
-    byte[] result = new byte[written + markerLength];
-    Buffer.BlockCopy(datagram, 0, result, 0, written);
-    _escapingEncoding.GetBytes(TruncationMarker, 0, TruncationMarker.Length, result, written);
     return result;
   }
 
@@ -513,9 +467,4 @@ public class UdpAppender : AppenderSkeleton
   /// The smallest datagram size an operator may configure.
   /// </summary>
   private const int MinDatagramSize = 512;
-
-  /// <summary>
-  /// Marks a datagram that could not carry the whole event.
-  /// </summary>
-  private const string TruncationMarker = "...[truncated]";
 }

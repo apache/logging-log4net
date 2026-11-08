@@ -19,6 +19,7 @@
 
 
 using System;
+using System.Linq;
 using System.Text;
 
 using log4net.Appender;
@@ -117,6 +118,135 @@ public class ContentEscapeTest
     Assert.That(FormatWithEscapedSurrogates(layout, loggingEvent), Is.EqualTo("[a\\ud83db \U0001F600]"));
   }
 
+  /// <summary>Text that fits comes back unchanged, with its encoded length.</summary>
+  [Test]
+  public void TextThatFitsIsNotCut()
+  {
+    string result = TruncateToBytes("hello", Encoding.ASCII, 5, out int byteCount);
+
+    Assert.That(result, Is.EqualTo("hello"));
+    Assert.That(byteCount, Is.EqualTo(5));
+  }
+
+  /// <summary>The marker counts against the budget.</summary>
+  [Test]
+  public void TheMarkerIsPartOfTheBudget()
+  {
+    string result = TruncateToBytes(new string('a', 1000), Encoding.ASCII, 512, out int byteCount);
+
+    Assert.That(result, Is.EqualTo(new string('a', 498) + "...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(512));
+  }
+
+  /// <summary>A cut inside a three byte character would decode as the replacement character.</summary>
+  [Test]
+  public void ACutKeepsMultiByteCharactersWhole()
+  {
+    string result = TruncateToBytes(new string('\u3042', 1000), Encoding.UTF8, 516, out int byteCount);
+
+    // 516 bytes hold the 14 byte marker and 167 of the three byte characters, one byte stays unused.
+    Assert.That(result, Is.EqualTo(new string('\u3042', 167) + "...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(515));
+  }
+
+  /// <summary>The same for the two halves of a surrogate pair.</summary>
+  [Test]
+  public void ACutKeepsSurrogatePairsWhole()
+  {
+    string result = TruncateToBytes(string.Concat(Enumerable.Repeat("\U0001F600", 1000)), Encoding.UTF8, 516,
+      out int byteCount);
+
+    Assert.That(result, Is.EqualTo(string.Concat(Enumerable.Repeat("\U0001F600", 125)) + "...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(514));
+  }
+
+  /// <summary>A pair across the boundary of the chunks the cut works in stays whole.</summary>
+  [Test]
+  public void APairAcrossAChunkBoundaryStaysWhole()
+  {
+    string text = "a" + string.Concat(Enumerable.Repeat("\U0001F600", 1000));
+
+    string result = TruncateToBytes(text, Encoding.UTF8, 3015, out int byteCount);
+
+    Assert.That(result, Is.EqualTo("a" + string.Concat(Enumerable.Repeat("\U0001F600", 750)) + "...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(3015));
+  }
+
+  /// <summary>A budget larger than the encoder's buffer is filled across several rounds.</summary>
+  [Test]
+  public void ABudgetAboveTheBufferIsFilled()
+  {
+    string result = TruncateToBytes(new string('a', 10000), Encoding.ASCII, 5000, out int byteCount);
+
+    Assert.That(result, Is.EqualTo(new string('a', 4986) + "...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(5000));
+  }
+
+  /// <summary>
+  /// Latin-1 escapes a pair as two <c>\uXXXX</c>, 12 bytes. When only part of that fits, the pair goes whole.
+  /// </summary>
+  [Test]
+  public void AnEscapedPairThatOnlyPartlyFitsGoesWhole()
+  {
+    Encoding latin1 = WithEscapingFallback(Encoding.GetEncoding("iso-8859-1"));
+    string text = string.Concat(Enumerable.Repeat("\U0001F600", 10));
+
+    string result = TruncateToBytes(text, latin1, 32, out int byteCount);
+
+    Assert.That(result, Is.EqualTo("\U0001F600...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(26));
+  }
+
+  /// <summary>A pair whose escape is only partly written at a chunk boundary is dropped whole.</summary>
+  [Test]
+  public void APartlyEscapedPairAtAChunkBoundaryIsDroppedWhole()
+  {
+    Encoding latin1 = WithEscapingFallback(Encoding.GetEncoding("iso-8859-1"));
+    string text = new string('a', 1023) + string.Concat(Enumerable.Repeat("\U0001F600", 10));
+
+    // 1023 bytes of text, 8 to spare for a pair whose escape takes 12.
+    string result = TruncateToBytes(text, latin1, 1045, out int byteCount);
+
+    Assert.That(result, Is.EqualTo(new string('a', 1023) + "...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(1037));
+  }
+
+  /// <summary>
+  /// A high surrogate held back at a chunk boundary is not kept, even when its replacement character
+  /// would fit where the pair does not.
+  /// </summary>
+  [Test]
+  public void AHighSurrogateHeldBackAtAChunkBoundaryIsNotKept()
+  {
+    string text = new string('a', 1023) + string.Concat(Enumerable.Repeat("\U0001F600", 10));
+
+    // 1023 bytes of text, 3 to spare: U+FFFD for a lone half would fit, the pair's 4 bytes do not.
+    string result = TruncateToBytes(text, Encoding.UTF8, 1040, out int byteCount);
+
+    Assert.That(result, Is.EqualTo(new string('a', 1023) + "...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(1037));
+  }
+
+  /// <summary>A budget below the marker never throws: the text goes, the marker stays.</summary>
+  [Test]
+  public void ABudgetBelowTheMarkerGivesTheMarkerAlone()
+  {
+    string result = TruncateToBytes(new string('a', 100), Encoding.ASCII, 10, out int byteCount);
+
+    Assert.That(result, Is.EqualTo("...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(14));
+  }
+
+  /// <summary>Room for the marker but not for the first character is the same case.</summary>
+  [Test]
+  public void ABudgetTooSmallForTheFirstCharacterGivesTheMarkerAlone()
+  {
+    string result = TruncateToBytes(new string('\u3042', 10), Encoding.UTF8, 16, out int byteCount);
+
+    Assert.That(result, Is.EqualTo("...[truncated]"));
+    Assert.That(byteCount, Is.EqualTo(14));
+  }
+
   private static Encoding WithEscapingFallback(Encoding encoding)
     => _contentEscape.Invoke<Encoding>(nameof(WithEscapingFallback), [encoding]);
 
@@ -125,6 +255,14 @@ public class ContentEscapeTest
 
   private static string EscapeUnpairedSurrogates(string message)
     => _contentEscape.Invoke<string>(nameof(EscapeUnpairedSurrogates), [message]);
+
+  private static string TruncateToBytes(string text, Encoding encoding, int maxBytes, out int byteCount)
+  {
+    object?[] arguments = [text, encoding, maxBytes, 0];
+    string result = _contentEscape.Invoke<string>(nameof(TruncateToBytes), arguments);
+    byteCount = (int)arguments[3]!;
+    return result;
+  }
 
   private static string FormatWithEscapedSurrogates(LayoutSkeleton layout, LoggingEvent loggingEvent)
     => _contentEscape.Invoke<string>(nameof(FormatWithEscapedSurrogates), [layout, loggingEvent]);
