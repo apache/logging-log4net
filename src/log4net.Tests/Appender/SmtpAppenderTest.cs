@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
@@ -28,6 +29,7 @@ using System.Threading.Tasks;
 
 using log4net.Appender;
 using log4net.Config;
+using log4net.Core;
 using log4net.Layout;
 using log4net.Repository;
 using log4net.Tests.Appender.Internal;
@@ -45,6 +47,103 @@ namespace log4net.Tests.Appender;
 [TestFixture]
 public class SmtpAppenderTest
 {
+  /// <summary>The obsolete appender splits an oversize batch as the Ext.Mail one does.</summary>
+  [Test]
+  public void ABatchOverTheBudgetIsSplitIntoSeveralMails()
+  {
+    RecordingSmtpAppender appender = CreateRecordingAppender();
+
+    SendBatch(appender, new string('a', 1500), new string('b', 1500), new string('c', 1500), new string('d', 1500));
+
+    Assert.That(appender.Bodies, Is.EqualTo(new[]
+    {
+      "H\n" + new string('a', 1500) + "\n" + new string('b', 1500) + "\nF\n",
+      "H\n" + new string('c', 1500) + "\n" + new string('d', 1500) + "\nF\n",
+    }));
+  }
+
+  /// <summary>It sends synchronously, so each mail needs its own catch: one refused part does not cost the rest.</summary>
+  [Test]
+  public void ARefusedMailDoesNotCostTheRestOfTheBatch()
+  {
+    RecordingSmtpAppender appender = CreateRecordingAppender();
+    appender.SendsToRefuse = 1;
+
+    SendBatch(appender, new string('a', 1500), new string('b', 1500), new string('c', 1500));
+
+    Assert.That(appender.Bodies, Is.EqualTo(new[] { "H\n" + new string('c', 1500) + "\nF\n" }));
+  }
+
+  /// <summary>A record that does not fit even alone is cut and reported.</summary>
+  [Test]
+  public void ARecordOverTheBudgetIsCutAndReported()
+  {
+    RecordingSmtpAppender appender = CreateRecordingAppender();
+    RecordingErrorHandler errorHandler = new();
+    appender.ErrorHandler = errorHandler;
+
+    SendBatch(appender, new string('a', 5000));
+
+    Assert.That(appender.Bodies, Is.EqualTo(new[] { "H\n" + new string('a', 4078) + "...[truncated]F\n" }));
+    Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+  }
+
+  /// <summary>Header and footer that leave no room for record text are reported at activation.</summary>
+  [Test]
+  public void HeaderAndFooterOverTheBudgetAreReported()
+  {
+    PatternLayout layout = new() { ConversionPattern = "%m%n", Header = new string('h', 4090), Footer = "F\n" };
+    layout.ActivateOptions();
+    RecordingErrorHandler errorHandler = new();
+    RecordingSmtpAppender appender = new() { Layout = layout, MaxBodySize = 4096, ErrorHandler = errorHandler };
+
+    appender.ActivateOptions();
+
+    Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+  }
+
+  /// <summary>1 MiB, as for the Ext.Mail appender.</summary>
+  [Test]
+  public void MaxBodySizeDefaultsTo1MiB()
+    => Assert.That(new SmtpAppender().MaxBodySize, Is.EqualTo(1048576));
+
+  private static RecordingSmtpAppender CreateRecordingAppender()
+  {
+    // A literal \n rather than %n, so that the bodies are the same on every platform.
+    PatternLayout layout = new() { ConversionPattern = "%m\n", Header = "H\n", Footer = "F\n" };
+    layout.ActivateOptions();
+    return new() { Layout = layout, BufferSize = 10, MaxBodySize = 4096, ErrorHandler = new RecordingErrorHandler() };
+  }
+
+  private static void SendBatch(RecordingSmtpAppender appender, params string[] messages)
+  {
+    appender.ActivateOptions();
+    foreach (string message in messages)
+    {
+      appender.DoAppend(new LoggingEvent(typeof(SmtpAppenderTest), null, "test", Level.Error, message, null));
+    }
+    appender.Flush(1000);
+  }
+
+  /// <summary>Records the bodies instead of sending them, and refuses the first ones on request.</summary>
+  private sealed class RecordingSmtpAppender : SmtpAppender
+  {
+    internal List<string> Bodies { get; } = [];
+
+    internal int SendsToRefuse { get; set; }
+
+    /// <inheritdoc/>
+    protected override void SendEmail(string messageBody)
+    {
+      if (SendsToRefuse > 0)
+      {
+        SendsToRefuse--;
+        throw new InvalidOperationException("552 5.3.4 Message size exceeds fixed limit");
+      }
+      Bodies.Add(messageBody);
+    }
+  }
+
   /// <summary>An unbounded send stalls every thread logging through the appender.</summary>
   [Test]
   public void SendTimeoutMillisDefaultsToFifteenSeconds()

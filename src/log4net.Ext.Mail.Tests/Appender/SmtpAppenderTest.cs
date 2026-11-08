@@ -603,6 +603,115 @@ public class SmtpAppenderTest
     Assert.That(body, Does.Contain("three"));
   }
 
+  /// <summary>1 MiB stays under the 10 MB limit of common servers even when quoted-printable triples it.</summary>
+  [Test]
+  public void MaxBodySizeDefaultsTo1MiB()
+    => Assert.That(CreateAppender().MaxBodySize, Is.EqualTo(1048576));
+
+  /// <summary>Below 4096 header and footer would crowd out the records.</summary>
+  [Test]
+  public void MaxBodySizeRejectsValuesBelow4096()
+    => Assert.That(() => CreateAppender().MaxBodySize = 4095, Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>
+  /// A server refuses an oversize mail as a whole, so a batch over the budget goes out as several
+  /// mails, each with header and footer.
+  /// </summary>
+  [Test]
+  public void ABatchOverTheBudgetIsSplitIntoSeveralMails()
+  {
+    SmtpAppender appender = CreateBatchAppender();
+
+    SendBatch(appender, new string('a', 1500), new string('b', 1500), new string('c', 1500), new string('d', 1500));
+
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(2));
+    Assert.That(Lf(_transport.SentMails[0].Body), Is.EqualTo(Body(new string('a', 1500), new string('b', 1500))));
+    Assert.That(Lf(_transport.SentMails[1].Body), Is.EqualTo(Body(new string('c', 1500), new string('d', 1500))));
+    Assert.That(_errorHandler.Message, Is.Empty);
+  }
+
+  /// <summary>A record that does not fit even alone is cut and reported.</summary>
+  [Test]
+  public void ARecordOverTheBudgetIsCutAndReported()
+  {
+    SmtpAppender appender = CreateBatchAppender();
+
+    SendBatch(appender, new string('a', 5000));
+
+    // 4096 bytes less header, footer and the 14 byte marker.
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
+    Assert.That(Lf(_transport.SentMails[0].Body), Is.EqualTo("H\n" + new string('a', 4078) + "...[truncated]F\n"));
+    Assert.That(_errorHandler.Message, Does.Contain("Truncated 1 logging event"));
+  }
+
+  /// <summary>The budget counts bytes in the body's own encoding, not in UTF-8.</summary>
+  [Test]
+  public void TheBudgetCountsInTheBodyEncoding()
+  {
+    SmtpAppender appender = CreateBatchAppender();
+    appender.BodyEncoding = Encoding.GetEncoding("iso-8859-1");
+
+    // 1501 bytes per record in Latin-1, 3001 in UTF-8: two fit one mail only in Latin-1.
+    SendBatch(appender, new string('\u00e4', 1500), new string('\u00e4', 1500));
+
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
+  }
+
+  /// <summary>Each mail is sent on its own: one refused part does not cost the rest of the batch.</summary>
+  [Test]
+  public void ARefusedMailDoesNotCostTheRestOfTheBatch()
+  {
+    SmtpAppender appender = CreateBatchAppender();
+    _transport.SendsToRefuse = 1;
+
+    SendBatch(appender, new string('a', 1500), new string('b', 1500), new string('c', 1500));
+
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
+    Assert.That(Lf(_transport.SentMails[0].Body), Is.EqualTo(Body(new string('c', 1500))));
+  }
+
+  /// <summary>
+  /// Header and footer that leave no room for record text are reported at activation, and every
+  /// record then goes out as the marker alone rather than losing the batch.
+  /// </summary>
+  [Test]
+  public void HeaderAndFooterOverTheBudgetAreReportedAndTheMarkerIsSent()
+  {
+    SmtpAppender appender = CreateAppender(header: new string('h', 4090), footer: "F\n");
+    appender.BufferSize = 10;
+    appender.MaxBodySize = 4096;
+
+    // 4 bytes are left for records: too few for this one and its marker.
+    SendBatch(appender, new string('x', 10));
+
+    Assert.That(_errorHandler.Message, Does.Contain("no room"));
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
+    Assert.That(Lf(_transport.SentMails[0].Body), Is.EqualTo(new string('h', 4090) + "...[truncated]F\n"));
+  }
+
+  private SmtpAppender CreateBatchAppender()
+  {
+    SmtpAppender appender = CreateAppender(header: "H\n", footer: "F\n");
+    appender.BufferSize = 10;
+    appender.MaxBodySize = 4096;
+    return appender;
+  }
+
+  private static void SendBatch(SmtpAppender appender, params string[] messages)
+  {
+    appender.ActivateOptions();
+    foreach (string message in messages)
+    {
+      appender.DoAppend(CreateEvent(message));
+    }
+    Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
+  }
+
+  /// <summary>MimeKit and <c>%n</c> write <c>\r\n</c> on Windows; the tests compare with <c>\n</c>.</summary>
+  private static string Lf(string body) => body.Replace("\r\n", "\n", StringComparison.Ordinal);
+
+  private static string Body(params string[] messages) => "H\n" + string.Join("\n", messages) + "\n" + "F\n";
+
   [Test]
   public void RequiresALayout()
   {

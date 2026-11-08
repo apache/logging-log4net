@@ -68,6 +68,9 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   /// </summary>
   internal Exception? SendException { get; set; }
 
+  /// <summary>How many of the next sends fail, as a server refuses an oversize mail.</summary>
+  internal int SendsToRefuse { get; set; }
+
   /// <summary>When set, every call that takes a token waits this long, honouring it.</summary>
   internal int DelayMillisPerCall { get; set; }
 
@@ -114,6 +117,11 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
     if (SendException is Exception exception)
     {
       throw exception;
+    }
+    if (SendsToRefuse > 0)
+    {
+      SendsToRefuse--;
+      throw new InvalidOperationException("552 5.3.4 Message size exceeds fixed limit");
     }
     SentMails.Add(new SentMail(message));
   }
