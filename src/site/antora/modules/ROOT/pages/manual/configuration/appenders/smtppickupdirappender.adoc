@@ -29,7 +29,10 @@ The path is relative to the application's base directory (AppDomain.BaseDirector
 
 Each file is a plain RFC 822 message, read to its end by the pickup service, and carries no SMTP
 DATA terminator. Body lines are written verbatim and are not dot stuffed, so an agent that expects
-SMTP DATA framing is not a supported consumer.
+SMTP DATA framing is not a supported consumer. A carriage return from logged content that is not
+followed by a line feed is written as `\r`: SMTP allows it only as part of a line end, and a strict
+mail server such as Sendmail refuses the mail otherwise. Events are escaped one by one, so a CR
+ending one event before an LF starting the next is written as `\r` and a line feed.
 
 The following example shows how to configure the SmtpPickupDirAppender to deliver log events via SMTP email.
 The `To`, `From`, `Subject` and `PickupDir` are required parameters.

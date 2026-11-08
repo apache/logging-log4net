@@ -20,6 +20,7 @@
 using System;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using log4net.Core;
 using log4net.Layout;
 using log4net.Util;
@@ -84,6 +85,14 @@ internal static class ContentEscape
 
       return builder.ToString();
     }
+
+    /// <summary>
+    /// Replaces a CR that is not followed by LF with a visible <c>\r</c> escape; a CRLF stays.
+    /// </summary>
+    /// <returns>The message with every lone CR escaped.</returns>
+    /// <remarks>SMTP allows a CR only before LF, and a strict mail server refuses a mail with a lone one.</remarks>
+    internal string EscapeLoneCarriageReturns()
+      => message.IndexOf('\r') < 0 ? message : _loneCarriageReturn.Replace(message, @"\r");
 
     /// <summary>
     /// Escapes what <paramref name="encoding"/> cannot carry, for a sink that takes a string and an encoding.
@@ -159,6 +168,9 @@ internal static class ContentEscape
     internal string FormatWithEscapedSurrogates(LoggingEvent loggingEvent)
       => layout.Format(loggingEvent).EscapeUnpairedSurrogates();
   }
+
+  /// <summary>A CR that is not followed by LF.</summary>
+  private static readonly Regex _loneCarriageReturn = new("\r(?!\n)", RegexOptions.Compiled);
 
   /// <summary>
   /// Marks text that was cut to fit a sink.

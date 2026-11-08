@@ -118,6 +118,15 @@ public class ContentEscapeTest
     Assert.That(FormatWithEscapedSurrogates(layout, loggingEvent), Is.EqualTo("[a\\ud83db \U0001F600]"));
   }
 
+  /// <summary>A CR without LF becomes <c>\r</c>; a CRLF is a line end and stays.</summary>
+  [TestCase("plain", "plain", TestName = "NoCarriageReturn")]
+  [TestCase("a\rb", @"a\rb", TestName = "ACarriageReturnInside")]
+  [TestCase("a\r", @"a\r", TestName = "ACarriageReturnAtTheEnd")]
+  [TestCase("a\r\nb", "a\r\nb", TestName = "ACarriageReturnBeforeALineFeed")]
+  [TestCase("\r\r\n", "\\r\r\n", TestName = "TwoCarriageReturnsBeforeALineFeed")]
+  public void LoneCarriageReturnsAreEscaped(string message, string expected)
+    => Assert.That(EscapeLoneCarriageReturns(message), Is.EqualTo(expected));
+
   /// <summary>Text that fits comes back unchanged, with its encoded length.</summary>
   [Test]
   public void TextThatFitsIsNotCut()
@@ -255,6 +264,9 @@ public class ContentEscapeTest
 
   private static string EscapeUnpairedSurrogates(string message)
     => _contentEscape.Invoke<string>(nameof(EscapeUnpairedSurrogates), [message]);
+
+  private static string EscapeLoneCarriageReturns(string message)
+    => _contentEscape.Invoke<string>(nameof(EscapeLoneCarriageReturns), [message]);
 
   private static string TruncateToBytes(string text, Encoding encoding, int maxBytes, out int byteCount)
   {
