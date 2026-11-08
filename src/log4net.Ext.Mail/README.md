@@ -90,6 +90,7 @@ Then configure log4net in your code:
 - `password` - password for authentication
 - `priority` - email priority (`Low`, `Normal`, `High`)
 - `bufferSize` - buffer up to N events before sending (default: 512)
+- `bodyEncoding` - encoding of the body (default: `utf-8`); a character it cannot represent is written as `\uXXXX`, and the body goes out quoted-printable, or base64 for UTF-16 and UTF-32
 - `maxBodySize` - largest mail body in bytes, header and footer included (default: 1048576); a larger batch goes out as several mails
 - `lossy` - discard buffered events if trigger never fires (default: false)
 - `evaluator` - custom evaluator to trigger sending (e.g., `LevelEvaluator`)

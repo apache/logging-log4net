@@ -603,6 +603,44 @@ public class SmtpAppenderTest
     Assert.That(body, Does.Contain("three"));
   }
 
+  /// <summary>
+  /// SMTP allows a CR only before LF. A lone CR from content goes out quoted-printable as <c>=0D</c>, so a
+  /// strict relay accepts the mail, and comes back as CR.
+  /// </summary>
+  [TestCase("login failed for user mallory\rx", TestName = "ALoneCarriageReturn")]
+  [TestCase("a line\r.and a dot after it", TestName = "ADotAfterALoneCarriageReturn")]
+  public void ALoneCarriageReturnDoesNotReachTheWireBare(string message)
+  {
+    SmtpAppender appender = CreateAppender();
+
+    Append(appender, message);
+
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
+    Assert.That(_transport.SentMails[0].HasBareCarriageReturn(), Is.False);
+    Assert.That(_transport.SentMails[0].BodyTransferEncoding, Is.EqualTo(ContentEncoding.QuotedPrintable));
+    Assert.That(_transport.SentMails[0].Body, Contains.Substring(message).Using(StringComparison.Ordinal));
+  }
+
+  /// <summary>
+  /// In UTF-16 the bytes of CR and LF occur inside other characters, which quoted-printable would treat as
+  /// line breaks: such a body goes out base64.
+  /// </summary>
+  [TestCase("utf-16", TestName = "Utf16")]
+  [TestCase("utf-32", TestName = "Utf32")]
+  [TestCase("utf-32BE", TestName = "Utf32BigEndian")]
+  [TestCase("unicodeFFFE", TestName = "Utf16BigEndian")]
+  public void AUtf16OrUtf32BodyGoesOutBase64(string encoding)
+  {
+    SmtpAppender appender = CreateAppender();
+    appender.BodyEncoding = Encoding.GetEncoding(encoding);
+
+    Append(appender, "a\rb \u0a41");
+
+    Assert.That(_transport.SentMails[0].HasBareCarriageReturn(), Is.False);
+    Assert.That(_transport.SentMails[0].BodyTransferEncoding, Is.EqualTo(ContentEncoding.Base64));
+    Assert.That(_transport.SentMails[0].Body, Contains.Substring("a\rb \u0a41").Using(StringComparison.Ordinal));
+  }
+
   /// <summary>1 MiB stays under the 10 MB limit of common servers even when quoted-printable triples it.</summary>
   [Test]
   public void MaxBodySizeDefaultsTo1MiB()

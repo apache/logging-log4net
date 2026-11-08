@@ -301,8 +301,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// Gets or sets the body encoding to be used.
   /// </summary>
   /// <remarks>
-  /// The default encoding is <see cref="Encoding.UTF8"/>.
-  /// A character it cannot represent is written as a <c>\uXXXX</c> escape.
+  /// The default encoding is <see cref="Encoding.UTF8"/>; a character it cannot represent is written as
+  /// <c>\uXXXX</c>. The body goes out quoted-printable, or base64 for UTF-16 and UTF-32.
   /// </remarks>
   public Encoding BodyEncoding { get; set; } = Encoding.UTF8;
 
@@ -630,10 +630,19 @@ public class SmtpAppender : BufferingAppenderSkeleton
 
     TextPart body = new(TextFormat.Plain);
     body.SetText(BodyEncoding.WithEscapingFallback(), messageBody);
+    // SMTP allows a CR only before LF, and a strict relay refuses a mail with a lone one from content.
+    body.ContentTransferEncoding = IsUtf16OrUtf32(BodyEncoding) ? ContentEncoding.Base64 : ContentEncoding.QuotedPrintable;
     message.Body = body;
 
     return message;
   }
+
+  /// <summary>
+  /// Tells whether the bytes of CR and LF can occur inside other characters, which quoted-printable would
+  /// take for line breaks.
+  /// </summary>
+  private static bool IsUtf16OrUtf32(Encoding encoding)
+    => encoding.CodePage is 1200 or 1201 or 12000 or 12001;
 
   /// <summary>
   /// Values for the <see cref="Authentication"/> property.
