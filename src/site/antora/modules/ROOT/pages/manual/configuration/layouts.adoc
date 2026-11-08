@@ -78,6 +78,13 @@ will yield the output
 2024-12-21 14:07:41,517 [main] WARN  Animals.Carnivora.Dog - Meow!
 ----
 
+[NOTE]
+====
+`%aspnet-request`, available only in the .NET Framework build, shows form fields only once the application has read the request body in classic or buffered mode.
+Before that, and after a bufferless read, they are left out, so that a client withholding its body cannot hold the appender.
+Query string, cookies and server variables are always shown.
+====
+
 [#dynamic-pattern-layout]
 === DyamicPatternLayout
 
