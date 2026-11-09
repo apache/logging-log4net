@@ -24,6 +24,9 @@ It outputs messages without color coding, making it simple and suitable for basi
 The following example shows how to configure the `ConsoleAppender` to log messages to the console.
 By default the messages are sent to the console standard output stream.
 
+A lone surrogate shows as `\uXXXX`, so a writer set with `Console.SetOut` that cannot encode it keeps working.
+For XML output, use `FileAppender` or `RollingFileAppender`: log4net does not control the encoding of such a writer.
+
 [source,xml]
 ----
 <appender name="ConsoleAppender" type="log4net.Appender.ConsoleAppender">

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="351" link="https://github.com/apache/logging-log4net/issues/351"/>
+  <description format="asciidoc">Write characters the encoding cannot represent as `\uXXXX`
+  in `FileAppender`, `RollingFileAppender`, `UdpAppender` and both `SmtpAppender` classes. They used
+  to become `?`, U+FFFD or a look-alike character. On .NET Framework the default encoding is the
+  ANSI code page, so text outside it, such as Cyrillic or Chinese, now shows as escapes unless you
+  set `utf-8` (fixed by @FreeAndNil)</description>
+</entry>

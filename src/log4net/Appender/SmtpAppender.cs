@@ -18,10 +18,11 @@
 #endregion
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Text;
 
 using System.Net.Mail;
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -249,7 +250,8 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// Gets or sets the body encoding to be used.
   /// </summary>
   /// <remarks>
-  /// The default encoding is the operating system's current ANSI codepage.
+  /// The default encoding is UTF-8.
+  /// A character it cannot represent is written as a <c>\uXXXX</c> escape.
   /// </remarks>
   public Encoding BodyEncoding { get; set; } = Encoding.UTF8;
 
@@ -262,31 +264,94 @@ public class SmtpAppender : BufferingAppenderSkeleton
     events.EnsureNotNull();
     // Note: this code already owns the monitor for this
     // appender. This frees us from needing to synchronize again.
+    List<string> bodies;
     try
     {
-      using StringWriter writer = new(System.Globalization.CultureInfo.InvariantCulture);
-
-      if (Layout?.Header is string header)
-      {
-        writer.Write(header);
-      }
-
-      for (int i = 0; i < events.Length; i++)
-      {
-        // Render the event and append the text to the buffer
-        RenderLoggingEvent(writer, events[i]);
-      }
-
-      if (Layout?.Footer is string footer)
-      {
-        writer.Write(footer);
-      }
-
-      SendEmail(writer.ToString());
+      bodies = RenderBodies(events);
     }
     catch (Exception e) when (!e.IsFatal())
     {
       ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
+      return;
+    }
+
+    // Sent synchronously under the appender lock: a split batch waits SendTimeoutMillis per mail.
+    foreach (string body in bodies)
+    {
+      try
+      {
+        SendEmail(body);
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        // Each mail on its own: one refused part does not cost the rest of the batch.
+        ErrorHandler.Error("Error occurred while sending e-mail notification.", e);
+      }
+    }
+  }
+
+  /// <inheritdoc/>
+  public override void ActivateOptions()
+  {
+    base.ActivateOptions();
+    WarnIfNoRoomForRecords();
+  }
+
+  /// <summary>
+  /// Gets or sets the largest mail body, in bytes of <see cref="BodyEncoding"/>, header and footer included.
+  /// </summary>
+  /// <value>At least 4096. Default 1048576.</value>
+  /// <remarks>
+  /// A server refuses an oversize mail as a whole, so a batch over the budget goes out as several mails
+  /// and a record too long for one mail is cut and marked <c>...[truncated]</c>. Quoted-printable can
+  /// triple the size on the wire.
+  /// </remarks>
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is less than 4096.</exception>
+  public int MaxBodySize
+  {
+    get;
+    set
+    {
+      if (value < MailBodies.MinBodySize)
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          $"The value specified is less than {MailBodies.MinBodySize}.");
+      }
+      field = value;
+    }
+  } = MailBodies.DefaultBodySize;
+
+  /// <summary>
+  /// Renders the batch into mail bodies that each fit <see cref="MaxBodySize"/>, and reports a cut.
+  /// </summary>
+  /// <param name="events">The logging events to send.</param>
+  /// <returns>At least one body.</returns>
+  private List<string> RenderBodies(LoggingEvent[] events)
+  {
+    string[] records = new string[events.Length];
+    for (int i = 0; i < events.Length; i++)
+    {
+      records[i] = RenderLoggingEvent(events[i]);
+    }
+
+    List<string> bodies = MailBodies.Split(Layout?.Header, records, Layout?.Footer,
+      BodyEncoding.WithEscapingFallback(), MaxBodySize, out int cutRecords);
+    if (cutRecords > 0)
+    {
+      ErrorHandler.Error($"Truncated {cutRecords} logging event(s) to fit a mail body of {MaxBodySize} bytes.");
+    }
+    return bodies;
+  }
+
+  /// <summary>
+  /// Warns once when header and footer leave no room for record text in <see cref="MaxBodySize"/>.
+  /// </summary>
+  private void WarnIfNoRoomForRecords()
+  {
+    if (!MailBodies.LeavesRoomForRecords(Layout?.Header, Layout?.Footer, BodyEncoding.WithEscapingFallback(), MaxBodySize))
+    {
+      ErrorHandler.Error(
+        $"Header and footer leave no room in a mail body of {MaxBodySize} bytes: every event will be sent as the truncation marker alone.");
     }
   }
 
@@ -348,7 +413,15 @@ public class SmtpAppender : BufferingAppenderSkeleton
     }
 
     using MailMessage mailMessage = new();
-    mailMessage.Body = messageBody;
+    FillMailMessage(mailMessage, messageBody.EnsureNotNull());
+
+    // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
+    smtpClient.Send(mailMessage);
+  }
+
+  private void FillMailMessage(MailMessage mailMessage, string messageBody)
+  {
+    mailMessage.Body = messageBody.EscapeUnencodableText(BodyEncoding);
     mailMessage.BodyEncoding = BodyEncoding;
     mailMessage.From = new MailAddress(From.EnsureNotNull());
     mailMessage.To.Add(_to.EnsureNotNull());
@@ -367,9 +440,6 @@ public class SmtpAppender : BufferingAppenderSkeleton
     mailMessage.Subject = Subject;
     mailMessage.SubjectEncoding = SubjectEncoding;
     mailMessage.Priority = Priority;
-
-    // TODO: Consider using SendAsync to send the message without blocking. We would need a SendCompletedCallback to log errors.
-    smtpClient.Send(mailMessage);
   }
 
   private int _sendTimeoutMillis = 15_000;

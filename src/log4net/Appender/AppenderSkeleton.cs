@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using log4net.Appender.Internal;
 using log4net.Filter;
 using log4net.Util;
 using log4net.Layout;
@@ -684,6 +685,10 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// to a string then <see cref="RenderLoggingEvent(LoggingEvent)"/> does
   /// provide an efficient mechanism for doing so.
   /// </para>
+  /// <para>
+  /// A lone surrogate is written as <c>\uXXXX</c>: an encoder that throws on it keeps it in its
+  /// buffer and fails every later write.
+  /// </para>
   /// </remarks>
   protected void RenderLoggingEvent(TextWriter writer, LoggingEvent loggingEvent)
   {
@@ -693,25 +698,26 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
       throw new InvalidOperationException("A layout must be set");
     }
 
+    using SurrogateEscapingWriter escaping = new(writer);
     if (Layout.IgnoresException)
     {
       string? exceptionStr = loggingEvent.EnsureNotNull().GetExceptionString();
       if (!string.IsNullOrEmpty(exceptionStr))
       {
         // render the event and the exception
-        Layout.Format(writer, loggingEvent);
-        writer.WriteLine(exceptionStr);
+        Layout.Format(escaping, loggingEvent);
+        escaping.WriteLine(exceptionStr);
       }
       else
       {
         // there is no exception to render
-        Layout.Format(writer, loggingEvent);
+        Layout.Format(escaping, loggingEvent);
       }
     }
     else
     {
       // The layout will render the exception
-      Layout.Format(writer, loggingEvent);
+      Layout.Format(escaping, loggingEvent);
     }
   }
 

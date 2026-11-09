@@ -75,6 +75,15 @@ internal sealed class Log4NetCommand : IDbCommand
     return 0;
   }
 
+  /// <summary>Clears the state the fake keeps across tests.</summary>
+  internal static void Reset()
+  {
+    MostRecentInstance = null;
+    AttemptCount = 0;
+    ExceptionTrigger = null;
+    ExecutedPayloads.Clear();
+  }
+
   /// <summary>
   /// The number of successful <see cref="ExecuteNonQuery"/> calls on this instance.
   /// </summary>

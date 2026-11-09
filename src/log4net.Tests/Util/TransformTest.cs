@@ -18,6 +18,8 @@
 #endregion
 
 using System;
+using System.Text;
+using System.Xml;
 using log4net.Util;
 using NUnit.Framework;
 
@@ -104,6 +106,52 @@ public class TransformTest
   public void MaskXmlInvalidCharactersNullInputThrowsArgumentNullException()
     => Assert.That(() => Transform.MaskXmlInvalidCharacters(null!, "?"),
         Throws.ArgumentNullException);
+
+  /// <summary>
+  /// Verifies that text written as CDATA reads back unchanged when it holds the CDATA end marker.
+  /// The brackets make the weighting choose CDATA; the marker at the very end takes its own branch.
+  /// </summary>
+  [TestCase("<a><b><c><d>]]>")]
+  [TestCase("<a><b><c><d>]]>x")]
+  [TestCase("<a><b><c><d><e><f>]]>]]>")]
+  [TestCase("<a><b><c><d><e><f>]]>x]]>y")]
+  public void WriteEscapedXmlStringKeepsTextAroundCDataEnd(string text)
+    => Assert.That(WriteEscapedXmlStringReadBack(text), Is.EqualTo(text));
+
+  /// <summary>
+  /// Verifies that a look-alike of the CDATA end marker does not count as one: ignorable
+  /// characters between the brackets are skipped by a linguistic search.
+  /// </summary>
+  [TestCase("<a><b><c>]\u200D]>x")]
+  [TestCase("<a><b><c>]\U000E0020]>x")]
+  [TestCase("<a><b><c>]\U000E0100]>x")]
+  [TestCase("<a><b><c><d><e>]]>x]\U000E0020]>y")]
+  public void WriteEscapedXmlStringKeepsCDataEndLookAlike(string text)
+    => Assert.That(WriteEscapedXmlStringReadBack(text), Is.EqualTo(text));
+
+  /// <summary>
+  /// Verifies that the search does not depend on the culture: on ICU th-TH, every '&gt;' is a hit.
+  /// </summary>
+  [Test]
+  [SetCulture("th-TH")]
+  public void WriteEscapedXmlStringIsCultureInvariant()
+    => Assert.That(WriteEscapedXmlStringReadBack("<order><id>42</id></order>"), Is.EqualTo("<order><id>42</id></order>"));
+
+  private static string WriteEscapedXmlStringReadBack(string text)
+  {
+    StringBuilder written = new();
+    using (XmlWriter writer = XmlWriter.Create(written, new() { ConformanceLevel = ConformanceLevel.Fragment }))
+    {
+      writer.WriteStartElement("m");
+      writer.WriteEscapedXmlString(text, "?");
+      writer.WriteEndElement();
+    }
+
+    Assert.That(written.ToString(), Contains.Substring("<![CDATA[").Using(StringComparison.Ordinal));
+    XmlDocument document = new();
+    document.LoadXml(written.ToString());
+    return document.DocumentElement!.InnerText;
+  }
 
   #region CountSubstrings tests (private method accessed via reflection)
 

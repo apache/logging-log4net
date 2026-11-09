@@ -133,6 +133,11 @@ namespace log4net.Layout;
 ///             Used to output all request parameters in the case of <b>%aspnet-request</b> or just one named param if used as <b>%aspnet-request{key}</b>
 ///             </para>
 ///             <para>
+///             Form fields appear only once the application has read the request body in classic or buffered
+///             mode; before that, and after a bufferless read, they are left out, so that a client withholding
+///             its body cannot hold the appender. Query string, cookies and server variables are always shown.
+///             </para>
+///             <para>
 ///             This pattern is not available for Compact Framework or Client Profile assemblies.
 ///             </para>
 ///         </description>
@@ -657,7 +662,8 @@ namespace log4net.Layout;
 /// example, it the maximum field width is eight and the data item is
 /// ten characters long, then the first two characters of the data item
 /// are dropped. This behavior deviates from the printf function in C
-/// where truncation is done from the end.
+/// where truncation is done from the end. A surrogate pair is never split, so the result
+/// can be one character shorter than the maximum.
 /// </para>
 /// <para>
 /// Below are various format modifier examples for the logger

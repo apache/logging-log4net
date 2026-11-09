@@ -23,6 +23,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 
+using log4net.Appender.Internal;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
@@ -392,6 +393,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
 
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
+    _databaseAcceptedAnEvent = false;
     InitializeDatabaseConnection();
   }
 
@@ -506,6 +508,10 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// configured not to use transactions. See <see cref="UseTransactions"/>
   /// property for more information.
   /// </para>
+  /// <para>
+  /// An override that runs its own inserts keeps the retry from learning that the database accepted
+  /// one, so five failures in a row always discard the remaining events.
+  /// </para>
   /// </remarks>
   protected virtual void SendBuffer(IDbTransaction? dbTran, LoggingEvent[] events)
   {
@@ -548,6 +554,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
 
           // Execute the query
           dbCmd.ExecuteNonQuery();
+          _databaseAcceptedAnEvent = true;
         }
         catch (Exception ex) when (dbTran is null && !ex.IsFatal())
         {
@@ -580,6 +587,7 @@ public class AdoNetAppender : BufferingAppenderSkeleton
 
           dbCmd.CommandText = logStatement;
           dbCmd.ExecuteNonQuery();
+          _databaseAcceptedAnEvent = true;
         }
         catch (Exception ex) when (dbTran is null && !ex.IsFatal())
         {
@@ -600,7 +608,9 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// <para>
   /// Used as the fallback after a transactional batch failed and was rolled back. The
   /// events are sent without a transaction and failures are reported to the
-  /// <see cref="AppenderSkeleton.ErrorHandler"/> without affecting the remaining events.
+  /// <see cref="AppenderSkeleton.ErrorHandler"/>. A rejected event loses only itself, unless the
+  /// database has not accepted an insert since <see cref="ActivateOptions"/>: five failures in a
+  /// row then discard the remaining events.
   /// </para>
   /// <para>
   /// Note that this makes delivery at-least-once rather than exactly-once: if the batch
@@ -636,11 +646,9 @@ public class AdoNetAppender : BufferingAppenderSkeleton
       {
         failuresInARow = 0;
       }
-      else if (++failuresInARow >= MaxFailuresInARow)
+      else if (++failuresInARow >= MaxFailuresInARow && !_databaseAcceptedAnEvent)
       {
-        // Retrying one by one is meant to save the events around the one the database rejected.
-        // This many in a row means the batch is not the problem, and the remaining events would
-        // cost one round trip each to learn the same thing.
+        // Only while the database has never accepted an insert: a run of rejected content must not cost the events behind it.
         ErrorHandler.Error(
           $"Giving up on the remaining logging events after {failuresInARow} consecutive failures.");
         return;
@@ -653,6 +661,13 @@ public class AdoNetAppender : BufferingAppenderSkeleton
   /// which reports rather than throws, so <see cref="SendBufferPerEvent"/> can count failures.
   /// </summary>
   private bool _eventFailed;
+
+  /// <summary>
+  /// Set once an insert executed since <see cref="ActivateOptions"/>, rolled back or not, since it
+  /// proves table and permission. A reconnect does not clear it, so a database that fails later
+  /// costs one round trip per event.
+  /// </summary>
+  private bool _databaseAcceptedAnEvent;
 
   private const int MaxFailuresInARow = 5;
 
@@ -998,6 +1013,10 @@ public class AdoNetAppenderParameter
   /// <para>
   /// For BLOB data types like VARCHAR(max) it may be impossible to infer the value automatically, use -1 as the size in this case.
   /// </para>
+  /// <para>
+  /// When <see cref="DbType"/> is a string type, a longer value is cut to this many UTF-16 code units,
+  /// after escaping, without splitting a surrogate pair.
+  /// </para>
   /// </remarks>
   /// <seealso cref="IDbDataParameter.Size" />
   public int Size { get; set; }
@@ -1083,11 +1102,42 @@ public class AdoNetAppenderParameter
     // Format the value
     object? formattedValue = Layout?.Format(loggingEvent);
 
+    if (formattedValue is string rendered)
+    {
+      formattedValue = PrepareText(rendered);
+    }
+
     // If the value is null then convert to a DBNull
     formattedValue ??= DBNull.Value;
 
     param.Value = formattedValue;
   }
+
+  /// <summary>
+  /// Escapes what a database such as PostgreSQL rejects along with the event, then cuts to
+  /// <see cref="Size"/>, because a provider cutting inside a surrogate pair loses the event too.
+  /// </summary>
+  /// <param name="text">The rendered value.</param>
+  /// <returns>The value to bind.</returns>
+  private string PrepareText(string text)
+  {
+    text = text.EscapeNulCharacters().EscapeUnpairedSurrogates();
+
+    // A size of -1 means no limit to some providers, and is no length on a non-text type.
+    if (Size <= 0 || text.Length <= Size || !IsTextParameter)
+    {
+      return text;
+    }
+
+    return text.Substring(0, char.IsHighSurrogate(text[Size - 1]) ? Size - 1 : Size);
+  }
+
+  /// <summary>
+  /// Whether the provider treats a string value as text. An inferred parameter reads as
+  /// <see cref="DbType.AnsiString"/>, the zero of the enum.
+  /// </summary>
+  private bool IsTextParameter
+    => DbType is DbType.String or DbType.AnsiString or DbType.StringFixedLength or DbType.AnsiStringFixedLength;
 
   /// <summary>
   /// The database type for this parameter.

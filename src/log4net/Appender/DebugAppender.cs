@@ -19,8 +19,12 @@
 
 #define DEBUG
 
+using System;
+
+using log4net.Appender.Internal;
 using log4net.Layout;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender;
 
@@ -70,6 +74,9 @@ public class DebugAppender : AppenderSkeleton
   /// Defaults to a <see cref="PatternLayout"/> with %logger as the pattern which will use the logger name of the current 
   /// <see cref="LoggingEvent"/> as the category parameter.
   /// </para>
+  /// <para>
+  /// A NUL character in the message or the category is written as <c>\0</c>.
+  /// </para>
   /// </remarks>
   public PatternLayout? Category { get; set; } = new("%logger");
 
@@ -87,9 +94,16 @@ public class DebugAppender : AppenderSkeleton
     }
 
     // System.Diagnostics.Debug is thread-safe, so no need for lock(this).
-    System.Diagnostics.Debug.Flush();
-
-    return true;
+    try
+    {
+      System.Diagnostics.Debug.Flush();
+      return true;
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      ErrorHandler.Error($"Failed to flush appender [{Name}].", e, ErrorCode.FlushFailure);
+      return false;
+    }
   }
 
   /// <summary>
@@ -108,20 +122,23 @@ public class DebugAppender : AppenderSkeleton
     //
     // Write the string to the Debug system
     //
+    // The default listener ends in OutputDebugString or syslog(3), where a NUL ends the record.
+    string message = RenderLoggingEvent(loggingEvent).EscapeNulCharacters();
     if (Category is null)
     {
-      System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
+      System.Diagnostics.Debug.Write(message);
     }
     else
     {
-      string category = Category.Format(loggingEvent);
+      // A listener writes the category to the same stream.
+      string category = Category.FormatWithEscapedSurrogates(loggingEvent).EscapeNulCharacters();
       if (string.IsNullOrEmpty(category))
       {
-        System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent));
+        System.Diagnostics.Debug.Write(message);
       }
       else
       {
-        System.Diagnostics.Debug.Write(RenderLoggingEvent(loggingEvent), category);
+        System.Diagnostics.Debug.Write(message, category);
       }
     }
     //

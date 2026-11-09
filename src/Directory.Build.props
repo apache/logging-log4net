@@ -28,7 +28,7 @@
     <SystemConfigurationConfigurationManagerPackageVersion>4.5.0</SystemConfigurationConfigurationManagerPackageVersion>
     <MicrosoftSourceLinkGitHubPackageVersion>8.0.0</MicrosoftSourceLinkGitHubPackageVersion>
     <!-- Analyzer packages -->
-    <MicrosoftNetAnalyzersPackageVersion>8.0.0</MicrosoftNetAnalyzersPackageVersion>
+    <MicrosoftNetAnalyzersPackageVersion>10.0.114</MicrosoftNetAnalyzersPackageVersion>
     <!-- Test Packages -->
     <MicrosoftNetTestSdkPackageVersion>17.11.1</MicrosoftNetTestSdkPackageVersion>
     <NUnitAnalyzersPackageVersion>4.3.0</NUnitAnalyzersPackageVersion>

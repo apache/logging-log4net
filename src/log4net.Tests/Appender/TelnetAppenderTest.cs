@@ -27,6 +27,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using log4net.Appender;
 using log4net.Config;
@@ -373,6 +374,8 @@ public sealed class TelnetAppenderTest
       // A queue this small fills as soon as the client stops reading, and nothing waits for room.
       SendQueueSize = 4,
       EnqueueTimeoutMillis = 0,
+      // Only bounds Close, where the sender is still stuck on this client.
+      SendTimeoutMillis = 1_000,
       ErrorHandler = errorHandler
     };
     appender.ActivateOptions();
@@ -382,9 +385,10 @@ public sealed class TelnetAppenderTest
     {
       deadReader.ConnectAndStopReading();
 
+      // More than the socket buffers hold, so the sender blocks whatever its speed.
       for (int i = 0; i < 200; i++)
       {
-        appender.DoAppend(CreateEvent(new string('x', 4_096)));
+        appender.DoAppend(CreateEvent(new string('x', 65_536)));
       }
 
       Assert.That(errorHandler.Messages.FindAll(m => m.IndexOf("was dropped", StringComparison.Ordinal) >= 0),
@@ -591,6 +595,135 @@ public sealed class TelnetAppenderTest
       text.AppendLine($"diagnostics failed: {e.Message}");
     }
     return text.ToString();
+  }
+
+  /// <summary>
+  /// A connection already waiting when the appender accepts again must not be handled inside the
+  /// callback of the one before it, or clients that keep the backlog filled nest callbacks until the
+  /// stack overflows.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AcceptCallbacksDoNotNest()
+  {
+    const int connections = 50;
+    int port = FindFreeTcpPort();
+    List<TcpClient> peers = [];
+    int deepest = 0;
+    using ManualResetEventSlim allAccepted = new();
+
+    // The handler reports each accepted connection from inside the accept callback, so the next
+    // peer connects while that callback runs and is waiting when the handler accepts again.
+    void InsideOnConnect(object? source, LogReceivedEventArgs e)
+    {
+      if (!e.LogLog.Message.StartsWith("Accepting connection from", StringComparison.Ordinal))
+      {
+        return;
+      }
+
+      int depth = 0;
+      foreach (StackFrame frame in new StackTrace().GetFrames())
+      {
+        if (frame.GetMethod()?.Name == "OnConnect")
+        {
+          depth++;
+        }
+      }
+
+      deepest = Math.Max(deepest, depth);
+      if (peers.Count < connections)
+      {
+        peers.Add(new TcpClient(IPAddress.Loopback.ToString(), port));
+      }
+      else
+      {
+        allAccepted.Set();
+      }
+    }
+
+    bool internalDebugging = LogLog.InternalDebugging;
+    LogLog.InternalDebugging = true;
+    LogLog.LogReceived += InsideOnConnect;
+    TelnetAppender appender = new() { Port = port, Layout = new PatternLayout("%message%newline") };
+    // The handler has to act inside the event, so it stays; the console stays quiet.
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      try
+      {
+        appender.ActivateOptions();
+        peers.Add(new TcpClient(IPAddress.Loopback.ToString(), port));
+        Assert.That(allAccepted.Wait(_receiveTimeout), Is.True, "not all connections were accepted");
+      }
+      finally
+      {
+        LogLog.LogReceived -= InsideOnConnect;
+        LogLog.InternalDebugging = internalDebugging;
+        appender.Close();
+        peers.ForEach(peer => peer.Dispose());
+      }
+    });
+
+    Assert.That(deepest, Is.EqualTo(1));
+  }
+
+  /// <summary>
+  /// A connection accepted after <c>Dispose</c> has swept the clients is closed, not registered.
+  /// </summary>
+  [Test]
+  public void AConnectionAcceptedAfterDisposeIsClosed()
+  {
+    Type handlerType = typeof(TelnetAppender).NonPublicNestedType("SocketHandler");
+    IDisposable handler = handlerType.Construct<IDisposable>([IPAddress.Loopback, FindFreeTcpPort(), 0]);
+    handler.Dispose();
+    using Socket listener = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+    listener.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+    listener.Listen(1);
+    using TcpClient peer = new(IPAddress.Loopback.ToString(), ((IPEndPoint)listener.LocalEndPoint!).Port);
+    using Socket accepted = listener.Accept();
+
+    handler.Invoke("OnConnect", [Task.FromResult(accepted)]);
+
+    Assert.That(() => accepted.Available, Throws.TypeOf<ObjectDisposedException>());
+    Assert.That(handler.GetFieldValue<IList>("_clients"), Is.Empty);
+  }
+
+  /// <summary>A client registered after <c>Dispose</c> swept the list is closed instead.</summary>
+  [Test]
+  public void AClientAddedAfterDisposeIsClosed()
+  {
+    Type handlerType = typeof(TelnetAppender).NonPublicNestedType("SocketHandler");
+    IDisposable handler = handlerType.Construct<IDisposable>([IPAddress.Loopback, FindFreeTcpPort(), 0]);
+    handler.Dispose();
+    using Socket listener = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+    listener.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+    listener.Listen(1);
+    using TcpClient peer = new(IPAddress.Loopback.ToString(), ((IPEndPoint)listener.LocalEndPoint!).Port);
+    using Socket accepted = listener.Accept();
+    using IDisposable client = handlerType.NonPublicNestedType("SocketClient").Construct<IDisposable>([accepted]);
+
+    handler.Invoke("AddClient", [client]);
+
+    Assert.That(() => accepted.Available, Throws.TypeOf<ObjectDisposedException>());
+    Assert.That(handler.GetFieldValue<IList>("_clients"), Is.Empty);
+  }
+
+  /// <summary>An accept that cannot start on a live handler is reported, not swallowed.</summary>
+  [Test]
+  [NonParallelizable]
+  public void AnAcceptThatCannotStartIsReported()
+  {
+    Type handlerType = typeof(TelnetAppender).NonPublicNestedType("SocketHandler");
+    using IDisposable handler = handlerType.Construct<IDisposable>([IPAddress.Loopback, FindFreeTcpPort(), 0]);
+    handler.GetFieldValue<Socket>("_serverSocket").Dispose();
+    List<LogLog> messages = [];
+
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      using LogLog.LogReceivedAdapter _ = new(messages);
+      handler.Invoke("AcceptConnection", []);
+    });
+
+    Assert.That(messages.ConvertAll(message => message.Message), Does.Contain("Failed to accept further connections."));
   }
 
   /// <summary>

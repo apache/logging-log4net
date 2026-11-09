@@ -37,6 +37,10 @@ namespace log4net.Tests.Appender;
 [TestFixture]
 public class AdoNetAppenderTest
 {
+  /// <summary>The fake provider keeps its state in statics.</summary>
+  [SetUp]
+  public void ResetFakeProvider() => Log4NetCommand.Reset();
+
   [Test]
   public void NoBufferingTest()
   {
@@ -513,11 +517,155 @@ public class AdoNetAppenderTest
   }
 
   /// <summary>
+  /// A database that cannot store a NUL or an unpaired surrogate in a text value (PostgreSQL)
+  /// rejects the insert and with it the event, so both are escaped before the value is bound.
+  /// </summary>
+  [Test]
+  public void NulAndUnpairedSurrogateAreEscapedBeforeBinding()
+  {
+    AdoNetAppenderParameter messageParam = new()
+    {
+      ParameterName = "@message",
+      DbType = DbType.String,
+      Size = 4000,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    AdoNetAppender appender = new()
+    {
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+      BufferSize = -1,
+      CommandText = "INSERT INTO Log ([Message]) VALUES (@message)"
+    };
+    appender.AddParameter(messageParam);
+    appender.ActivateOptions();
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, appender);
+    ILog log = LogManager.GetLogger(rep.Name, "NulAndUnpairedSurrogateAreEscapedBeforeBinding");
+
+    log.Debug("login failed for user mallory\0 \ud800 \U0001F600");
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.That(command, Is.Not.Null);
+
+    IDbDataParameter param = (IDbDataParameter)command.Parameters["@message"];
+    Assert.That(param.Value, Is.EqualTo("login failed for user mallory\\0 \\ud800 \U0001F600"));
+  }
+
+  /// <summary>A provider cutting inside a surrogate pair loses the event, so the value arrives cut.</summary>
+  /// <param name="message">The logged message.</param>
+  /// <param name="size">The parameter size.</param>
+  /// <param name="expected">The bound value.</param>
+  [TestCase("abcde", 5, "abcde", TestName = "ExactlySize")]
+  [TestCase("abcdefgh", 0, "abcdefgh", TestName = "NoSize")]
+  [TestCase("abcdefgh", 5, "abcde", TestName = "LongerThanSize")]
+  [TestCase("ab\U0001F600", 3, "ab", TestName = "SizeInsideAPair")]
+  [TestCase("abcdefgh", -1, "abcdefgh", TestName = "UnlimitedSize")]
+  [TestCase("ab\0cd", 5, @"ab\0c", TestName = "EscapesCountTowardsSize")]
+  [TestCase("ab\U0001F600", 4, "ab\U0001F600", TestName = "SizeAfterAPair")]
+  public void TextIsCutToSize(string message, int size, string expected)
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      DbType = DbType.String,
+      Size = size,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, message), Is.EqualTo(expected));
+  }
+
+  /// <summary>Every text type gets the cut.</summary>
+  /// <param name="dbType">The parameter type.</param>
+  [TestCase(DbType.String)]
+  [TestCase(DbType.AnsiString)]
+  [TestCase(DbType.StringFixedLength)]
+  [TestCase(DbType.AnsiStringFixedLength)]
+  public void TextTypesAreCutToSize(DbType dbType)
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      DbType = dbType,
+      Size = 3,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, "abcdefgh"), Is.EqualTo("abc"));
+  }
+
+  /// <summary>A parameter without a <c>DbType</c> is text to the provider when the value is.</summary>
+  [Test]
+  public void TextIsCutToSizeWhenTheTypeIsInferred()
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      Size = 3,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, "abcdefgh"), Is.EqualTo("abc"));
+  }
+
+  /// <summary>On a non-text type <c>Size</c> is no length: a rendered number stays whole.</summary>
+  [Test]
+  public void SizeDoesNotCutANonTextParameter()
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@message",
+      DbType = DbType.Int32,
+      Size = 2,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    };
+
+    Assert.That(BoundValue(parameter, "12345"), Is.EqualTo("12345"));
+  }
+
+  /// <summary>Only strings are escaped and cut, a raw value reaches the provider as it is.</summary>
+  [Test]
+  public void SizeDoesNotTouchARawValue()
+  {
+    AdoNetAppenderParameter parameter = new()
+    {
+      ParameterName = "@date",
+      DbType = DbType.DateTime,
+      Size = 1,
+      Layout = new RawTimeStampLayout()
+    };
+
+    Assert.That(BoundValue(parameter, "Message"), Is.TypeOf<DateTime>());
+  }
+
+  private static object? BoundValue(AdoNetAppenderParameter parameter, string message)
+  {
+    AdoNetAppender appender = new()
+    {
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+      BufferSize = -1,
+      CommandText = "INSERT INTO Log ([Message]) VALUES (" + parameter.ParameterName + ")"
+    };
+    appender.AddParameter(parameter);
+    appender.ActivateOptions();
+
+    ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(rep, appender);
+    LogManager.GetLogger(rep.Name, "BoundValue").Debug(message);
+
+    IDbCommand? command = Log4NetCommand.MostRecentInstance;
+    Assert.That(command, Is.Not.Null);
+    return ((IDbDataParameter)command.Parameters[parameter.ParameterName!]).Value;
+  }
+
+  /// <summary>
   /// Retrying one by one exists to save the events around the one the database rejected. When
   /// every one of them fails, the batch is not the problem and each further round trip only
   /// learns that again.
   /// </summary>
   [Test]
+  [NonParallelizable]
   public void RetryingPerEventGivesUpAfterRepeatedFailures()
   {
     const int bufferSize = 19;
@@ -581,6 +729,7 @@ public class AdoNetAppenderTest
   /// retrying: five failures spread out are not five in a row.
   /// </summary>
   [Test]
+  [NonParallelizable]
   public void RetryingPerEventKeepsGoingWhileFailuresAreSpreadOut()
   {
     const int bufferSize = 9;
@@ -630,6 +779,151 @@ public class AdoNetAppenderTest
 
       Assert.That(Log4NetCommand.ExecutedPayloads, Has.Count.EqualTo(expectedWrites));
       Assert.That(Log4NetCommand.ExecutedPayloads, Has.Member("good 9"));
+    }
+    finally
+    {
+      Log4NetCommand.ExceptionTrigger = null;
+      Log4NetCommand.ExecutedPayloads.Clear();
+    }
+  }
+
+  /// <summary>
+  /// A run of failures from a database that has accepted an insert is a run of rejected
+  /// events, not a broken database: the events behind it must still be written.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void RetryingPerEventKeepsGoingAfterARunOfRejectedEvents()
+  {
+    const int bufferSize = 9;
+    const int rejectedInARow = 7;
+
+    Log4NetCommand.ExceptionTrigger = "POISON";
+    try
+    {
+      XmlDocument log4NetConfig = new();
+      log4NetConfig.LoadXml(
+        """
+        <log4net>
+        <appender name="AdoNetAppender" type="log4net.Appender.AdoNetAppender">
+          <bufferSize value="9" />
+          <useTransactions value="true" />
+          <connectionType value="log4net.Tests.Appender.AdoNet.Log4NetConnection" />
+          <connectionString value="data source=[database server]" />
+          <commandText value="INSERT INTO Log ([Message]) VALUES (@message)" />
+          <parameter>
+            <parameterName value="@message" />
+            <dbType value="String" />
+            <size value="4000" />
+            <layout type="log4net.Layout.PatternLayout">
+              <conversionPattern value="%message" />
+            </layout>
+          </parameter>
+        </appender>
+        <root>
+          <level value="ALL" />
+          <appender-ref ref="AdoNetAppender" />
+        </root>
+        </log4net>
+        """);
+
+      ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
+      ILog log = LogManager.GetLogger(rep.Name, nameof(RetryingPerEventKeepsGoingAfterARunOfRejectedEvents));
+
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        // The event after the buffer is full flushes all ten: one good, seven rejected, two good.
+        log.Debug("good before");
+        for (int i = 0; i < rejectedInARow; i++)
+        {
+          log.Debug("POISON");
+        }
+        for (int i = rejectedInARow + 1; i <= bufferSize; i++)
+        {
+          log.Debug($"good {i}");
+        }
+      });
+
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.Member("good 8"));
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.Member("good 9"));
+      Assert.That(Log4NetCommand.ExecutedPayloads, Has.No.Member("POISON"));
+    }
+    finally
+    {
+      Log4NetCommand.ExceptionTrigger = null;
+      Log4NetCommand.ExecutedPayloads.Clear();
+    }
+  }
+
+  /// <summary>Without <c>CommandText</c> the event takes the statement path, where a run counts the same.</summary>
+  [Test]
+  [NonParallelizable]
+  public void RetryingPerEventKeepsGoingOnTheStatementPath()
+  {
+    AdoNetAppender appender = new()
+    {
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+      BufferSize = 100,
+      Layout = new PatternLayout("%message")
+    };
+
+    string[] written = LogWithRejections(appender, "good before", "POISON", "POISON", "POISON", "POISON", "POISON", "good after");
+
+    Assert.That(written, Has.Member("good after"));
+  }
+
+  /// <summary>Activating again starts over: the database has to prove itself to the new options.</summary>
+  [Test]
+  [NonParallelizable]
+  public void RetryingPerEventForgetsAnAcceptedInsertOnActivation()
+  {
+    AdoNetAppender appender = new()
+    {
+      ConnectionType = typeof(Log4NetConnection).AssemblyQualifiedName!,
+      BufferSize = 100,
+      CommandText = "INSERT INTO Log ([Message]) VALUES (@message)"
+    };
+    appender.AddParameter(new AdoNetAppenderParameter
+    {
+      ParameterName = "@message",
+      DbType = DbType.String,
+      Layout = new Layout2RawLayoutAdapter(new PatternLayout("%message"))
+    });
+
+    LogWithRejections(appender, "good before");
+    appender.ActivateOptions();
+    string[] written = LogWithRejections(appender, "POISON", "POISON", "POISON", "POISON", "POISON", "good after");
+
+    Assert.That(written, Has.No.Member("good after"));
+  }
+
+  private static string[] LogWithRejections(AdoNetAppender appender, params string[] messages)
+  {
+    Log4NetCommand.ExceptionTrigger = "POISON";
+    Log4NetCommand.ExecutedPayloads.Clear();
+    try
+    {
+      string[] written = [];
+      LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+      {
+        if (string.IsNullOrEmpty(appender.Name))
+        {
+          appender.Name = Guid.NewGuid().ToString();
+          appender.ActivateOptions();
+          BasicConfigurator.Configure(LogManager.CreateRepository(appender.Name), appender);
+        }
+
+        ILog log = LogManager.GetLogger(appender.Name, "LogWithRejections");
+        foreach (string message in messages)
+        {
+          log.Debug(message);
+        }
+
+        appender.Flush();
+        written = [.. Log4NetCommand.ExecutedPayloads];
+      });
+      return written;
     }
     finally
     {

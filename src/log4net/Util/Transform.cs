@@ -62,7 +62,8 @@ public static class Transform
     {
       // Write string using CDATA section
 
-      int end = stringData.IndexOf(CdataEnd);
+      // Ordinal: a linguistic hit need not be the three units the loop below assumes
+      int end = stringData.IndexOf(CdataEnd, StringComparison.Ordinal);
 
       if (end < 0)
       {
@@ -84,7 +85,7 @@ public static class Transform
           {
             writer.WriteString(CdataUnescapableToken);
             start = end + 2;
-            end = stringData.IndexOf(CdataEnd, start);
+            end = stringData.IndexOf(CdataEnd, start, StringComparison.Ordinal);
           }
         }
 

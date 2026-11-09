@@ -217,7 +217,13 @@ See xref:#mailkit-smtpappender-transport-security[].
 |The encoding of the subject line, for example `utf-8`. Defaults to `utf-8`.
 
 |`bodyEncoding`
-|The encoding of the message body, for example `utf-8`. Defaults to `utf-8`.
+|The encoding of the message body, for example `utf-8`. Defaults to `utf-8`. A character it cannot represent is written as a `\uXXXX` escape.
+The body goes out quoted-printable, or base64 for UTF-16 and UTF-32, so a carriage return from logged content never reaches the relay bare.
+
+|`maxBodySize`
+|The largest mail body in bytes of `bodyEncoding`, header and footer included. Defaults to `1048576`, at least `4096`.
+A server refuses an oversize mail as a whole, so a batch over the budget goes out as several mails, and a record too long for one mail is cut and marked `...[truncated]`.
+Quoted-printable can triple the size on the wire. The legacy appender has the same option.
 
 |`sendQueueSize`
 |How many rendered mails may wait to be sent. Defaults to `500`.

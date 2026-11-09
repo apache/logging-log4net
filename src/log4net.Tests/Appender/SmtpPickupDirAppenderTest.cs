@@ -150,6 +150,36 @@ public class SmtpPickupDirAppenderTest
   }
 
   /// <summary>
+  /// SMTP allows a CR only before LF, and Sendmail defers a picked up mail with a lone one. Such a CR
+  /// from content is written as <c>\r</c>; a CRLF stays a line end.
+  /// </summary>
+  [Test]
+  public void ALoneCarriageReturnIsEscaped()
+  {
+    using AutoTempFolder pickupDir = new();
+    SilentErrorHandler sh = new();
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
+    ILogger log = CreateLogger(appender);
+
+    log.Log(GetType(), Level.Info, "mallory\rx", null);
+    log.Log(GetType(), Level.Info, "first line\r\nsecond line", null);
+    DestroyLogger();
+
+    string file = Directory.GetFiles(pickupDir.Path)[0];
+    string content = File.ReadAllText(file);
+    Assert.That(content, Contains.Substring("mallory\\rx").Using(StringComparison.Ordinal));
+    Assert.That(content, Contains.Substring("first line\r\nsecond line").Using(StringComparison.Ordinal));
+    byte[] bytes = File.ReadAllBytes(file);
+    bool bareCarriageReturn = false;
+    for (int i = 0; i < bytes.Length; i++)
+    {
+      bareCarriageReturn |= bytes[i] == '\r' && (i + 1 == bytes.Length || bytes[i + 1] != '\n');
+    }
+    Assert.That(bareCarriageReturn, Is.False, "a CR without LF in the file");
+    Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
+  }
+
+  /// <summary>
   /// The appender used to close the file with a lone dot, so a logged line that is only a dot was
   /// indistinguishable from it and ended the mail early for an agent honouring the terminator.
   /// </summary>

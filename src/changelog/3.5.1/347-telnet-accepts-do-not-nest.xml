@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="347" link="https://github.com/apache/logging-log4net/issues/347"/>
+  <description format="asciidoc">`TelnetAppender` handles each accepted connection on a fresh stack. Since 3.0.0
+  a connection already waiting was handled inside the callback of the one before it, so clients
+  that kept reconnecting nested callbacks on one thread (fixed by @FreeAndNil)</description>
+</entry>

@@ -28,6 +28,9 @@ See xref:manual/configuration/filters.adoc[] for more information.
 See xref:manual/configuration/layouts.adoc[] for more information.
 * only directly handle the writing of log event data to the target destination.
 
+An appender that inherits from `AppenderSkeleton` writes a lone surrogate as `\uXXXX` in text layouts, because a writer that cannot encode it would stop the appender.
+`XmlLayout` masks it earlier, as `?` by default.
+
 Appenders always have a name so that they can be referenced from a
 xref:manual/configuration.adoc#configuring-loggers[logger configuration].
 

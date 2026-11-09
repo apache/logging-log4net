@@ -38,6 +38,7 @@ The file will be appended to rather than overwritten each time the logging proce
 
 This example shows how to configure the file name to write to using an environment variable TEMP.
 The encoding to use to write to the file is also specified.
+A character the encoding cannot represent is written as a `\uXXXX` escape, never as a best fit substitute or `?`.
 
 [source,xml]
 ----

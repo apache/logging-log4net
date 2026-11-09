@@ -26,7 +26,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using log4net.Appender.Internal;
+using System.Threading.Tasks;
 using log4net.Core;
 using log4net.Util;
 
@@ -310,6 +310,8 @@ public class TelnetAppender : AppenderSkeleton
   {
     private const int MaxConnections = 20;
 
+    private const int AcceptRetryDelayMillis = 100;
+
     private readonly Socket _serverSocket;
     private readonly int _sendTimeoutMillis;
     private readonly List<SocketClient> _clients = [];
@@ -356,7 +358,7 @@ public class TelnetAppender : AppenderSkeleton
       /// <param name="message">string to send</param>
       public void Send(string message)
       {
-        _writer.Write(ContentEscape.EscapeUnpairedSurrogates(message.EnsureNotNull()));
+        _writer.Write(message.EnsureNotNull());
         _writer.Flush();
       }
 
@@ -447,7 +449,26 @@ public class TelnetAppender : AppenderSkeleton
       AcceptConnection();
     }
 
-    private void AcceptConnection() => _serverSocket.BeginAccept(OnConnect, null);
+    /// <summary>
+    /// Starts the next accept. Its callback runs on a fresh stack: <see cref="Socket.BeginAccept(AsyncCallback, object)"/>
+    /// alone completes inline when a connection is waiting, and a filled backlog then nests callbacks.
+    /// </summary>
+    private void AcceptConnection()
+    {
+      try
+      {
+        Task.Factory.FromAsync(_serverSocket.BeginAccept, _serverSocket.EndAccept, null)
+          .ContinueWith(OnConnect, TaskScheduler.Default);
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        // Disposed meanwhile is expected; anything else leaves the port bound with no accept pending.
+        if (!_wasDisposed)
+        {
+          LogLog.Error(_declaringType, "Failed to accept further connections.", e);
+        }
+      }
+    }
 
     /// <summary>
     /// Sends a string message to each of the connected clients.
@@ -493,6 +514,13 @@ public class TelnetAppender : AppenderSkeleton
     {
       lock (_syncRoot)
       {
+        if (_wasDisposed)
+        {
+          // Dispose has swept the clients already: registering this one would leak it.
+          client.Dispose();
+          return;
+        }
+
         _clients.Add(client);
       }
     }
@@ -518,7 +546,7 @@ public class TelnetAppender : AppenderSkeleton
     /// <summary>
     /// Callback used to accept a connection on the server socket
     /// </summary>
-    /// <param name="asyncResult">The result of the asynchronous operation</param>
+    /// <param name="acceptTask">The accept that completed</param>
     /// <remarks>
     /// <para>
     /// On connection adds to the list of connections 
@@ -526,17 +554,19 @@ public class TelnetAppender : AppenderSkeleton
     /// </para>
     /// </remarks>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope")]
-    private void OnConnect(IAsyncResult asyncResult)
+    private void OnConnect(Task<Socket> acceptTask)
     {
-      if (_wasDisposed)
-      {
-        return;
-      }
-
+      bool failed = false;
       try
       {
-        // Block until a client connects
-        Socket socket = _serverSocket.EndAccept(asyncResult);
+        Socket socket = acceptTask.GetAwaiter().GetResult();
+        if (_wasDisposed)
+        {
+          // Accepted after Dispose swept the clients: registering it would leak it.
+          socket.Dispose();
+          return;
+        }
+
         LogLog.Debug(_declaringType, $"Accepting connection from [{socket.RemoteEndPoint}]");
         if (_sendTimeoutMillis > 0)
         {
@@ -568,19 +598,43 @@ public class TelnetAppender : AppenderSkeleton
         }
         else
         {
-          client.Send("Sorry - Too many connections.\r\n");
-          client.Dispose();
+          try
+          {
+            client.Send("Sorry - Too many connections.\r\n");
+          }
+          catch (Exception e) when (!e.IsFatal())
+          {
+            // A refused peer that has hung up already is no reason to delay the next accept.
+          }
+          finally
+          {
+            client.Dispose();
+          }
         }
       }
       catch (Exception e) when (!e.IsFatal())
       {
-        // Ignore
+        failed = true;
       }
       finally
       {
         if (!_wasDisposed)
         {
-          AcceptConnection();
+          if (failed)
+          {
+            // A failure such as EMFILE can repeat at once: wait rather than spin.
+            Task.Delay(AcceptRetryDelayMillis).ContinueWith(_ =>
+            {
+              if (!_wasDisposed)
+              {
+                AcceptConnection();
+              }
+            }, TaskScheduler.Default);
+          }
+          else
+          {
+            AcceptConnection();
+          }
         }
       }
     }

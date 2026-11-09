@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="348" link="https://github.com/apache/logging-log4net/issues/348"/>
+  <description format="asciidoc">`LocalSyslogAppender` cuts a record longer than `MaxRecordSize` (default 204800 UTF-8
+  bytes), marks it `...[truncated]` and reports it. glibc used to drop a record larger than its
+  socket send buffer silently (fixed by @FreeAndNil)</description>
+</entry>

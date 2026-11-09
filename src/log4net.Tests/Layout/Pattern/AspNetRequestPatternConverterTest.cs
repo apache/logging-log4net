@@ -21,8 +21,11 @@
 #if NET462_OR_GREATER
 
 using System;
+using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Web;
+using System.Web.Hosting;
 
 using log4net.Config;
 using log4net.Layout;
@@ -35,7 +38,8 @@ using NUnit.Framework;
 namespace log4net.Tests.Layout.Pattern;
 
 /// <summary>
-/// Tests that <c>%aspnet-request</c> survives content ASP.NET request validation rejects.
+/// Tests that <c>%aspnet-request</c> survives content ASP.NET request validation rejects, and that it
+/// does not wait for the client to send the request body.
 /// </summary>
 [TestFixture]
 public sealed class AspNetRequestPatternConverterTest
@@ -91,6 +95,124 @@ public sealed class AspNetRequestPatternConverterTest
   }
 
   /// <summary>
+  /// Guards the next tests: if reading the form does not ask the client for the body, they pass vacuously.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ReadingTheFormLoadsTheEntityBody()
+  {
+    FormPost workerRequest = new();
+    HttpContext.Current = new(workerRequest);
+
+    try
+    {
+      _ = HttpContext.Current.Request.Unvalidated.Form;
+    }
+    catch (HttpException)
+    {
+      // The body never arrives.
+    }
+
+    Assert.That(workerRequest.WasAskedForTheBody, Is.True);
+  }
+
+  /// <summary>
+  /// The layout runs under the appender's lock, so waiting there for a client to send its body would let
+  /// that client hold up every thread that logs.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void TheConverterDoesNotLoadTheEntityBody()
+  {
+    FormPost workerRequest = new();
+    HttpContext.Current = new(workerRequest);
+
+    string rendered = Render("%aspnet-request{name}|%aspnet-request|%message");
+
+    Assert.That(workerRequest.WasAskedForTheBody, Is.False);
+    Assert.That(HttpContext.Current.Request.ReadEntityBodyMode, Is.EqualTo(ReadEntityBodyMode.None));
+    Assert.That(rendered, Does.EndWith("|TestMessage"));
+    Assert.That(rendered, Does.Not.Contain(SystemInfo.NotAvailableText));
+  }
+
+  /// <summary>
+  /// Once the application has read the body, a form field is still reported.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFormFieldIsShownOnceTheBodyHasBeenRead()
+  {
+    HttpContext.Current = new(new FormPost("name=value"));
+    _ = HttpContext.Current.Request.Form;
+
+    string rendered = Render("%aspnet-request{name}|%message");
+
+    Assert.That(rendered, Is.EqualTo("value|TestMessage"));
+  }
+
+  /// <summary>
+  /// After a bufferless read the form throws when read; the rest of the request is still reported.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ABufferlessReadStillReportsTheRestOfTheRequest()
+  {
+    HttpContext.Current = new(new FormPost("name=value"));
+    _ = HttpContext.Current.Request.GetBufferlessInputStream();
+
+    string rendered = Render("%aspnet-request{REQUEST_METHOD}|%message");
+
+    Assert.That(rendered, Is.EqualTo("POST|TestMessage"));
+  }
+
+  /// <summary>
+  /// A buffered read the application has not finished leaves the form out, without failing the conversion.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AnUnfinishedBufferedReadLeavesTheFormOut()
+  {
+    // Nothing preloaded, so any read of the form would have to ask the client.
+    FormPost workerRequest = new();
+    HttpContext.Current = new(workerRequest);
+    _ = HttpContext.Current.Request.GetBufferedInputStream();
+
+    string rendered = Render("%aspnet-request{name}|%message");
+
+    Assert.That(workerRequest.WasAskedForTheBody, Is.False);
+    Assert.That(rendered, Is.EqualTo(SystemInfo.NullText + "|TestMessage"));
+  }
+
+  /// <summary>
+  /// Once the application has read the buffered stream to its end, the form is shown.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AFinishedBufferedReadShowsTheForm()
+  {
+    HttpContext.Current = new(new FormPost("name=value"));
+    HttpContext.Current.Request.GetBufferedInputStream().CopyTo(Stream.Null);
+
+    string rendered = Render("%aspnet-request{name}|%message");
+
+    Assert.That(rendered, Is.EqualTo("value|TestMessage"));
+  }
+
+  /// <summary>
+  /// The query string comes before the server variables, as in the indexer the lookup replaces.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void TheQueryStringComesBeforeTheServerVariables()
+  {
+    HttpContext.Current = new(new FormPost(query: "REQUEST_METHOD=fromquery"));
+
+    string rendered = Render("%aspnet-request{REQUEST_METHOD}|%message");
+
+    Assert.That(rendered, Is.EqualTo("fromquery|TestMessage"));
+  }
+
+  /// <summary>
   /// A benign request is unchanged, so the paths above are not hiding a broken happy path.
   /// </summary>
   [Test]
@@ -128,6 +250,45 @@ public sealed class AspNetRequestPatternConverterTest
     // The runtime does this for a real request; the first Params read then validates.
     request.ValidateInput();
     return request;
+  }
+
+  /// <summary>
+  /// A form post of which <paramref name="preloaded"/> arrived with the headers: all of the body, as IIS
+  /// hands over a small one, or nothing, so that the body still has to be read from the client.
+  /// </summary>
+  private sealed class FormPost(string? preloaded = null, string query = "")
+    : SimpleWorkerRequest("/", Path.GetTempPath(), "page.aspx", query, TextWriter.Null)
+  {
+    private readonly byte[]? _preloaded = preloaded is null ? null : Encoding.ASCII.GetBytes(preloaded);
+
+    /// <summary>
+    /// Whether ASP.NET tried to read the body from the client, where a real request blocks.
+    /// </summary>
+    public bool WasAskedForTheBody { get; private set; }
+
+    /// <inheritdoc/>
+    public override string GetHttpVerbName() => "POST";
+
+    /// <inheritdoc/>
+    public override string GetKnownRequestHeader(int index) => index switch
+    {
+      HeaderContentType => "application/x-www-form-urlencoded",
+      HeaderContentLength => (_preloaded?.Length ?? 1000).ToString(CultureInfo.InvariantCulture),
+      _ => base.GetKnownRequestHeader(index),
+    };
+
+    /// <inheritdoc/>
+    public override byte[]? GetPreloadedEntityBody() => _preloaded;
+
+    /// <inheritdoc/>
+    public override bool IsEntireEntityBodyIsPreloaded() => _preloaded is not null;
+
+    /// <inheritdoc/>
+    public override int ReadEntityBody(byte[] buffer, int size)
+    {
+      WasAskedForTheBody = true;
+      return 0;
+    }
   }
 
   /// <summary>

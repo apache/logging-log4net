@@ -25,6 +25,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using log4net.Appender.Internal;
 using log4net.Util;
 using log4net.Layout;
 using log4net.Core;
@@ -953,8 +954,10 @@ public class FileAppender : TextWriterAppender
   /// </value>
   /// <remarks>
   /// <para>
-  /// The default encoding set is <see cref="Encoding.Default"/>
-  /// which is the encoding for the system's current ANSI code page.
+  /// The default encoding is the system's ANSI code page on .NET Framework and UTF-8 on .NET.
+  /// </para>
+  /// <para>
+  /// A character the encoding cannot represent is written as a <c>\uXXXX</c> escape.
   /// </para>
   /// </remarks>
   public Encoding Encoding { get; set; } = Encoding.GetEncoding(0);
@@ -1335,7 +1338,7 @@ public class FileAppender : TextWriterAppender
   protected virtual void SetQWForFiles(Stream fileStream)
   {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-    StreamWriter writer = new(fileStream, Encoding);
+    StreamWriter writer = new(fileStream, this.Encoding.WithEscapingFallback());
 #pragma warning restore CA2000 // Dispose objects before losing scope
     SetQWForFiles(writer);
   }

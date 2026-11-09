@@ -62,8 +62,10 @@
     <InternalsVisibleTo Include="log4net.Ext.Mail.Tests" />
   </ItemGroup>
   <ItemGroup Label="Shared sources from log4net">
-    <!-- Log4NetAssert and the attributes it uses are internal to log4net, so they are
-         compiled into this assembly rather than referenced. -->
+    <!-- ContentEscape, Log4NetAssert and the attributes it uses are internal to log4net, so
+         they are compiled into this assembly rather than referenced. -->
+    <Compile Include="..\log4net\Appender\Internal\ContentEscape.cs" Link="Appender\Internal\ContentEscape.cs" />
+    <Compile Include="..\log4net\Appender\Internal\MailBodies.cs" Link="Appender\Internal\MailBodies.cs" />
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" Link="Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" />
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\NotNullAttribute.cs" Link="Diagnostics\CodeAnalysis\NotNullAttribute.cs" />
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\ValidatedNotNullAttribute.cs" Link="Diagnostics\CodeAnalysis\ValidatedNotNullAttribute.cs" />

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="354" link="https://github.com/apache/logging-log4net/issues/354"/>
+  <description format="asciidoc">`%aspnet-request` no longer reads the request body from the client. It used to load
+  the form under the appender lock, so a client withholding its body held every thread logging to the
+  appender. Form fields now appear only once the application has read the body in classic or buffered
+  mode, and a bufferless read no longer turns the whole conversion into `NOT AVAILABLE`. Lookups such as
+  `+%aspnet-request{REMOTE_ADDR}+` are unchanged (fixed by @FreeAndNil)</description>
+</entry>

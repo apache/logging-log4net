@@ -18,7 +18,6 @@
 //
 #endregion
 
-using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Web;
@@ -59,7 +58,7 @@ internal sealed class AspNetRequestPatternConverter : AspNetPatternLayoutConvert
     {
       HttpRequest request = httpContext.Request;
       // Unvalidated reads past ASP.NET request validation, which throws on content like "<script>".
-      value = Option is null ? GetParameters(request) : request.Unvalidated[Option];
+      value = Option is null ? request.GetUnvalidatedValues() : request.GetUnvalidatedValue(Option);
     }
     catch (HttpException)
     {
@@ -70,24 +69,6 @@ internal sealed class AspNetRequestPatternConverter : AspNetPatternLayoutConvert
     }
 
     WriteObject(writer, loggingEvent.Repository, value);
-  }
-
-  /// <summary>
-  /// Rebuilds <see cref="HttpRequest.Params"/> from the unvalidated values.
-  /// </summary>
-  private static NameValueCollection GetParameters(HttpRequest request)
-  {
-    UnvalidatedRequestValues unvalidated = request.Unvalidated;
-    NameValueCollection parameters = new();
-    parameters.Add(unvalidated.QueryString);
-    parameters.Add(unvalidated.Form);
-    HttpCookieCollection cookies = unvalidated.Cookies;
-    foreach (string name in cookies.AllKeys)
-    {
-      parameters.Add(name, cookies[name]?.Value);
-    }
-    parameters.Add(request.ServerVariables);
-    return parameters;
   }
 }
 

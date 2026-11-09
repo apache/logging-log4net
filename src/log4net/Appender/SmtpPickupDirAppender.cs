@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 
-using System.Globalization;
 using System.Text;
 using log4net.Appender.Internal;
 using log4net.Core;
@@ -157,9 +156,8 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
 
         for (int i = 0; i < events.Length; i++)
         {
-          using StringWriter rendered = new(CultureInfo.InvariantCulture);
-          RenderLoggingEvent(rendered, events[i]);
-          writer.Write(ContentEscape.EscapeUnpairedSurrogates(rendered.ToString()));
+          // A CR without LF from content would get the mail refused by a strict MTA.
+          writer.Write(RenderLoggingEvent(events[i]).EscapeLoneCarriageReturns());
         }
 
         if (Layout?.Footer is string footer)

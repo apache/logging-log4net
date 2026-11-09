@@ -68,6 +68,9 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   /// </summary>
   internal Exception? SendException { get; set; }
 
+  /// <summary>How many of the next sends fail, as a server refuses an oversize mail.</summary>
+  internal int SendsToRefuse { get; set; }
+
   /// <summary>When set, every call that takes a token waits this long, honouring it.</summary>
   internal int DelayMillisPerCall { get; set; }
 
@@ -114,6 +117,11 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
     if (SendException is Exception exception)
     {
       throw exception;
+    }
+    if (SendsToRefuse > 0)
+    {
+      SendsToRefuse--;
+      throw new InvalidOperationException("552 5.3.4 Message size exceeds fixed limit");
     }
     SentMails.Add(new SentMail(message));
   }
@@ -171,6 +179,14 @@ internal sealed class SentMail
     TextPart? textPart = message.Body as TextPart;
     Body = textPart?.Text ?? string.Empty;
     BodyCharset = textPart?.ContentType.Charset;
+    BodyTransferEncoding = textPart?.ContentTransferEncoding ?? ContentEncoding.Default;
+
+    // SMTP line ends, as MailKit writes the message onto the wire.
+    FormatOptions wire = FormatOptions.Default.Clone();
+    wire.NewLineFormat = NewLineFormat.Dos;
+    using System.IO.MemoryStream raw = new();
+    message.WriteTo(wire, raw);
+    Raw = raw.ToArray();
   }
 
   internal string[] From { get; }
@@ -195,6 +211,24 @@ internal sealed class SentMail
   internal string Body { get; }
 
   internal string? BodyCharset { get; }
+
+  internal ContentEncoding BodyTransferEncoding { get; }
+
+  /// <summary>The whole message as written to the wire.</summary>
+  internal byte[] Raw { get; }
+
+  /// <summary>Tells whether the message holds a CR that is not followed by LF, which SMTP forbids.</summary>
+  internal bool HasBareCarriageReturn()
+  {
+    for (int i = 0; i < Raw.Length; i++)
+    {
+      if (Raw[i] == '\r' && (i + 1 == Raw.Length || Raw[i + 1] != '\n'))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
 
   private static string[] Addresses(InternetAddressList list)
     => list.Mailboxes.Select(m => m.Address).ToArray();

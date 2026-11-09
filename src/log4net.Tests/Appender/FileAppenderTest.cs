@@ -29,6 +29,7 @@ using log4net.Repository;
 using log4net.Config;
 using log4net.Util;
 using log4net.Core;
+using log4net.Layout;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -268,5 +269,35 @@ public sealed class FileAppenderTest
       lockingModel.OnClose();
       File.Delete(tempFile);
     }
+  }
+
+  /// <summary>
+  /// A best fit fallback wrote U+FF1C as <c>&lt;</c> after the layout had nothing to escape, so
+  /// content could close its event and add a forged one. The root declares the prefix for net462.
+  /// </summary>
+  [TestCase("iso-8859-1")]
+  [TestCase("windows-1252")]
+  public void ContentCannotForgeAnXmlEventThroughTheEncoding(string encodingName)
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "events.xml");
+    Encoding encoding = TestEncodings.Get(encodingName);
+    FileAppender appender = new() { File = file, Encoding = encoding, Layout = new XmlLayoutSchemaLog4J() };
+    appender.ActivateOptions();
+
+    appender.DoAppend(new LoggingEvent(new()
+    {
+      Level = Level.Warn,
+      LoggerName = "LoginService",
+      Message = "mallory\uff1c/log4j:message\uff1e\uff1c/log4j:event\uff1e"
+        + "\uff1clog4j:event logger=\uff02Audit\uff02\uff1e\uff1clog4j:message\uff1eforged"
+    }));
+    appender.Close();
+
+    XmlDocument document = new();
+    document.LoadXml($"<log xmlns:log4j=\"log4net\">{File.ReadAllText(file, encoding)}</log>");
+    Assert.That(document.SelectNodes("//*[local-name()='event']")!, Has.Count.EqualTo(1));
+    Assert.That(document.SelectSingleNode("//*[local-name()='message']")!.InnerText,
+      Does.StartWith(@"mallory\uff1c/log4j:message\uff1e"));
   }
 }
