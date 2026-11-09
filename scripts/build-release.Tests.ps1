@@ -59,8 +59,10 @@ Describe 'build-release.ps1' {
 
   It 'names the release version in the API reference title' {
     $result = Invoke-InScratchTree -Root $script:Root -Script 'build-release.ps1'
+    $props = [xml](Get-Content (Join-Path $PSScriptRoot '..' 'src' 'Directory.Build.props'))
+    $version = $props.SelectSingleNode('/Project/PropertyGroup/VersionPrefix').InnerText
 
-    @($result.Lines | Where-Object { $_ -like 'dotnet docfx *' })[0] | Should -BeLike '*_appTitle=Apache log4net 3.5.1 API Reference*'
+    @($result.Lines | Where-Object { $_ -like 'dotnet docfx *' })[0] | Should -BeLike "*_appTitle=Apache log4net $version API Reference*"
   }
 
   It 'asks for no tag when the API reference build fails' {
