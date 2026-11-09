@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="updated">
+  <description format="asciidoc">Bumped `MailKit` in `log4net.Ext.Mail` to 4.18.2, which brings `System.Security.Cryptography.Pkcs`
+  10.0.13 with the fix for CVE-2026-70162 (by @FreeAndNil)</description>
+</entry>
