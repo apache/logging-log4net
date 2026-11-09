@@ -3,4 +3,4 @@
          xmlns="https://logging.apache.org/xml/ns"
          xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
          date="2026-11-12"
-         version="3.5.1"/>
+         version="3.6.0"/>

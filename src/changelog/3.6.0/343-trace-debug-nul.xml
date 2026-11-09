@@ -4,7 +4,10 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
   <issue id="343" link="https://github.com/apache/logging-log4net/issues/343"/>
+  <issue id="355" link="https://github.com/apache/logging-log4net/pull/355"/>
   <description format="asciidoc">Escape NUL characters as `\0` in the message and category of
   `TraceAppender` and `DebugAppender`. The default listener ends in a native call that stops at the
-  first NUL, which cut the rest of the record off (fixed by @FreeAndNil)</description>
+  first NUL, which cut the rest of the record off
+  (ANT-2026-WERUEPPY,
+  fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/355[#355])</description>
 </entry>

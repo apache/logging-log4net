@@ -4,6 +4,7 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
   <issue id="344" link="https://github.com/apache/logging-log4net/issues/344"/>
+  <issue id="355" link="https://github.com/apache/logging-log4net/pull/355"/>
   <description format="asciidoc">Escape lone surrogates as `\uXXXX` in
   `AppenderSkeleton.RenderLoggingEvent`, for every appender that uses it, third-party ones included,
   and in the categories of `TraceAppender`, `DebugAppender` and `AspNetTraceAppender`.
@@ -11,6 +12,7 @@
   process restarted. Output changes where a lone surrogate used to become `?`, U+FFFD or pass through
   unchanged, and there is no option to turn it off. The XML layouts keep masking it as `?`. Layouts
   now receive a wrapping writer, and `WriteLine()` follows the `NewLine` of the application's writer.
-  `TraceAppender` and `DebugAppender` also report a failed flush instead of throwing (fixed by
-  @FreeAndNil)</description>
+  `TraceAppender` and `DebugAppender` also report a failed flush instead of throwing
+  (ANT-2026-K72QFN2N,
+  fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/355[#355])</description>
 </entry>

@@ -4,6 +4,9 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
   <issue id="344" link="https://github.com/apache/logging-log4net/issues/344"/>
+  <issue id="355" link="https://github.com/apache/logging-log4net/pull/355"/>
   <description format="asciidoc">Keep surrogate pairs whole when a maximum width cuts a pattern
-  conversion. The result can be one character shorter than the width (fixed by @FreeAndNil)</description>
+  conversion. The result can be one character shorter than the width
+  (ANT-2026-K72QFN2N,
+  fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/355[#355])</description>
 </entry>

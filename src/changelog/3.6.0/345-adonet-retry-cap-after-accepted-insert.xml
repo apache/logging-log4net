@@ -4,8 +4,10 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="fixed">
   <issue id="345" link="https://github.com/apache/logging-log4net/issues/345"/>
+  <issue id="355" link="https://github.com/apache/logging-log4net/pull/355"/>
   <description format="asciidoc">Give up retrying a failed `AdoNetAppender` batch only while the
   database has not accepted an insert. Five rejected events in a row discarded the rest of the batch.
-  A database that fails after start-up costs one round trip per event again (fixed by
-  @FreeAndNil)</description>
+  A database that fails after start-up costs one round trip per event again
+  (ANT-2026-WAJNPYNG,
+  fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/355[#355])</description>
 </entry>
