@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="356" link="https://github.com/apache/logging-log4net/issues/356"/>
+  <issue id="357" link="https://github.com/apache/logging-log4net/pull/357"/>
+  <description format="asciidoc">Keep location information, such as `%location`, `%method`, `%line` and `%stacktrace`, for
+  events logged through `ILog`. Once the JIT optimized a logging method of `LogImpl`, it could inline it or
+  call `Logger.Log` as a tail call, the `LogImpl` frame vanished from the stack, and the location came out
+  empty. Seen on Linux x64 with .NET 10. Wrappers that extend `LogImpl` or pass their own type as the stack
+  boundary need `MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization` on their logging methods
+  (fixed by @FreeAndNil in https://github.com/apache/logging-log4net/pull/357[#357])</description>
+</entry>

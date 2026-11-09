@@ -50,13 +50,14 @@ jobs:
           dotnet-version: 10
           dotnet-quality: ga
 
+      # Release, as shipped and as build-release.ps1 tests: only optimized code shows JIT effects (#356).
       - name: Build
         run: |
-            dotnet build ./src/log4net.sln
+            dotnet build ./src/log4net.sln -c Release
 
       - name: Test
         run: |
-            dotnet test ./src/log4net.sln
+            dotnet test ./src/log4net.sln -c Release --no-build
 
       # Recompiles both shipping projects through docfx with warnings as errors, so a broken doc
       # comment or cref fails the pull request rather than the release build. The script itself

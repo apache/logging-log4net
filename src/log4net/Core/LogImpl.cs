@@ -19,6 +19,7 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 using log4net.Repository;
 using log4net.Util;
@@ -165,6 +166,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <see cref="Debug(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Debug(object? message) 
     => Logger.Log(_thisDeclaringType, _levelDebug, message, null);
 
@@ -184,6 +186,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="Debug(object)"/>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Debug(object? message, Exception? exception) 
     => Logger.Log(_thisDeclaringType, _levelDebug, message, exception);
 
@@ -209,6 +212,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void DebugFormat(string format, params object?[]? args)
   {
     if (IsDebugEnabled)
@@ -240,6 +244,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void DebugFormat(string format, object? arg0)
   {
     if (IsDebugEnabled)
@@ -272,6 +277,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void DebugFormat(string format, object? arg0, object? arg1)
   {
     if (IsDebugEnabled)
@@ -305,6 +311,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void DebugFormat(string format, object? arg0, object? arg1, object? arg2)
   {
     if (IsDebugEnabled)
@@ -332,6 +339,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void DebugFormat(IFormatProvider? provider, string format, params object?[]? args)
   {
     if (IsDebugEnabled)
@@ -364,6 +372,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <see cref="Info(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Info(object? message) 
     => Logger.Log(_thisDeclaringType, _levelInfo, message, null);
 
@@ -383,6 +392,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="Info(object)"/>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Info(object? message, Exception? exception) 
     => Logger.Log(_thisDeclaringType, _levelInfo, message, exception);
 
@@ -408,6 +418,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void InfoFormat(string format, params object?[]? args)
   {
     if (IsInfoEnabled)
@@ -439,6 +450,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void InfoFormat(string format, object? arg0)
   {
     if (IsInfoEnabled)
@@ -471,6 +483,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void InfoFormat(string format, object? arg0, object? arg1)
   {
     if (IsInfoEnabled)
@@ -504,6 +517,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void InfoFormat(string format, object? arg0, object? arg1, object? arg2)
   {
     if (IsInfoEnabled)
@@ -531,6 +545,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void InfoFormat(IFormatProvider? provider, string format, params object?[]? args)
   {
     if (IsInfoEnabled)
@@ -563,6 +578,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <see cref="Warn(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Warn(object? message) 
     => Logger.Log(_thisDeclaringType, _levelWarn, message, null);
 
@@ -582,6 +598,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="Warn(object)"/>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Warn(object? message, Exception? exception) 
     => Logger.Log(_thisDeclaringType, _levelWarn, message, exception);
 
@@ -607,6 +624,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void WarnFormat(string format, params object?[]? args)
   {
     if (IsWarnEnabled)
@@ -638,6 +656,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void WarnFormat(string format, object? arg0)
   {
     if (IsWarnEnabled)
@@ -670,6 +689,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void WarnFormat(string format, object? arg0, object? arg1)
   {
     if (IsWarnEnabled)
@@ -703,6 +723,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void WarnFormat(string format, object? arg0, object? arg1, object? arg2)
   {
     if (IsWarnEnabled)
@@ -730,6 +751,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void WarnFormat(IFormatProvider? provider, string format, params object?[]? args)
   {
     if (IsWarnEnabled)
@@ -762,6 +784,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <see cref="Error(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Error(object? message)
     => Logger.Log(_thisDeclaringType, _levelError, message, null);
 
@@ -781,6 +804,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="Error(object)"/>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Error(object? message, Exception? exception) 
     => Logger.Log(_thisDeclaringType, _levelError, message, exception);
 
@@ -806,6 +830,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void ErrorFormat(string format, params object?[]? args)
   {
     if (IsErrorEnabled)
@@ -837,6 +862,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void ErrorFormat(string format, object? arg0)
   {
     if (IsErrorEnabled)
@@ -869,6 +895,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void ErrorFormat(string format, object? arg0, object? arg1)
   {
     if (IsErrorEnabled)
@@ -902,6 +929,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void ErrorFormat(string format, object? arg0, object? arg1, object? arg2)
   {
     if (IsErrorEnabled)
@@ -929,6 +957,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void ErrorFormat(IFormatProvider? provider, string format, params object?[]? args)
   {
     if (IsErrorEnabled)
@@ -961,6 +990,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// <see cref="Fatal(object,Exception)"/> form instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Fatal(object? message) 
     => Logger.Log(_thisDeclaringType, _levelFatal, message, null);
 
@@ -980,6 +1010,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// </para>
   /// </remarks>
   /// <seealso cref="Fatal(object)"/>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void Fatal(object? message, Exception? exception) 
     => Logger.Log(_thisDeclaringType, _levelFatal, message, exception);
 
@@ -1005,6 +1036,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void FatalFormat(string format, params object?[]? args)
   {
     if (IsFatalEnabled)
@@ -1036,6 +1068,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void FatalFormat(string format, object? arg0)
   {
     if (IsFatalEnabled)
@@ -1068,6 +1101,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void FatalFormat(string format, object? arg0, object? arg1)
   {
     if (IsFatalEnabled)
@@ -1101,6 +1135,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void FatalFormat(string format, object? arg0, object? arg1, object? arg2)
   {
     if (IsFatalEnabled)
@@ -1128,6 +1163,7 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// methods instead.
   /// </para>
   /// </remarks>
+  [MethodImpl(KeepCallerFrame)]
   public virtual void FatalFormat(IFormatProvider? provider, string format, params object?[]? args)
   {
     if (IsFatalEnabled)
@@ -1261,6 +1297,12 @@ public class LogImpl : LoggerWrapperImpl, ILog
   /// The fully qualified name of this declaring type not the type of any subclass.
   /// </summary>
   private static readonly Type _thisDeclaringType = typeof(LogImpl);
+
+  /// <summary>
+  /// Keeps each logging method's frame on the stack, as <see cref="LocationInfo"/> looks for it: an
+  /// optimizing JIT would otherwise inline the method or turn its call to <c>Logger.Log</c> into a tail call.
+  /// </summary>
+  internal const MethodImplOptions KeepCallerFrame = MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization;
 
   /// <summary>
   /// Used to ensure 'params object?[]?' arguments that receive a null are converted
