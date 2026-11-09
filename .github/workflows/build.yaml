@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ macos-latest, ubuntu-24.04, windows-latest ]
 
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -62,7 +62,7 @@ jobs:
       # comment or cref fails the pull request rather than the release build. The script itself
       # is covered on all three runners by the Pester suite below; the real docfx run needs one.
       - name: API reference
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-24.04'
         shell: pwsh
         run: ./scripts/build-api-docs.ps1
 
