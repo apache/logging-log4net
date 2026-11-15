@@ -19,5 +19,5 @@
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
 
 'Running Installer'
-winget install Microsoft.DotNet.SDK.8
-'dotnet 8 sdk installed'
+winget install Microsoft.DotNet.SDK.10
+'dotnet 10 sdk installed'

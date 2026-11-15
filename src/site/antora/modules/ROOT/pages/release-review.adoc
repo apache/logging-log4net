@@ -36,7 +36,7 @@ winget install -e --id Microsoft.PowerShell
 winget install -e --id GnuPG.Gpg4win
 winget install -e --id Slik.Subversion  # or any other subversion client
 winget install -e --id Mono.Mono
-winget install -e --id Microsoft.DotNet.SDK.8
+winget install -e --id Microsoft.DotNet.SDK.10
 ----
 After installation, verify that gpg and svn are in the path and add them when not.
 
@@ -48,7 +48,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 choco install gpg4win
 choco install sliksvn  # or any other subversion client
 choco install mono
-choco install dotnet-8.0-sdk
+choco install dotnet-10.0-sdk
 ----
 
 . Check out the release distribution
