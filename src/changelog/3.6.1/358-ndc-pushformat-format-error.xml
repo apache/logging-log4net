@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="358" link="https://github.com/apache/logging-log4net/issues/358"/>
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">`NDC.PushFormat` no longer throws when an argument fails to format, for
+  example an object whose `ToString()` throws or a date the culture's calendar cannot represent. It
+  pushes the same error text `ILog.InfoFormat` writes, so the `using` body still runs. A malformed
+  format string and null arguments no longer throw either; a null format still does
+  (ANT-2026-PZUYSLEY, fixed by @FreeAndNil)</description>
+</entry>

@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using log4net.Util;
 
 namespace log4net;
 
@@ -227,7 +228,11 @@ public static class NDC
   /// can be easily combined with the <see langword="using"/> keyword to scope the
   /// context.
   /// </para>
+  /// <para>
+  /// An argument that fails to format pushes an error text instead of throwing, as <see cref="ILog.InfoFormat(string, object?)"/> does.
+  /// </para>
   /// </remarks>
+  /// <exception cref="ArgumentNullException"><paramref name="messageFormat"/> is <see langword="null"/>.</exception>
   /// <example>
   /// Simple example of using the <see cref="Push"/> method with the <see langword="using"/> keyword.
   /// <code language="csharp">
@@ -239,7 +244,8 @@ public static class NDC
   /// </code>
   /// </example>
   /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
-  public static IDisposable PushFormat(string messageFormat, params object[] args) => Push(string.Format(messageFormat, args));
+  public static IDisposable PushFormat(string messageFormat, params object[] args)
+    => ThreadContext.Stacks["NDC"].Push(new SystemStringFormat(null, messageFormat.EnsureNotNull(), args).ToString());
 
   /// <summary>
   /// Removes the context information for this thread. It is
