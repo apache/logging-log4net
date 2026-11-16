@@ -1112,7 +1112,7 @@ public class LoggingEvent : ILog4NetSerializable
         else
         {
           // Very last resort
-          _data.ExceptionString = ExceptionObject.ToString();
+          _data.ExceptionString = ExceptionObject.ToStringSafe();
         }
       }
       else

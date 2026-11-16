@@ -32,6 +32,15 @@ namespace log4net.Tests.Core;
 [TestFixture]
 public sealed class LoggingEventTest
 {
+  /// <summary>
+  /// Without a repository the exception is rendered with its own <c>ToString()</c>, which may throw.
+  /// </summary>
+  [Test]
+  public void ExceptionStringWithoutRepositoryFallsBackWhenTheExceptionCannotRender()
+    => Assert.That(new LoggingEvent(null, null, "logger", Level.Error, "message", new Util.UnrenderableException())
+      .GetExceptionString(),
+      Is.EqualTo("log4net.Tests.Util.UnrenderableException: <Exception while rendering exception: System.InvalidOperationException>"));
+
   // net8 deprecates BinaryFormatter used in testing.
 #if NET462_OR_GREATER
   private static readonly DateTime _localTime

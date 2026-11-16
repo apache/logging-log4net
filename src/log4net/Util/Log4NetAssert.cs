@@ -114,4 +114,21 @@ internal static class Log4NetAssert
   [EditorBrowsable(EditorBrowsableState.Never)]
   public static bool IsFatal(this Exception exception)
     => exception is OutOfMemoryException or StackOverflowException;
+
+  /// <summary>
+  /// Renders <paramref name="exception"/> with its <c>ToString()</c>, or with the type names when that throws.
+  /// </summary>
+  /// <param name="exception">Exception</param>
+  /// <returns>The exception's text, or a fallback naming its type and the type it threw</returns>
+  internal static string ToStringSafe(this Exception exception)
+  {
+    try
+    {
+      return exception.ToString();
+    }
+    catch (Exception e) when (!e.IsFatal())
+    {
+      return $"{exception.GetType().FullName}: <Exception while rendering exception: {e.GetType().FullName}>";
+    }
+  }
 }

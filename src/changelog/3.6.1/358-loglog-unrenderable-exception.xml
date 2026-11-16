@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="358" link="https://github.com/apache/logging-log4net/issues/358"/>
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">Keep a logging call from throwing when an exception cannot render itself.
+  The internal log wrote `exception.ToString()` unguarded, so an exception whose `ToString()` threw
+  again escaped every catch block that reports through it, and `ILog.InfoFormat` and the like threw
+  into the application. The internal log, the error text of a failed rendering and the last-resort
+  exception text of `LoggingEvent` now fall back to the type names (ANT-2026-F4RWPVSV, fixed by
+  @FreeAndNil)</description>
+</entry>

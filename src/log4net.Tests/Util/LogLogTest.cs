@@ -24,6 +24,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using log4net.Config;
+using log4net.Layout;
+using log4net.Repository;
+using log4net.Tests.Appender;
 using log4net.Util;
 using NUnit.Framework;
 
@@ -76,6 +80,60 @@ public class LogLogTest
     {
       LogLog.EmitInternalMessages = true;
     }
+  }
+
+  /// <summary>
+  /// An exception whose own <c>ToString()</c> throws is written as a fallback text, not rethrown.
+  /// </summary>
+  [TestCase(nameof(LogLog.Warn))]
+  [TestCase(nameof(LogLog.Debug))]
+  [TestCase(nameof(LogLog.Error))]
+  [NonParallelizable]
+  public void UnrenderableExceptionIsNotRethrown(string method)
+  {
+    TraceListenerRecorder recorder = new();
+    Trace.Listeners.Add(recorder);
+    bool internalDebugging = LogLog.InternalDebugging;
+    try
+    {
+      // The exception text is only rendered when internal messages are emitted, so these reach the console.
+      LogLog.InternalDebugging = true;
+      Action<Type, string, Exception?> log = method switch
+      {
+        nameof(LogLog.Debug) => LogLog.Debug,
+        nameof(LogLog.Warn) => LogLog.Warn,
+        _ => LogLog.Error
+      };
+      Assert.That(() => log(GetType(), "message", new UnrenderableException()), Throws.Nothing);
+    }
+    finally
+    {
+      LogLog.InternalDebugging = internalDebugging;
+      Trace.Listeners.Remove(recorder);
+    }
+
+    Assert.That(recorder.Lines, Has.Some.EqualTo(
+      "log4net.Tests.Util.UnrenderableException: <Exception while rendering exception: System.InvalidOperationException>"));
+  }
+
+  /// <summary>
+  /// A format argument whose <c>ToString()</c> throws an exception that cannot render itself used to
+  /// escape <see cref="ILog.InfoFormat(string, object?)"/>, twice because the error handler reports once.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void FormatArgumentThrowingAnUnrenderableExceptionDoesNotThrow()
+  {
+    StringAppender appender = new() { Layout = new PatternLayout("%message%newline") };
+    ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(repository, appender);
+    ILog log = LogManager.GetLogger(repository.Name, "test");
+
+    // The defect needs internal messages emitted, so the warnings reach the console.
+    Assert.That(() => log.InfoFormat("{0}", new ThrowsUnrenderableException()), Throws.Nothing);
+    Assert.That(() => log.InfoFormat("{0}", new ThrowsUnrenderableException()), Throws.Nothing);
+    Assert.That(appender.GetString().Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries),
+      Has.Exactly(2).StartsWith("<log4net.Error>"));
   }
 
   /// <summary>
@@ -152,4 +210,40 @@ internal sealed class TraceListenerCounter : TraceListener
 
   /// <inheritdoc/>
   public int Count { get; private set; }
+}
+
+/// <summary>
+/// Records the lines written to a <see cref="TraceListener"/>.
+/// </summary>
+internal sealed class TraceListenerRecorder : TraceListener
+{
+  /// <inheritdoc/>
+  public override void Write(string? message) => Lines.Add(message ?? string.Empty);
+
+  /// <inheritdoc/>
+  public override void WriteLine(string? message) => Write(message);
+
+  /// <summary>
+  /// The lines written so far.
+  /// </summary>
+  public List<string> Lines { get; } = [];
+}
+
+/// <summary>
+/// An exception whose <c>ToString()</c> throws.
+/// </summary>
+public sealed class UnrenderableException : Exception
+{
+  /// <inheritdoc/>
+  public override string ToString() => throw new InvalidOperationException("ToString failed");
+}
+
+/// <summary>
+/// An object whose <c>ToString()</c> throws an exception naming the object itself, so that exception's
+/// <c>Message</c>, and with it its own <c>ToString()</c>, throws again.
+/// </summary>
+internal sealed class ThrowsUnrenderableException
+{
+  /// <inheritdoc/>
+  public override string ToString() => throw new ArgumentOutOfRangeException("value", this, "unsupported");
 }
