@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="323" link="https://github.com/apache/logging-log4net/issues/323"/>
+  <issue id="362" link="https://github.com/apache/logging-log4net/issues/362"/>
+  <issue id="365" link="https://github.com/apache/logging-log4net/pull/365"/>
+  <description format="asciidoc">A second fix of a buffered event, such as `All` in an appender behind
+  a `Partial` buffer, no longer captures the identity, location, thread name and properties of the
+  thread that flushes the buffer. Off the thread delivering the event, a later fix captures only the
+  message, exception text, domain and user name; it captures no properties at all, not even the
+  event's own, and `LoggingEvent.Fix` does not report the identity, location, thread name and
+  properties it left out. This also applies to a second fix outside a logging call, for example
+  `Fix = Partial` then `Fix = All` on the same thread. During a fix the message is rendered directly,
+  without calling an override of `RenderedMessage` (ANT-2026-BH0P93PP, fixed by @FreeAndNil)</description>
+</entry>

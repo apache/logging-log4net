@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="362" link="https://github.com/apache/logging-log4net/issues/362"/>
+  <issue id="365" link="https://github.com/apache/logging-log4net/pull/365"/>
+  <description format="asciidoc">A buffering appender that fixes less than `All`, such as
+  `BufferingForwardingAppender` with `Partial`, no longer hides the identity, location, thread name,
+  domain, message and exception text from the appenders after it in the same logging call. The
+  thread delivering the event may now fill in what the fix left out; once the delivery ended, the
+  event stays locked as before (ANT-2026-JY0R8A0K, fixed by @FreeAndNil)</description>
+</entry>

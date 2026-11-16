@@ -480,7 +480,7 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (_data.LocationInfo is null && _cacheUpdatable)
+      if (_data.LocationInfo is null && CanCache)
       {
         _data.LocationInfo = new(_callerStackBoundaryDeclaringType);
       }
@@ -570,29 +570,34 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (_data.Message is null && _cacheUpdatable)
+      if (_data.Message is null && CanCache)
       {
-        if (MessageObject is null)
-        {
-          _data.Message = string.Empty;
-        }
-        else if (MessageObject is string s)
-        {
-          _data.Message = s;
-        }
-        else if (Repository is not null)
-        {
-          _data.Message = Repository.RendererMap.FindAndRender(MessageObject);
-        }
-        else
-        {
-          // Very last resort
-          _data.Message = MessageObject.ToString();
-        }
+        _data.Message = RenderMessage();
       }
 
       return _data.Message;
     }
+  }
+
+  /// <summary>
+  /// Renders <see cref="MessageObject"/>, the message text of this event.
+  /// </summary>
+  private string? RenderMessage()
+  {
+    if (MessageObject is null)
+    {
+      return string.Empty;
+    }
+    if (MessageObject is string s)
+    {
+      return s;
+    }
+    if (Repository is not null)
+    {
+      return Repository.RendererMap.FindAndRender(MessageObject);
+    }
+    // Very last resort
+    return MessageObject.ToString();
   }
 
   /// <summary>
@@ -652,7 +657,7 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (_data.ThreadName is null && _cacheUpdatable)
+      if (_data.ThreadName is null && CanCache)
       {
         _data.ThreadName = ReviseThreadName(Thread.CurrentThread.Name);
       }
@@ -899,7 +904,7 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (_data.Identity is null && _cacheUpdatable)
+      if (_data.Identity is null && CanCache)
       {
         try
         {
@@ -944,7 +949,7 @@ public class LoggingEvent : ILog4NetSerializable
   {
     get
     {
-      if (_data.Domain is null && _cacheUpdatable)
+      if (_data.Domain is null && CanCache)
       {
         _data.Domain = SystemInfo.ApplicationFriendlyName;
       }
@@ -1100,28 +1105,25 @@ public class LoggingEvent : ILog4NetSerializable
   /// </remarks>
   public string? GetExceptionString()
   {
-    if (_data.ExceptionString is null && _cacheUpdatable)
+    if (_data.ExceptionString is null && CanCache)
     {
-      if (ExceptionObject is not null)
-      {
-        if (Repository is not null)
-        {
-          // Render exception using the repositories renderer map
-          _data.ExceptionString = Repository.RendererMap.FindAndRender(ExceptionObject);
-        }
-        else
-        {
-          // Very last resort
-          _data.ExceptionString = ExceptionObject.ToStringSafe();
-        }
-      }
-      else
-      {
-        _data.ExceptionString = string.Empty;
-      }
+      _data.ExceptionString = RenderException();
     }
 
     return _data.ExceptionString;
+  }
+
+  /// <summary>
+  /// Renders <see cref="ExceptionObject"/>, or returns an empty string when there is none.
+  /// </summary>
+  private string? RenderException()
+  {
+    if (ExceptionObject is null)
+    {
+      return string.Empty;
+    }
+    // Render exception using the repositories renderer map, or as a very last resort by itself
+    return Repository is not null ? Repository.RendererMap.FindAndRender(ExceptionObject) : ExceptionObject.ToStringSafe();
   }
 
   /// <summary>
@@ -1140,15 +1142,19 @@ public class LoggingEvent : ILog4NetSerializable
     // determine the flags that we are actually fixing
     FixFlags updateFlags = (flags ^ _fixFlags) & flags;
 
+    // Off the delivering thread the thread-bound fields would be this thread's, so they stay empty.
+    bool own = CanCache;
+    if (!own)
+    {
+      updateFlags &= ~(FixFlags.Identity | FixFlags.LocationInfo | FixFlags.ThreadName | FixFlags.Properties);
+    }
+
     if (updateFlags > 0)
     {
-      // Unlocked only while there is something to fix, so a redundant call cannot reopen the cache.
-      _cacheUpdatable = true;
-
       if ((updateFlags & FixFlags.Message) != 0)
       {
-        // Force the message to be rendered
-        _ = RenderedMessage;
+        // Written directly: the getter is locked off the delivering thread
+        _data.Message ??= RenderMessage();
 
         _fixFlags |= FixFlags.Message;
       }
@@ -1180,7 +1186,7 @@ public class LoggingEvent : ILog4NetSerializable
       if ((updateFlags & FixFlags.Domain) != 0)
       {
         // Grab the domain name
-        _ = Domain;
+        _data.Domain ??= SystemInfo.ApplicationFriendlyName;
 
         _fixFlags |= FixFlags.Domain;
       }
@@ -1196,7 +1202,7 @@ public class LoggingEvent : ILog4NetSerializable
       if ((updateFlags & FixFlags.Exception) != 0)
       {
         // Force the exception text to be loaded
-        _ = GetExceptionString();
+        _data.ExceptionString ??= RenderException();
 
         _fixFlags |= FixFlags.Exception;
       }
@@ -1213,7 +1219,7 @@ public class LoggingEvent : ILog4NetSerializable
     // not asked for. Outside the block above, which is skipped when there is nothing to fix while
     // the cache is locked all the same. FixFlags.UserName stays unset: the flags report what the
     // caller requested.
-    if (_data.UserName is null && IsImpersonating())
+    if (own && _data.UserName is null && IsImpersonating())
     {
       _data.UserName = TryGetCurrentUserName() ?? SystemInfo.NotAvailableText;
     }
@@ -1266,7 +1272,7 @@ public class LoggingEvent : ILog4NetSerializable
 
   private void CacheProperties()
   {
-    if (_data.Properties is null && _cacheUpdatable)
+    if (_data.Properties is null && CanCache)
     {
       if (_compositeProperties is null)
       {
@@ -1447,6 +1453,33 @@ public class LoggingEvent : ILog4NetSerializable
   /// changes in the caching strategy.
   /// </remarks>
   private volatile bool _cacheUpdatable = true;
+
+  /// <summary>
+  /// The thread delivering this event to the appenders of one logging call, 0 when nobody does.
+  /// </summary>
+  /// <remarks>
+  /// That thread may still fill the cache after a fix, so later appenders of the same call see every
+  /// field; written only by the thread that entered, so no other thread ever matches.
+  /// </remarks>
+  private int _deliveryThreadId;
+
+  /// <summary>
+  /// Whether the calling thread may fill the cache: the event is not fixed yet, or it delivers it.
+  /// </summary>
+  private bool CanCache => _cacheUpdatable || _deliveryThreadId == Environment.CurrentManagedThreadId;
+
+  /// <summary>
+  /// Marks the calling thread as delivering this event, unless it is fixed or delivered already.
+  /// </summary>
+  /// <returns><see langword="true"/> when the caller has to call <see cref="ExitDelivery"/>.</returns>
+  internal bool TryEnterDelivery()
+    => _cacheUpdatable
+      && Interlocked.CompareExchange(ref _deliveryThreadId, Environment.CurrentManagedThreadId, 0) == 0;
+
+  /// <summary>
+  /// Ends the delivery started by <see cref="TryEnterDelivery"/>.
+  /// </summary>
+  internal void ExitDelivery() => _deliveryThreadId = 0;
 
   /// <summary>
   /// The key into the Properties map for the host name value.
