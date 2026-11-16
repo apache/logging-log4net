@@ -17,9 +17,11 @@
 //
 #endregion
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Layout.Pattern;
 
@@ -91,26 +93,15 @@ internal sealed class ExceptionPatternConverter : PatternLayoutConverter
   {
     if (loggingEvent.ExceptionObject is not null && !string.IsNullOrEmpty(Option))
     {
-      switch (Option!.ToLowerInvariant())
+      try
       {
-        case "message":
-          WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Message);
-          break;
-        case "source":
-          WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.Source);
-          break;
-        case "stacktrace":
-          WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.StackTrace);
-          break;
-        case "targetsite":
-          WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.TargetSite);
-          break;
-        case "helplink":
-          WriteObject(writer, loggingEvent.Repository, loggingEvent.ExceptionObject.HelpLink);
-          break;
-        default:
-          // do not output SystemInfo.NotAvailableText
-          break;
+        WriteMember(writer, loggingEvent, loggingEvent.ExceptionObject);
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        // An application's exception may throw from its own members; the rest of the record still follows.
+        LogLog.Error(_declaringType, $"Exception reading the {Option} of an exception", e);
+        writer.Write($"<log4net.Error>Exception reading {Option}</log4net.Error>");
       }
     }
     else
@@ -126,4 +117,34 @@ internal sealed class ExceptionPatternConverter : PatternLayoutConverter
       }
     }
   }
+
+  /// <summary>
+  /// Writes the exception member that <see cref="PatternConverter.Option"/> names.
+  /// </summary>
+  private void WriteMember(TextWriter writer, LoggingEvent loggingEvent, Exception exception)
+  {
+    switch (Option!.ToLowerInvariant())
+    {
+      case "message":
+        WriteObject(writer, loggingEvent.Repository, exception.Message);
+        break;
+      case "source":
+        WriteObject(writer, loggingEvent.Repository, exception.Source);
+        break;
+      case "stacktrace":
+        WriteObject(writer, loggingEvent.Repository, exception.StackTrace);
+        break;
+      case "targetsite":
+        WriteObject(writer, loggingEvent.Repository, exception.TargetSite);
+        break;
+      case "helplink":
+        WriteObject(writer, loggingEvent.Repository, exception.HelpLink);
+        break;
+      default:
+        // do not output SystemInfo.NotAvailableText
+        break;
+    }
+  }
+
+  private static readonly Type _declaringType = typeof(ExceptionPatternConverter);
 }

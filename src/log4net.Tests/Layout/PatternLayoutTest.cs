@@ -462,6 +462,26 @@ public class PatternLayoutTest
 #endif
 
   /// <summary>
+  /// An exception member that throws is written as an error text, and the rest of the record follows.
+  /// </summary>
+  [TestCase("source")]
+  [TestCase("message")]
+  [TestCase("helplink")]
+  [TestCase("stacktrace")]
+  public void ExceptionMemberThatThrowsIsWrittenAsAnErrorText(string option)
+  {
+    PatternLayout layout = NewPatternLayout("%exception{" + option + "}|end");
+    LoggingEvent loggingEvent = new(GetType(), null, "test", Level.Error, "m", new MembersThrowException());
+    using StringWriter writer = new();
+
+    // The failure is reported through the internal log.
+    LogLog.ExecuteWithoutEmittingInternalMessages(
+      () => Assert.That(() => layout.Format(writer, loggingEvent), Throws.Nothing));
+
+    Assert.That(writer.ToString(), Is.EqualTo($"<log4net.Error>Exception reading {option}</log4net.Error>|end"));
+  }
+
+  /// <summary>
   /// Converter that treats the message of an event as the name a <see cref="NamedPatternConverter"/>
   /// works on, so that the precision handling can be exercised with arbitrary input.
   /// </summary>
@@ -470,5 +490,31 @@ public class PatternLayoutTest
   {
     /// <inheritdoc/>
     protected override string GetFullyQualifiedName(LoggingEvent loggingEvent) => loggingEvent.MessageObject?.ToString() ?? string.Empty;
+  }
+}
+
+/// <summary>
+/// An exception whose overridable members throw.
+/// </summary>
+public sealed class MembersThrowException : Exception
+{
+  /// <inheritdoc/>
+  public override string Message => throw new InvalidOperationException("Message failed");
+
+  /// <inheritdoc/>
+  public override string? Source
+  {
+    get => throw new InvalidOperationException("Source failed");
+    set { }
+  }
+
+  /// <inheritdoc/>
+  public override string? StackTrace => throw new InvalidOperationException("StackTrace failed");
+
+  /// <inheritdoc/>
+  public override string? HelpLink
+  {
+    get => throw new InvalidOperationException("HelpLink failed");
+    set { }
   }
 }
