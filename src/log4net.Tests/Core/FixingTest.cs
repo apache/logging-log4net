@@ -27,6 +27,9 @@ using System.Threading.Tasks;
 
 using log4net.Appender;
 using log4net.Core;
+using log4net.Filter;
+using log4net.Layout;
+using log4net.Tests.Appender;
 using log4net.Util;
 
 using NUnit.Framework;
@@ -560,8 +563,9 @@ public class FixingTest
     Assert.That(data.ThreadName, Is.Null);
     Assert.That(data.Identity, Is.Null);
     Assert.That(data.LocationInfo, Is.Null);
-    Assert.That(data.Properties, Is.Null);
-    Assert.That(fixFlags, Is.EqualTo(FixFlags.Message | FixFlags.UserName | FixFlags.Domain | FixFlags.Exception));
+    Assert.That(data.Properties, Is.Not.Null);
+    Assert.That(data.Properties!.Contains("who"), Is.False);
+    Assert.That(fixFlags, Is.EqualTo(FixFlags.Message | FixFlags.UserName | FixFlags.Domain | FixFlags.Exception | FixFlags.Properties));
   }
 
   /// <summary>
@@ -629,6 +633,294 @@ public class FixingTest
   }
 
   /// <summary>
+  /// A buffer without properties used to show the flushing thread's context to the target.
+  /// </summary>
+  [Test]
+  public void ATargetBehindABufferWithoutPropertiesDoesNotSeeTheFlushingThreadsContext()
+  {
+    List<object?> seen = [];
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.None, 2, new Probe(e => seen.Add(e.LookupProperty("who")))));
+
+    LogAsUsers(logger);
+
+    Assert.That(seen, Is.EqualTo(new object?[] { null, null, "user3" }));
+  }
+
+  /// <summary>
+  /// <see cref="FixFlags.Mdc"/> and <see cref="FixFlags.Ndc"/> fix the properties, so each event keeps its own value.
+  /// </summary>
+  [TestCase(FixFlags.Mdc)]
+  [TestCase(FixFlags.Ndc)]
+  public void MdcAndNdcFixTheProperties(FixFlags bufferFix)
+  {
+    List<object?> seen = [];
+    ILogger logger = CreateLogger(CreateBuffer(bufferFix, 2, new Probe(e => seen.Add(e.LookupProperty("who")))));
+
+    LogAsUsers(logger);
+
+    Assert.That(seen, Is.EqualTo(new object?[] { "user1", "user2", "user3" }));
+  }
+
+  /// <summary>
+  /// Off the delivering thread the event's own and the global properties stay visible.
+  /// </summary>
+  [Test]
+  public void EventAndGlobalPropertiesStayVisibleOffTheDeliveringThread()
+  {
+    Probe probe = new();
+    ILogger logger = CreateLogger(new Probe(e => e.Properties["own"] = "mine"), CreateBuffer(FixFlags.None), probe);
+    GlobalContext.Properties["global"] = "everyone";
+    try
+    {
+      RunAs("Alice", () => Log(logger));
+      object? own = null, global = null;
+
+      RunAs("Bob", () =>
+      {
+        own = probe.Events[0].LookupProperty("own");
+        global = probe.Events[0].LookupProperty("global");
+      });
+
+      Assert.That(own, Is.EqualTo("mine"));
+      Assert.That(global, Is.EqualTo("everyone"));
+    }
+    finally
+    {
+      GlobalContext.Properties.Remove("global");
+    }
+  }
+
+  /// <summary>
+  /// A later appender on the delivering thread still sees the thread and logical-thread properties.
+  /// </summary>
+  [Test]
+  public void ALaterAppenderDuringTheDeliverySeesTheThreadProperties()
+  {
+    object? who = null, logicalWho = null;
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.None), new Probe(e =>
+    {
+      who = e.LookupProperty("who");
+      logicalWho = e.LookupProperty("logical-who");
+    }));
+
+    RunAs("Alice", () =>
+    {
+      ThreadContext.Properties["who"] = "alice";
+      LogicalThreadContext.Properties["logical-who"] = "alice";
+      Log(logger);
+    });
+
+    Assert.That(who, Is.EqualTo("alice"));
+    Assert.That(logicalWho, Is.EqualTo("alice"));
+  }
+
+  /// <summary>
+  /// A key written through <see cref="LoggingEvent.GetProperties"/> off the delivering thread reads back.
+  /// </summary>
+  [Test]
+  public void AKeyWrittenThroughGetPropertiesOffTheDeliveringThreadReadsBack()
+  {
+    StringAppender xml = new() { Layout = new XmlLayoutSchemaLog4J() };
+    Probe probe = new();
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.None, 2, xml, probe));
+    LogAsUsers(logger);
+    object? value = null;
+
+    RunAs("Bob", () =>
+    {
+      probe.Events[0].GetProperties()["written"] = "back";
+      value = probe.Events[0].GetProperties()["written"];
+    });
+
+    Assert.That(value, Is.EqualTo("back"));
+    Assert.That(xml.GetString().Split(["log4jmachinename"], StringSplitOptions.None), Has.Length.EqualTo(4));
+  }
+
+  /// <summary>
+  /// Off the delivering thread the properties still hold the fixed identity and user name keys.
+  /// </summary>
+  [Test]
+  public void TheIdentityAndUserNameKeysStayVisibleOffTheDeliveringThread()
+  {
+    Probe probe = new();
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.Identity | FixFlags.UserName | FixFlags.Message), probe);
+    RunAs("Alice", () => Log(logger));
+    PropertiesDictionary? properties = null;
+
+    RunAs("Bob", () => properties = probe.Events[0].GetProperties());
+
+    Assert.That(properties![LoggingEvent.IdentityProperty], Is.EqualTo("Alice"));
+    Assert.That(properties.Contains(LoggingEvent.UserNameProperty), Is.True);
+  }
+
+  /// <summary>
+  /// A later fix off the delivering thread keeps the event's own and the global properties, not its own context.
+  /// </summary>
+  [TestCase(FixFlags.Mdc)]
+  [TestCase(FixFlags.All)]
+  public void ALaterFixOffTheDeliveringThreadKeepsEventAndGlobalProperties(FixFlags flags)
+  {
+    Probe probe = new();
+    ILogger logger = CreateLogger(new Probe(e => e.Properties["own"] = "mine"), CreateBuffer(FixFlags.None), probe);
+    GlobalContext.Properties["global"] = "everyone";
+    try
+    {
+      RunAs("Alice", () => Log(logger));
+      LoggingEventData data = default;
+      FixFlags fixFlags = FixFlags.None;
+
+      RunAs("Bob", () =>
+      {
+        ThreadContext.Properties["who"] = "flusher";
+        probe.Events[0].Fix = flags;
+        data = probe.Events[0].GetLoggingEventData(FixFlags.None);
+        fixFlags = probe.Events[0].Fix;
+      });
+
+      Assert.That(fixFlags & FixFlags.Properties, Is.EqualTo(FixFlags.Properties));
+      Assert.That(data.Properties?["own"], Is.EqualTo("mine"));
+      Assert.That(data.Properties?["global"], Is.EqualTo("everyone"));
+      Assert.That(data.Properties?.Contains("who"), Is.False);
+    }
+    finally
+    {
+      GlobalContext.Properties.Remove("global");
+    }
+  }
+
+  /// <summary>
+  /// A property filter on the target used to match the flushing thread's value for every buffered event.
+  /// </summary>
+  [Test]
+  public void APropertyFilterBehindABufferDoesNotMatchTheFlushingThreadsValue()
+  {
+    List<string?> accepted = [];
+    Probe target = new(e => accepted.Add(e.RenderedMessage));
+    target.AddFilter(new PropertyFilter { Key = "who", StringToMatch = "user3" });
+    target.AddFilter(new DenyAllFilter());
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.None, 2, target));
+
+    LogAsUsers(logger);
+
+    Assert.That(accepted, Is.EqualTo(new[] { "user3" }));
+  }
+
+  /// <summary>
+  /// Another thread's fix during the delivery must not take the properties away from the delivering thread.
+  /// </summary>
+  [Test]
+  public void AnotherThreadsFixDuringTheDeliveryLeavesThePropertiesToTheDeliveringThread()
+  {
+    object? who = null;
+    LoggingEventData data = default;
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.None), new Probe(e =>
+    {
+      Thread other = new(() =>
+      {
+        ThreadContext.Properties["who"] = "bob";
+        e.Fix = FixFlags.All;
+      })
+      { IsBackground = true };
+      other.Start();
+      Assert.That(other.Join(TimeSpan.FromSeconds(10)), Is.True);
+    }), new Probe(e =>
+    {
+      who = e.LookupProperty("who");
+      e.Fix = FixFlags.All;
+      data = e.GetLoggingEventData(FixFlags.None);
+    }));
+
+    RunAs("Alice", () =>
+    {
+      ThreadContext.Properties["who"] = "alice";
+      Log(logger);
+    });
+
+    Assert.That(who, Is.EqualTo("alice"));
+    Assert.That(data.Properties?["who"], Is.EqualTo("alice"));
+  }
+
+  /// <summary>
+  /// The off-thread snapshot resolves an <see cref="IFixingRequired"/> value and takes no stack of the fixing thread.
+  /// </summary>
+  [Test]
+  public void TheOffThreadSnapshotResolvesFixingRequiredValuesAndTakesNoThreadStack()
+  {
+    Probe probe = new();
+    ILogger logger = CreateLogger(new Probe(e => e.Properties["own"] = new FixedOnRequest()), CreateBuffer(FixFlags.None), probe);
+    RunAs("Alice", () => Log(logger));
+    LoggingEventData data = default;
+
+    RunAs("Bob", () =>
+    {
+      using (ThreadContext.Stacks["NDC"].Push("flusher"))
+      {
+        probe.Events[0].Fix = FixFlags.All;
+      }
+      data = probe.Events[0].GetLoggingEventData(FixFlags.None);
+    });
+
+    Assert.That(data.Properties?["own"], Is.EqualTo("fixed"));
+    Assert.That(data.Properties?.Contains("NDC"), Is.False);
+  }
+
+  /// <summary>
+  /// A key written through <see cref="LoggingEvent.GetProperties"/> before an off-thread fix lands in the snapshot.
+  /// </summary>
+  [Test]
+  public void AKeyWrittenThroughGetPropertiesBeforeAnOffThreadFixIsKept()
+  {
+    Probe probe = new();
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.None), probe);
+    RunAs("Alice", () => Log(logger));
+    LoggingEventData data = default;
+
+    RunAs("Bob", () =>
+    {
+      probe.Events[0].GetProperties()["written"] = "before";
+      probe.Events[0].Fix = FixFlags.All;
+      data = probe.Events[0].GetLoggingEventData(FixFlags.None);
+    });
+
+    Assert.That(data.Properties?["written"], Is.EqualTo("before"));
+  }
+
+  /// <summary>
+  /// Once the logging call returned, an event fixed without properties no longer shows the logging thread's context.
+  /// </summary>
+  [Test]
+  public void AfterTheLoggingCallTheLoggingThreadNoLongerSeesItsContextInAnEventFixedWithoutProperties()
+  {
+    MemoryAppender memory = new() { Fix = FixFlags.None };
+    ILogger logger = CreateLogger(CreateBuffer(FixFlags.None), memory);
+    object? who = "unset";
+
+    RunAs("Alice", () =>
+    {
+      ThreadContext.Properties["who"] = "alice";
+      Log(logger);
+      who = memory.GetEvents()[0].LookupProperty("who");
+    });
+
+    Assert.That(who, Is.Null);
+  }
+
+  /// <summary>
+  /// Logs one event each as user1, user2 and user3, each with its name in <c>who</c>.
+  /// </summary>
+  private static void LogAsUsers(ILogger logger)
+  {
+    foreach (string user in new[] { "user1", "user2", "user3" })
+    {
+      RunAs(user, () =>
+      {
+        ThreadContext.Properties["who"] = user;
+        Log(logger, user);
+      });
+    }
+  }
+
+  /// <summary>
   /// Logs <paramref name="message"/> with an exception through <paramref name="logger"/>.
   /// </summary>
   private static void Log(ILogger logger, string message = "message")
@@ -684,6 +976,13 @@ public class FixingTest
     }
     buffer.ActivateOptions();
     return buffer;
+  }
+
+  /// <summary>Resolves to "fixed" when the event is fixed.</summary>
+  private sealed class FixedOnRequest : IFixingRequired
+  {
+    /// <inheritdoc/>
+    public object? GetFixedObject() => "fixed";
   }
 
   /// <summary>A message whose rendering signals <paramref name="rendering"/> and waits for <paramref name="release"/>.</summary>

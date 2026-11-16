@@ -1146,7 +1146,7 @@ public class LoggingEvent : ILog4NetSerializable
     bool own = CanCache;
     if (!own)
     {
-      updateFlags &= ~(FixFlags.Identity | FixFlags.LocationInfo | FixFlags.ThreadName | FixFlags.Properties);
+      updateFlags &= ~(FixFlags.Identity | FixFlags.LocationInfo | FixFlags.ThreadName);
     }
 
     if (updateFlags > 0)
@@ -1207,11 +1207,21 @@ public class LoggingEvent : ILog4NetSerializable
         _fixFlags |= FixFlags.Exception;
       }
 
-      if ((updateFlags & FixFlags.Properties) != 0)
+      // Mdc and Ndc are thread properties too; only Properties is reported.
+      if ((updateFlags & (FixFlags.Properties | FixFlags.Mdc | FixFlags.Ndc)) != 0)
       {
-        CacheProperties();
-
-        _fixFlags |= FixFlags.Properties;
+        if (own)
+        {
+          _data.Properties ??= CreateSnapshot(_compositeProperties ??= CreateCompositeProperties(includeThreadContexts: true));
+          _fixFlags |= FixFlags.Properties;
+        }
+        else if (_deliveryThreadId == 0)
+        {
+          // Nobody delivers the event any more: keep what does not depend on a thread.
+          _data.Properties ??= CreateSnapshot(_detachedProperties ?? CreateCompositeProperties(includeThreadContexts: false));
+          _detachedProperties = null;
+          _fixFlags |= FixFlags.Properties;
+        }
       }
     }
 
@@ -1228,7 +1238,10 @@ public class LoggingEvent : ILog4NetSerializable
     _cacheUpdatable = false;
   }
 
-  private void CreateCompositeProperties()
+  /// <summary>
+  /// Composes the event's, the calling thread's (when <paramref name="includeThreadContexts"/>) and the global properties.
+  /// </summary>
+  private CompositeProperties CreateCompositeProperties(bool includeThreadContexts)
   {
     CompositeProperties compositeProperties = new();
 
@@ -1236,13 +1249,16 @@ public class LoggingEvent : ILog4NetSerializable
     {
       compositeProperties.Add(_eventProperties);
     }
-    if (LogicalThreadContext.Properties.GetProperties(false) is PropertiesDictionary logicalThreadProperties)
+    if (includeThreadContexts)
     {
-      compositeProperties.Add(logicalThreadProperties);
-    }
-    if (ThreadContext.Properties.GetProperties(false) is PropertiesDictionary threadProperties)
-    {
-      compositeProperties.Add(threadProperties);
+      if (LogicalThreadContext.Properties.GetProperties(false) is { } logicalThreadProperties)
+      {
+        compositeProperties.Add(logicalThreadProperties);
+      }
+      if (ThreadContext.Properties.GetProperties(false) is { } threadProperties)
+      {
+        compositeProperties.Add(threadProperties);
+      }
     }
 
     // TODO: Add Repository Properties
@@ -1267,42 +1283,42 @@ public class LoggingEvent : ILog4NetSerializable
     }
 
     compositeProperties.Add(GlobalContext.Properties.GetReadOnlyProperties());
-    _compositeProperties = compositeProperties;
+    return compositeProperties;
   }
 
-  private void CacheProperties()
+  /// <summary>
+  /// The properties a reader on the calling thread sees: without any thread context off the delivering thread.
+  /// </summary>
+  private CompositeProperties ReadableProperties => CanCache
+    ? _compositeProperties ??= CreateCompositeProperties(includeThreadContexts: true)
+    : _detachedProperties ??= CreateCompositeProperties(includeThreadContexts: false);
+
+  /// <summary>
+  /// Copies <paramref name="properties"/> with every <see cref="IFixingRequired"/> value fixed and null values left out.
+  /// </summary>
+  private static PropertiesDictionary CreateSnapshot(CompositeProperties properties)
   {
-    if (_data.Properties is null && CanCache)
+    PropertiesDictionary fixedProperties = new();
+
+    // Validate properties
+    foreach (KeyValuePair<string, object?> entry in properties.Flatten())
     {
-      if (_compositeProperties is null)
+      object? val = entry.Value;
+
+      // Fix any IFixingRequired objects
+      if (entry.Value is IFixingRequired fixingRequired)
       {
-        CreateCompositeProperties();
+        val = fixingRequired.GetFixedObject();
       }
 
-      PropertiesDictionary flattenedProperties = _compositeProperties!.Flatten();
-
-      PropertiesDictionary fixedProperties = new();
-
-      // Validate properties
-      foreach (KeyValuePair<string, object?> entry in flattenedProperties)
+      // Strip keys with null values
+      if (val is not null)
       {
-        object? val = entry.Value;
-
-        // Fix any IFixingRequired objects
-        if (entry.Value is IFixingRequired fixingRequired)
-        {
-          val = fixingRequired.GetFixedObject();
-        }
-
-        // Strip keys with null values
-        if (val is not null)
-        {
-          fixedProperties[entry.Key] = val;
-        }
+        fixedProperties[entry.Key] = val;
       }
-
-      _data.Properties = fixedProperties;
     }
+
+    return fixedProperties;
   }
 
   /// <summary>
@@ -1325,8 +1341,9 @@ public class LoggingEvent : ILog4NetSerializable
   ///   <item>
   ///     <term>the thread properties</term>
   ///     <description>
-  ///     The <see cref="ThreadContext.Properties"/> that are set on the current
-  ///     thread. These properties are shared by all events logged on this thread.
+  ///     The <see cref="ThreadContext.Properties"/> and <see cref="LogicalThreadContext.Properties"/>
+  ///     of the thread delivering the event; left out once the event is fixed and read after its
+  ///     delivery or on another thread.
   ///     </description>
   ///   </item>
   ///   <item>
@@ -1346,12 +1363,7 @@ public class LoggingEvent : ILog4NetSerializable
       return _data.Properties[key];
     }
 
-    if (_compositeProperties is null)
-    {
-      CreateCompositeProperties();
-    }
-
-    return _compositeProperties![key];
+    return ReadableProperties[key];
   }
 
   /// <summary>
@@ -1375,12 +1387,7 @@ public class LoggingEvent : ILog4NetSerializable
       return _data.Properties;
     }
 
-    if (_compositeProperties is null)
-    {
-      CreateCompositeProperties();
-    }
-
-    return _compositeProperties!.Flatten();
+    return ReadableProperties.Flatten();
   }
 
   /// <summary>
@@ -1424,6 +1431,11 @@ public class LoggingEvent : ILog4NetSerializable
   /// The internal logging event data.
   /// </summary>
   private CompositeProperties? _compositeProperties;
+
+  /// <summary>
+  /// The properties read off the delivering thread after the fix: event and global, no thread context.
+  /// </summary>
+  private CompositeProperties? _detachedProperties;
 
   /// <summary>
   /// The internal logging event data.

@@ -8,10 +8,10 @@
   <issue id="365" link="https://github.com/apache/logging-log4net/pull/365"/>
   <description format="asciidoc">A second fix of a buffered event, such as `All` in an appender behind
   a `Partial` buffer, no longer captures the identity, location, thread name and properties of the
-  thread that flushes the buffer. Off the thread delivering the event, a later fix captures only the
-  message, exception text, domain and user name; it captures no properties at all, not even the
-  event's own, and `LoggingEvent.Fix` does not report the identity, location, thread name and
-  properties it left out. This also applies to a second fix outside a logging call, for example
-  `Fix = Partial` then `Fix = All` on the same thread. During a fix the message is rendered directly,
+  thread that flushes the buffer. Off the thread delivering the event, a later fix captures the
+  message, exception text, domain, user name and the event's own and global properties (unless
+  another thread still delivers the event), not the thread's contexts; `LoggingEvent.Fix` does not
+  report the identity, location and thread name it left out. This also applies to a second fix
+  outside a logging call, for example `Fix = Partial` then `Fix = All` on the same thread. During a fix the message is rendered directly,
   without calling an override of `RenderedMessage` (ANT-2026-BH0P93PP, fixed by @FreeAndNil)</description>
 </entry>
