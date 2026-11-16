@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using log4net.Filter;
 using log4net.Appender;
 using log4net.Core;
@@ -122,6 +123,23 @@ public sealed class AppenderSkeletonTest
     Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
   }
 
+  /// <summary>
+  /// A filter decision outside the enum used to keep the filter loop spinning on the same filter.
+  /// </summary>
+  [Test]
+  public void UndefinedFilterDecisionMovesOnToTheNextFilter()
+  {
+    MessageRecordingAppender appender = new();
+    appender.AddFilter(new UndefinedDecisionFilter());
+    appender.AddFilter(new DenyAllFilter());
+
+    // Unfixed, DoAppend never returns, so it runs on another thread with a deadline.
+    Task append = Task.Run(() => appender.DoAppend(CreateEvents("1")[0]));
+
+    Assert.That(append.Wait(TimeSpan.FromSeconds(10)), Is.True, "DoAppend did not return");
+    Assert.That(appender.Messages, Is.Empty, "the next filter, DenyAllFilter, decides");
+  }
+
   private static LoggingEvent[] CreateEvents(params string[] messages)
     => [.. messages.Select(message => new LoggingEvent(typeof(AppenderSkeletonTest), null, "test", Level.Info, message, null))];
 
@@ -141,6 +159,13 @@ public sealed class AppenderSkeletonTest
       }
       Messages.Add(loggingEvent.RenderedMessage!);
     }
+  }
+
+  /// <summary>Returns a decision outside <see cref="FilterDecision"/>.</summary>
+  private sealed class UndefinedDecisionFilter : FilterSkeleton
+  {
+    /// <inheritdoc/>
+    public override FilterDecision Decide(LoggingEvent loggingEvent) => (FilterDecision)5;
   }
 
   /// <summary>Throws for the message "2", accepts the rest.</summary>

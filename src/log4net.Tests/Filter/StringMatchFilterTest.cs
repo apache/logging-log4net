@@ -21,8 +21,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+using System.Xml;
+using log4net.Appender;
+using log4net.Config;
 using log4net.Core;
 using log4net.Filter;
+using log4net.Repository;
 using log4net.Util;
 
 using NUnit.Framework;
@@ -182,6 +186,57 @@ public class StringMatchFilterTest
     filter.MatchTimeoutMillis = 0;
     Assert.That(filter.MatchTimeoutMillis, Is.EqualTo(0));
   }
+
+  /// <summary>
+  /// A decision outside the enum would leave the appender's filter loop without a way forward.
+  /// </summary>
+  [Test]
+  public void TimeoutDecisionRejectsAnUndefinedValue()
+    => Assert.That(() => new StringMatchFilter().TimeoutDecision = (FilterDecision)5,
+      Throws.TypeOf<ArgumentOutOfRangeException>());
+
+  /// <summary>
+  /// From configuration an undefined decision is reported and the default kept.
+  /// </summary>
+  [Test]
+  public void TimeoutDecisionFromConfigurationKeepsNeutralForAnUndefinedValue()
+  {
+    XmlDocument config = new();
+    config.LoadXml(
+      """
+      <log4net>
+        <appender name="MemoryAppender" type="log4net.Appender.MemoryAppender, log4net">
+          <filter type="log4net.Filter.StringMatchFilter, log4net">
+            <stringToMatch value="x" />
+            <timeoutDecision value="5" />
+          </filter>
+        </appender>
+        <root>
+          <appender-ref ref="MemoryAppender" />
+        </root>
+      </log4net>
+      """);
+    ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    List<LogLog> internalLog = [];
+
+    using (new LogLog.LogReceivedAdapter(internalLog))
+    {
+      LogLog.ExecuteWithoutEmittingInternalMessages(() => XmlConfigurator.Configure(repository, config["log4net"]!));
+    }
+
+    StringMatchFilter filter = (StringMatchFilter)((AppenderSkeleton)repository.GetAppenders()[0]).FilterHead!;
+    Assert.That(filter.TimeoutDecision, Is.EqualTo(FilterDecision.Neutral));
+    Assert.That(internalLog.Exists(entry => entry.Message.IndexOf("timeoutDecision", StringComparison.OrdinalIgnoreCase) >= 0), Is.True);
+  }
+
+  /// <summary>
+  /// The three defined decisions are accepted.
+  /// </summary>
+  [TestCase(FilterDecision.Deny)]
+  [TestCase(FilterDecision.Accept)]
+  [TestCase(FilterDecision.Neutral)]
+  public void TimeoutDecisionAcceptsTheDefinedValues(FilterDecision decision)
+    => Assert.That(new StringMatchFilter { TimeoutDecision = decision }.TimeoutDecision, Is.EqualTo(decision));
 
   private static LoggingEvent CreateEvent(string message)
     => new(new LoggingEventData { Level = Level.Info, Message = message, LoggerName = "TestLogger" });

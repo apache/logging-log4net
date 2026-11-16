@@ -456,6 +456,8 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
           break;
 
         case FilterDecision.Neutral:
+        // A decision outside the enum is taken as Neutral, or the loop would never move on.
+        default:
           f = f.Next;    // Move to next filter
           break;
       }

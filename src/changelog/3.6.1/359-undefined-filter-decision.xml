@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="359" link="https://github.com/apache/logging-log4net/issues/359"/>
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">A filter decision outside `Deny`, `Neutral` and `Accept` no longer hangs
+  the appender. The filter loop never moved on from such a decision, so a `StringMatchFilter` with a
+  `timeoutDecision` of `5`, once a regex match timed out, or a custom filter returning such a value
+  stopped logging through that appender and its shutdown. An unknown decision now counts as
+  `Neutral`, and `StringMatchFilter.TimeoutDecision` rejects one: from configuration it is reported
+  and the default `Neutral` kept (ANT-2026-VKBDETLN, fixed by @FreeAndNil)</description>
+</entry>
