@@ -43,11 +43,21 @@ public static class Transform
   /// The test is escaped either using XML escape entities
   /// or using CDATA sections.
   /// </para>
+  /// <para>
+  /// Each CR and LF is written as a character reference, so that it reads back exactly; such a string is never CDATA.
+  /// </para>
   /// </remarks>
   public static void WriteEscapedXmlString(this XmlWriter writer, string textData, string invalidCharReplacement)
   {
     writer.EnsureNotNull();
     string stringData = MaskXmlInvalidCharacters(textData, invalidCharReplacement);
+    if (stringData.IndexOfAny(_lineBreaks) >= 0)
+    {
+      // A parser reads a literal CR or CR LF as LF, and a CDATA section cannot hold a reference.
+      WriteWithLineBreakReferences(writer, stringData);
+      return;
+    }
+
     // Write either escaped text or CDATA sections
 
     int weightCData = 12 * (1 + CountSubstrings(stringData, CdataEnd));
@@ -113,13 +123,13 @@ public static class Transform
   /// with the mask string specified.
   /// </para>
   /// <para>
-  /// Supplementary characters (U+10000–U+10FFFF) encoded as valid UTF-16 surrogate
+  /// Supplementary characters (U+10000 to U+10FFFF) encoded as valid UTF-16 surrogate
   /// pairs are preserved; only lone surrogates and other illegal code units are masked.
   /// </para>
   /// </remarks>
   public static string MaskXmlInvalidCharacters(string textData, string mask)
     => _invalidChars.Replace(textData, m =>
-        // A valid surrogate pair represents a legal supplementary character — preserve it.
+        // A valid surrogate pair represents a legal supplementary character: preserve it.
         m.Value.Length == 2 ? m.Value : mask);
 
   /// <summary>
@@ -140,7 +150,7 @@ public static class Transform
       return 0;
     }
 
-    // Use the char overload for single-character substrings — avoids string
+    // Use the char overload for single-character substrings: avoids string
     // comparison overhead; all current callers pass single ASCII characters.
     if (substring.Length == 1)
     {
@@ -172,6 +182,29 @@ public static class Transform
     }
     return count;
   }
+
+  /// <summary>
+  /// Writes <paramref name="text"/> as escaped text, each CR and LF as a character reference.
+  /// </summary>
+  private static void WriteWithLineBreakReferences(XmlWriter writer, string text)
+  {
+    int start = 0;
+    for (int index = text.IndexOfAny(_lineBreaks); index >= 0; index = text.IndexOfAny(_lineBreaks, start))
+    {
+      if (index > start)
+      {
+        writer.WriteString(text.Substring(start, index - start));
+      }
+      writer.WriteCharEntity(text[index]);
+      start = index + 1;
+    }
+    if (start < text.Length)
+    {
+      writer.WriteString(text.Substring(start));
+    }
+  }
+
+  private static readonly char[] _lineBreaks = ['\r', '\n'];
 
   private const string CdataEnd = "]]>";
   private const string CdataUnescapableToken = "]]";

@@ -5,8 +5,8 @@
        type="fixed">
   <issue id="358" link="https://github.com/apache/logging-log4net/issues/358"/>
   <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
-  <description format="asciidoc">`%exception{message}`, `{source}`, `{stacktrace}`, `{targetsite}` and
-  `{helplink}` no longer cut the record when the exception's member throws. The rest of the record,
+  <description format="asciidoc">`+%exception{message}+`, `+{source}+`, `+{stacktrace}+`, `+{targetsite}+` and
+  `+{helplink}+` no longer cut the record when the exception's member throws. The rest of the record,
   its line end included, was lost, and the next record followed on the same line. The converter now
   writes `&lt;log4net.Error&gt;Exception reading message&lt;/log4net.Error&gt;` for the member and
   reports the failure through the internal log (ANT-2026-O16FBEKV, fixed by @FreeAndNil)</description>

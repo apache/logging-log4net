@@ -444,4 +444,71 @@ public sealed class XmlLayoutTest
       log.Logger.Log(new(null, repository, data));
     }
   }
+
+  /// <summary>
+  /// A parser turns a literal CR or CR LF into LF, so each CR and LF is a character reference,
+  /// and the message reads back exactly.
+  /// </summary>
+  [TestCase("a\nb", "a&#xA;b", TestName = "Lf")]
+  [TestCase("a\rb", "a&#xD;b", TestName = "LoneCr")]
+  [TestCase("a\n", "a&#xA;", TestName = "TrailingLf")]
+  [TestCase("a\r", "a&#xD;", TestName = "TrailingCr")]
+  [TestCase("a\r\nb", "a&#xD;&#xA;b", TestName = "CrLf")]
+  [TestCase("a\r\r\nb", "a&#xD;&#xD;&#xA;b", TestName = "CrCrLf")]
+  [TestCase("a]]>\rb", "a]]&gt;&#xD;b", TestName = "CrAfterCdataEnd")]
+  public void LineBreaksInAMessageAreCharacterReferences(string message, string expected)
+  {
+    string record = FormatMessage(message);
+
+    Assert.That(record, Is.EqualTo(CreateEventNode(expected)));
+    Assert.That(XmlRecords.ElementText(record, "message"), Is.EqualTo(message));
+  }
+
+  /// <summary>
+  /// A CDATA section cannot hold a character reference, so markup with a line break is escaped instead.
+  /// </summary>
+  [Test]
+  public void MarkupWithALineBreakIsEscapedNotCdata()
+  {
+    const string message = "<a><b><c>&\n</c></b></a>";
+
+    string record = FormatMessage(message);
+
+    Assert.That(record, Is.EqualTo(CreateEventNode("&lt;a&gt;&lt;b&gt;&lt;c&gt;&amp;&#xA;&lt;/c&gt;&lt;/b&gt;&lt;/a&gt;")));
+    Assert.That(XmlRecords.ElementText(record, "message"), Is.EqualTo(message));
+  }
+
+  /// <summary>
+  /// Markup without a line break keeps its CDATA section.
+  /// </summary>
+  [Test]
+  public void MarkupWithoutALineBreakKeepsCdata()
+    => Assert.That(FormatMessage("<a><b><c></c></b></a>"), Is.EqualTo(CreateEventNode("<![CDATA[<a><b><c></c></b></a>]]>")));
+
+  /// <summary>
+  /// A multi-line exception text reads back with its CR LF line ends.
+  /// </summary>
+  [Test]
+  public void ExceptionTextKeepsItsLineEnds()
+  {
+    LoggingEventData evt = CreateBaseEvent();
+    evt.ExceptionString = "System.Exception: boom\r\n   at A.B()\r\n   at C.D()";
+    using StringWriter writer = new();
+
+    new XmlLayout().Format(writer, new LoggingEvent(evt));
+
+    string record = writer.ToString();
+    Assert.That(XmlRecords.RawContent(record, "exception"),
+      Is.EqualTo("System.Exception: boom&#xD;&#xA;   at A.B()&#xD;&#xA;   at C.D()"));
+    Assert.That(XmlRecords.ElementText(record, "exception"), Is.EqualTo(evt.ExceptionString));
+  }
+
+  private string FormatMessage(string message)
+  {
+    LoggingEventData evt = CreateBaseEvent();
+    evt.Message = message;
+    using StringWriter writer = new();
+    new XmlLayout().Format(writer, new LoggingEvent(evt));
+    return writer.ToString();
+  }
 }

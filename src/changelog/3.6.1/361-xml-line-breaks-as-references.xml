@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="361" link="https://github.com/apache/logging-log4net/issues/361"/>
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">`XmlLayout` and `XmlLayoutSchemaLog4J` write each CR and LF in the
+  message, the exception text and the NDC as a character reference (`+&amp;#xD;+`, `+&amp;#xA;+`), so
+  they read back exactly. A parser read a CR as LF, and CR LF and LF were indistinguishable. Text
+  with a line break is escaped instead of written as CDATA. Visible change: a multi-line message or
+  stack trace is one physical line in the file. This applies to `Transform.WriteEscapedXmlString`
+  as well (ANT-2026-HQWYRAWL, fixed by @FreeAndNil)</description>
+</entry>
