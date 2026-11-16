@@ -191,7 +191,15 @@ public class TextWriterAppender : AppenderSkeleton
     loggingEvents.EnsureNotNull();
     foreach (LoggingEvent loggingEvent in loggingEvents)
     {
-      RenderLoggingEvent(QuietWriter, loggingEvent);
+      // One event that fails to render costs only that event, not the rest of the batch.
+      try
+      {
+        RenderLoggingEvent(QuietWriter, loggingEvent);
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        ErrorHandler.Error("Failed to append a logging event in Bulk DoAppend", e);
+      }
     }
 
     if (ImmediateFlush)

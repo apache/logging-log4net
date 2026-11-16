@@ -140,8 +140,116 @@ public sealed class AppenderSkeletonTest
     Assert.That(appender.Messages, Is.Empty, "the next filter, DenyAllFilter, decides");
   }
 
+  /// <summary>
+  /// A subclass that overrides only <c>Append(IEnumerable)</c> still gets the batch in one call.
+  /// </summary>
+  [Test]
+  public void EnumerableOnlyOverrideGetsTheBatch()
+  {
+    EnumerableOnlyAppender appender = new();
+
+    appender.DoAppend(CreateEvents("1", "2", "3"));
+
+    Assert.That(appender.Batches, Is.EqualTo(new[] { 3 }));
+  }
+
+  /// <summary>
+  /// An <c>Append(IEnumerable)</c> override that calls back into <c>Append(LoggingEvent[])</c>,
+  /// with or without an array override calling base, appends each event once instead of recursing.
+  /// </summary>
+  [TestCase(false)]
+  [TestCase(true)]
+  public void EnumerableOverrideCallingBackDoesNotRecurse(bool withArrayOverride)
+  {
+    CallingBackAppender appender = withArrayOverride ? new CallingBackWithArrayOverrideAppender() : new();
+
+    appender.DoAppend(CreateEvents("1", "2", "3"));
+
+    Assert.That(appender.Messages, Is.EqualTo(new[] { "1", "2", "3" }));
+  }
+
+  /// <summary>
+  /// After an <c>Append(IEnumerable)</c> override threw once, the next batch still reaches it.
+  /// </summary>
+  [Test]
+  public void EnumerableOverrideIsReachedAgainAfterItThrew()
+  {
+    ThrowsOnceEnumerableAppender appender = new() { ErrorHandler = new RecordingErrorHandler() };
+
+    appender.DoAppend(CreateEvents("1"));
+    appender.DoAppend(CreateEvents("2"));
+
+    Assert.That(appender.Calls, Is.EqualTo(2));
+  }
+
   private static LoggingEvent[] CreateEvents(params string[] messages)
     => [.. messages.Select(message => new LoggingEvent(typeof(AppenderSkeletonTest), null, "test", Level.Info, message, null))];
+
+  /// <summary>Overrides only <c>Append(IEnumerable)</c> and records the batch sizes.</summary>
+  private sealed class EnumerableOnlyAppender : AppenderSkeleton
+  {
+    internal List<int> Batches { get; } = [];
+
+    /// <inheritdoc/>
+    protected override void Append(LoggingEvent loggingEvent) => Batches.Add(-1);
+
+    /// <inheritdoc/>
+    protected override void Append(IEnumerable<LoggingEvent> loggingEvents) => Batches.Add(loggingEvents.Count());
+  }
+
+  /// <summary>Its <c>Append(IEnumerable)</c> calls <c>Append(LoggingEvent[])</c>; a depth guard stops a recursion.</summary>
+  private class CallingBackAppender : AppenderSkeleton
+  {
+    private int _depth;
+
+    internal List<string> Messages { get; } = [];
+
+    /// <inheritdoc/>
+    protected override void Append(LoggingEvent loggingEvent) => Messages.Add(loggingEvent.RenderedMessage!);
+
+    /// <inheritdoc/>
+    protected override void Append(IEnumerable<LoggingEvent> loggingEvents)
+    {
+      if (++_depth > 10)
+      {
+        throw new InvalidOperationException("recursion");
+      }
+      try
+      {
+        Append(loggingEvents.ToArray());
+      }
+      finally
+      {
+        _depth--;
+      }
+    }
+  }
+
+  /// <summary>Also overrides <c>Append(LoggingEvent[])</c>, calling base.</summary>
+  private sealed class CallingBackWithArrayOverrideAppender : CallingBackAppender
+  {
+    /// <inheritdoc/>
+    protected override void Append(LoggingEvent[] loggingEvents) => base.Append(loggingEvents);
+  }
+
+  /// <summary>Its <c>Append(IEnumerable)</c> throws on the first call.</summary>
+  private sealed class ThrowsOnceEnumerableAppender : AppenderSkeleton
+  {
+    internal int Calls { get; private set; }
+
+    /// <inheritdoc/>
+    protected override void Append(LoggingEvent loggingEvent)
+    { }
+
+    /// <inheritdoc/>
+    protected override void Append(IEnumerable<LoggingEvent> loggingEvents)
+    {
+      if (++Calls == 1)
+      {
+        throw new InvalidOperationException("first batch failed");
+      }
+    }
+  }
 
   /// <summary>Records the messages it appends and throws for <see cref="ThrowFor"/>.</summary>
   private sealed class MessageRecordingAppender : AppenderSkeleton

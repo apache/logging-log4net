@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="359" link="https://github.com/apache/logging-log4net/issues/359"/>
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">Hand a batch to the `Append(LoggingEvent[])` overrides again, as before 3.0.0.
+  Since 3.0.0 `DoAppend(LoggingEvent[])` passed a list and reached only `Append(IEnumerable)`, so a
+  batch from a `BufferingForwardingAppender` took one file lock, one roll check and one flush per
+  event. Now `FileAppender`, `RollingFileAppender` and `TextWriterAppender` take them once per batch,
+  and `ForwardingAppender` hands each attached appender the whole batch in turn (A1, A2, B1, B2
+  instead of A1, B1, A2, B2). A subclass of these that overrides only `Append(LoggingEvent)` or
+  `Append(IEnumerable)` no longer sees batches and should override `Append(LoggingEvent[])` as well.
+  A failing file lock now costs the batch, and a size-rolled file can overshoot `MaxFileSize` by up
+  to one batch (fixed by @FreeAndNil)</description>
+</entry>
