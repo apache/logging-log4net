@@ -27,9 +27,12 @@ It is therefore unaffected by the deprecation of `System.Net.Mail.SmtpClient`, a
 The `PickupDir` parameter is a path that must exist and the code executing the appender must have permission to create new files and write to them in this directory.
 The path is relative to the application's base directory (AppDomain.BaseDirectory).
 
-Each file is a plain RFC 822 message, read to its end by the pickup service, and carries no SMTP
-DATA terminator. Body lines are written verbatim and are not dot stuffed, so an agent that expects
-SMTP DATA framing is not a supported consumer. A carriage return from logged content that is not
+Each file is a MIME message, read to its end by the pickup service, and carries no SMTP DATA
+terminator. Its headers are `MIME-Version: 1.0`, `Content-Type: text/plain; charset=utf-8` and
+`Content-Transfer-Encoding: 8bit`, or `base64` when a line of the body exceeds the 998 octets
+RFC 5322 allows or the layout header or footer holds a NUL. Body lines are not dot stuffed, so an
+agent that expects SMTP DATA framing is not a supported consumer. A NUL from logged content is
+written as `\0`. A carriage return from logged content that is not
 followed by a line feed is written as `\r`: SMTP allows it only as part of a line end, and a strict
 mail server such as Sendmail refuses the mail otherwise. Events are escaped one by one, so a CR
 ending one event before an LF starting the next is written as `\r` and a line feed.

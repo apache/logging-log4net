@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="360" link="https://github.com/apache/logging-log4net/issues/360"/>
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">`SmtpPickupDirAppender` writes MIME headers: `MIME-Version`,
+  `Content-Type: text/plain; charset=utf-8` and `Content-Transfer-Encoding`. The body goes out as
+  `8bit`, or as `base64` when a line exceeds the 998 octets RFC 5322 allows or the layout header or
+  footer holds a NUL. A strict mail server refused the whole mail for one long logged line, and a
+  reader without a charset garbled non-ASCII text. A NUL from logged content is now written as `\0`
+  (ANT-2026-TNHX6V52, fixed by @FreeAndNil)</description>
+</entry>

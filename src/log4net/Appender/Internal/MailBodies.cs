@@ -71,6 +71,53 @@ internal static class MailBodies
   }
 
   /// <summary>
+  /// Tells whether <paramref name="body"/> may go out as 8bit: no NUL and no line over 998 UTF-8 octets.
+  /// </summary>
+  /// <param name="body">The whole body, layout header and footer included.</param>
+  /// <returns><see langword="false"/> when the body has to go out as base64.</returns>
+  /// <remarks>
+  /// Lines end at each LF and a CR right before it does not count (RFC 5322 2.1.1), so LF and CR LF
+  /// bodies are measured alike on every platform.
+  /// </remarks>
+  internal static bool FitsEightBit(string body)
+  {
+    const int maxLineOctets = 998;
+    int octets = 0;
+    for (int i = 0; i < body.Length; i++)
+    {
+      char c = body[i];
+      if (c == '\0')
+      {
+        return false;
+      }
+      if (c == '\n')
+      {
+        octets = 0;
+        continue;
+      }
+      if (c == '\r' && i + 1 < body.Length && body[i + 1] == '\n')
+      {
+        continue;
+      }
+      if (char.IsHighSurrogate(c) && i + 1 < body.Length && char.IsLowSurrogate(body[i + 1]))
+      {
+        octets += 4;
+        i++;
+      }
+      else
+      {
+        // An unpaired surrogate is written as U+FFFD, three octets like the rest of the BMP above U+07FF.
+        octets += c < 0x80 ? 1 : c < 0x800 ? 2 : 3;
+      }
+      if (octets > maxLineOctets)
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /// <summary>
   /// Packs the records into as few bodies as fit <paramref name="maxBodySize"/>, each with header and footer.
   /// </summary>
   /// <param name="header">The layout's header, or <see langword="null"/>.</param>
