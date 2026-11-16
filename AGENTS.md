@@ -158,6 +158,16 @@ almost always be doing.
 - Drive a test over a background thread with gates (`ManualResetEventSlim`), never with
   `Thread.Sleep`: park the worker, assert the state you care about, then release it. See
   `BackgroundSenderTest`, where every wait has a generous timeout and the assertions are exact.
+- **Make a race deterministic instead of hammering it in a loop.** Park the first caller at the
+  critical point through a hook a test double can take over: a virtual member, or an interface the
+  type implements explicitly (a subclass may re-implement it, and `foreach` over a type without a
+  public `GetEnumerator` dispatches to that interface). Run the second caller while the first is
+  parked, then release it. `CompositePropertiesTest` parks `Flatten` after one key: it fails every
+  time unfixed, in milliseconds, where the brute-force loop it replaced was up to two orders of
+  magnitude slower, heavy on CPU and dependent on scheduling. Gate only the first pass, bound every
+  wait, and catch on the worker `when (!e.IsFatal())` to rethrow on the test thread. When no such
+  hook exists, ask the maintainer before falling back to brute force: the API may be extended to
+  offer one.
 - **`Does.Contain` is culture sensitive and cannot be made ordinal**: its `ContainsConstraint` has
   no comparison parameter. Linguistic comparison skips ignorable characters, so `Does.Not.Contain`
   reports a match for NUL, soft hyphen or a zero-width character in a string that holds none. When

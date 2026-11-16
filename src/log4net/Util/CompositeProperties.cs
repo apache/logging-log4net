@@ -18,6 +18,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Threading;
 
 namespace log4net.Util;
 
@@ -116,20 +117,21 @@ public sealed class CompositeProperties
   /// </remarks>
   public PropertiesDictionary Flatten()
   {
-    if (_flattened is null)
+    if (_flattened is { } flattened)
     {
-      _flattened = [];
+      return flattened;
+    }
 
-      for (int i = _nestedProperties.Count; --i >= 0;)
+    PropertiesDictionary built = [];
+    for (int i = _nestedProperties.Count; --i >= 0;)
+    {
+      foreach (KeyValuePair<string, object?> entry in _nestedProperties[i])
       {
-        ReadOnlyPropertiesDictionary cur = _nestedProperties[i];
-
-        foreach (KeyValuePair<string, object?> entry in cur)
-        {
-          _flattened[entry.Key] = entry.Value;
-        }
+        built[entry.Key] = entry.Value;
       }
     }
-    return _flattened;
+
+    // Published only when complete; of two racing callers both get the first one published.
+    return Interlocked.CompareExchange(ref _flattened, built, null) ?? built;
   }
 }
