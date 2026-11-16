@@ -25,6 +25,7 @@ using System.Text;
 using log4net.Core;
 using log4net.Ext.Mail.Appender;
 using log4net.Layout;
+using log4net.Tests.Appender.Internal;
 using MailKit.Security;
 using MimeKit;
 using NUnit.Framework;
@@ -743,6 +744,23 @@ public class SmtpAppenderTest
       appender.DoAppend(CreateEvent(message));
     }
     Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
+  }
+
+  /// <summary>
+  /// An event that fails to render is replaced by a marker; the mail still carries the others.
+  /// </summary>
+  [Test]
+  public void EventThatFailsToRenderBecomesAMarkerInTheMail()
+  {
+    SmtpAppender appender = CreateBatchAppender();
+    appender.Layout = new ThrowingLayout();
+
+    SendBatch(appender, "a", ThrowingLayout.FailingMessage, "c");
+
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
+    Assert.That(Lf(_transport.SentMails[0].Body),
+      Is.EqualTo("a\n<log4net.Error>Exception rendering event</log4net.Error>\nc\n"));
+    Assert.That(_errorHandler.Message, Does.Contain("layout failed"));
   }
 
   /// <summary>MimeKit and <c>%n</c> write <c>\r\n</c> on Windows; the tests compare with <c>\n</c>.</summary>

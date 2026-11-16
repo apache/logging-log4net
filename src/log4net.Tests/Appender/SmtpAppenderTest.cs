@@ -107,6 +107,24 @@ public class SmtpAppenderTest
   public void MaxBodySizeDefaultsTo1MiB()
     => Assert.That(new SmtpAppender().MaxBodySize, Is.EqualTo(1048576));
 
+  /// <summary>
+  /// An event that fails to render is replaced by a marker; the mail still carries the others.
+  /// </summary>
+  [Test]
+  public void EventThatFailsToRenderBecomesAMarkerInTheMail()
+  {
+    RecordingErrorHandler errorHandler = new();
+    RecordingSmtpAppender appender = new() { Layout = new ThrowingLayout(), BufferSize = 10, ErrorHandler = errorHandler };
+
+    SendBatch(appender, "a", ThrowingLayout.FailingMessage, "c");
+
+    Assert.That(appender.Bodies, Is.EqualTo(new[]
+    {
+      "a\n<log4net.Error>Exception rendering event</log4net.Error>" + Environment.NewLine + "c\n"
+    }));
+    Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+  }
+
   private static RecordingSmtpAppender CreateRecordingAppender()
   {
     // A literal \n rather than %n, so that the bodies are the same on every platform.

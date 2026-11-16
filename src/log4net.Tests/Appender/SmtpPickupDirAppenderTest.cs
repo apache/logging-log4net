@@ -24,6 +24,7 @@ using System.Text;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
+using log4net.Tests.Appender.Internal;
 
 using NUnit.Framework;
 
@@ -147,6 +148,30 @@ public class SmtpPickupDirAppenderTest
     Assert.That(content, Does.Contain(@"poison\ud800event"));
     Assert.That(content, Does.Contain("the event after it"));
     Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
+  }
+
+  /// <summary>
+  /// An event that fails to render is replaced by a marker; the mail still carries the others.
+  /// </summary>
+  [Test]
+  public void EventThatFailsToRenderBecomesAMarkerInTheMail()
+  {
+    using AutoTempFolder pickupDir = new();
+    SilentErrorHandler sh = new();
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
+    appender.Layout = new ThrowingLayout();
+    appender.ActivateOptions();
+
+    foreach (string message in new[] { "a", ThrowingLayout.FailingMessage, "c" })
+    {
+      appender.DoAppend(new LoggingEvent(GetType(), null, "test", Level.Info, message, null));
+    }
+    appender.Close();
+
+    string content = File.ReadAllText(Directory.GetFiles(pickupDir.Path)[0]);
+    Assert.That(content, Does.Contain(
+      "a\n<log4net.Error>Exception rendering event</log4net.Error>" + Environment.NewLine + "c\n"));
+    Assert.That(sh.Message, Is.Not.Empty);
   }
 
   /// <summary>

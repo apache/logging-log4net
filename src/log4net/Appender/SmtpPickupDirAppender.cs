@@ -154,10 +154,10 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
           writer.Write(header);
         }
 
-        for (int i = 0; i < events.Length; i++)
+        foreach (string record in MailBodies.Render(events, RenderLoggingEvent, ErrorHandler))
         {
           // A CR without LF from content would get the mail refused by a strict MTA.
-          writer.Write(RenderLoggingEvent(events[i]).EscapeLoneCarriageReturns());
+          writer.Write(record.EscapeLoneCarriageReturns());
         }
 
         if (Layout?.Footer is string footer)

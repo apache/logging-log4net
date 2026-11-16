@@ -373,9 +373,17 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
 
         foreach (LoggingEvent loggingEvent in loggingEvents)
         {
-          if (FilterEvent(loggingEvent))
+          // One event that makes a filter throw costs only that event, not the rest of the batch.
+          try
           {
-            filteredEvents.Add(loggingEvent);
+            if (FilterEvent(loggingEvent))
+            {
+              filteredEvents.Add(loggingEvent);
+            }
+          }
+          catch (Exception e) when (!e.IsFatal())
+          {
+            ErrorHandler.Error("Failed to filter a logging event in Bulk DoAppend", e);
           }
         }
 
@@ -591,7 +599,15 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   {
     foreach (LoggingEvent loggingEvent in loggingEvents.EnsureNotNull())
     {
-      Append(loggingEvent);
+      // One event that throws costs only that event, not the rest of the batch.
+      try
+      {
+        Append(loggingEvent);
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        ErrorHandler.Error("Failed to append a logging event in Bulk DoAppend", e);
+      }
     }
   }
 

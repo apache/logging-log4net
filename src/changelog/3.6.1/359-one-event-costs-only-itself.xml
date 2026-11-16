@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="359" link="https://github.com/apache/logging-log4net/issues/359"/>
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">An event that throws while a batch is appended, for example in a custom
+  layout, filter or appender, now costs only that event. Before, the rest of the batch was lost, and
+  behind a `BufferingForwardingAppender` it existed nowhere else. The mail appenders write
+  `&lt;log4net.Error&gt;Exception rendering event&lt;/log4net.Error&gt;` in place of an event that
+  fails to render and send the others. Each such event is now reported on its own
+  (ANT-2026-PSTH1UQ1, fixed by @FreeAndNil)</description>
+</entry>

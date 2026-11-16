@@ -156,7 +156,15 @@ public class AppenderAttachedImpl : IAppenderAttachable
     {
       foreach (LoggingEvent loggingEvent in loggingEvents)
       {
-        appender.DoAppend(loggingEvent);
+        // One event that throws costs only that event, not the rest of the batch.
+        try
+        {
+          appender.DoAppend(loggingEvent);
+        }
+        catch (Exception e) when (!e.IsFatal())
+        {
+          LogLog.Error(_declaringType, $"Failed to append to appender [{appender.Name}]", e);
+        }
       }
     }
   }

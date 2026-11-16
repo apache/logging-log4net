@@ -17,8 +17,13 @@
 //
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using log4net.Filter;
 using log4net.Appender;
+using log4net.Core;
+using log4net.Tests.Appender.Internal;
 using NUnit.Framework;
 
 namespace log4net.Tests.Appender;
@@ -84,5 +89,65 @@ public sealed class AppenderSkeletonTest
     DenyAllFilter filter = new();
     _appender.AddFilter(filter);
     Assert.That(_appender.FilterHead, Is.SameAs(filter));
+  }
+
+  /// <summary>
+  /// One event of a batch that throws in <c>Append</c> costs only that event.
+  /// </summary>
+  [Test]
+  public void BulkAppendKeepsTheEventsAfterOneThatThrows()
+  {
+    RecordingErrorHandler errorHandler = new();
+    MessageRecordingAppender appender = new() { ErrorHandler = errorHandler, ThrowFor = "2" };
+
+    appender.DoAppend(CreateEvents("1", "2", "3", "4", "5"));
+
+    Assert.That(appender.Messages, Is.EqualTo(new[] { "1", "3", "4", "5" }));
+    Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+  }
+
+  /// <summary>
+  /// One event of a batch that makes a filter throw costs only that event.
+  /// </summary>
+  [Test]
+  public void BulkFilterKeepsTheEventsAfterOneThatThrows()
+  {
+    RecordingErrorHandler errorHandler = new();
+    MessageRecordingAppender appender = new() { ErrorHandler = errorHandler };
+    appender.AddFilter(new ThrowingFilter());
+
+    appender.DoAppend(CreateEvents("1", "2", "3", "4", "5"));
+
+    Assert.That(appender.Messages, Is.EqualTo(new[] { "1", "3", "4", "5" }));
+    Assert.That(errorHandler.Messages, Has.Count.EqualTo(1));
+  }
+
+  private static LoggingEvent[] CreateEvents(params string[] messages)
+    => [.. messages.Select(message => new LoggingEvent(typeof(AppenderSkeletonTest), null, "test", Level.Info, message, null))];
+
+  /// <summary>Records the messages it appends and throws for <see cref="ThrowFor"/>.</summary>
+  private sealed class MessageRecordingAppender : AppenderSkeleton
+  {
+    internal List<string> Messages { get; } = [];
+
+    internal string? ThrowFor { get; init; }
+
+    /// <inheritdoc/>
+    protected override void Append(LoggingEvent loggingEvent)
+    {
+      if (loggingEvent.RenderedMessage == ThrowFor)
+      {
+        throw new InvalidOperationException("append failed");
+      }
+      Messages.Add(loggingEvent.RenderedMessage!);
+    }
+  }
+
+  /// <summary>Throws for the message "2", accepts the rest.</summary>
+  private sealed class ThrowingFilter : FilterSkeleton
+  {
+    /// <inheritdoc/>
+    public override FilterDecision Decide(LoggingEvent loggingEvent)
+      => loggingEvent.RenderedMessage == "2" ? throw new InvalidOperationException("filter failed") : FilterDecision.Neutral;
   }
 }

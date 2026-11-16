@@ -328,11 +328,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <returns>At least one body.</returns>
   private List<string> RenderBodies(LoggingEvent[] events)
   {
-    string[] records = new string[events.Length];
-    for (int i = 0; i < events.Length; i++)
-    {
-      records[i] = RenderLoggingEvent(events[i]);
-    }
+    string[] records = MailBodies.Render(events, RenderLoggingEvent, ErrorHandler);
 
     List<string> bodies = MailBodies.Split(Layout?.Header, records, Layout?.Footer,
       BodyEncoding.WithEscapingFallback(), MaxBodySize, out int cutRecords);
