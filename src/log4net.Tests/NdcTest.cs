@@ -18,7 +18,10 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using log4net.Tests.Util;
 using log4net.Util;
 using NUnit.Framework;
@@ -118,4 +121,22 @@ public class NdcTest
   [Test]
   public void PushFormatWithANullFormatThrows()
     => Assert.That(() => NDC.PushFormat(null!, 1), Throws.ArgumentNullException);
+
+  /// <summary>
+  /// <see cref="NDC"/> is hidden from IntelliSense to steer new code to <c>ThreadContext.Stacks</c>,
+  /// without the warnings an <see cref="ObsoleteAttribute"/> would give existing callers.
+  /// </summary>
+  [Test]
+  public void NdcIsHiddenFromTheEditorButNotObsolete()
+  {
+    MemberInfo[] members =
+    [
+      typeof(NDC),
+      .. typeof(NDC).DeclaredPublicMembers()
+    ];
+
+    Assert.That(members.Where(member => member.GetCustomAttribute<EditorBrowsableAttribute>()?.State
+      != EditorBrowsableState.Never).Select(member => member.Name), Is.Empty);
+    Assert.That(members.Where(member => member.IsDefined(typeof(ObsoleteAttribute))).Select(member => member.Name), Is.Empty);
+  }
 }

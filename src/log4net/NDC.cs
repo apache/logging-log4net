@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using log4net.Util;
 
 namespace log4net;
@@ -62,7 +63,7 @@ namespace log4net;
 /// <threadsafety static="true" instance="true" />
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-/*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static class NDC
 {
   /// <summary>
@@ -85,7 +86,7 @@ public static class NDC
   /// </para>
   /// </remarks>
   /// <seealso cref="SetMaxDepth"/>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static int Depth => ThreadContext.Stacks["NDC"].Count;
 
   /// <summary>
@@ -102,7 +103,7 @@ public static class NDC
   /// Clears the stack of NDC data held on the current thread.
   /// </para>
   /// </remarks>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static void Clear() => ThreadContext.Stacks["NDC"].Clear();
 
   /// <summary>
@@ -122,7 +123,7 @@ public static class NDC
   /// parent thread.
   /// </para>
   /// </remarks>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static Stack CloneStack() => ThreadContext.Stacks["NDC"].InternalStack;
 
   /// <summary>
@@ -146,7 +147,7 @@ public static class NDC
   /// this method.
   /// </para>
   /// </remarks>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks", true)]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static void Inherit(Stack stack) => ThreadContext.Stacks["NDC"].InternalStack = stack;
 
   /// <summary>
@@ -169,7 +170,7 @@ public static class NDC
   /// empty string (not <see langword="null"/>) is returned.
   /// </para>
   /// </remarks>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static string? Pop() => ThreadContext.Stacks["NDC"].Pop();
 
   /// <summary>
@@ -203,7 +204,7 @@ public static class NDC
   /// }
   /// </code>
   /// </example>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static IDisposable Push(string message) => ThreadContext.Stacks["NDC"].Push(message);
 
   /// <summary>
@@ -243,7 +244,7 @@ public static class NDC
   /// }
   /// </code>
   /// </example>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static IDisposable PushFormat(string messageFormat, params object[] args)
     => ThreadContext.Stacks["NDC"].Push(new SystemStringFormat(null, messageFormat.EnsureNotNull(), args).ToString());
 
@@ -262,7 +263,7 @@ public static class NDC
   /// This method is not implemented.
   /// </para>
   /// </remarks>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static void Remove()
   {
   }
@@ -286,7 +287,7 @@ public static class NDC
   /// call. This can be used to return to a known context depth.
   /// </para>
   /// </remarks>
-  /*[Obsolete("NDC has been replaced by ThreadContext.Stacks")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static void SetMaxDepth(int maxDepth)
   {
     if (maxDepth >= 0)

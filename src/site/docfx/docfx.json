@@ -10,6 +10,7 @@
         }
       ],
       "dest": "log4net",
+      "filter": "filterConfig.yml",
       "properties": {
         "TargetFramework": "net462"
       },

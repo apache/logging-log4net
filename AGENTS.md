@@ -149,7 +149,8 @@ almost always be doing.
 - **That reflection goes through `ReflectionExtensions`** in `src/log4net.Tests/Util/`, namespace
   `log4net.Tests`, so no test spells out `BindingFlags` itself: `NonPublicNestedType`,
   `Construct<T>`, `Invoke<T>`, `GetFieldValue<T>`, `SetFieldValue`, on a `Type` for the static
-  members and on an instance for the instance ones. Pass the arguments as an explicit `[a, b]`;
+  members and on an instance for the instance ones; `DeclaredPublicMembers` lists the public
+  members a type declares itself, for attribute checks. Pass the arguments as an explicit `[a, b]`;
   an expanded `params` argument trips CS8620 in a C# 14 extension block, which
   `WarningsAsErrors=nullable` makes a build error.
 - **NUnit constructs one fixture instance for the whole fixture**, so an instance field that
