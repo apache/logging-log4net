@@ -17,6 +17,13 @@
 //
 #endregion
 
+using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using log4net.Tests.Util;
+using log4net.Util;
 using NUnit.Framework;
 
 namespace log4net.Tests;
@@ -40,5 +47,96 @@ public class NdcTest
     NDC.Inherit(context);
     Assert.That(NDC.Pop(), Is.EqualTo("last"));
     Assert.That(NDC.Pop(), Is.EqualTo("first"));
+  }
+
+  /// <summary>
+  /// Each test starts with an empty stack on the test thread.
+  /// </summary>
+  [SetUp]
+  public void ClearStack() => NDC.Clear();
+
+  /// <summary>
+  /// An argument that fails to format gives the error text, as <see cref="ILog.InfoFormat(string, object?)"/> does.
+  /// </summary>
+  [Test]
+  public void PushFormatWithAnArgumentThatThrowsPushesTheErrorText()
+  {
+    // The format error is reported through the internal log.
+    LogLog.ExecuteWithoutEmittingInternalMessages(
+      () => Assert.That(() => NDC.PushFormat("{0}", new ThrowsUnrenderableException()), Throws.Nothing));
+    Assert.That(NDC.Pop(), Does.StartWith("<log4net.Error>"));
+  }
+
+  /// <summary>
+  /// A date the culture's calendar cannot represent fails to format.
+  /// </summary>
+  [Test]
+  [SetCulture("ar-SA")]
+  public void PushFormatWithADateOutsideTheCalendarPushesTheErrorText()
+  {
+    if (CultureInfo.CurrentCulture.Calendar is not UmAlQuraCalendar)
+    {
+      Assert.Ignore("ar-SA does not default to the Um Al Qura calendar here");
+    }
+    LogLog.ExecuteWithoutEmittingInternalMessages(
+      () => Assert.That(() => NDC.PushFormat("{0}", new DateTime(2077, 11, 17)), Throws.Nothing));
+    Assert.That(NDC.Pop(), Does.StartWith("<log4net.Error>"));
+  }
+
+  /// <summary>
+  /// A malformed format string gives the error text.
+  /// </summary>
+  [Test]
+  public void PushFormatWithAMalformedFormatPushesTheErrorText()
+  {
+    LogLog.ExecuteWithoutEmittingInternalMessages(
+      () => Assert.That(() => NDC.PushFormat("{", 1), Throws.Nothing));
+    Assert.That(NDC.Pop(), Does.StartWith("<log4net.Error>"));
+  }
+
+  /// <summary>
+  /// Null arguments push the format string unchanged.
+  /// </summary>
+  [Test]
+  public void PushFormatWithNullArgumentsPushesTheFormat()
+  {
+    NDC.PushFormat("a {0}", null!);
+    Assert.That(NDC.Pop(), Is.EqualTo("a {0}"));
+  }
+
+  /// <summary>
+  /// A valid format is formatted in the thread's culture, as before.
+  /// </summary>
+  [Test]
+  [SetCulture("de-DE")]
+  public void PushFormatUsesTheThreadCulture()
+  {
+    NDC.PushFormat("a {0}", 1234.5);
+    Assert.That(NDC.Pop(), Is.EqualTo("a 1234,5"));
+  }
+
+  /// <summary>
+  /// A null format is misuse and still throws.
+  /// </summary>
+  [Test]
+  public void PushFormatWithANullFormatThrows()
+    => Assert.That(() => NDC.PushFormat(null!, 1), Throws.ArgumentNullException);
+
+  /// <summary>
+  /// <see cref="NDC"/> is hidden from IntelliSense to steer new code to <c>ThreadContext.Stacks</c>,
+  /// without the warnings an <see cref="ObsoleteAttribute"/> would give existing callers.
+  /// </summary>
+  [Test]
+  public void NdcIsHiddenFromTheEditorButNotObsolete()
+  {
+    MemberInfo[] members =
+    [
+      typeof(NDC),
+      .. typeof(NDC).DeclaredPublicMembers()
+    ];
+
+    Assert.That(members.Where(member => member.GetCustomAttribute<EditorBrowsableAttribute>()?.State
+      != EditorBrowsableState.Never).Select(member => member.Name), Is.Empty);
+    Assert.That(members.Where(member => member.IsDefined(typeof(ObsoleteAttribute))).Select(member => member.Name), Is.Empty);
   }
 }

@@ -25,6 +25,7 @@ using System.Text;
 using log4net.Core;
 using log4net.Ext.Mail.Appender;
 using log4net.Layout;
+using log4net.Tests.Appender.Internal;
 using MailKit.Security;
 using MimeKit;
 using NUnit.Framework;
@@ -745,6 +746,23 @@ public class SmtpAppenderTest
     Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
   }
 
+  /// <summary>
+  /// An event that fails to render is replaced by a marker; the mail still carries the others.
+  /// </summary>
+  [Test]
+  public void EventThatFailsToRenderBecomesAMarkerInTheMail()
+  {
+    SmtpAppender appender = CreateBatchAppender();
+    appender.Layout = new ThrowingLayout();
+
+    SendBatch(appender, "a", ThrowingLayout.FailingMessage, "c");
+
+    Assert.That(_transport.SentMails, Has.Count.EqualTo(1));
+    Assert.That(Lf(_transport.SentMails[0].Body),
+      Is.EqualTo("a\n<log4net.Error>Exception rendering event</log4net.Error>\nc\n"));
+    Assert.That(_errorHandler.Message, Does.Contain("layout failed"));
+  }
+
   /// <summary>MimeKit and <c>%n</c> write <c>\r\n</c> on Windows; the tests compare with <c>\n</c>.</summary>
   private static string Lf(string body) => body.Replace("\r\n", "\n", StringComparison.Ordinal);
 
@@ -816,25 +834,43 @@ public class SmtpAppenderTest
   }
 
   /// <summary>
-  /// Every single operation stays inside the timeout here, their sum does not. A per operation
-  /// timeout would let this run on; the deadline stops it.
+  /// One deadline covers the whole send, not one operation: every call that takes a token gets the
+  /// same one. Not caught here, being timing properties: one source re-armed before each call, and
+  /// a deadline that ignores <see cref="SmtpAppender.SendTimeoutMillis"/>.
+  /// </summary>
+  [TestCase(SmtpAppender.SmtpAuthentication.Ntlm)]
+  [TestCase(SmtpAppender.SmtpAuthentication.Basic)]
+  public void OneDeadlineCoversTheWholeSend(SmtpAppender.SmtpAuthentication authentication)
+  {
+    SmtpAppender appender = CreateAppender();
+    appender.Authentication = authentication;
+    appender.Username = "user";
+    appender.Password = "secret";
+
+    Append(appender);
+
+    Assert.That(_transport.Calls, Is.EqualTo(new[] { "Connect", "Authenticate", "Send", "Disconnect", "Dispose" }));
+    Assert.That(_transport.Tokens, Has.Count.EqualTo(3));
+    Assert.That(_transport.Tokens, Is.All.EqualTo(_transport.Tokens[0]));
+    Assert.That(_transport.Tokens[0].CanBeCanceled, Is.True);
+  }
+
+  /// <summary>
+  /// The deadline stops a send that does not finish. The fake waits for the token, so a timer that
+  /// fires late on a busy machine only delays the test.
   /// </summary>
   [Test]
-  public void TheDeadlineCoversTheWholeSendAndNotOneOperation()
+  public void TheDeadlineStopsASendThatDoesNotFinish()
   {
-    // Under the timeout per call, over it in sum.
-    const int sendTimeoutMillis = 300;
-    const int delayMillisPerCall = 200;
-
     SmtpAppender appender = CreateAppender();
-    appender.SendTimeoutMillis = sendTimeoutMillis;
-    _transport.DelayMillisPerCall = delayMillisPerCall;
+    appender.SendTimeoutMillis = 300;
+    _transport.SendWaitsForTheDeadline = true;
 
     Append(appender);
 
     Assert.That(_transport.SentMails, Is.Empty);
     Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
-    Assert.That(_transport.CancelledCalls, Is.Not.Empty, "the deadline never stopped the send");
+    Assert.That(_transport.CancelledCalls, Is.EqualTo(new[] { "Send" }));
   }
 
   /// <summary>Bounded, so an unreachable server cannot grow the queue without limit.</summary>

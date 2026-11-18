@@ -71,8 +71,11 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   /// <summary>How many of the next sends fail, as a server refuses an oversize mail.</summary>
   internal int SendsToRefuse { get; set; }
 
-  /// <summary>When set, every call that takes a token waits this long, honouring it.</summary>
-  internal int DelayMillisPerCall { get; set; }
+  /// <summary>When set, <see cref="Send"/> does not finish until its token is cancelled, or 20 seconds have passed.</summary>
+  internal bool SendWaitsForTheDeadline { get; set; }
+
+  /// <summary>The token each call received, in order.</summary>
+  internal List<CancellationToken> Tokens { get; } = [];
 
   /// <summary>The calls that found the token cancelled, in order.</summary>
   internal List<string> CancelledCalls { get; } = [];
@@ -87,7 +90,7 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
     CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Connect));
-    Delay(nameof(Connect), cancellationToken);
+    Tokens.Add(cancellationToken);
     ConnectedHost = host;
     ConnectedPort = port;
     SecureSocketOptions = secureSocketOptions;
@@ -97,7 +100,7 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   public void Authenticate(ICredentials credentials, CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Authenticate));
-    Delay(nameof(Authenticate), cancellationToken);
+    Tokens.Add(cancellationToken);
     Credentials = credentials;
     IsAuthenticated = true;
   }
@@ -105,7 +108,7 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   public void Authenticate(SaslMechanism mechanism, CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Authenticate));
-    Delay(nameof(Authenticate), cancellationToken);
+    Tokens.Add(cancellationToken);
     SaslMechanism = mechanism;
     IsAuthenticated = true;
   }
@@ -113,7 +116,17 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   public void Send(MimeMessage message, CancellationToken cancellationToken)
   {
     Calls.Add(nameof(Send));
-    Delay(nameof(Send), cancellationToken);
+    Tokens.Add(cancellationToken);
+    if (SendWaitsForTheDeadline)
+    {
+      // Waits for the token however late its timer fires; only a missing deadline runs out.
+      cancellationToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(20));
+      if (cancellationToken.IsCancellationRequested)
+      {
+        CancelledCalls.Add(nameof(Send));
+      }
+      cancellationToken.ThrowIfCancellationRequested();
+    }
     if (SendException is Exception exception)
     {
       throw exception;
@@ -137,21 +150,6 @@ internal sealed class FakeSmtpTransport : ISmtpTransport
   {
     Calls.Add(nameof(Dispose));
     IsDisposed = true;
-  }
-
-  private void Delay(string call, CancellationToken cancellationToken)
-  {
-    if (DelayMillisPerCall > 0)
-    {
-      cancellationToken.WaitHandle.WaitOne(DelayMillisPerCall);
-    }
-
-    if (cancellationToken.IsCancellationRequested)
-    {
-      CancelledCalls.Add(call);
-    }
-
-    cancellationToken.ThrowIfCancellationRequested();
   }
 }
 

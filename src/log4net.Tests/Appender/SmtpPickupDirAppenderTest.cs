@@ -19,11 +19,13 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
+using log4net.Tests.Appender.Internal;
 
 using NUnit.Framework;
 
@@ -83,12 +85,13 @@ public class SmtpPickupDirAppenderTest
   /// Creates a logger hierarchy, configures a SMTP pickup dir appender and returns an ILogger
   /// </summary>
   /// <param name="appender">The appender to use</param>
+  /// <param name="layout">The layout, <c>%m%n</c> when <see langword="null"/>.</param>
   /// <returns>A configured ILogger</returns>
-  private static ILogger CreateLogger(SmtpPickupDirAppender appender)
+  private static ILogger CreateLogger(SmtpPickupDirAppender appender, PatternLayout? layout = null)
   {
     Repository.Hierarchy.Hierarchy h = (Repository.Hierarchy.Hierarchy)LogManager.CreateRepository("TestRepository");
 
-    var layout = new PatternLayout { ConversionPattern = "%m%n" };
+    layout ??= new PatternLayout { ConversionPattern = "%m%n" };
     layout.ActivateOptions();
 
     appender.Layout = layout;
@@ -147,6 +150,30 @@ public class SmtpPickupDirAppenderTest
     Assert.That(content, Does.Contain(@"poison\ud800event"));
     Assert.That(content, Does.Contain("the event after it"));
     Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
+  }
+
+  /// <summary>
+  /// An event that fails to render is replaced by a marker; the mail still carries the others.
+  /// </summary>
+  [Test]
+  public void EventThatFailsToRenderBecomesAMarkerInTheMail()
+  {
+    using AutoTempFolder pickupDir = new();
+    SilentErrorHandler sh = new();
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(pickupDir.Path, sh);
+    appender.Layout = new ThrowingLayout();
+    appender.ActivateOptions();
+
+    foreach (string message in new[] { "a", ThrowingLayout.FailingMessage, "c" })
+    {
+      appender.DoAppend(new LoggingEvent(GetType(), null, "test", Level.Info, message, null));
+    }
+    appender.Close();
+
+    string content = File.ReadAllText(Directory.GetFiles(pickupDir.Path)[0]);
+    Assert.That(content, Does.Contain(
+      "a\n<log4net.Error>Exception rendering event</log4net.Error>" + Environment.NewLine + "c\n"));
+    Assert.That(sh.Message, Is.Not.Empty);
   }
 
   /// <summary>
@@ -285,4 +312,182 @@ public class SmtpPickupDirAppenderTest
 
     Assert.That(sh.Message, Is.EqualTo(string.Empty), "Unexpected error message");
   }
+
+  /// <summary>
+  /// A short ASCII body goes out as 8bit, unchanged.
+  /// </summary>
+  [Test]
+  public void AShortAsciiBodyIsEightBit()
+  {
+    Mail mail = LogAndRead(null, "This is a message");
+
+    AssertMimeHeaders(mail, "8bit");
+    Assert.That(mail.Body, Is.EqualTo("This is a message" + NewLine + NewLine));
+  }
+
+  /// <summary>
+  /// Without a charset a reader takes the body as US-ASCII and garbles non-ASCII text.
+  /// </summary>
+  [Test]
+  public void CyrillicTextIsDeclaredAsUtf8()
+  {
+    Mail mail = LogAndRead(null, "Привет");
+
+    AssertMimeHeaders(mail, "8bit");
+    Assert.That(mail.Body, Is.EqualTo("Привет" + NewLine + NewLine));
+  }
+
+  /// <summary>
+  /// A line over 998 octets gets the mail refused by a strict server, so the body goes out as base64,
+  /// with multi-byte characters across the 57-octet cuts.
+  /// </summary>
+  [Test]
+  public void ALongNonAsciiLineIsBase64()
+  {
+    string message = "a" + string.Concat(Enumerable.Repeat("€", 300)) + string.Concat(Enumerable.Repeat("\U0001F600", 50));
+
+    Mail mail = LogAndRead(null, message);
+
+    AssertMimeHeaders(mail, "base64");
+    Assert.That(DecodeBase64(mail.Body), Is.EqualTo(message + NewLine + NewLine));
+  }
+
+  /// <summary>
+  /// Two events without a line break between them exceed the limit only together.
+  /// </summary>
+  [Test]
+  public void EventsJoinedIntoOneLongLineAreBase64()
+  {
+    Mail mail = LogAndRead(new PatternLayout("%m"), new string('a', 600), new string('b', 600));
+
+    AssertMimeHeaders(mail, "base64");
+    Assert.That(DecodeBase64(mail.Body), Is.EqualTo(new string('a', 600) + new string('b', 600) + NewLine));
+  }
+
+  /// <summary>
+  /// A full last base64 line is not followed by an empty one, and a partial one is padded.
+  /// </summary>
+  [TestCase(1, 4)]
+  [TestCase(0, 76)]
+  public void TheLastBase64LineIsNeitherEmptyNorUnpadded(int extraOctets, int lastLineLength)
+  {
+    // 1140 octets are 20 lines of 57; the two line breaks after the message count too.
+    string message = new('a', 1140 + extraOctets - 2 * NewLine.Length);
+
+    Mail mail = LogAndRead(null, message);
+
+    AssertMimeHeaders(mail, "base64");
+    Assert.That(DecodeBase64(mail.Body), Is.EqualTo(message + NewLine + NewLine));
+    string[] lines = mail.Body.Split([NewLine], StringSplitOptions.None);
+    Assert.That(lines[lines.Length - 2], Has.Length.EqualTo(lastLineLength));
+  }
+
+  /// <summary>
+  /// In base64 the layout header and footer are encoded with the events.
+  /// </summary>
+  [Test]
+  public void HeaderAndFooterAreInsideTheBase64Body()
+  {
+    PatternLayout layout = new("%m%n") { Header = "HEADER" + NewLine, Footer = "FOOTER" + NewLine };
+
+    Mail mail = LogAndRead(layout, new string('a', 1000));
+
+    AssertMimeHeaders(mail, "base64");
+    Assert.That(DecodeBase64(mail.Body),
+      Is.EqualTo("HEADER" + NewLine + new string('a', 1000) + NewLine + "FOOTER" + NewLine + NewLine));
+  }
+
+  /// <summary>
+  /// A NUL from the layout header is not escaped, so the body goes out as base64.
+  /// </summary>
+  [Test]
+  public void ANulInTheLayoutHeaderIsBase64()
+  {
+    PatternLayout layout = new("%m%n") { Header = "head\0er" + NewLine };
+
+    Mail mail = LogAndRead(layout, "x");
+
+    AssertMimeHeaders(mail, "base64");
+    Assert.That(DecodeBase64(mail.Body), Is.EqualTo("head\0er" + NewLine + "x" + NewLine + NewLine));
+    Assert.That(mail.Bytes, Does.Not.Contain((byte)0));
+  }
+
+  /// <summary>
+  /// A NUL from content is escaped as <c>\0</c>, as the other sinks do, and the body stays 8bit.
+  /// </summary>
+  [Test]
+  public void ANulInAMessageIsEscaped()
+  {
+    Mail mail = LogAndRead(null, "a\0b");
+
+    AssertMimeHeaders(mail, "8bit");
+    Assert.That(mail.Body, Is.EqualTo(@"a\0b" + NewLine + NewLine));
+    Assert.That(mail.Bytes, Does.Not.Contain((byte)0));
+  }
+
+  /// <summary>
+  /// An escaped lone CR does not change the transfer encoding.
+  /// </summary>
+  [Test]
+  public void ALoneCarriageReturnStaysEightBit()
+  {
+    Mail mail = LogAndRead(null, "x\ry");
+
+    AssertMimeHeaders(mail, "8bit");
+    Assert.That(mail.Body, Is.EqualTo(@"x\ry" + NewLine + NewLine));
+  }
+
+  private static string NewLine => Environment.NewLine;
+
+  /// <summary>
+  /// Logs the messages through a new pickup appender and reads back the one mail it wrote.
+  /// </summary>
+  private static Mail LogAndRead(PatternLayout? layout, params string[] messages)
+  {
+    using AutoTempFolder pickupDir = new();
+    SilentErrorHandler sh = new();
+    ILogger log = CreateLogger(CreateSmtpPickupDirAppender(pickupDir.Path, sh), layout);
+    foreach (string message in messages)
+    {
+      log.Log(typeof(SmtpPickupDirAppenderTest), Level.Info, message, null);
+    }
+    DestroyLogger();
+
+    Assert.That(sh.Message, Is.Empty, "Unexpected error message");
+    byte[] bytes = File.ReadAllBytes(Directory.GetFiles(pickupDir.Path).Single());
+    string content = new UTF8Encoding(false, true).GetString(bytes);
+    int end = content.IndexOf(NewLine + NewLine, StringComparison.Ordinal);
+    Assert.That(end, Is.GreaterThan(0), "no blank line after the headers");
+    return new(content.Substring(0, end).Split([NewLine], StringSplitOptions.None),
+      content.Substring(end + 2 * NewLine.Length), bytes);
+  }
+
+  /// <summary>
+  /// Asserts the seven headers, the MIME ones among them, with exactly one transfer encoding.
+  /// </summary>
+  private static void AssertMimeHeaders(Mail mail, string transferEncoding)
+  {
+    Assert.That(mail.Headers, Has.Length.EqualTo(7));
+    Assert.That(mail.Headers, Does.Contain("MIME-Version: 1.0"));
+    Assert.That(mail.Headers, Does.Contain("Content-Type: text/plain; charset=utf-8"));
+    Assert.That(mail.Headers.Where(header => header.StartsWith("Content-Transfer-Encoding:", StringComparison.Ordinal)),
+      Is.EqualTo(new[] { "Content-Transfer-Encoding: " + transferEncoding }));
+  }
+
+  /// <summary>
+  /// Checks the line lengths of a base64 body and decodes it as UTF-8.
+  /// </summary>
+  private static string DecodeBase64(string body)
+  {
+    string[] lines = body.Split([NewLine], StringSplitOptions.None);
+    Assert.That(lines[lines.Length - 1], Is.Empty, "the body ends with a line break");
+    for (int i = 0; i < lines.Length - 1; i++)
+    {
+      Assert.That(lines[i].Length, i < lines.Length - 2 ? Is.EqualTo(76) : Is.InRange(1, 76), $"line {i}");
+    }
+    return new UTF8Encoding(false, true).GetString(Convert.FromBase64String(string.Concat(lines)));
+  }
+
+  /// <summary>One mail file: its header lines, the body after the blank line, and its bytes.</summary>
+  private readonly record struct Mail(string[] Headers, string Body, byte[] Bytes);
 }

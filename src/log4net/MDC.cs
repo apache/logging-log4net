@@ -17,6 +17,8 @@
 //
 #endregion
 
+using System.ComponentModel;
+
 namespace log4net;
 
 /// <summary>
@@ -44,7 +46,7 @@ namespace log4net;
 /// <threadsafety static="true" instance="true" />
 /// <author>Nicko Cadell</author>
 /// <author>Gert Driesen</author>
-/*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
+[EditorBrowsable(EditorBrowsableState.Never)]
 public static class MDC
 {
   /// <summary>
@@ -64,7 +66,7 @@ public static class MDC
   /// previously defined context then <see langword="null"/> will be returned.
   /// </para>
   /// </remarks>
-  /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static string? Get(string key) => ThreadContext.Properties[key]?.ToString();
 
   /// <summary>
@@ -90,7 +92,7 @@ public static class MDC
   /// is specified as <see langword="null"/> then the key value mapping will be removed.
   /// </para>
   /// </remarks>
-  /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static void Set(string key, string value) => ThreadContext.Properties[key] = value;
 
   /// <summary>
@@ -108,7 +110,7 @@ public static class MDC
   /// Remove the specified entry from this thread's MDC
   /// </para>
   /// </remarks>
-  /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static void Remove(string key) => ThreadContext.Properties.Remove(key);
 
   /// <summary>
@@ -125,6 +127,6 @@ public static class MDC
   /// Remove all the entries from this thread's MDC
   /// </para>
   /// </remarks>
-  /*[Obsolete("MDC has been replaced by ThreadContext.Properties")]*/
+  [EditorBrowsable(EditorBrowsableState.Never)]
   public static void Clear() => ThreadContext.Properties.Clear();
 }

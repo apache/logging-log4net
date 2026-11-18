@@ -127,17 +127,25 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
     // appender. This frees us from needing to synchronize again.
     try
     {
+      // Rendered before the file is opened: the transfer encoding depends on the whole body.
+      StringBuilder body = new(Layout?.Header);
+      foreach (string record in MailBodies.Render(events, RenderLoggingEvent, ErrorHandler))
+      {
+        // A CR without LF from content would get the mail refused by a strict MTA.
+        body.Append(record.EscapeLoneCarriageReturns().EscapeNulCharacters());
+      }
+      // No SMTP DATA terminator: the pickup service reads the file to its end.
+      string text = body.Append(Layout?.Footer).Append(Environment.NewLine).ToString();
+      bool eightBit = MailBodies.FitsEightBit(text);
+
       StreamWriter writer;
 
       // Impersonate to open the file
-      // Written under its final name, so a failure mid write leaves a partial mail for the pickup
-      // service. Accepted: no temporary name is safe for every service, and FileExtension is the
-      // operator's to choose.
+      // Written under its final name: an I/O error mid write leaves a partial mail, accepted.
       string filePath = Path.Combine(PickupDir.EnsureNotNull(), Guid.NewGuid().ToString("N") + _fileExtension);
       using (SecurityContext?.Impersonate(this))
       {
-        // Not File.CreateText: its encoding throws on content it cannot encode, which would
-        // abandon the whole batch and leave a truncated mail for the pickup service to send.
+        // Not File.CreateText: its encoding throws on an unpaired surrogate and would leave a truncated mail.
         writer = new StreamWriter(filePath, false, new UTF8Encoding(false));
       }
 
@@ -147,27 +155,19 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
         writer.WriteLine("From: " + From);
         writer.WriteLine("Subject: " + Subject);
         writer.WriteLine("Date: " + DateTime.UtcNow.ToString("r"));
+        writer.WriteLine("MIME-Version: 1.0");
+        writer.WriteLine("Content-Type: text/plain; charset=utf-8");
+        writer.WriteLine("Content-Transfer-Encoding: " + (eightBit ? "8bit" : "base64"));
         writer.WriteLine();
 
-        if (Layout?.Header is string header)
+        if (eightBit)
         {
-          writer.Write(header);
+          writer.Write(text);
         }
-
-        for (int i = 0; i < events.Length; i++)
+        else
         {
-          // A CR without LF from content would get the mail refused by a strict MTA.
-          writer.Write(RenderLoggingEvent(events[i]).EscapeLoneCarriageReturns());
+          WriteBase64(writer, text);
         }
-
-        if (Layout?.Footer is string footer)
-        {
-          writer.Write(footer);
-        }
-
-        // No SMTP DATA terminator: the pickup service reads the file to its end, and ours only
-        // made a logged line that is only a dot look like one.
-        writer.WriteLine();
       }
     }
     catch (Exception e) when (!e.IsFatal())
@@ -230,4 +230,18 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
   protected static string ConvertToFullPath(string path) => SystemInfo.ConvertToFullPath(path);
 
   private string _fileExtension = string.Empty;
+
+  /// <summary>
+  /// Writes the UTF-8 octets of <paramref name="text"/> as base64 lines of 76 characters (RFC 2045 6.8).
+  /// </summary>
+  private static void WriteBase64(TextWriter writer, string text)
+  {
+    // Not Base64FormattingOptions.InsertLineBreaks: it hardcodes CR LF, the file uses Environment.NewLine.
+    const int octetsPerLine = 57;
+    byte[] octets = Encoding.UTF8.GetBytes(text);
+    for (int offset = 0; offset < octets.Length; offset += octetsPerLine)
+    {
+      writer.WriteLine(Convert.ToBase64String(octets, offset, Math.Min(octetsPerLine, octets.Length - offset)));
+    }
+  }
 }

@@ -315,7 +315,7 @@ public sealed class LogLog
         EmitOutLine(Log4NetPrefix + message);
         if (exception is not null)
         {
-          EmitOutLine(exception.ToString());
+          EmitOutLine(exception.ToStringSafe());
         }
       }
 
@@ -378,7 +378,7 @@ public sealed class LogLog
         EmitErrorLine(WarnPrefix + message);
         if (exception is not null)
         {
-          EmitErrorLine(exception.ToString());
+          EmitErrorLine(exception.ToStringSafe());
         }
       }
 
@@ -446,7 +446,7 @@ public sealed class LogLog
         EmitErrorLine(ErrPrefix + message);
         if (exception is not null)
         {
-          EmitErrorLine(exception.ToString());
+          EmitErrorLine(exception.ToStringSafe());
         }
       }
 

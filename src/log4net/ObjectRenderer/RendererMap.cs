@@ -114,17 +114,7 @@ public class RendererMap
 
           writer.Write($"<log4net.Error>Exception rendering object type [{objectTypeName}]");
 
-          string? exceptionText = null;
-          try
-          {
-            exceptionText = e.ToString();
-          }
-          catch (Exception inner) when (!inner.IsFatal())
-          {
-            // Ignore exception
-          }
-
-          writer.Write($"<stackTrace>{exceptionText}</stackTrace>");
+          writer.Write($"<stackTrace>{e.ToStringSafe()}</stackTrace>");
           writer.Write("</log4net.Error>");
         }
       }

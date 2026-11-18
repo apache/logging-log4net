@@ -17,8 +17,11 @@
 //
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Text;
+using log4net.Core;
+using log4net.Util;
 
 namespace log4net.Appender.Internal;
 
@@ -36,6 +39,83 @@ internal static class MailBodies
   /// The default budget, 1 MiB.
   /// </summary>
   internal const int DefaultBodySize = 1_048_576;
+
+  /// <summary>
+  /// Stands in for an event whose rendering threw.
+  /// </summary>
+  internal const string RenderError = "<log4net.Error>Exception rendering event</log4net.Error>";
+
+  /// <summary>
+  /// Renders each event on its own, so one that throws is reported and replaced by <see cref="RenderError"/>.
+  /// </summary>
+  /// <param name="events">The batch, in order.</param>
+  /// <param name="render">Renders one event.</param>
+  /// <param name="errorHandler">Receives the failure of each event that throws.</param>
+  /// <returns>One record per event.</returns>
+  internal static string[] Render(LoggingEvent[] events, Func<LoggingEvent, string> render, IErrorHandler errorHandler)
+  {
+    string[] records = new string[events.Length];
+    for (int i = 0; i < events.Length; i++)
+    {
+      try
+      {
+        records[i] = render(events[i]);
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        errorHandler.Error("Failed to render a logging event for the mail.", e);
+        records[i] = RenderError + Environment.NewLine;
+      }
+    }
+    return records;
+  }
+
+  /// <summary>
+  /// Tells whether <paramref name="body"/> may go out as 8bit: no NUL and no line over 998 UTF-8 octets.
+  /// </summary>
+  /// <param name="body">The whole body, layout header and footer included.</param>
+  /// <returns><see langword="false"/> when the body has to go out as base64.</returns>
+  /// <remarks>
+  /// Lines end at each LF and a CR right before it does not count (RFC 5322 2.1.1), so LF and CR LF
+  /// bodies are measured alike on every platform.
+  /// </remarks>
+  internal static bool FitsEightBit(string body)
+  {
+    const int maxLineOctets = 998;
+    int octets = 0;
+    for (int i = 0; i < body.Length; i++)
+    {
+      char c = body[i];
+      if (c == '\0')
+      {
+        return false;
+      }
+      if (c == '\n')
+      {
+        octets = 0;
+        continue;
+      }
+      if (c == '\r' && i + 1 < body.Length && body[i + 1] == '\n')
+      {
+        continue;
+      }
+      if (char.IsHighSurrogate(c) && i + 1 < body.Length && char.IsLowSurrogate(body[i + 1]))
+      {
+        octets += 4;
+        i++;
+      }
+      else
+      {
+        // An unpaired surrogate is written as U+FFFD, three octets like the rest of the BMP above U+07FF.
+        octets += c < 0x80 ? 1 : c < 0x800 ? 2 : 3;
+      }
+      if (octets > maxLineOctets)
+      {
+        return false;
+      }
+    }
+    return true;
+  }
 
   /// <summary>
   /// Packs the records into as few bodies as fit <paramref name="maxBodySize"/>, each with header and footer.

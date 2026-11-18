@@ -373,15 +373,24 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
 
         foreach (LoggingEvent loggingEvent in loggingEvents)
         {
-          if (FilterEvent(loggingEvent))
+          // One event that makes a filter throw costs only that event, not the rest of the batch.
+          try
           {
-            filteredEvents.Add(loggingEvent);
+            if (FilterEvent(loggingEvent))
+            {
+              filteredEvents.Add(loggingEvent);
+            }
+          }
+          catch (Exception e) when (!e.IsFatal())
+          {
+            ErrorHandler.Error("Failed to filter a logging event in Bulk DoAppend", e);
           }
         }
 
         if (filteredEvents.Count > 0 && PreAppendCheck())
         {
-          Append(filteredEvents);
+          // The array overload, so that the batch overrides of the file and forwarding appenders run.
+          Append(filteredEvents.Count == loggingEvents.Length ? loggingEvents : filteredEvents.ToArray());
         }
       }
       catch (Exception e) when (!e.IsFatal())
@@ -448,6 +457,8 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
           break;
 
         case FilterDecision.Neutral:
+        // A decision outside the enum is taken as Neutral, or the loop would never move on.
+        default:
           f = f.Next;    // Move to next filter
           break;
       }
@@ -557,8 +568,8 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// <param name="loggingEvents">the array of logging events</param>
   /// <remarks>
   /// <para>
-  /// This base class implementation calls the <see cref="Append(LoggingEvent)"/>
-  /// method for each element in the bulk array.
+  /// This base class implementation calls <see cref="Append(IEnumerable{LoggingEvent})"/>, or, when
+  /// that calls back into this method, <see cref="Append(LoggingEvent)"/> for each element.
   /// </para>
   /// <para>
   /// A subclass that can better process a bulk array of events should
@@ -567,9 +578,22 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// </remarks>
   protected virtual void Append(LoggingEvent[] loggingEvents)
   {
-    foreach (LoggingEvent loggingEvent in loggingEvents.EnsureNotNull())
+    loggingEvents.EnsureNotNull();
+    if (_inBulkAppend)
     {
-      Append(loggingEvent);
+      // An Append(IEnumerable) override called back into this one: append each event instead of recursing.
+      AppendEach(loggingEvents);
+      return;
+    }
+
+    _inBulkAppend = true;
+    try
+    {
+      Append((IEnumerable<LoggingEvent>)loggingEvents);
+    }
+    finally
+    {
+      _inBulkAppend = false;
     }
   }
 
@@ -587,11 +611,23 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// override this method in addition to <see cref="Append(LoggingEvent)"/>.
   /// </para>
   /// </remarks>
-  protected virtual void Append(IEnumerable<LoggingEvent> loggingEvents)
+  protected virtual void Append(IEnumerable<LoggingEvent> loggingEvents) => AppendEach(loggingEvents.EnsureNotNull());
+
+  /// <summary>
+  /// Appends each event on its own, so one that throws is reported and costs only itself.
+  /// </summary>
+  private void AppendEach(IEnumerable<LoggingEvent> loggingEvents)
   {
-    foreach (LoggingEvent loggingEvent in loggingEvents.EnsureNotNull())
+    foreach (LoggingEvent loggingEvent in loggingEvents)
     {
-      Append(loggingEvent);
+      try
+      {
+        Append(loggingEvent);
+      }
+      catch (Exception e) when (!e.IsFatal())
+      {
+        ErrorHandler.Error("Failed to append a logging event in Bulk DoAppend", e);
+      }
     }
   }
 
@@ -778,6 +814,11 @@ public abstract class AppenderSkeleton : IAppender, IBulkAppender, IOptionHandle
   /// The guard prevents an appender from repeatedly calling its own DoAppend method
   /// </summary>
   private bool _recursiveGuard;
+
+  /// <summary>
+  /// Set while the base <see cref="Append(LoggingEvent[])"/> delegates to <see cref="Append(IEnumerable{LoggingEvent})"/>.
+  /// </summary>
+  private bool _inBulkAppend;
 
   /// <summary>
   /// Used for locking actions by this appender.

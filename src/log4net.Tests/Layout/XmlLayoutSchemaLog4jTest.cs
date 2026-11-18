@@ -112,5 +112,35 @@ namespace log4net.Tests.Layout
         log.Logger.Log(new(null, repository, data));
       }
     }
+
+    /// <summary>
+    /// Message, NDC and throwable keep their CR LF line ends as character references.
+    /// </summary>
+    [TestCase("NDC")]
+    [TestCase("message")]
+    [TestCase("throwable")]
+    public void LineEndsInElementTextReadBackExactly(string element)
+    {
+      StringAppender stringAppender = new() { Layout = new XmlLayoutSchemaLog4J() };
+      ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      BasicConfigurator.Configure(repository, stringAppender);
+      ILog log = LogManager.GetLogger(repository.Name, "TestLogger");
+      LoggingEventData data = new()
+      {
+        LoggerName = "TestLogger",
+        Level = Level.Info,
+        TimeStampUtc = DateTime.UtcNow,
+        Message = "a\r\nb",
+        ExceptionString = "a\r\nb",
+        Properties = new()
+      };
+      data.Properties["NDC"] = "a\r\nb";
+
+      log.Logger.Log(new(null, repository, data));
+
+      string record = stringAppender.GetString();
+      Assert.That(XmlRecords.RawContent(record, element), Is.EqualTo("a&#xD;&#xA;b"));
+      Assert.That(XmlRecords.ElementText(record, element), Is.EqualTo("a\r\nb"));
+    }
   }
 }

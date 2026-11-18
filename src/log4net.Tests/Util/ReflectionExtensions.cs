@@ -26,7 +26,7 @@ namespace log4net.Tests;
 
 /// <summary>
 /// Reaches the private and internal members that <c>log4net</c> does not expose, since it grants no
-/// <c>InternalsVisibleTo</c>.
+/// <c>InternalsVisibleTo</c>, and lists the public ones, so no test spells out binding flags.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -43,8 +43,11 @@ namespace log4net.Tests;
 /// </remarks>
 internal static class ReflectionExtensions
 {
-  private const BindingFlags AnyMember =
-    BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+  private const BindingFlags PublicMember = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public;
+
+  private const BindingFlags AnyMember = PublicMember | BindingFlags.NonPublic;
+
+  private const BindingFlags DeclaredPublicMember = PublicMember | BindingFlags.DeclaredOnly;
 
   extension(Type owner)
   {
@@ -81,6 +84,11 @@ internal static class ReflectionExtensions
     internal T Construct<T>(params object?[] arguments)
       => (T)(Activator.CreateInstance(owner, AnyMember, null, arguments, null)
         ?? throw new InvalidOperationException($"could not construct {owner.FullName}"));
+
+    /// <summary>Lists the public members the type declares itself, without accessors and constructors.</summary>
+    internal IEnumerable<MemberInfo> DeclaredPublicMembers()
+      => owner.GetMembers(DeclaredPublicMember)
+        .Where(member => member is not MethodBase { IsSpecialName: true });
   }
 
   extension(object target)

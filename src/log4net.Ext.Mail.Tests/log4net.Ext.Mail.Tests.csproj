@@ -17,6 +17,7 @@
   <ItemGroup>
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" Link="Diagnostics\CodeAnalysis\CallerArgumentExpressionAttribute.cs" />
     <Compile Include="..\log4net\Diagnostics\CodeAnalysis\IsExternalInit.cs" Link="Diagnostics\CodeAnalysis\IsExternalInit.cs" />
+    <Compile Include="..\log4net.Tests\Appender\Internal\ThrowingLayout.cs" Link="Appender\Internal\ThrowingLayout.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\log4net.Ext.Mail\log4net.Ext.Mail.csproj" />

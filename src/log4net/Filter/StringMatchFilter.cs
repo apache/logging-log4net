@@ -126,7 +126,20 @@ public class StringMatchFilter : FilterSkeleton
   /// every chain, which is why this is configured rather than chosen here.
   /// </para>
   /// </remarks>
-  public FilterDecision TimeoutDecision { get; set; } = FilterDecision.Neutral;
+  /// <exception cref="ArgumentOutOfRangeException">The value specified is not a defined decision.</exception>
+  public FilterDecision TimeoutDecision
+  {
+    get;
+    set
+    {
+      if (value is not (FilterDecision.Deny or FilterDecision.Neutral or FilterDecision.Accept))
+      {
+        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+          "The value specified for TimeoutDecision is not Deny, Neutral or Accept.");
+      }
+      field = value;
+    }
+  } = FilterDecision.Neutral;
 
   /// <summary>
   /// The decision a match produces, per <see cref="AcceptOnMatch"/>.

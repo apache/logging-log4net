@@ -23,6 +23,7 @@ using System.IO;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
+using log4net.Tests.Appender.Internal;
 
 using NUnit.Framework;
 
@@ -96,6 +97,48 @@ public class TextWriterAppenderTest
     appender.ImmediateFlush = true;
 
     Assert.That(appender.Flush(1000), Is.True);
+  }
+
+  /// <summary>
+  /// A batch is written by <c>Append(LoggingEvent[])</c>: one flush, and an event whose layout throws
+  /// costs only that event.
+  /// </summary>
+  [Test]
+  public void BatchFlushesOnceAndSkipsAnEventThatFailsToRender()
+  {
+    FlushCountingWriter writer = new();
+    TextWriterAppender appender = new()
+    {
+      Layout = new ThrowingLayout(),
+      ImmediateFlush = true,
+      ErrorHandler = new SilentErrorHandler(),
+      Writer = writer
+    };
+    appender.ActivateOptions();
+    writer.Flushes = 0;
+
+    appender.DoAppend(
+    [
+      new(typeof(TextWriterAppenderTest), null, "test", Level.Info, "a", null),
+      new(typeof(TextWriterAppenderTest), null, "test", Level.Info, ThrowingLayout.FailingMessage, null),
+      new(typeof(TextWriterAppenderTest), null, "test", Level.Info, "c", null)
+    ]);
+
+    Assert.That(writer.ToString(), Is.EqualTo("a\nc\n"));
+    Assert.That(writer.Flushes, Is.EqualTo(1));
+  }
+
+  /// <summary>Counts the calls to <see cref="Flush"/>.</summary>
+  private sealed class FlushCountingWriter : StringWriter
+  {
+    internal int Flushes { get; set; }
+
+    /// <inheritdoc/>
+    public override void Flush()
+    {
+      Flushes++;
+      base.Flush();
+    }
   }
 
   private static TextWriterAppender CreateAppender(TextWriter writer)

@@ -191,6 +191,48 @@ public sealed class FileAppenderTest
   }
 
   /// <summary>
+  /// A batch takes the inter process lock once, through <c>FileAppender.Append(LoggingEvent[])</c>.
+  /// </summary>
+  [Test]
+  public void BatchTakesTheInterProcessLockOnce()
+  {
+    using AutoTempFolder folder = new();
+    CountingInterProcessLock lockingModel = new();
+    FileAppender appender = new()
+    {
+      File = Path.Combine(folder.Path, "batch.log"),
+      Layout = new PatternLayout("%message%newline"),
+      LockingModel = lockingModel
+    };
+    appender.ActivateOptions();
+    lockingModel.Acquired = 0;
+
+    appender.DoAppend(
+    [
+      new(typeof(FileAppenderTest), null, "test", Level.Info, "1", null),
+      new(typeof(FileAppenderTest), null, "test", Level.Info, "2", null),
+      new(typeof(FileAppenderTest), null, "test", Level.Info, "3", null)
+    ]);
+    int acquired = lockingModel.Acquired;
+    appender.Close();
+
+    Assert.That(acquired, Is.EqualTo(1));
+  }
+
+  /// <summary>Counts the calls to <see cref="AcquireLock"/>.</summary>
+  private sealed class CountingInterProcessLock : FileAppender.InterProcessLock
+  {
+    internal int Acquired { get; set; }
+
+    /// <inheritdoc/>
+    public override Stream? AcquireLock()
+    {
+      Acquired++;
+      return base.AcquireLock();
+    }
+  }
+
+  /// <summary>
   /// The wait for the inter process lock happens while the appender lock is held, so it has to be
   /// bounded by default: a lock nobody releases would otherwise suspend all logging for good.
   /// </summary>

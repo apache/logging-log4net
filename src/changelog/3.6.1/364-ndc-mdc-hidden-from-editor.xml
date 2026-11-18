@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="364" link="https://github.com/apache/logging-log4net/pull/364"/>
+  <description format="asciidoc">`NDC`, `MDC` and their members are hidden from IntelliSense with
+  `[EditorBrowsable(EditorBrowsableState.Never)]`, so new code is steered to `ThreadContext.Stacks`
+  and `ThreadContext.Properties`. Existing callers compile as before, without obsolete warnings, and
+  the API reference keeps their pages (raised by @fluffynuts, implemented by @FreeAndNil)</description>
+</entry>
