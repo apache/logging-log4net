@@ -43,6 +43,7 @@
 **** xref:manual/configuration/appenders/udpappender.adoc[]
 *** xref:manual/configuration/filters.adoc[]
 *** xref:manual/configuration/layouts.adoc[]
+**** xref:manual/configuration/layouts/patterns.adoc[]
 ** xref:manual/native-aot.adoc[]
 ** xref:manual/examples.adoc[]
 ** xref:manual/faq.adoc[]
