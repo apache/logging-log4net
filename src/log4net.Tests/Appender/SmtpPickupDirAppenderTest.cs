@@ -177,6 +177,35 @@ public class SmtpPickupDirAppenderTest
   }
 
   /// <summary>
+  /// A resize together with a new <see cref="SmtpPickupDirAppender.PickupDir"/> sends the old buffer
+  /// into the new folder, after its path was trimmed and made absolute.
+  /// </summary>
+  [Test]
+  public void AResizeSendsTheOldBufferToTheNewConvertedPickupDir()
+  {
+    using AutoTempFolder oldDir = new();
+    using AutoTempFolder newDir = new();
+    SilentErrorHandler sh = new();
+    SmtpPickupDirAppender appender = CreateSmtpPickupDirAppender(oldDir.Path, sh);
+    appender.Layout = new PatternLayout("%m%n");
+    appender.BufferSize = 5;
+    appender.ActivateOptions();
+    foreach (string message in new[] { "1", "2", "3" })
+    {
+      appender.DoAppend(new LoggingEvent(GetType(), null, "test", Level.Info, message, null));
+    }
+
+    appender.PickupDir = "  " + newDir.Path + "  ";
+    appender.BufferSize = 2;
+    appender.ActivateOptions();
+
+    Assert.That(sh.Message, Is.Empty, "Unexpected error message");
+    Assert.That(Directory.GetFiles(oldDir.Path), Is.Empty);
+    Assert.That(File.ReadAllText(Directory.GetFiles(newDir.Path).Single()),
+      Does.Contain("1" + Environment.NewLine + "2" + Environment.NewLine + "3" + Environment.NewLine));
+  }
+
+  /// <summary>
   /// SMTP allows a CR only before LF, and Sendmail defers a picked up mail with a lone one. Such a CR
   /// from content is written as <c>\r</c>; a CRLF stays a line end.
   /// </summary>

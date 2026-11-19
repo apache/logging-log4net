@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="363" link="https://github.com/apache/logging-log4net/issues/363"/>
+  <issue id="365" link="https://github.com/apache/logging-log4net/pull/365"/>
+  <description format="asciidoc">A second `ActivateOptions()` on a buffering appender no longer drops
+  the buffered events silently: the same size keeps them, another size sends them first, as on close
+  (ANT-2026-IG7QNHGN, fixed by @FreeAndNil)</description>
+</entry>

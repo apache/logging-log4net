@@ -314,8 +314,12 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
   /// object is in an undefined state and must not be used. 
   /// </para>
   /// <para>
-  /// If any of the configuration properties are modified then 
+  /// If any of the configuration properties are modified then
   /// <see cref="ActivateOptions"/> must be called again.
+  /// </para>
+  /// <para>
+  /// A later call with the same size keeps the buffered events; with another size it sends them
+  /// first, as <see cref="OnClose"/> does.
   /// </para>
   /// </remarks>
   public override void ActivateOptions()
@@ -330,13 +334,27 @@ public abstract class BufferingAppenderSkeleton : AppenderSkeleton
       ErrorHandler.Error($"Appender [{Name}] is Lossy but has no Evaluator. The buffer will never be sent!");
     }
 
-    if (BufferSize > 1)
+    lock (LockObj)
     {
-      _cyclicBuffer = new CyclicBuffer(BufferSize);
-    }
-    else
-    {
-      _cyclicBuffer = null;
+      if (_cyclicBuffer?.MaxSize == BufferSize)
+      {
+        // Activated again with the same size: the buffered events stay.
+        return;
+      }
+
+      // The old buffer goes out as on Close before one of the new size replaces it.
+      if (_cyclicBuffer is not null)
+      {
+        try
+        {
+          Flush(true);
+        }
+        catch (Exception e) when (!e.IsFatal())
+        {
+          ErrorHandler.Error("Failed to send the buffered logging events in ActivateOptions", e);
+        }
+      }
+      _cyclicBuffer = BufferSize > 1 ? new(BufferSize) : null;
     }
   }
 

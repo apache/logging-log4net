@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ExceptionServices;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,6 +32,8 @@ using log4net.Tests.Appender;
 using log4net.Util;
 
 using NUnit.Framework;
+
+using static log4net.Tests.TestThreads;
 
 namespace log4net.Tests.Core;
 
@@ -925,30 +926,6 @@ public class FixingTest
   /// </summary>
   private static void Log(ILogger logger, string message = "message")
     => logger.Log(typeof(FixingTest), Level.Info, message, new InvalidOperationException("boom"));
-
-  /// <summary>
-  /// Runs <paramref name="action"/> on a new thread named after <paramref name="user"/> and logged in as them.
-  /// </summary>
-  private static void RunAs(string user, Action action)
-  {
-    ExceptionDispatchInfo? failure = null;
-    Thread thread = new(() =>
-    {
-      Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(user), null);
-      try
-      {
-        action();
-      }
-      catch (Exception e) when (!e.IsFatal())
-      {
-        failure = ExceptionDispatchInfo.Capture(e);
-      }
-    })
-    { Name = user, IsBackground = true };
-    thread.Start();
-    Assert.That(thread.Join(TimeSpan.FromSeconds(10)), Is.True, $"{user} did not finish");
-    failure?.Throw();
-  }
 
   /// <summary>
   /// Creates a repository of its own whose root holds <paramref name="appenders"/> in order.
