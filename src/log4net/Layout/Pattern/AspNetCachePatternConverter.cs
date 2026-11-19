@@ -27,17 +27,19 @@ using log4net.Util;
 namespace log4net.Layout.Pattern;
 
 /// <summary>
-/// Converter for items in the ASP.Net Cache.
+/// Converter for <c>%aspnet-cache</c>: items of <see cref="HttpRuntime.Cache" />.
 /// </summary>
-/// <remarks>
-/// <para>
-/// Outputs an item from the <see cref="HttpRuntime.Cache" />.
-/// </para>
-/// </remarks>
 /// <author>Ron Grabowski</author>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class AspNetCachePatternConverter : AspNetPatternLayoutConverter
 {
+  /// <summary>
+  /// Shows application-wide data, so it needs no check of the logging request.
+  /// </summary>
+  public AspNetCachePatternConverter()
+    : base(isRequestScoped: false)
+  { }
+
   /// <summary>
   /// Write the ASP.Net Cache item to the output
   /// </summary>

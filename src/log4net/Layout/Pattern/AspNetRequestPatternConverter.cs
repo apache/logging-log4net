@@ -27,17 +27,23 @@ using log4net.Util;
 namespace log4net.Layout.Pattern;
 
 /// <summary>
-/// Converter for items in the ASP.Net Cache.
+/// Converter for <c>%aspnet-request</c>: parameters of <see cref="HttpContext.Request" />.
 /// </summary>
 /// <remarks>
-/// <para>
-/// Outputs an item from the <see cref="HttpRuntime.Cache" />.
-/// </para>
+/// Form fields appear only once the application has read the body in classic or buffered mode, so that a
+/// client withholding its body cannot hold the appender.
 /// </remarks>
 /// <author>Ron Grabowski</author>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class AspNetRequestPatternConverter : AspNetPatternLayoutConverter
 {
+  /// <summary>
+  /// Shows data of the current request, so it registers the request capture.
+  /// </summary>
+  public AspNetRequestPatternConverter()
+    : base(isRequestScoped: true)
+  { }
+
   /// <summary>
   /// Write the ASP.Net Cache item to the output
   /// </summary>

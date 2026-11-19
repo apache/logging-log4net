@@ -26,25 +26,40 @@ using log4net.Util;
 namespace log4net.Layout.Pattern;
 
 /// <summary>
-/// Abstract class that provides access to the current HttpContext (<see cref="HttpContext.Current" />) that 
-/// derived classes need.
+/// Base of the <c>%aspnet-*</c> converters; writes <see cref="SystemInfo.NotAvailableText" /> without a current request.
 /// </summary>
 /// <remarks>
-/// This class handles the case when HttpContext.Current is null by writing
-/// <see cref="SystemInfo.NotAvailableText" /> to the writer.
+/// A request scoped converter also writes it for an event fixed with properties in another request.
 /// </remarks>
 /// <author>Ron Grabowski</author>
 internal abstract class AspNetPatternLayoutConverter : PatternLayoutConverter
 {
+  private readonly bool _isRequestScoped;
+
+  /// <summary>
+  /// Registers the request capture for a converter that shows request data.
+  /// </summary>
+  /// <param name="isRequestScoped">Whether the converter shows data of the current request, not of the application.</param>
+  protected AspNetPatternLayoutConverter(bool isRequestScoped)
+  {
+    _isRequestScoped = isRequestScoped;
+    if (isRequestScoped)
+    {
+      AspNetRequestCapture.Register();
+    }
+  }
+
   protected override void Convert(TextWriter writer, LoggingEvent loggingEvent)
   {
-    if (HttpContext.Current is null)
+    // Another request's data would be wrong, not missing.
+    if (HttpContext.Current is HttpContext httpContext
+      && (!_isRequestScoped || AspNetRequestCapture.WasLoggedIn(loggingEvent, httpContext)))
     {
-      writer.Write(SystemInfo.NotAvailableText);
+      Convert(writer, loggingEvent, httpContext);
     }
     else
     {
-      Convert(writer, loggingEvent, HttpContext.Current);
+      writer.Write(SystemInfo.NotAvailableText);
     }
   }
 

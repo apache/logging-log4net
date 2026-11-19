@@ -158,6 +158,7 @@ Slow, see <<caller-location>>.
 |all
 |An event property, with the key in braces, e.g. `+%property{user}+`; without a key all keys and values as a comma separated list.
 By default `log4net:HostName` holds the name of the machine that logged the event.
+Once an `%aspnet-context`, `%aspnet-request` or `%aspnet-session` pattern is used, `log4net:AspNetRequest` shows up with an empty value.
 
 Properties are searched in this order:
 
@@ -256,3 +257,8 @@ Without a key each shows all items, with `+{key}+` the named one.
 `%aspnet-request` shows form fields only once the application has read the request body in classic or buffered mode.
 Before that, and after a bufferless read, they are left out, so that a client withholding its body cannot hold the appender.
 Query string, cookies and server variables are always shown.
+
+`%aspnet-cache` shows `NOT AVAILABLE` when rendered outside a request.
+`%aspnet-context`, `%aspnet-request` and `%aspnet-session` show `NOT AVAILABLE` for an event buffered in another request, logged outside one, or built from `LoggingEventData`.
+A buffer only knows the logging request when its `fix` includes `Properties`, as `All` (the default) and `Partial` do; otherwise it shows the request that flushes it.
+For the logging request's values use `ThreadContext.Properties` and `%property`.
