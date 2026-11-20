@@ -607,6 +607,20 @@ public partial class RollingFileAppender : FileAppender
   }
 
   /// <summary>
+  /// Retries a failed open with the base file name, as <see cref="OpenFile"/> adds the suffix itself.
+  /// </summary>
+  protected override void PrepareWriter()
+  {
+    if (_baseFileName is null)
+    {
+      base.PrepareWriter();
+      return;
+    }
+    // A retry never truncates, as in the base class.
+    SafeOpenFile(_baseFileName, append: true);
+  }
+
+  /// <summary>
   /// Creates and opens the file for logging.  If <see cref="StaticLogFileName"/>
   /// is false then the fully qualified name is determined and used.
   /// </summary>
