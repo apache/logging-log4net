@@ -1059,7 +1059,14 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Reset()
   {
+    // A failed open leaves the stream without a writer that would close it.
+    bool hadWriter = QuietWriter is not null;
     base.Reset();
+    if (!hadWriter)
+    {
+      _stream?.Dispose();
+    }
+    _stream = null;
     _fileName = null;
   }
 
@@ -1080,12 +1087,17 @@ public class FileAppender : TextWriterAppender
   /// Will be called for each logged message until the file is
   /// successfully opened.
   /// </para>
+  /// <para>
+  /// Retries the last failed open, so it always appends; an appender used without
+  /// <see cref="ActivateOptions"/> is undefined and not considered here.
+  /// </para>
   /// </remarks>
   protected override void PrepareWriter()
   {
     if (_fileName is not null)
     {
-      SafeOpenFile(_fileName, AppendToFile);
+      // A retry never truncates, whatever the locking model.
+      SafeOpenFile(_fileName, append: true);
     }
   }
 
@@ -1154,8 +1166,11 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteFooter()
   {
-    //WriteFooter can be called even before a file is opened
-    RunWithBestEffortLock(base.WriteFooter);
+    // Without a writer there is nothing to write, so no lock to wait for.
+    if (HasOpenWriter)
+    {
+      RunWithBestEffortLock(base.WriteFooter);
+    }
   }
 
   /// <summary>
@@ -1168,7 +1183,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteHeader()
   {
-    if (_stream?.AcquireLock() ?? false)
+    if (HasOpenWriter && (_stream?.AcquireLock() ?? false))
     {
       try
       {
@@ -1192,8 +1207,16 @@ public class FileAppender : TextWriterAppender
   protected override void CloseWriter()
   {
     // An already closed writer cannot take the lock.
-    RunWithBestEffortLock(base.CloseWriter);
+    if (HasOpenWriter)
+    {
+      RunWithBestEffortLock(base.CloseWriter);
+    }
   }
+
+  /// <summary>
+  /// Whether a writer is open; after a failed open or during a roll there is none to lock for.
+  /// </summary>
+  private bool HasOpenWriter => QuietWriter is { Closed: false };
 
   /// <summary>
   /// Closes the previously opened file.
@@ -1265,6 +1288,10 @@ public class FileAppender : TextWriterAppender
   /// This method will ensure that the directory structure
   /// for the <paramref name="fileName"/> specified exists.
   /// </para>
+  /// <para>
+  /// <paramref name="append"/> applies to this open only; <see cref="AppendToFile"/> keeps its
+  /// configured value.
+  /// </para>
   /// </remarks>
   protected virtual void OpenFile(string fileName, bool append)
   {
@@ -1290,9 +1317,8 @@ public class FileAppender : TextWriterAppender
 
       LogLog.Debug(_declaringType, "Opening file for writing [" + fileName + "] append [" + append + "]");
 
-      // Save these for later, allowing retries if file open fails
+      // Save it for later, allowing retries if file open fails
       _fileName = fileName;
-      AppendToFile = append;
 
       LockingModel.CurrentAppender = this;
       LockingModel.OpenFile(fileName, append, Encoding);

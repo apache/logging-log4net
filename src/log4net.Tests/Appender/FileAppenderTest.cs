@@ -36,6 +36,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using log4net.Tests.Appender.Internal;
 
 namespace log4net.Tests.Appender;
 
@@ -219,16 +220,266 @@ public sealed class FileAppenderTest
     Assert.That(acquired, Is.EqualTo(1));
   }
 
-  /// <summary>Counts the calls to <see cref="AcquireLock"/>.</summary>
+  /// <summary>Counts the calls to <see cref="AcquireLock"/>, and the files opened and closed.</summary>
   private sealed class CountingInterProcessLock : FileAppender.InterProcessLock
   {
     internal int Acquired { get; set; }
+
+    internal int Opened { get; private set; }
+
+    internal int Closed { get; private set; }
 
     /// <inheritdoc/>
     public override Stream? AcquireLock()
     {
       Acquired++;
       return base.AcquireLock();
+    }
+
+    /// <inheritdoc/>
+    public override void OpenFile(string filename, bool append, Encoding encoding)
+    {
+      Opened++;
+      base.OpenFile(filename, append, encoding);
+    }
+
+    /// <inheritdoc/>
+    public override void CloseFile()
+    {
+      Closed++;
+      base.CloseFile();
+    }
+  }
+
+  /// <summary>
+  /// An open that times out on the lock is retried with every event. Each attempt waits once, for
+  /// the open; footer, close and header have no writer to lock for.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AnOpenThatTimesOutWaitsOnceForTheLock()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "held.log");
+    CountingInterProcessLock lockingModel = new() { LockTimeoutMillis = 200 };
+    FileAppender appender = CreateAppender(file, lockingModel);
+    int activation, perEvent, close;
+
+    using (new HeldLock(file))
+    {
+      appender.ActivateOptions();
+      activation = lockingModel.Acquired;
+      lockingModel.Acquired = 0;
+      appender.DoAppend(CreateEvent("lost"));
+      perEvent = lockingModel.Acquired;
+      lockingModel.Acquired = 0;
+      appender.Close();
+      close = lockingModel.Acquired;
+    }
+
+    Assert.That(activation, Is.EqualTo(1));
+    Assert.That(perEvent, Is.EqualTo(1));
+    Assert.That(close, Is.EqualTo(0));
+  }
+
+  /// <summary>
+  /// Each retried open used to leave the stream of the failed one open until garbage collection.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ARetriedOpenClosesTheStreamOfTheFailedOne()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "held.log");
+    CountingInterProcessLock lockingModel = new() { LockTimeoutMillis = 200 };
+    FileAppender appender = CreateAppender(file, lockingModel);
+
+    using (new HeldLock(file))
+    {
+      appender.ActivateOptions();
+      appender.DoAppend(CreateEvent("lost"));
+      appender.DoAppend(CreateEvent("lost"));
+      appender.Close();
+    }
+
+    Assert.That(lockingModel.Opened, Is.EqualTo(3));
+    Assert.That(lockingModel.Closed, Is.EqualTo(3));
+  }
+
+  /// <summary>
+  /// Once the lock is free again the next event opens the file, header first.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AnOpenRecoversWithTheHeaderOnceTheLockIsFree()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "held.log");
+    FileAppender appender = CreateAppender(file, new FileAppender.InterProcessLock { LockTimeoutMillis = 200 });
+    ((PatternLayout)appender.Layout!).Header = "header" + Environment.NewLine;
+
+    using (new HeldLock(file))
+    {
+      appender.ActivateOptions();
+      appender.DoAppend(CreateEvent("lost"));
+    }
+    appender.DoAppend(CreateEvent("written"));
+    appender.Close();
+
+    Assert.That(File.ReadAllText(file), Is.EqualTo("header" + Environment.NewLine + "written" + Environment.NewLine));
+  }
+
+  /// <summary>
+  /// With <c>AppendToFile=false</c> only the first open of an activation truncates: a retry used to
+  /// truncate again and drop what the lock holder wrote meanwhile. A new activation truncates again.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ARetriedOpenAppendsToWhatTheLockHolderWrote()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "held.log");
+    File.WriteAllText(file, "old" + Environment.NewLine);
+    FileAppender appender = CreateAppender(file, new FileAppender.InterProcessLock { LockTimeoutMillis = 200 });
+    appender.AppendToFile = false;
+
+    using (new HeldLock(file))
+    {
+      appender.ActivateOptions();
+      // The lock holder writes while it holds the lock.
+      using FileStream holder = new(file, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+      byte[] theirs = Encoding.ASCII.GetBytes("theirs" + Environment.NewLine);
+      holder.Write(theirs, 0, theirs.Length);
+    }
+    appender.DoAppend(CreateEvent("mine"));
+    string afterRetry = ReadWhileOpen(file);
+    appender.ActivateOptions();
+    appender.DoAppend(CreateEvent("again"));
+    appender.Close();
+
+    Assert.That(afterRetry, Is.EqualTo("theirs" + Environment.NewLine + "mine" + Environment.NewLine));
+    Assert.That(File.ReadAllText(file), Is.EqualTo("again" + Environment.NewLine));
+    Assert.That(appender.AppendToFile, Is.False);
+  }
+
+  /// <summary>
+  /// A roll closes the writer before it opens the next file; the open's reset takes no lock for the
+  /// writer closed already: footer and close of the old file, open, header and event take one each.
+  /// </summary>
+  [Test]
+  public void AnEventThatRollsTakesNoLockForTheClosedWriter()
+  {
+    using AutoTempFolder folder = new();
+    CountingInterProcessLock lockingModel = new();
+    RollingFileAppender appender = new()
+    {
+      File = Path.Combine(folder.Path, "rolling.log"),
+      Layout = new PatternLayout("%message%newline"),
+      LockingModel = lockingModel,
+      RollingStyle = RollingFileAppender.RollingMode.Size,
+      MaxFileSize = 1,
+      MaxSizeRollBackups = 2,
+      ErrorHandler = new RecordingErrorHandler()
+    };
+    appender.ActivateOptions();
+    appender.DoAppend(CreateEvent("first"));
+    lockingModel.Acquired = 0;
+
+    appender.DoAppend(CreateEvent("rolls"));
+    int acquired = lockingModel.Acquired;
+    appender.Close();
+
+    Assert.That(acquired, Is.EqualTo(5));
+  }
+
+  /// <summary>
+  /// A retry appends, but a roll after it still starts its new file empty with <c>AppendToFile=false</c>.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void ARollAfterARecoveredOpenStartsAnEmptyFile()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "rolling.log");
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      AppendToFile = false,
+      Layout = new PatternLayout("%message%newline"),
+      LockingModel = new FileAppender.InterProcessLock { LockTimeoutMillis = 200 },
+      RollingStyle = RollingFileAppender.RollingMode.Size,
+      MaxFileSize = 1,
+      // No backups: the roll truncates in place, so a roll that appended would keep "recovered".
+      MaxSizeRollBackups = 0,
+      ErrorHandler = new RecordingErrorHandler()
+    };
+
+    using (new HeldLock(file))
+    {
+      appender.ActivateOptions();
+    }
+    appender.DoAppend(CreateEvent("recovered"));
+    appender.DoAppend(CreateEvent("rolled"));
+    appender.Close();
+
+    Assert.That(File.ReadAllText(file), Is.EqualTo("rolled" + Environment.NewLine));
+  }
+
+  private static FileAppender CreateAppender(string file, FileAppender.LockingModelBase lockingModel)
+    => new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      LockingModel = lockingModel,
+      ErrorHandler = new RecordingErrorHandler()
+    };
+
+  /// <summary>Reads a file the appender still holds open, which Windows refuses without shared write access.</summary>
+  private static string ReadWhileOpen(string file)
+  {
+    using FileStream stream = new(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+    using StreamReader reader = new(stream);
+    return reader.ReadToEnd();
+  }
+
+  private static LoggingEvent CreateEvent(string message)
+    => new(typeof(FileAppenderTest), null, "test", Level.Info, message, null);
+
+  /// <summary>
+  /// Holds the inter process lock of a file on another thread, as another process would, until disposed.
+  /// </summary>
+  private sealed class HeldLock : IDisposable
+  {
+    private readonly ManualResetEventSlim _held = new();
+    private readonly ManualResetEventSlim _release = new();
+    private readonly Task _holder;
+
+    internal HeldLock(string file)
+    {
+      // A mutex has to be taken and released on one thread, so the holder does both.
+      _holder = Task.Run(() =>
+      {
+        using Mutex mutex = new(false, typeof(FileAppender).Invoke<string>("MutexNameForPath", [file, string.Empty]));
+        mutex.WaitOne();
+        _held.Set();
+        _release.Wait();
+        mutex.ReleaseMutex();
+      });
+      if (!_held.Wait(TimeSpan.FromSeconds(10)))
+      {
+        // Lets the holder end in case it takes the mutex after all.
+        _release.Set();
+        throw new TimeoutException("the holder never took the mutex");
+      }
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+      _release.Set();
+      _holder.Wait(TimeSpan.FromSeconds(10));
+      _held.Dispose();
+      _release.Dispose();
     }
   }
 

@@ -661,16 +661,7 @@ public partial class RollingFileAppender : FileAppender
       }
 
       // Open the file (call the base class to do it)
-      // base.OpenFile assigns append to AppendToFile, and can throw after doing so.
-      bool configuredAppend = AppendToFile;
-      try
-      {
-        base.OpenFile(fileName, append);
-      }
-      finally
-      {
-        AppendToFile = configuredAppend;
-      }
+      base.OpenFile(fileName, append);
 
       // Set the file size onto the counting writer. A refused lock leaves none.
       (QuietWriter as CountingQuietTextWriter)?.Count = currentCount;
