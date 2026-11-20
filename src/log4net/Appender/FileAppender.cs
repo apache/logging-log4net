@@ -469,6 +469,13 @@ public class FileAppender : TextWriterAppender
     private string? _filename;
     private bool _append;
     private Stream? _stream;
+    private Mutex? _mutex;
+    private bool _isMutexHeld;
+
+    /// <summary>
+    /// How long to wait for the mutex before an event is dropped and reported.
+    /// </summary>
+    internal int MutexTimeoutMillis { get; set; } = 10_000;
 
     /// <summary>
     /// Prepares to open the file when the first message is logged.
@@ -520,6 +527,12 @@ public class FileAppender : TextWriterAppender
       {
         if (_filename is not null)
         {
+          if (!TryEnterMutex())
+          {
+            CurrentAppender?.ErrorHandler.Error(
+              $"Timeout after {MutexTimeoutMillis}ms waiting for the lock on {_filename}, so the logging event was not written.");
+            return null;
+          }
           try
           {
             _stream = CreateStream(_filename, _append, FileShare.Read);
@@ -527,6 +540,8 @@ public class FileAppender : TextWriterAppender
           }
           catch (Exception e) when (!e.IsFatal())
           {
+            // ReleaseLock is not called for a failed acquire.
+            ReleaseMutex();
             CurrentAppender?.ErrorHandler.Error($"Unable to acquire lock on file {_filename}. {e.Message}");
           }
         }
@@ -550,19 +565,33 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override void ReleaseLock()
     {
-      if (_stream is not null)
+      try
       {
-        CloseStream(_stream);
+        if (_stream is not null)
+        {
+          CloseStream(_stream);
+        }
+      }
+      finally
+      {
         _stream = null;
+        ReleaseMutex();
       }
     }
 
     /// <summary>
     /// Initializes all resources used by this locking model.
     /// </summary>
+    /// <remarks>
+    /// Outside Windows a shared open lets a second writer in, so writers take turns through the mutex
+    /// <see cref="InterProcessLock"/> uses; Windows refuses the second open already.
+    /// </remarks>
     public override void ActivateOptions()
     {
-      //NOP
+      if (_mutex is null && !SystemInfo.IsWindows && CurrentAppender?.File is string file)
+      {
+        _mutex = TryCreateMutex(MutexName(file, string.Empty));
+      }
     }
 
     /// <summary>
@@ -570,7 +599,57 @@ public class FileAppender : TextWriterAppender
     /// </summary>
     public override void OnClose()
     {
-      //NOP
+      _mutex?.Dispose();
+      _mutex = null;
+    }
+
+    /// <summary>
+    /// Creates the named mutex, or reports once and returns <see langword="null"/> where the runtime
+    /// cannot, as without a writable home directory; logging then goes on as without the mutex.
+    /// </summary>
+    internal static Mutex? TryCreateMutex(string name)
+    {
+      try
+      {
+        return new(false, name);
+      }
+      // The constructor's documented exceptions, and the one of runtimes without named mutexes.
+      catch (Exception e) when (e is IOException
+                                  or UnauthorizedAccessException
+                                  or WaitHandleCannotBeOpenedException
+                                  or PlatformNotSupportedException)
+      {
+        LogLog.Warn(typeof(MinimalLock),
+          $"No named mutex {name}, so other processes writing the file are not kept out. {e.Message}");
+        return null;
+      }
+    }
+
+    private bool TryEnterMutex()
+    {
+      if (_mutex is null)
+      {
+        return true;
+      }
+      try
+      {
+        _isMutexHeld = _mutex.WaitOne(MutexTimeoutMillis);
+      }
+      catch (AbandonedMutexException)
+      {
+        // The previous owner died without releasing; the wait succeeded.
+        _isMutexHeld = true;
+      }
+      return _isMutexHeld;
+    }
+
+    private void ReleaseMutex()
+    {
+      if (_isMutexHeld)
+      {
+        _isMutexHeld = false;
+        _mutex!.ReleaseMutex();
+      }
     }
   }
 
@@ -989,7 +1068,7 @@ public class FileAppender : TextWriterAppender
   /// <para>
   /// There are three built in locking models, <see cref="ExclusiveLock"/>, <see cref="MinimalLock"/> and <see cref="InterProcessLock"/> .
   /// The first locks the file from the start of logging to the end, the 
-  /// second locks only for the minimal amount of time when logging each message
+  /// second locks only for the minimal amount of time when logging each message, outside Windows also through the named Mutex,
   /// and the last synchronizes processes using a named Mutex, outside Windows guaranteed only for one user account on one host.
   /// </para>
   /// <para>
