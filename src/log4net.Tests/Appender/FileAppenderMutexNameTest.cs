@@ -25,6 +25,7 @@ using System.Threading;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
+using log4net.Tests.Appender.Internal;
 using log4net.Util;
 
 using NUnit.Framework;
@@ -217,6 +218,74 @@ public sealed class FileAppenderMutexNameTest
         "Windows has no limit, so the name must be left as earlier versions computed it");
     }
   }
+
+  /// <summary>
+  /// Outside Windows a plain mutex name is per session, so two services or a service and a cron job
+  /// did not exclude each other: the name is global there.
+  /// </summary>
+  [Test]
+  [Platform(Exclude = "Win")]
+  public void TheMutexNameIsGlobalOutsideWindows()
+  {
+    string name = MutexName("/var/log/app.log", "_rolling");
+
+    Assert.That(name, Is.EqualTo(@"Global\_var_log_app.log_rolling"));
+  }
+
+  /// <summary>
+  /// The prefix comes on top of a name already at the limit, and the platform still accepts it.
+  /// </summary>
+  [Test]
+  [Platform(Exclude = "Win")]
+  public void AGlobalNameAtTheLimitCanBeCreated()
+  {
+    string name = MutexName("/" + new string('d', 4000) + "/app.log", "_rolling");
+
+    using Mutex mutex = new(false, name);
+    Assert.That(mutex.WaitOne(0), Is.True);
+    mutex.ReleaseMutex();
+  }
+
+  /// <summary>
+  /// The roll lock goes by the same global name: held by another process, the appender writes without
+  /// rolling instead of rolling under it.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void TheRollLockIsTheGlobalOne()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "rolling.log");
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      RollingStyle = RollingFileAppender.RollingMode.Size,
+      MaxFileSize = 1,
+      MaxSizeRollBackups = 1,
+      LockTimeoutMillis = 200,
+      Layout = new PatternLayout("%message%newline"),
+      ErrorHandler = new RecordingErrorHandler()
+    };
+    appender.ActivateOptions();
+
+    using (new HeldLock(file, "_rolling"))
+    {
+      appender.DoAppend(new LoggingEvent(typeof(FileAppenderMutexNameTest), null, "test", Level.Info, "first", null));
+      appender.DoAppend(new LoggingEvent(typeof(FileAppenderMutexNameTest), null, "test", Level.Info, "second", null));
+    }
+    appender.Close();
+
+    Assert.That(Directory.GetFiles(folder.Path), Has.Length.EqualTo(1));
+  }
+
+  /// <summary>On Windows the name stays as earlier versions computed it: a global one needs a shared ACL.</summary>
+  [Test]
+  [Platform("Win")]
+  public void TheMutexNameIsUnprefixedOnWindows()
+    => Assert.That(MutexName("/var/log/app.log", "_rolling"), Is.EqualTo("_var_log_app.log_rolling"));
+
+  private static string MutexName(string path, string suffix)
+    => typeof(FileAppender).Invoke<string>(nameof(MutexName), [path, suffix]);
 
   private static string MutexNameForPath(string path, string suffix)
     => typeof(FileAppender).Invoke<string>(nameof(MutexNameForPath), [path, suffix]);

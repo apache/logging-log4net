@@ -36,6 +36,10 @@ The file will be appended to rather than overwritten each time the logging proce
 </appender>
 ----
 
+If the file cannot be opened, each later event tries again.
+Such a retry never truncates, whatever the locking model, also with `appendToFile` set to `false`, so
+what another process wrote meanwhile stays.
+
 This example shows how to configure the file name to write to using an environment variable TEMP.
 The encoding to use to write to the file is also specified.
 A character the encoding cannot represent is written as a `\uXXXX` escape, never as a best fit substitute or `?`.
@@ -70,12 +74,17 @@ This example shows how to configure the appender to use the minimal locking mode
 == Waiting for the lock
 
 `InterProcessLock` coordinates several processes writing to one file through a named mutex.
+Outside Windows `MinimalLock` takes the same mutex around each write, as a shared open does not keep a
+second writer out there; readers are not held up, and its wait is fixed at 10000 milliseconds.
+Outside Windows only the processes of one user account on one host are guaranteed to share that
+mutex, which needs a writable home directory.
 The wait for it happens while the appender lock is held, so a lock nobody releases would suspend
 every thread logging through the appender.
 
 The wait is therefore bounded by `lockTimeoutMillis`, 10000 by default.
 An event that cannot get the lock in time is reported through the error handler and dropped, and the
 appender carries on with the next one.
+If the lock times out while the file is opened, each later event tries the open again and waits once.
 Raise the value when the file is on storage where the lock is legitimately slow to obtain, such as a
 network share, or set it to `-1` to wait for as long as it takes.
 
@@ -92,6 +101,11 @@ network share, or set it to `-1` to wait for as long as it takes.
   </layout>
 </appender>
 ----
+
+`InterProcessLock` and `MinimalLock` write out what they buffered before each release of the lock,
+so that no text lands after or over another process's; `immediateFlush` set to `false` has no effect
+with them.
+For speed put a `BufferingForwardingAppender` in front: one lock and one flush per batch.
 
 `RollingFileAppender` takes a second mutex around the decision to roll and has its own
 `lockTimeoutMillis` for it, with the same default.

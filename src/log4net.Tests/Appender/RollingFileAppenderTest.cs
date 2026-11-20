@@ -1332,7 +1332,8 @@ public class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
+    // The retry appends to what the lock holder wrote.
+    AssertFileEquals(filename, "Test" + "This is a message 2" + Environment.NewLine);
     Assert.That(sh.Message, Does.StartWith("Unable to acquire lock on file"),
       "Expecting an error message");
   }
@@ -1414,7 +1415,8 @@ public class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
+    // The retry appends to what the lock holder wrote.
+    AssertFileEquals(filename, "Test" + "This is a message 2" + Environment.NewLine);
     Assert.That(sh.Message.Substring(0, 30), Is.EqualTo("Unable to acquire lock on file"),
       "Expecting an error message");
   }
@@ -1485,7 +1487,8 @@ public class RollingFileAppenderTest
     log.Log(GetType(), Level.Info, "This is a message 2", null);
     DestroyLogger();
 
-    AssertFileEquals(filename, "This is a message 2" + Environment.NewLine);
+    // The retry appends to what the lock holder wrote.
+    AssertFileEquals(filename, "Test" + "This is a message 2" + Environment.NewLine);
     Assert.That(sh.Message.Substring(0, 30), Is.EqualTo("Unable to acquire lock on file"),
       "Expecting an error message");
   }

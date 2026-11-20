@@ -278,8 +278,11 @@ FileAppender offers different locking models, but they have limitations:
 
 * **Default** - Holds an exclusive write lock, preventing other processes from writing.
 * **MinimalLock** - Acquires the write lock only while logging, allowing interleaved writes but with significant performance loss.
-* **InterProcessLock** - Uses a system-wide Mutex to synchronize, but requires all processes to cooperate. 
+Outside Windows it also takes the named Mutex of InterProcessLock.
+* **InterProcessLock** - Uses a named Mutex to synchronize, but requires all processes to cooperate.
 While better than MinimalLock, it still causes performance issues due to frequent Mutex acquisition.
+Outside Windows only processes of one user account on one host are guaranteed to share it.
+MinimalLock and InterProcessLock flush before each release of the lock, whatever `immediateFlush` says.
 * **NoLock** - Does not use any lock, allowing all processes to write simultaneously.
 However, this can lead to log data corruption if multiple processes write to the file at the same time.
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="367" link="https://github.com/apache/logging-log4net/issues/367"/>
+  <issue id="369" link="https://github.com/apache/logging-log4net/pull/369"/>
+  <description format="asciidoc">Outside Windows `MinimalLock` keeps other writers out while it
+  writes, so one process no longer overwrites the event another just wrote. Readers are not blocked;
+  an event that cannot get the lock within 10 seconds is reported and dropped (ANT-2026-JC5GM7W7, fixed by @FreeAndNil)</description>
+</entry>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="367" link="https://github.com/apache/logging-log4net/issues/367"/>
+  <issue id="369" link="https://github.com/apache/logging-log4net/pull/369"/>
+  <description format="asciidoc">Outside Windows `InterProcessLock` and `RollingFileAppender` now lock
+  the file across login sessions, so processes started separately, such as services and cron jobs, no
+  longer write at the same time (fixed by @FreeAndNil)</description>
+</entry>

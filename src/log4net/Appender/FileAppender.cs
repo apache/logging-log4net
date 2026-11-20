@@ -469,6 +469,13 @@ public class FileAppender : TextWriterAppender
     private string? _filename;
     private bool _append;
     private Stream? _stream;
+    private Mutex? _mutex;
+    private bool _isMutexHeld;
+
+    /// <summary>
+    /// How long to wait for the mutex before an event is dropped and reported.
+    /// </summary>
+    internal int MutexTimeoutMillis { get; set; } = 10_000;
 
     /// <summary>
     /// Prepares to open the file when the first message is logged.
@@ -520,6 +527,12 @@ public class FileAppender : TextWriterAppender
       {
         if (_filename is not null)
         {
+          if (!TryEnterMutex())
+          {
+            CurrentAppender?.ErrorHandler.Error(
+              $"Timeout after {MutexTimeoutMillis}ms waiting for the lock on {_filename}, so the logging event was not written.");
+            return null;
+          }
           try
           {
             _stream = CreateStream(_filename, _append, FileShare.Read);
@@ -527,6 +540,8 @@ public class FileAppender : TextWriterAppender
           }
           catch (Exception e) when (!e.IsFatal())
           {
+            // ReleaseLock is not called for a failed acquire.
+            ReleaseMutex();
             CurrentAppender?.ErrorHandler.Error($"Unable to acquire lock on file {_filename}. {e.Message}");
           }
         }
@@ -550,19 +565,33 @@ public class FileAppender : TextWriterAppender
     /// </remarks>
     public override void ReleaseLock()
     {
-      if (_stream is not null)
+      try
       {
-        CloseStream(_stream);
+        if (_stream is not null)
+        {
+          CloseStream(_stream);
+        }
+      }
+      finally
+      {
         _stream = null;
+        ReleaseMutex();
       }
     }
 
     /// <summary>
     /// Initializes all resources used by this locking model.
     /// </summary>
+    /// <remarks>
+    /// Outside Windows a shared open lets a second writer in, so writers take turns through the mutex
+    /// <see cref="InterProcessLock"/> uses; Windows refuses the second open already.
+    /// </remarks>
     public override void ActivateOptions()
     {
-      //NOP
+      if (_mutex is null && !SystemInfo.IsWindows && CurrentAppender?.File is string file)
+      {
+        _mutex = TryCreateMutex(MutexName(file, string.Empty));
+      }
     }
 
     /// <summary>
@@ -570,7 +599,57 @@ public class FileAppender : TextWriterAppender
     /// </summary>
     public override void OnClose()
     {
-      //NOP
+      _mutex?.Dispose();
+      _mutex = null;
+    }
+
+    /// <summary>
+    /// Creates the named mutex, or reports once and returns <see langword="null"/> where the runtime
+    /// cannot, as without a writable home directory; logging then goes on as without the mutex.
+    /// </summary>
+    internal static Mutex? TryCreateMutex(string name)
+    {
+      try
+      {
+        return new(false, name);
+      }
+      // The constructor's documented exceptions, and the one of runtimes without named mutexes.
+      catch (Exception e) when (e is IOException
+                                  or UnauthorizedAccessException
+                                  or WaitHandleCannotBeOpenedException
+                                  or PlatformNotSupportedException)
+      {
+        LogLog.Warn(typeof(MinimalLock),
+          $"No named mutex {name}, so other processes writing the file are not kept out. {e.Message}");
+        return null;
+      }
+    }
+
+    private bool TryEnterMutex()
+    {
+      if (_mutex is null)
+      {
+        return true;
+      }
+      try
+      {
+        _isMutexHeld = _mutex.WaitOne(MutexTimeoutMillis);
+      }
+      catch (AbandonedMutexException)
+      {
+        // The previous owner died without releasing; the wait succeeded.
+        _isMutexHeld = true;
+      }
+      return _isMutexHeld;
+    }
+
+    private void ReleaseMutex()
+    {
+      if (_isMutexHeld)
+      {
+        _isMutexHeld = false;
+        _mutex!.ReleaseMutex();
+      }
     }
   }
 
@@ -761,9 +840,7 @@ public class FileAppender : TextWriterAppender
         {
           if (CurrentAppender.File is not null)
           {
-            // No ACL, Global\ prefix or user name here: without a shared ACL a global mutex
-            // throws for whichever process starts second, and a user name splits one session.
-            _mutex = new Mutex(false, MutexNameForPath(CurrentAppender.File, string.Empty));
+            _mutex = new Mutex(false, MutexName(CurrentAppender.File, string.Empty));
           }
           else
           {
@@ -991,8 +1068,8 @@ public class FileAppender : TextWriterAppender
   /// <para>
   /// There are three built in locking models, <see cref="ExclusiveLock"/>, <see cref="MinimalLock"/> and <see cref="InterProcessLock"/> .
   /// The first locks the file from the start of logging to the end, the 
-  /// second locks only for the minimal amount of time when logging each message
-  /// and the last synchronizes processes using a named system-wide Mutex.
+  /// second locks only for the minimal amount of time when logging each message, outside Windows also through the named Mutex,
+  /// and the last synchronizes processes using a named Mutex, outside Windows guaranteed only for one user account on one host.
   /// </para>
   /// <para>
   /// The default locking model is the <see cref="ExclusiveLock"/>.
@@ -1037,6 +1114,10 @@ public class FileAppender : TextWriterAppender
 
     LockingModel.CurrentAppender = this;
     LockingModel.ActivateOptions();
+    if (!ImmediateFlush && LockingModel is (InterProcessLock or MinimalLock))
+    {
+      LogLog.Warn(_declaringType, "ImmediateFlush=false is ignored with InterProcessLock and MinimalLock.");
+    }
 
     if (_fileName is not null)
     {
@@ -1059,7 +1140,14 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void Reset()
   {
+    // A failed open leaves the stream without a writer that would close it.
+    bool hadWriter = QuietWriter is not null;
     base.Reset();
+    if (!hadWriter)
+    {
+      _stream?.Dispose();
+    }
+    _stream = null;
     _fileName = null;
   }
 
@@ -1080,12 +1168,17 @@ public class FileAppender : TextWriterAppender
   /// Will be called for each logged message until the file is
   /// successfully opened.
   /// </para>
+  /// <para>
+  /// Retries the last failed open, so it always appends; an appender used without
+  /// <see cref="ActivateOptions"/> is undefined and not considered here.
+  /// </para>
   /// </remarks>
   protected override void PrepareWriter()
   {
     if (_fileName is not null)
     {
-      SafeOpenFile(_fileName, AppendToFile);
+      // A retry never truncates, whatever the locking model.
+      SafeOpenFile(_fileName, append: true);
     }
   }
 
@@ -1113,7 +1206,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream?.ReleaseLock();
+        ReleaseLockFlushed();
       }
     }
   }
@@ -1139,7 +1232,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream?.ReleaseLock();
+        ReleaseLockFlushed();
       }
     }
   }
@@ -1154,8 +1247,11 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteFooter()
   {
-    //WriteFooter can be called even before a file is opened
-    RunWithBestEffortLock(base.WriteFooter);
+    // Without a writer there is nothing to write, so no lock to wait for.
+    if (HasOpenWriter)
+    {
+      RunWithBestEffortLock(base.WriteFooter);
+    }
   }
 
   /// <summary>
@@ -1168,7 +1264,7 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   protected override void WriteHeader()
   {
-    if (_stream?.AcquireLock() ?? false)
+    if (HasOpenWriter && (_stream?.AcquireLock() ?? false))
     {
       try
       {
@@ -1176,8 +1272,79 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream?.ReleaseLock();
+        ReleaseLockFlushed();
       }
+    }
+  }
+
+  /// <summary>
+  /// Flushes the buffered text under the file lock; without it the locking stream refuses the write.
+  /// <see cref="InterProcessLock"/> and <see cref="MinimalLock"/> flush at every release, so there is nothing to do.
+  /// </summary>
+  /// <param name="millisecondsTimeout">Not honoured: the wait is the locking model's.</param>
+  /// <returns><see langword="false"/> when the file lock could not be taken or the flush failed.</returns>
+  public override bool Flush(int millisecondsTimeout)
+  {
+    if (ImmediateFlush || LockingModel is (InterProcessLock or MinimalLock))
+    {
+      return true;
+    }
+
+    // The appender lock first: the locking stream counts acquisitions, not their threads.
+    lock (LockObj)
+    {
+      if (!HasOpenWriter)
+      {
+        return true;
+      }
+      if (_stream?.AcquireLock() is not true)
+      {
+        return false;
+      }
+      try
+      {
+        return base.Flush(millisecondsTimeout);
+      }
+      finally
+      {
+        _stream.ReleaseLock();
+      }
+    }
+  }
+
+  /// <summary>
+  /// Writes the footer and closes the file within a single lock, so that no other process writes in between.
+  /// </summary>
+  protected override void WriteFooterAndCloseWriter()
+  {
+    if (HasOpenWriter)
+    {
+      RunWithBestEffortLock(base.WriteFooterAndCloseWriter);
+    }
+    else
+    {
+      // Nothing to lock for, but an overriding subclass still gets its calls.
+      base.WriteFooterAndCloseWriter();
+    }
+  }
+
+  /// <summary>
+  /// Releases the file lock. With a lock shared between processes the buffered text goes out first,
+  /// whatever <see cref="TextWriterAppender.ImmediateFlush"/> says, or it would land after or over
+  /// another process's text.
+  /// </summary>
+  private void ReleaseLockFlushed()
+  {
+    try
+    {
+      if (LockingModel is (InterProcessLock or MinimalLock) && QuietWriter is { Closed: false } writer)
+      {
+        writer.Flush();
+      }
+    }
+    finally
+    {
+      _stream?.ReleaseLock();
     }
   }
 
@@ -1192,8 +1359,16 @@ public class FileAppender : TextWriterAppender
   protected override void CloseWriter()
   {
     // An already closed writer cannot take the lock.
-    RunWithBestEffortLock(base.CloseWriter);
+    if (HasOpenWriter)
+    {
+      RunWithBestEffortLock(base.CloseWriter);
+    }
   }
+
+  /// <summary>
+  /// Whether a writer is open; after a failed open or during a roll there is none to lock for.
+  /// </summary>
+  private bool HasOpenWriter => QuietWriter is { Closed: false };
 
   /// <summary>
   /// Closes the previously opened file.
@@ -1237,9 +1412,19 @@ public class FileAppender : TextWriterAppender
   /// </summary>
   private void RunWithBestEffortLock(Action action)
   {
-    bool locked = _stream?.AcquireLock() ?? false;
+    // A nested call runs under the outer attempt, taken or not, instead of waiting again.
+    if (_inBestEffortLock)
+    {
+      action();
+      return;
+    }
+
+    _inBestEffortLock = true;
+    bool locked = false;
     try
     {
+      // Inside the try: an acquire that throws must not leave the flag set.
+      locked = _stream?.AcquireLock() ?? false;
       action();
     }
     finally
@@ -1248,6 +1433,7 @@ public class FileAppender : TextWriterAppender
       {
         _stream?.ReleaseLock();
       }
+      _inBestEffortLock = false;
     }
   }
 
@@ -1264,6 +1450,10 @@ public class FileAppender : TextWriterAppender
   /// <para>
   /// This method will ensure that the directory structure
   /// for the <paramref name="fileName"/> specified exists.
+  /// </para>
+  /// <para>
+  /// <paramref name="append"/> applies to this open only; <see cref="AppendToFile"/> keeps its
+  /// configured value.
   /// </para>
   /// </remarks>
   protected virtual void OpenFile(string fileName, bool append)
@@ -1290,9 +1480,8 @@ public class FileAppender : TextWriterAppender
 
       LogLog.Debug(_declaringType, "Opening file for writing [" + fileName + "] append [" + append + "]");
 
-      // Save these for later, allowing retries if file open fails
+      // Save it for later, allowing retries if file open fails
       _fileName = fileName;
-      AppendToFile = append;
 
       LockingModel.CurrentAppender = this;
       LockingModel.OpenFile(fileName, append, Encoding);
@@ -1377,8 +1566,8 @@ public class FileAppender : TextWriterAppender
   /// </summary>
   /// <remarks>
   /// The flattened path, as earlier versions computed it. Only a name the platform rejects is
-  /// hashed: Unix stops at <see cref="MaxMutexNameBytes"/>, Windows has no limit. Unprefixed, so
-  /// on Windows it coordinates one session.
+  /// hashed: Unix stops at <see cref="MaxMutexNameBytes"/>, Windows has no limit. Unprefixed;
+  /// <see cref="MutexName"/> adds the prefix.
   /// <para>
   /// The suffix can collide, since it is only appended: the lock for <c>/var/log/app_rolling</c> and
   /// the rolling lock for <c>/var/log/app</c> name one mutex. Two unrelated files then contend on
@@ -1388,6 +1577,13 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   internal static string MutexNameForPath(string path, string suffix)
     => MutexNameForPath(path, suffix, SystemInfo.IsWindows ? null : MaxMutexNameBytes);
+
+  /// <summary>
+  /// The name of the mutex for <paramref name="path"/>: outside Windows with <c>Global\</c>, as a plain
+  /// name there is per session; on Windows without, where a global mutex needs a shared ACL.
+  /// </summary>
+  internal static string MutexName(string path, string suffix)
+    => SystemInfo.IsWindows ? MutexNameForPath(path, suffix) : @"Global\" + MutexNameForPath(path, suffix);
 
   /// <summary>Takes the limit rather than deciding it, so both branches are testable anywhere.</summary>
   private static string MutexNameForPath(string path, string suffix, int? maxBytes)
@@ -1421,6 +1617,11 @@ public class FileAppender : TextWriterAppender
   /// The stream to log to. Has added locking semantics
   /// </summary>
   private LockingStream? _stream;
+
+  /// <summary>
+  /// Set while <see cref="RunWithBestEffortLock"/> runs, always under the appender lock.
+  /// </summary>
+  private bool _inBestEffortLock;
 
   /// <summary>
   /// The fully qualified type of the FileAppender class.

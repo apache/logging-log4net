@@ -607,6 +607,20 @@ public partial class RollingFileAppender : FileAppender
   }
 
   /// <summary>
+  /// Retries a failed open with the base file name, as <see cref="OpenFile"/> adds the suffix itself.
+  /// </summary>
+  protected override void PrepareWriter()
+  {
+    if (_baseFileName is null)
+    {
+      base.PrepareWriter();
+      return;
+    }
+    // A retry never truncates, as in the base class.
+    SafeOpenFile(_baseFileName, append: true);
+  }
+
+  /// <summary>
   /// Creates and opens the file for logging.  If <see cref="StaticLogFileName"/>
   /// is false then the fully qualified name is determined and used.
   /// </summary>
@@ -661,16 +675,7 @@ public partial class RollingFileAppender : FileAppender
       }
 
       // Open the file (call the base class to do it)
-      // base.OpenFile assigns append to AppendToFile, and can throw after doing so.
-      bool configuredAppend = AppendToFile;
-      try
-      {
-        base.OpenFile(fileName, append);
-      }
-      finally
-      {
-        AppendToFile = configuredAppend;
-      }
+      base.OpenFile(fileName, append);
 
       // Set the file size onto the counting writer. A refused lock leaves none.
       (QuietWriter as CountingQuietTextWriter)?.Count = currentCount;
@@ -1156,7 +1161,7 @@ public partial class RollingFileAppender : FileAppender
     }
 
     // initialize the mutex that is used to lock rolling
-    _mutexForRolling = new Mutex(false, MutexNameForPath(_baseFileName, "_rolling"));
+    _mutexForRolling = new Mutex(false, MutexName(_baseFileName, "_rolling"));
 
     if (_rollDate && File is not null && _scheduledFilename is null)
     {
