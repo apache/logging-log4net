@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="362" link="https://github.com/apache/logging-log4net/issues/362"/>
+  <issue id="365" link="https://github.com/apache/logging-log4net/pull/365"/>
+  <description format="asciidoc">`%aspnet-context`, `%aspnet-request` and `%aspnet-session`
+  show `NOT AVAILABLE` instead of another request's values for an event buffered with its properties fixed
+  and flushed by a later request, and for one built from `LoggingEventData` or deserialized. Property dumps
+  then list an empty `log4net:AspNetRequest`. A buffer whose `fix` leaves out `Properties`, or an event first
+  fixed off the logging thread, still shows the request that renders it (ANT-2026-O0DMJJ34, fixed by @FreeAndNil)</description>
+</entry>

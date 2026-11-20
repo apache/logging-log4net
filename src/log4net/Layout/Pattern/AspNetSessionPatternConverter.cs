@@ -27,17 +27,19 @@ using log4net.Util;
 namespace log4net.Layout.Pattern;
 
 /// <summary>
-/// Converter for items in the ASP.Net Cache.
+/// Converter for <c>%aspnet-session</c>: items of <see cref="HttpContext.Session" />.
 /// </summary>
-/// <remarks>
-/// <para>
-/// Outputs an item from the <see cref="HttpRuntime.Cache" />.
-/// </para>
-/// </remarks>
 /// <author>Ron Grabowski</author>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class AspNetSessionPatternConverter : AspNetPatternLayoutConverter
 {
+  /// <summary>
+  /// Shows data of the current request, so it registers the request capture.
+  /// </summary>
+  public AspNetSessionPatternConverter()
+    : base(isRequestScoped: true)
+  { }
+
   /// <summary>
   /// Write the ASP.Net Cache item to the output
   /// </summary>

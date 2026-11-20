@@ -199,14 +199,15 @@ public class SmtpPickupDirAppender : BufferingAppenderSkeleton
       throw new ArgumentException($"{nameof(PickupDir)} must be specified", nameof(PickupDir));
     }
 
-    base.ActivateOptions();
-
     SecurityContext ??= SecurityContextProvider.DefaultProvider.CreateSecurityContext(this);
 
     using (SecurityContext.Impersonate(this))
     {
       PickupDir = ConvertToFullPath(PickupDir.Trim());
     }
+
+    // After the path: a resize in the base sends the old buffer into PickupDir.
+    base.ActivateOptions();
   }
 
   /// <summary>

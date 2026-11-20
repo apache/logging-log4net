@@ -437,28 +437,40 @@ public abstract class Logger(string name) : IHierarchyNode, IAppenderAttachable,
 
     int writes = 0;
 
-    for (Logger? c = this; c is not null; c = c._parent)
+    // While this thread delivers the event, a fix by one appender does not hide fields from the next.
+    bool entered = loggingEvent.TryEnterDelivery();
+    try
     {
-      if (c._appenderAttachedImpl is not null)
+      for (Logger? c = this; c is not null; c = c._parent)
       {
-        // Protected against simultaneous call to addAppender, removeAppender,...
-        c._appenderLock.AcquireReaderLock();
-        try
+        if (c._appenderAttachedImpl is not null)
         {
-          if (c._appenderAttachedImpl is not null)
+          // Protected against simultaneous call to addAppender, removeAppender,...
+          c._appenderLock.AcquireReaderLock();
+          try
           {
-            writes += c._appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+            if (c._appenderAttachedImpl is not null)
+            {
+              writes += c._appenderAttachedImpl.AppendLoopOnAppenders(loggingEvent);
+            }
+          }
+          finally
+          {
+            c._appenderLock.ReleaseReaderLock();
           }
         }
-        finally
+
+        if (!c.Additivity)
         {
-          c._appenderLock.ReleaseReaderLock();
+          break;
         }
       }
-
-      if (!c.Additivity)
+    }
+    finally
+    {
+      if (entered)
       {
-        break;
+        loggingEvent.ExitDelivery();
       }
     }
 

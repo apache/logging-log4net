@@ -26,17 +26,19 @@ using log4net.Core;
 namespace log4net.Layout.Pattern;
 
 /// <summary>
-/// Converter for items in the <see cref="HttpContext" />.
+/// Converter for <c>%aspnet-context</c>: items of <see cref="HttpContext.Items" />.
 /// </summary>
-/// <remarks>
-/// <para>
-/// Outputs an item from the <see cref="HttpContext" />.
-/// </para>
-/// </remarks>
 /// <author>Ron Grabowski</author>
 [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Reflection")]
 internal sealed class AspNetContextPatternConverter : AspNetPatternLayoutConverter
 {
+  /// <summary>
+  /// Shows data of the current request, so it registers the request capture.
+  /// </summary>
+  public AspNetContextPatternConverter()
+    : base(isRequestScoped: true)
+  { }
+
   /// <summary>
   /// Write the ASP.Net HttpContext item to the output
   /// </summary>

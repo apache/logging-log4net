@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="362" link="https://github.com/apache/logging-log4net/issues/362"/>
+  <issue id="365" link="https://github.com/apache/logging-log4net/pull/365"/>
+  <description format="asciidoc">An event buffered without `Properties` in its `Fix` no longer shows the
+  context properties of the thread that flushes the buffer to `%property`, `%mdc`, `%ndc`, the XML
+  layouts and property filters. Read after the logging call, or on another thread, its properties
+  hold only the event's own and the global ones, and a later fix there stores just these.
+  `FixFlags.Mdc` and `FixFlags.Ndc` now fix the properties, as their names suggest. Behaviour
+  change: once the logging call has returned, and after a fix without `Properties` outside a logging
+  call, the logging thread itself no longer sees its context properties in the event
+  (ANT-2026-FE7I6RPI, fixed by @FreeAndNil)</description>
+</entry>
