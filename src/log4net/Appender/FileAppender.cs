@@ -1201,6 +1201,41 @@ public class FileAppender : TextWriterAppender
   }
 
   /// <summary>
+  /// Flushes the buffered text under the file lock; without it the locking stream refuses the write.
+  /// <see cref="InterProcessLock"/> and <see cref="MinimalLock"/> flush at every release, so there is nothing to do.
+  /// </summary>
+  /// <param name="millisecondsTimeout">Not honoured: the wait is the locking model's.</param>
+  /// <returns><see langword="false"/> when the file lock could not be taken or the flush failed.</returns>
+  public override bool Flush(int millisecondsTimeout)
+  {
+    if (ImmediateFlush || LockingModel is (InterProcessLock or MinimalLock))
+    {
+      return true;
+    }
+
+    // The appender lock first: the locking stream counts acquisitions, not their threads.
+    lock (LockObj)
+    {
+      if (!HasOpenWriter)
+      {
+        return true;
+      }
+      if (_stream?.AcquireLock() is not true)
+      {
+        return false;
+      }
+      try
+      {
+        return base.Flush(millisecondsTimeout);
+      }
+      finally
+      {
+        _stream.ReleaseLock();
+      }
+    }
+  }
+
+  /// <summary>
   /// Writes the footer and closes the file within a single lock, so that no other process writes in between.
   /// </summary>
   protected override void WriteFooterAndCloseWriter()

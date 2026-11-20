@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="366" link="https://github.com/apache/logging-log4net/issues/366"/>
+  <issue id="369" link="https://github.com/apache/logging-log4net/pull/369"/>
+  <description format="asciidoc">`FileAppender.Flush(int)` with `ImmediateFlush=false` no longer
+  drops the buffered text and returns `false`: it takes the file lock and writes the text.
+  With `InterProcessLock` and `MinimalLock` nothing is left buffered, as they flush before
+  each release, so it returns immediately (ANT-2026-98BDXCN5, fixed by @FreeAndNil)</description>
+</entry>

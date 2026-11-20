@@ -39,6 +39,8 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using log4net.Tests.Appender.Internal;
 
+using static log4net.Tests.Appender.Internal.TestFileAppenders;
+
 namespace log4net.Tests.Appender;
 
 /// <summary>
@@ -77,8 +79,8 @@ public sealed class FileAppenderTest
   [Test]
   public void FilenameWithPatternStringTest()
   {
-    LogLog.LogReceived += LogReceived;
-    try
+    List<LogLog> messages = [];
+    using (new LogLog.LogReceivedAdapter(messages))
     {
       XmlDocument log4NetConfig = new();
       log4NetConfig.LoadXml(
@@ -106,12 +108,8 @@ public sealed class FileAppenderTest
       ILoggerRepository rep = LogManager.CreateRepository(Guid.NewGuid().ToString());
       XmlConfigurator.Configure(rep, log4NetConfig["log4net"]!);
     }
-    finally
-    {
-      LogLog.LogReceived -= LogReceived;
-    }
 
-    static void LogReceived(object? source, LogReceivedEventArgs e) => Assert.Fail(e.LogLog.Message);
+    Assert.That(messages.ConvertAll(m => m.Message), Is.Empty);
   }
 
   /// <summary>
@@ -219,37 +217,6 @@ public sealed class FileAppenderTest
     appender.Close();
 
     Assert.That(acquired, Is.EqualTo(1));
-  }
-
-  /// <summary>Counts the calls to <see cref="AcquireLock"/>, and the files opened and closed.</summary>
-  private sealed class CountingInterProcessLock : FileAppender.InterProcessLock
-  {
-    internal int Acquired { get; set; }
-
-    internal int Opened { get; private set; }
-
-    internal int Closed { get; private set; }
-
-    /// <inheritdoc/>
-    public override Stream? AcquireLock()
-    {
-      Acquired++;
-      return base.AcquireLock();
-    }
-
-    /// <inheritdoc/>
-    public override void OpenFile(string filename, bool append, Encoding encoding)
-    {
-      Opened++;
-      base.OpenFile(filename, append, encoding);
-    }
-
-    /// <inheritdoc/>
-    public override void CloseFile()
-    {
-      Closed++;
-      base.CloseFile();
-    }
   }
 
   /// <summary>
@@ -744,64 +711,6 @@ public sealed class FileAppenderTest
     {
       Closes++;
       base.CloseWriter();
-    }
-  }
-
-  private static FileAppender CreateAppender(string file, FileAppender.LockingModelBase lockingModel)
-    => new()
-    {
-      File = file,
-      Layout = new PatternLayout("%message%newline"),
-      LockingModel = lockingModel,
-      ErrorHandler = new RecordingErrorHandler()
-    };
-
-  /// <summary>Reads a file the appender still holds open, which Windows refuses without shared write access.</summary>
-  private static string ReadWhileOpen(string file)
-  {
-    using FileStream stream = new(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-    using StreamReader reader = new(stream);
-    return reader.ReadToEnd();
-  }
-
-  private static LoggingEvent CreateEvent(string message)
-    => new(typeof(FileAppenderTest), null, "test", Level.Info, message, null);
-
-  /// <summary>
-  /// Holds the inter process lock of a file on another thread, as another process would, until disposed.
-  /// </summary>
-  private sealed class HeldLock : IDisposable
-  {
-    private readonly ManualResetEventSlim _held = new();
-    private readonly ManualResetEventSlim _release = new();
-    private readonly Task _holder;
-
-    internal HeldLock(string file)
-    {
-      // A mutex has to be taken and released on one thread, so the holder does both.
-      _holder = Task.Run(() =>
-      {
-        using Mutex mutex = new(false, typeof(FileAppender).Invoke<string>("MutexNameForPath", [file, string.Empty]));
-        mutex.WaitOne();
-        _held.Set();
-        _release.Wait();
-        mutex.ReleaseMutex();
-      });
-      if (!_held.Wait(TimeSpan.FromSeconds(10)))
-      {
-        // Lets the holder end in case it takes the mutex after all.
-        _release.Set();
-        throw new TimeoutException("the holder never took the mutex");
-      }
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-      _release.Set();
-      _holder.Wait(TimeSpan.FromSeconds(10));
-      _held.Dispose();
-      _release.Dispose();
     }
   }
 
