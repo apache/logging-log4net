@@ -74,6 +74,8 @@ This example shows how to configure the appender to use the minimal locking mode
 == Waiting for the lock
 
 `InterProcessLock` coordinates several processes writing to one file through a named mutex.
+Outside Windows only the processes of one user account on one host are guaranteed to share that
+mutex, which needs a writable home directory.
 The wait for it happens while the appender lock is held, so a lock nobody releases would suspend
 every thread logging through the appender.
 

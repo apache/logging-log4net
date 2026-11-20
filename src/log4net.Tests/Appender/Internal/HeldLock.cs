@@ -26,7 +26,8 @@ using log4net.Appender;
 namespace log4net.Tests.Appender.Internal;
 
 /// <summary>
-/// Holds the inter process lock of a file on another thread, as another process would, until disposed.
+/// Holds the inter process lock of a file on another thread, as another process would, until disposed;
+/// with the suffix <c>_rolling</c> the lock of its roll.
 /// </summary>
 internal sealed class HeldLock : IDisposable
 {
@@ -34,12 +35,12 @@ internal sealed class HeldLock : IDisposable
   private readonly ManualResetEventSlim _release = new();
   private readonly Task _holder;
 
-  internal HeldLock(string file)
+  internal HeldLock(string file, string suffix = "")
   {
     // A mutex has to be taken and released on one thread, so the holder does both.
     _holder = Task.Run(() =>
     {
-      using Mutex mutex = new(false, typeof(FileAppender).Invoke<string>("MutexNameForPath", [file, string.Empty]));
+      using Mutex mutex = new(false, typeof(FileAppender).Invoke<string>("MutexName", [file, suffix]));
       mutex.WaitOne();
       _held.Set();
       _release.Wait();

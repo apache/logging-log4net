@@ -765,7 +765,7 @@ public sealed class FileAppenderTest
     // A mutex has to be taken and released on one thread, so the holder does both.
     Task holder = Task.Run(() =>
     {
-      using Mutex contender = new(false, appenderFile);
+      using Mutex contender = new(false, typeof(FileAppender).Invoke<string>("MutexName", [appenderFile, string.Empty]));
       contender.WaitOne();
       held.Set();
       release.Wait();

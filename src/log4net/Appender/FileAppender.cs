@@ -761,9 +761,7 @@ public class FileAppender : TextWriterAppender
         {
           if (CurrentAppender.File is not null)
           {
-            // No ACL, Global\ prefix or user name here: without a shared ACL a global mutex
-            // throws for whichever process starts second, and a user name splits one session.
-            _mutex = new Mutex(false, MutexNameForPath(CurrentAppender.File, string.Empty));
+            _mutex = new Mutex(false, MutexName(CurrentAppender.File, string.Empty));
           }
           else
           {
@@ -992,7 +990,7 @@ public class FileAppender : TextWriterAppender
   /// There are three built in locking models, <see cref="ExclusiveLock"/>, <see cref="MinimalLock"/> and <see cref="InterProcessLock"/> .
   /// The first locks the file from the start of logging to the end, the 
   /// second locks only for the minimal amount of time when logging each message
-  /// and the last synchronizes processes using a named system-wide Mutex.
+  /// and the last synchronizes processes using a named Mutex, outside Windows guaranteed only for one user account on one host.
   /// </para>
   /// <para>
   /// The default locking model is the <see cref="ExclusiveLock"/>.
@@ -1489,8 +1487,8 @@ public class FileAppender : TextWriterAppender
   /// </summary>
   /// <remarks>
   /// The flattened path, as earlier versions computed it. Only a name the platform rejects is
-  /// hashed: Unix stops at <see cref="MaxMutexNameBytes"/>, Windows has no limit. Unprefixed, so
-  /// on Windows it coordinates one session.
+  /// hashed: Unix stops at <see cref="MaxMutexNameBytes"/>, Windows has no limit. Unprefixed;
+  /// <see cref="MutexName"/> adds the prefix.
   /// <para>
   /// The suffix can collide, since it is only appended: the lock for <c>/var/log/app_rolling</c> and
   /// the rolling lock for <c>/var/log/app</c> name one mutex. Two unrelated files then contend on
@@ -1500,6 +1498,13 @@ public class FileAppender : TextWriterAppender
   /// </remarks>
   internal static string MutexNameForPath(string path, string suffix)
     => MutexNameForPath(path, suffix, SystemInfo.IsWindows ? null : MaxMutexNameBytes);
+
+  /// <summary>
+  /// The name of the mutex for <paramref name="path"/>: outside Windows with <c>Global\</c>, as a plain
+  /// name there is per session; on Windows without, where a global mutex needs a shared ACL.
+  /// </summary>
+  internal static string MutexName(string path, string suffix)
+    => SystemInfo.IsWindows ? MutexNameForPath(path, suffix) : @"Global\" + MutexNameForPath(path, suffix);
 
   /// <summary>Takes the limit rather than deciding it, so both branches are testable anywhere.</summary>
   private static string MutexNameForPath(string path, string suffix, int? maxBytes)
