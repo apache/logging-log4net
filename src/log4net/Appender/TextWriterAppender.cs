@@ -60,12 +60,9 @@ public class TextWriterAppender : AppenderSkeleton
   /// </para>
   /// </value>
   /// <remarks>
-  /// Avoiding the flush operation at the end of each append results in
-  /// a performance gain of 10 to 20 percent. However, there is a safety
-  /// trade-off involved in skipping flushing. Indeed, when flushing is
-  /// skipped, then it is likely that the last few log events will not
-  /// be recorded on disk when the application exits. This is a high
-  /// price to pay even for a 20% performance gain.
+  /// Skipping the flush is faster, but the last events are lost when the process ends without closing
+  /// the appender. <see cref="FileAppender"/> with <see cref="FileAppender.InterProcessLock"/> or
+  /// <see cref="FileAppender.MinimalLock"/> always flushes before releasing the lock.
   /// </remarks>
   public bool ImmediateFlush { get; set; } = true;
 

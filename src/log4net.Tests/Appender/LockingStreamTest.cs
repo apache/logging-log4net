@@ -36,10 +36,13 @@ public sealed class LockingStreamTest
   {
     internal bool CanAcquire { get; set; }
 
+    internal bool IsAcquireThrowing { get; set; }
+
     internal int ReleaseCount { get; private set; }
 
     /// <inheritdoc/>
-    public override Stream? AcquireLock() => CanAcquire ? Stream.Null : null;
+    public override Stream? AcquireLock()
+      => IsAcquireThrowing ? throw new IOException("acquire failed") : CanAcquire ? Stream.Null : null;
 
     /// <inheritdoc/>
     public override void ReleaseLock() => ReleaseCount++;
@@ -123,6 +126,23 @@ public sealed class LockingStreamTest
     Assert.That(model.ReleaseCount, Is.EqualTo(1), "the counter went negative, so nothing locked again");
   }
 
+
+  /// <summary>
+  /// An acquire that throws must not leave the next call running unlocked without trying.
+  /// </summary>
+  [Test]
+  public void RunWithBestEffortLockTriesAgainAfterAnAcquireThatThrew()
+  {
+    SwitchableLock model = new() { CanAcquire = true, IsAcquireThrowing = true };
+    FileAppender appender = new();
+    SetStream(appender, NewLockingStream(model));
+
+    Assert.That(() => RunWithBestEffortLock(appender, () => { }), Throws.Exception);
+    model.IsAcquireThrowing = false;
+    RunWithBestEffortLock(appender, () => { });
+
+    Assert.That(model.ReleaseCount, Is.EqualTo(1));
+  }
 
   private static void SetStream(FileAppender appender, object stream)
     => appender.SetFieldValue("_stream", stream);

@@ -98,6 +98,11 @@ network share, or set it to `-1` to wait for as long as it takes.
 </appender>
 ----
 
+`InterProcessLock` and `MinimalLock` write out what they buffered before each release of the lock,
+so that no text lands after or over another process's; `immediateFlush` set to `false` has no effect
+with them.
+For speed put a `BufferingForwardingAppender` in front: one lock and one flush per batch.
+
 `RollingFileAppender` takes a second mutex around the decision to roll and has its own
 `lockTimeoutMillis` for it, with the same default.
 An event that cannot get that lock is written to the current file without checking whether it should

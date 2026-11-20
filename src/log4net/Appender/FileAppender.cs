@@ -1037,6 +1037,10 @@ public class FileAppender : TextWriterAppender
 
     LockingModel.CurrentAppender = this;
     LockingModel.ActivateOptions();
+    if (!ImmediateFlush && LockingModel is (InterProcessLock or MinimalLock))
+    {
+      LogLog.Warn(_declaringType, "ImmediateFlush=false is ignored with InterProcessLock and MinimalLock.");
+    }
 
     if (_fileName is not null)
     {
@@ -1125,7 +1129,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream?.ReleaseLock();
+        ReleaseLockFlushed();
       }
     }
   }
@@ -1151,7 +1155,7 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream?.ReleaseLock();
+        ReleaseLockFlushed();
       }
     }
   }
@@ -1191,8 +1195,44 @@ public class FileAppender : TextWriterAppender
       }
       finally
       {
-        _stream?.ReleaseLock();
+        ReleaseLockFlushed();
       }
+    }
+  }
+
+  /// <summary>
+  /// Writes the footer and closes the file within a single lock, so that no other process writes in between.
+  /// </summary>
+  protected override void WriteFooterAndCloseWriter()
+  {
+    if (HasOpenWriter)
+    {
+      RunWithBestEffortLock(base.WriteFooterAndCloseWriter);
+    }
+    else
+    {
+      // Nothing to lock for, but an overriding subclass still gets its calls.
+      base.WriteFooterAndCloseWriter();
+    }
+  }
+
+  /// <summary>
+  /// Releases the file lock. With a lock shared between processes the buffered text goes out first,
+  /// whatever <see cref="TextWriterAppender.ImmediateFlush"/> says, or it would land after or over
+  /// another process's text.
+  /// </summary>
+  private void ReleaseLockFlushed()
+  {
+    try
+    {
+      if (LockingModel is (InterProcessLock or MinimalLock) && QuietWriter is { Closed: false } writer)
+      {
+        writer.Flush();
+      }
+    }
+    finally
+    {
+      _stream?.ReleaseLock();
     }
   }
 
@@ -1260,9 +1300,19 @@ public class FileAppender : TextWriterAppender
   /// </summary>
   private void RunWithBestEffortLock(Action action)
   {
-    bool locked = _stream?.AcquireLock() ?? false;
+    // A nested call runs under the outer attempt, taken or not, instead of waiting again.
+    if (_inBestEffortLock)
+    {
+      action();
+      return;
+    }
+
+    _inBestEffortLock = true;
+    bool locked = false;
     try
     {
+      // Inside the try: an acquire that throws must not leave the flag set.
+      locked = _stream?.AcquireLock() ?? false;
       action();
     }
     finally
@@ -1271,6 +1321,7 @@ public class FileAppender : TextWriterAppender
       {
         _stream?.ReleaseLock();
       }
+      _inBestEffortLock = false;
     }
   }
 
@@ -1447,6 +1498,11 @@ public class FileAppender : TextWriterAppender
   /// The stream to log to. Has added locking semantics
   /// </summary>
   private LockingStream? _stream;
+
+  /// <summary>
+  /// Set while <see cref="RunWithBestEffortLock"/> runs, always under the appender lock.
+  /// </summary>
+  private bool _inBestEffortLock;
 
   /// <summary>
   /// The fully qualified type of the FileAppender class.

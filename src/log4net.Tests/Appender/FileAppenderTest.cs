@@ -20,6 +20,7 @@
 #endregion
 
 using System.Xml;
+using System.Collections.Generic;
 using System;
 using log4net.Appender;
 using NUnit.Framework;
@@ -364,7 +365,8 @@ public sealed class FileAppenderTest
 
   /// <summary>
   /// A roll closes the writer before it opens the next file; the open's reset takes no lock for the
-  /// writer closed already: footer and close of the old file, open, header and event take one each.
+  /// writer closed already: footer and close of the old file together, open, header and event take
+  /// one each.
   /// </summary>
   [Test]
   public void AnEventThatRollsTakesNoLockForTheClosedWriter()
@@ -389,7 +391,7 @@ public sealed class FileAppenderTest
     int acquired = lockingModel.Acquired;
     appender.Close();
 
-    Assert.That(acquired, Is.EqualTo(5));
+    Assert.That(acquired, Is.EqualTo(4));
   }
 
   /// <summary>
@@ -423,6 +425,326 @@ public sealed class FileAppenderTest
     appender.Close();
 
     Assert.That(File.ReadAllText(file), Is.EqualTo("rolled" + Environment.NewLine));
+  }
+
+  /// <summary>
+  /// Two writers on one file under a shared lock with <c>ImmediateFlush=false</c>: text buffered
+  /// past the lock used to land over, or after, the other writer's records. Each record is longer
+  /// than the writer's 1024 character buffer.
+  /// </summary>
+  [TestCase(true, true)]
+  [TestCase(false, true)]
+  [TestCase(true, false)]
+  [TestCase(false, false)]
+  public void SharedLockWritersKeepEachOthersRecordsWhole(bool isMinimalLock, bool isBatch)
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "shared.log");
+    FileAppender first = CreateSharedAppender(file, isMinimalLock);
+    FileAppender second = CreateSharedAppender(file, isMinimalLock);
+    string[] records = ["a", "b", "c", "d"];
+
+    for (int i = 0; i < records.Length; i++)
+    {
+      LoggingEvent loggingEvent = CreateEvent(new string(records[i][0], 1100));
+      FileAppender writer = i % 2 == 0 ? first : second;
+      if (isBatch)
+      {
+        writer.DoAppend([loggingEvent]);
+      }
+      else
+      {
+        writer.DoAppend(loggingEvent);
+      }
+    }
+    first.Close();
+    second.Close();
+
+    Assert.That(File.ReadAllText(file),
+      Is.EqualTo(string.Concat(records.Select(r => new string(r[0], 1100) + Environment.NewLine))));
+  }
+
+  /// <summary>
+  /// The same for <see cref="RollingFileAppender"/>, which inherits the appends.
+  /// </summary>
+  [TestCase(true)]
+  [TestCase(false)]
+  public void SharedLockRollingWritersKeepEachOthersRecordsWhole(bool isBatch)
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "shared.log");
+    RollingFileAppender[] writers = [CreateSharedRollingAppender(file), CreateSharedRollingAppender(file)];
+    void Append(RollingFileAppender writer, char letter)
+    {
+      LoggingEvent loggingEvent = CreateEvent(new string(letter, 1100));
+      if (isBatch)
+      {
+        writer.DoAppend([loggingEvent]);
+      }
+      else
+      {
+        writer.DoAppend(loggingEvent);
+      }
+    }
+
+    Append(writers[0], 'a');
+    Append(writers[1], 'b');
+    Append(writers[0], 'c');
+    writers[0].Close();
+    writers[1].Close();
+
+    Assert.That(File.ReadAllText(file), Is.EqualTo(new string('a', 1100) + Environment.NewLine
+      + new string('b', 1100) + Environment.NewLine + new string('c', 1100) + Environment.NewLine));
+  }
+
+  /// <summary>
+  /// A header longer than the writer's buffer, also with <c>ImmediateFlush=true</c>, used to be
+  /// written after the lock was released, over the other writer's records.
+  /// </summary>
+  [Test]
+  public void ALongHeaderDoesNotOverwriteTheOtherWriter()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "shared.log");
+    FileAppender first = CreateAppender(file, new FileAppender.InterProcessLock());
+    first.ActivateOptions();
+    first.DoAppend(CreateEvent("first"));
+    string header = new string('h', 1100) + Environment.NewLine;
+    FileAppender second = CreateAppender(file, new FileAppender.InterProcessLock());
+    ((PatternLayout)second.Layout!).Header = header;
+    second.ActivateOptions();
+    first.DoAppend(CreateEvent("again"));
+    second.DoAppend(CreateEvent("second"));
+    first.Close();
+    second.Close();
+
+    Assert.That(File.ReadAllText(file), Is.EqualTo("first" + Environment.NewLine + header
+      + "again" + Environment.NewLine + "second" + Environment.NewLine));
+  }
+
+  /// <summary>
+  /// A footer longer than the writer's buffer is written and closed under one lock, so the other
+  /// writer's records survive.
+  /// </summary>
+  [TestCase(true)]
+  [TestCase(false)]
+  public void ALongFooterDoesNotOverwriteTheOtherWriter(bool isMinimalLock)
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "shared.log");
+    string footer = new string('f', 1100) + Environment.NewLine;
+    FileAppender first = CreateSharedAppender(file, isMinimalLock, footer);
+    FileAppender second = CreateSharedAppender(file, isMinimalLock);
+
+    first.DoAppend(CreateEvent("first"));
+    second.DoAppend(CreateEvent("second"));
+    first.Close();
+    second.DoAppend(CreateEvent("again"));
+    second.Close();
+
+    Assert.That(File.ReadAllText(file), Is.EqualTo("first" + Environment.NewLine + "second" + Environment.NewLine
+      + footer + "again" + Environment.NewLine));
+  }
+
+  /// <summary>
+  /// A layout that throws after writing more than the writer's buffer used to leave its text behind,
+  /// to be written later at a stale offset over the other writer's records.
+  /// </summary>
+  [TestCase(true)]
+  [TestCase(false)]
+  public void ALayoutThrowingHalfwayDoesNotOverwriteTheOtherWriter(bool isImmediateFlush)
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "shared.log");
+    FileAppender first = CreateAppender(file, new FileAppender.InterProcessLock());
+    first.Layout = new ThrowingOnceLayout();
+    first.ImmediateFlush = isImmediateFlush;
+    first.ActivateOptions();
+    FileAppender second = CreateAppender(file, new FileAppender.InterProcessLock());
+    second.ActivateOptions();
+
+    first.DoAppend(CreateEvent("broken"));
+    second.DoAppend(CreateEvent("second"));
+    first.DoAppend(CreateEvent("first"));
+    first.Close();
+    second.Close();
+
+    // The broken record is cut and glued to the next one, but nothing is overwritten.
+    Assert.That(File.ReadAllText(file), Is.EqualTo(new string('x', 1500) + "second" + Environment.NewLine
+      + "first" + Environment.NewLine));
+  }
+
+  /// <summary>
+  /// Footer and close take the lock once; a nested attempt inside them does not take it again.
+  /// </summary>
+  [Test]
+  public void CloseTakesTheLockOnce()
+  {
+    using AutoTempFolder folder = new();
+    CountingInterProcessLock lockingModel = new();
+    FileAppender appender = CreateAppender(Path.Combine(folder.Path, "close.log"), lockingModel);
+    ((PatternLayout)appender.Layout!).Footer = "footer";
+    appender.ActivateOptions();
+    lockingModel.Acquired = 0;
+
+    appender.Close();
+
+    Assert.That(lockingModel.Acquired, Is.EqualTo(1));
+  }
+
+  /// <summary>
+  /// A lock that cannot be had at close is reported, not thrown, and waited for once, not again for
+  /// footer and close; the file is still closed.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void CloseWithTheLockHeldDoesNotThrow()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "held.log");
+    CountingInterProcessLock lockingModel = new() { LockTimeoutMillis = 200 };
+    FileAppender appender = CreateAppender(file, lockingModel);
+    appender.ActivateOptions();
+    lockingModel.Acquired = 0;
+
+    using (new HeldLock(file))
+    {
+      Assert.DoesNotThrow(appender.Close);
+    }
+
+    Assert.That(lockingModel.Acquired, Is.EqualTo(1));
+    Assert.That(lockingModel.Closed, Is.EqualTo(lockingModel.Opened));
+  }
+
+  /// <summary>
+  /// <c>ImmediateFlush=false</c> has no effect with the shared locks, and says so once per activation.
+  /// </summary>
+  [TestCase(typeof(FileAppender.MinimalLock), 1)]
+  [TestCase(typeof(FileAppender.ExclusiveLock), 0)]
+  [TestCase(typeof(FileAppender.InterProcessLock), 1)]
+  public void ImmediateFlushFalseIsReportedAsIgnored(Type lockingModel, int warnings)
+  {
+    using AutoTempFolder folder = new();
+    FileAppender appender = CreateAppender(Path.Combine(folder.Path, "warned.log"),
+      (FileAppender.LockingModelBase)Activator.CreateInstance(lockingModel)!);
+    appender.ImmediateFlush = false;
+    List<LogLog> messages = [];
+
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      using LogLog.LogReceivedAdapter _ = new(messages);
+      appender.ActivateOptions();
+    });
+    appender.Close();
+
+    Assert.That(messages.FindAll(m => m.Message.IndexOf("ImmediateFlush=false is ignored", StringComparison.Ordinal) >= 0), Has.Count.EqualTo(warnings));
+  }
+
+  /// <summary>
+  /// Control: <see cref="FileAppender.ExclusiveLock"/> still buffers with <c>ImmediateFlush=false</c>.
+  /// </summary>
+  [Test]
+  public void TheExclusiveLockStillBuffers()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "buffered.log");
+    FileAppender appender = CreateAppender(file, new FileAppender.ExclusiveLock());
+    appender.ImmediateFlush = false;
+    appender.ActivateOptions();
+
+    appender.DoAppend(CreateEvent("buffered"));
+    string beforeClose = ReadWhileOpen(file);
+    appender.Close();
+
+    Assert.That(beforeClose, Is.Empty);
+    Assert.That(File.ReadAllText(file), Is.EqualTo("buffered" + Environment.NewLine));
+  }
+
+  private static FileAppender CreateSharedAppender(string file, bool isMinimalLock, string? footer = null)
+  {
+    FileAppender appender = CreateAppender(file,
+      isMinimalLock ? new FileAppender.MinimalLock() : new FileAppender.InterProcessLock());
+    appender.ImmediateFlush = false;
+    ((PatternLayout)appender.Layout!).Footer = footer;
+    LogLog.ExecuteWithoutEmittingInternalMessages(appender.ActivateOptions);
+    return appender;
+  }
+
+  private static RollingFileAppender CreateSharedRollingAppender(string file)
+  {
+    RollingFileAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      LockingModel = new FileAppender.InterProcessLock(),
+      ImmediateFlush = false,
+      ErrorHandler = new RecordingErrorHandler()
+    };
+    LogLog.ExecuteWithoutEmittingInternalMessages(appender.ActivateOptions);
+    return appender;
+  }
+
+  /// <summary>Writes 1500 characters and then throws, the first time only.</summary>
+  private sealed class ThrowingOnceLayout : LayoutSkeleton
+  {
+    private bool _hasThrown;
+
+    /// <inheritdoc/>
+    public override void ActivateOptions()
+    { }
+
+    /// <inheritdoc/>
+    public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+    {
+      if (!_hasThrown)
+      {
+        _hasThrown = true;
+        writer.Write(new string('x', 1500));
+        throw new InvalidOperationException("rendering failed");
+      }
+      writer.Write(loggingEvent.RenderedMessage + Environment.NewLine);
+    }
+  }
+
+  /// <summary>
+  /// Without an open writer close takes no lock, but a subclass overriding <c>CloseWriter</c> is still called.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void CloseAfterAFailedOpenStillCallsTheSubclass()
+  {
+    using AutoTempFolder folder = new();
+    string file = Path.Combine(folder.Path, "held.log");
+    CountingCloseAppender appender = new()
+    {
+      File = file,
+      Layout = new PatternLayout("%message%newline"),
+      LockingModel = new FileAppender.InterProcessLock { LockTimeoutMillis = 200 },
+      ErrorHandler = new RecordingErrorHandler()
+    };
+    int closes;
+
+    using (new HeldLock(file))
+    {
+      appender.ActivateOptions();
+      closes = appender.Closes;
+      appender.Close();
+    }
+
+    Assert.That(appender.Closes, Is.EqualTo(closes + 1));
+  }
+
+  /// <summary>Counts the calls to <see cref="CloseWriter"/>.</summary>
+  private sealed class CountingCloseAppender : FileAppender
+  {
+    internal int Closes { get; private set; }
+
+    /// <inheritdoc/>
+    protected override void CloseWriter()
+    {
+      Closes++;
+      base.CloseWriter();
+    }
   }
 
   private static FileAppender CreateAppender(string file, FileAppender.LockingModelBase lockingModel)

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="366" link="https://github.com/apache/logging-log4net/issues/366"/>
+  <issue id="369" link="https://github.com/apache/logging-log4net/pull/369"/>
+  <description format="asciidoc">`InterProcessLock` and `MinimalLock` write out their buffered text
+  before releasing the lock, so processes sharing a file no longer overwrite or split each other's
+  records: `ImmediateFlush=false` has no effect with them and is reported once per activation. A long
+  header, a layout throwing halfway and the footer no longer leave text behind; the footer is written
+  and the file closed within a single lock
+  (ANT-2026-EAZMFSKC, fixed by @FreeAndNil)</description>
+</entry>
