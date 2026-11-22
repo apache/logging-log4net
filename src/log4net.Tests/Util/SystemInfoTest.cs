@@ -330,4 +330,24 @@ public class SystemInfoTest
   }
 
   private const string FlagField = "_configurationSystemUnavailable";
+
+  /// <summary>The compiler names the parameter after the expression passed as the value.</summary>
+  [Test]
+  public void TheParameterIsNamedAfterTheExpression()
+  {
+    int maxSize = -1;
+
+    ArgumentOutOfRangeException exception = SystemInfo.CreateArgumentOutOfRangeException(maxSize, "message");
+
+    Assert.That(exception.ParamName, Is.EqualTo("maxSize"));
+    Assert.That(exception.ActualValue, Is.EqualTo(-1));
+    Assert.That(exception.Message, Does.StartWith("message"));
+  }
+
+  /// <summary>A setter passes <c>value</c>, the name the runtime gives a setter's parameter.</summary>
+  [Test]
+  public void ASetterNamesTheParameterValue()
+    => Assert.That(() => new log4net.Appender.TelnetAppender().SendQueueSize = 0,
+      Throws.TypeOf<ArgumentOutOfRangeException>()
+        .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("value"));
 }

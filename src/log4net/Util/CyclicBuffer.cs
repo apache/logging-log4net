@@ -52,7 +52,7 @@ public class CyclicBuffer
   {
     if (maxSize < 1)
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(maxSize), maxSize, $"Parameter: {nameof(maxSize)}, Value: [{maxSize}] out of range. A positive integer is required.");
+      throw SystemInfo.CreateArgumentOutOfRangeException(maxSize, $"Parameter: {nameof(maxSize)}, Value: [{maxSize}] out of range. A positive integer is required.");
     }
 
     _maxSize = maxSize;
@@ -213,7 +213,7 @@ public class CyclicBuffer
     {
       if (newSize < 0) 
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(newSize), newSize, $"Parameter: {nameof(newSize)}, Value: [{newSize}] out of range. A positive integer is required.");
+        throw SystemInfo.CreateArgumentOutOfRangeException(newSize, $"Parameter: {nameof(newSize)}, Value: [{newSize}] out of range. A positive integer is required.");
       }
       if (newSize == numElems)
       {

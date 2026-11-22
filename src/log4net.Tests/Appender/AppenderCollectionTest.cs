@@ -61,4 +61,17 @@ public class AppenderCollectionTest
     Assert.That(appenderArray, Has.Length.EqualTo(1));
     Assert.That(appenderArray[0], Is.EqualTo(appender));
   }
+
+  /// <summary>
+  /// An index out of range is reported under the name of the indexer's parameter.
+  /// </summary>
+  [Test]
+  public void AnIndexOutOfRangeNamesTheIndex()
+  {
+    AppenderCollection appenderCollection = [];
+
+    Assert.That(() => appenderCollection[-1],
+      Throws.TypeOf<System.ArgumentOutOfRangeException>()
+        .With.Property(nameof(System.ArgumentOutOfRangeException.ParamName)).EqualTo("index"));
+  }
 }

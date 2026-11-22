@@ -38,14 +38,17 @@ You can also specify:
 
 * Facility (default: user)
 * Identity (default: application name)
-* NewLineHandling (default: Escape), one of `Escape`, `Split` or `Keep`
+* NewLineHandling (default: Escape), one of `Escape`, `Split` or `Keep`; any other value fails the
+appender's activation with an error
 * MaxRecordSize (default: 204800), in UTF-8 bytes, at least 512
 
-A newline in logged content ends the record for a syslog daemon that writes the message through to
-a line oriented log, so content can otherwise forge a second, authentic looking entry. `Escape`
-writes them as `\r` and `\n`, `Split` sends one record per line, and `Keep` passes them through
-for a daemon that handles multiline messages itself. Note that `syslog(3)` does no escaping of its
-own: whatever escaping you see on a mainstream Linux comes from the daemon, not from libc.
+A newline in logged content ends the record for a syslog daemon that writes the message through to a
+line oriented log, so content can otherwise forge a second, authentic looking entry. `Escape` writes
+them as `\r` and `\n`, `Split` sends one record per line, and `Keep` passes them through for a
+daemon that handles multiline messages itself. `Escape` and `Split` also write VT, FF, FS, GS, RS,
+NEL, U+2028 and U+2029 as `\uXXXX`, since a reader may break a line there; `Keep` passes them
+through. Note that `syslog(3)` does no escaping of its own: whatever escaping you see on a
+mainstream Linux comes from the daemon, not from libc.
 
 glibc sends each record as one datagram to `/dev/log` and drops it without a word when it is larger
 than the socket send buffer, 212960 bytes with the default `net.core.wmem_default`. A record longer

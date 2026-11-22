@@ -85,7 +85,7 @@ public sealed class LevelMap
   {
     if (name.EnsureNotNull().Length == 0)
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(name), name, 
+      throw SystemInfo.CreateArgumentOutOfRangeException(name,
         $"Parameter: name, Value: [{name}] out of range. Level name must not be empty");
     }
 

@@ -523,7 +523,7 @@ public class SmtpAppenderTest
 
     Assert.DoesNotThrow(() => Append(appender));
 
-    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a message."));
     Assert.That(_errorHandler.Message, Does.Contain("relay refused"));
   }
 
@@ -869,7 +869,7 @@ public class SmtpAppenderTest
     Append(appender);
 
     Assert.That(_transport.SentMails, Is.Empty);
-    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a message."));
     Assert.That(_transport.CancelledCalls, Is.EqualTo(new[] { "Send" }));
   }
 
@@ -888,7 +888,8 @@ public class SmtpAppenderTest
   [TestCase(-1)]
   public void SendQueueSizeRejectsValuesThatAreNotPositive(int value)
     => Assert.That(() => CreateAppender().SendQueueSize = value,
-      Throws.TypeOf<ArgumentOutOfRangeException>());
+      Throws.TypeOf<ArgumentOutOfRangeException>()
+        .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("value"));
 
   /// <summary>0 is allowed and never waits, a negative wait is meaningless.</summary>
   [Test]

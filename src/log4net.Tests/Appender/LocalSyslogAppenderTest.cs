@@ -140,6 +140,100 @@ public class LocalSyslogAppenderTest
     => Assert.That(new LocalSyslogAppender().NewLineHandling,
       Is.EqualTo(SyslogNewLineHandling.Escape));
 
+  /// <summary>
+  /// <c>newLineHandling</c> binds through <see cref="Enum.Parse(Type, string)"/>, which accepts any number, so an
+  /// undefined value must not turn the escaping off unnoticed.
+  /// </summary>
+  [TestCase(3)]
+  [TestCase(5)]
+  [TestCase(-1)]
+  public void AnUndefinedNewLineHandlingIsRejected(int value)
+  {
+    LocalSyslogAppender appender = new() { NewLineHandling = (SyslogNewLineHandling)value };
+
+    Assert.That(appender.ActivateOptions, Throws.TypeOf<ArgumentOutOfRangeException>());
+  }
+
+  /// <summary>Each defined value passes the check.</summary>
+  [TestCase(SyslogNewLineHandling.Keep)]
+  [TestCase(SyslogNewLineHandling.Split)]
+  [TestCase(SyslogNewLineHandling.Escape)]
+  [Platform("Linux")]
+  [NonParallelizable]
+  public void EveryDefinedNewLineHandlingIsAccepted(SyslogNewLineHandling value)
+  {
+    LocalSyslogAppender appender = new()
+    {
+      NewLineHandling = value,
+      Identity = "log4net-test",
+      Layout = new PatternLayout("%message")
+    };
+
+    Assert.That(appender.ActivateOptions, Throws.Nothing);
+    appender.Close();
+  }
+
+  /// <summary>An undefined value set after activation escapes, as the default does.</summary>
+  [Test]
+  public void AnUndefinedNewLineHandlingEscapes()
+  {
+    LocalSyslogAppender appender = new() { NewLineHandling = (SyslogNewLineHandling)5 };
+
+    Assert.That(GetRecords(appender, "a\nb"), Is.EqualTo(new[] { "a\\nb" }));
+  }
+
+  /// <summary><see cref="SyslogNewLineHandling.Keep"/> passes the newlines through.</summary>
+  [Test]
+  public void KeepLeavesTheNewLines()
+  {
+    LocalSyslogAppender appender = new() { NewLineHandling = SyslogNewLineHandling.Keep };
+
+    Assert.That(GetRecords(appender, "a\nb"), Is.EqualTo(new[] { "a\nb" }));
+  }
+
+  /// <summary>
+  /// A reader may break a line at these too, so <see cref="SyslogNewLineHandling.Escape"/> and
+  /// <see cref="SyslogNewLineHandling.Split"/> escape them; <see cref="SyslogNewLineHandling.Keep"/> passes them.
+  /// </summary>
+  [TestCase("a\vb", "a\\u000bb", TestName = "OtherLineBreaksAreEscapedUnlessKept(VT)")]
+  [TestCase("a\fb", "a\\u000cb", TestName = "OtherLineBreaksAreEscapedUnlessKept(FF)")]
+  [TestCase("a\u001cb", "a\\u001cb", TestName = "OtherLineBreaksAreEscapedUnlessKept(FS)")]
+  [TestCase("a\u001db", "a\\u001db", TestName = "OtherLineBreaksAreEscapedUnlessKept(GS)")]
+  [TestCase("a\u001eb", "a\\u001eb", TestName = "OtherLineBreaksAreEscapedUnlessKept(RS)")]
+  [TestCase("a\u2028b", "a\\u2028b", TestName = "OtherLineBreaksAreEscapedUnlessKept(LS)")]
+  [TestCase("a\u2029b", "a\\u2029b", TestName = "OtherLineBreaksAreEscapedUnlessKept(PS)")]
+  [TestCase("a\u0085b", "a\\u0085b", TestName = "OtherLineBreaksAreEscapedUnlessKept(NEL)")]
+  public void OtherLineBreaksAreEscapedUnlessKept(string message, string expected)
+  {
+    Assert.That(GetRecords(new() { NewLineHandling = SyslogNewLineHandling.Escape }, message),
+      Is.EqualTo(new[] { expected }));
+    Assert.That(GetRecords(new() { NewLineHandling = SyslogNewLineHandling.Split }, message),
+      Is.EqualTo(new[] { expected }));
+    Assert.That(GetRecords(new() { NewLineHandling = SyslogNewLineHandling.Keep }, message),
+      Is.EqualTo(new[] { message }));
+  }
+
+  /// <summary><see cref="SyslogNewLineHandling.Split"/> escapes every line, not only the first.</summary>
+  [Test]
+  public void SplitEscapesEveryLine()
+    => Assert.That(GetRecords(new() { NewLineHandling = SyslogNewLineHandling.Split }, "a\vb\nc\u2028d"),
+      Is.EqualTo(new[] { "a\\u000bb", "c\\u2028d" }));
+
+  /// <summary>The escape comes before the cut, so the escaped record still fits the limit.</summary>
+  [Test]
+  public void OtherLineBreaksAreEscapedBeforeTheCut()
+  {
+    LocalSyslogAppender appender = new() { MaxRecordSize = 512, ErrorHandler = new RecordingErrorHandler() };
+
+    Assert.That(GetRecords(appender, new string('\v', 100)),
+      Is.EqualTo(new[] { string.Concat(Enumerable.Repeat("\\u000b", 83)) + "...[truncated]" }));
+  }
+
+  /// <summary>Tab and text outside ASCII are no line breaks.</summary>
+  [Test]
+  public void TabAndNonAsciiTextAreUnchanged()
+    => Assert.That(GetRecords(new(), "a\tb \u00e4\u3042"), Is.EqualTo(new[] { "a\tb \u00e4\u3042" }));
+
   /// <summary>One record per line, and a blank line is no record at all.</summary>
   [Test]
   public void SplittingDropsTheEmptyLines()

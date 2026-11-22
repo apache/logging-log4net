@@ -98,7 +98,7 @@ public class StringMatchFilter : FilterSkeleton
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for MatchTimeoutMillis is negative.");
       }
       _matchTimeoutMillis = value;
@@ -134,7 +134,7 @@ public class StringMatchFilter : FilterSkeleton
     {
       if (value is not (FilterDecision.Deny or FilterDecision.Neutral or FilterDecision.Accept))
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for TimeoutDecision is not Deny, Neutral or Accept.");
       }
       field = value;

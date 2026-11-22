@@ -19,6 +19,7 @@
 
 using System;
 using System.Globalization;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using log4net.Appender.Internal;
@@ -258,6 +259,7 @@ public class RemoteSyslogAppender : UdpAppender
   }
 
   private const int CloseTimeoutMillis = 5_000;
+  private static readonly Type _declaringType = typeof(RemoteSyslogAppender);
   private IUdpConnection? _connection;
   private BackgroundSender<byte[]>? _sender;
   private int _sendQueueSize = 500;
@@ -507,7 +509,7 @@ public class RemoteSyslogAppender : UdpAppender
     base.ActivateOptions();
     if (NewLineHandling is not (SyslogNewLineHandling.Escape or SyslogNewLineHandling.Keep or SyslogNewLineHandling.Split))
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(NewLineHandling), NewLineHandling,
+      throw SystemInfo.CreateArgumentOutOfRangeException(NewLineHandling,
         $"The NewLineHandling is not {SyslogNewLineHandling.Escape} or {SyslogNewLineHandling.Keep} or {SyslogNewLineHandling.Split}.");
     }
     _levelMapping.ActivateOptions();
@@ -543,7 +545,7 @@ public class RemoteSyslogAppender : UdpAppender
     {
       if (value <= 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendQueueSize is not positive.");
       }
       _sendQueueSize = value;
@@ -553,6 +555,9 @@ public class RemoteSyslogAppender : UdpAppender
   /// <summary>
   /// How long a logging call waits for room in a full queue. Defaults to 5000, 0 never waits.
   /// </summary>
+  /// <remarks>
+  /// Once a wait timed out, logging calls drop without waiting until a send succeeds.
+  /// </remarks>
   /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
   public int EnqueueTimeoutMillis
   {
@@ -561,7 +566,7 @@ public class RemoteSyslogAppender : UdpAppender
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for EnqueueTimeoutMillis is negative.");
       }
       _enqueueTimeoutMillis = value;
@@ -569,7 +574,35 @@ public class RemoteSyslogAppender : UdpAppender
   }
 
   private void Send(byte[] datagram, CancellationToken cancellationToken)
-    => _connection?.SendAsync(datagram, datagram.Length).GetAwaiter().GetResult();
+  {
+    // StopSending clears the field while a stuck pump may still run.
+    if (_connection is not IUdpConnection connection)
+    {
+      return;
+    }
+
+    try
+    {
+      connection.SendAsync(datagram, datagram.Length).GetAwaiter().GetResult();
+    }
+    catch (SocketException e)
+    {
+      // On Linux a send can return the ICMP error of an earlier datagram and transmit nothing.
+      connection.SendAsync(datagram, datagram.Length).GetAwaiter().GetResult();
+      try
+      {
+        Report($"""
+          A send to remote syslog {RemoteAddress} on port {RemotePort} reported an error,
+          possibly for an earlier datagram; sent again.
+          """, e);
+      }
+      catch (Exception reportFailure) when (!reportFailure.IsFatal())
+      {
+        // The record went out, so the pump must not count it lost.
+        LogLog.Error(_declaringType, "The error handler threw.", reportFailure);
+      }
+    }
+  }
 
   private void Report(string message, Exception? exception)
   {

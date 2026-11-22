@@ -367,7 +367,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     {
       if (value < MailBodies.MinBodySize)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified is less than {MailBodies.MinBodySize}.");
       }
       field = value;
@@ -439,7 +439,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     {
       if (value <= 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendQueueSize is not positive.");
       }
       _sendQueueSize = value;
@@ -449,6 +449,9 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <summary>
   /// How long a logging call waits for room in a full queue. Defaults to 5000, 0 never waits.
   /// </summary>
+  /// <remarks>
+  /// Once a wait timed out, logging calls drop without waiting until a send succeeds.
+  /// </remarks>
   /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
   public int EnqueueTimeoutMillis
   {
@@ -457,7 +460,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for EnqueueTimeoutMillis is negative.");
       }
       _enqueueTimeoutMillis = value;
@@ -517,7 +520,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     SmtpTransportSecurity.ImplicitTls => SecureSocketOptions.SslOnConnect,
     SmtpTransportSecurity.StartTls => SecureSocketOptions.StartTls,
     SmtpTransportSecurity.StartTlsWhenAvailable => SecureSocketOptions.StartTlsWhenAvailable,
-    _ => throw SystemInfo.CreateArgumentOutOfRangeException(nameof(TransportSecurity), TransportSecurity,
+    _ => throw SystemInfo.CreateArgumentOutOfRangeException(TransportSecurity,
       $"The value specified for TransportSecurity is not one of the {nameof(SmtpTransportSecurity)} values.")
   };
 
@@ -572,7 +575,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     {
       if (value <= 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendTimeoutMillis is not positive.");
       }
       _sendTimeoutMillis = value;

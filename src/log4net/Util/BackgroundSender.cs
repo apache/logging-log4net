@@ -34,7 +34,8 @@ namespace log4net.Util;
 /// <para>
 /// An appender that sends over the network blocks the thread that made the logging call,
 /// and every other thread logging to the same appender behind it, for as long as the sink
-/// takes to answer. Queueing the work instead bounds that wait to the enqueue timeout.
+/// takes to answer. Queueing the work instead bounds that wait to the enqueue timeout, and once
+/// a wait timed out, further items are dropped without waiting until a send succeeds.
 /// </para>
 /// <para>
 /// The queue has a fixed capacity. Work is delivered in the order it was queued, by one
@@ -57,8 +58,10 @@ public sealed class BackgroundSender<T> : IDisposable
   private readonly CancellationTokenSource _shutdown = new();
   private int _droppedItemCount;
   private int _dropReported;
+  private int _reportedDropCount;
   private int _faultReported;
   private volatile bool _isFaulted;
+  private volatile bool _isCongested;
 
   /// <summary>
   /// Creates a queue and starts its background thread.
@@ -108,7 +111,8 @@ public sealed class BackgroundSender<T> : IDisposable
   /// <param name="item">The item to deliver.</param>
   /// <param name="millisecondsTimeout">
   /// How long to wait for room in a full queue. Zero returns immediately, which loses the item
-  /// rather than delaying the logging call.
+  /// rather than delaying the logging call. After a wait timed out, zero is used until a send
+  /// succeeds.
   /// </param>
   /// <returns><see langword="true"/> if the item was queued, <see langword="false"/> if it was dropped.</returns>
   public bool TryEnqueue(T item, int millisecondsTimeout)
@@ -117,10 +121,12 @@ public sealed class BackgroundSender<T> : IDisposable
     {
       try
       {
-        if (_queue.TryAdd(new Item(item), millisecondsTimeout))
+        if (_queue.TryAdd(new Item(item), _isCongested ? 0 : millisecondsTimeout))
         {
           return true;
         }
+
+        _isCongested = true;
       }
       catch (Exception e) when (!e.IsFatal())
       {
@@ -179,6 +185,7 @@ public sealed class BackgroundSender<T> : IDisposable
   /// <para>
   /// Never throws. Once the time is up the send in flight is cancelled and the remaining items
   /// are counted as dropped, so closing an appender cannot hang on an unresponsive sink.
+  /// The number dropped is reported once, and again only when it grew.
   /// </para>
   /// </remarks>
   public void Close(int millisecondsTimeout)
@@ -199,9 +206,9 @@ public sealed class BackgroundSender<T> : IDisposable
     }
 
     int dropped = DroppedItemCount;
-    if (dropped > 0)
+    if (dropped > Interlocked.Exchange(ref _reportedDropCount, dropped))
     {
-      Report($"[{_name}] {dropped} logging event(s) were not sent.", null);
+      Report($"[{_name}] {dropped} message(s) in total were not sent.", null);
     }
   }
 
@@ -257,11 +264,12 @@ public sealed class BackgroundSender<T> : IDisposable
         try
         {
           _send(item.Payload!, _shutdown.Token);
+          _isCongested = false;
         }
         catch (Exception e) when (!e.IsFatal())
         {
           CountLost();
-          Report($"[{_name}] Failed to send a logging event.", e);
+          Report($"[{_name}] Failed to send a message.", e);
         }
       }
     }
@@ -319,7 +327,7 @@ public sealed class BackgroundSender<T> : IDisposable
     CountLost();
     if (Interlocked.Exchange(ref _dropReported, 1) == 0)
     {
-      Report($"[{_name}] A logging event was dropped: the queue is full or closed. "
+      Report($"[{_name}] A message was dropped: the queue is full or closed. "
         + "Further losses are counted and reported when the sender closes.", null);
     }
   }

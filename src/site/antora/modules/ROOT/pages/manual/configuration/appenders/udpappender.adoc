@@ -39,7 +39,8 @@ The following example shows how to configure the `UdpAppender` to send events to
 An event that does not fit one datagram is truncated and marked with `...[truncated]` rather than
 dropped: the socket rejects a payload above `MaxDatagramSize` (default 65507, the maximum UDP
 payload of an IPv4 packet), and that used to cost the whole event. Lower `MaxDatagramSize`, down to
-512, to match a receiver that accepts less. It cannot be raised: an IPv6 packet would carry 20 bytes
+512, to match a receiver that accepts less, or to the path MTU minus 28 where a hop has a smaller
+MTU (measured with `RemoteSyslogAppender`). It cannot be raised: an IPv6 packet would carry 20 bytes
 more, which is not worth a second limit.
 
 The default `Encoding` is UTF-8 on .NET and the system's ANSI code page on .NET Framework; the receiver has to decode with the same encoding, so set it explicitly.

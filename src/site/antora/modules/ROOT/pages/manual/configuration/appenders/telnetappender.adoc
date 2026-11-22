@@ -72,16 +72,18 @@ how long a client that stopped reading holds up the stream before it is dropped.
 How many rendered events may wait to be written to the clients.
 The default is `500`.
 +
-A full queue drops the event from the telnet stream, counted and reported once.
-Only the telnet view is lost; every other appender still receives the event.
+A full queue drops the event from the telnet stream only; every other appender still receives it.
 
 `enqueueTimeoutMillis`::
 How long, in milliseconds, a logging call may wait for room in the send queue.
 The default is `50`.
 +
 This is the only delay a client can impose on the application.
-While the queue stays full it caps logging at 20 events per second; `0` drops immediately instead
-of waiting.
+
+:sender-sink: client
+:sender-item: event
+:sender-items: events
+include::partial$background-sender.adoc[]
 
 [#telnetappender-trust]
 == Intended use and trust model

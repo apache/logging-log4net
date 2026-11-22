@@ -86,7 +86,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value <= 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendQueueSize is not positive.");
       }
       _sendQueueSize = value;
@@ -99,8 +99,9 @@ public class TelnetAppender : AppenderSkeleton
   /// <value>A number of milliseconds, or 0 to drop immediately. The default is 50.</value>
   /// <remarks>
   /// <para>
-  /// This is the only delay a connected client can impose on the application. While the queue
-  /// stays full it caps logging at 20 events per second; 0 drops immediately instead of waiting.
+  /// This is the only delay a connected client can impose on the application. Once a wait
+  /// timed out, logging calls drop without waiting until a send succeeds; 0 drops immediately
+  /// instead of waiting.
   /// </para>
   /// </remarks>
   /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
@@ -111,7 +112,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for EnqueueTimeoutMillis is negative.");
       }
       _enqueueTimeoutMillis = value;
@@ -169,7 +170,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified for Port is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
       }
       _listeningPort = value;
@@ -205,7 +206,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendTimeoutMillis is negative.");
       }
       _sendTimeoutMillis = value;

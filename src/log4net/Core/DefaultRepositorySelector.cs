@@ -77,7 +77,7 @@ public class DefaultRepositorySelector : IRepositorySelector
     // Check that the type is a repository
     if (!typeof(ILoggerRepository).IsAssignableFrom(defaultRepositoryType.EnsureNotNull()))
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException("defaultRepositoryType", defaultRepositoryType, 
+      throw SystemInfo.CreateArgumentOutOfRangeException(defaultRepositoryType,
         $"Parameter: defaultRepositoryType, Value: [{defaultRepositoryType}] out of range. Argument must implement the ILoggerRepository interface");
     }
 

@@ -74,6 +74,8 @@ almost always be doing.
   `[CallerArgumentExpression(nameof(value))]`, so no argument name is passed at the call site.
   This includes constructor and property assignments: write `_x = x.EnsureNotNull();`,
   not `_x = x ?? throw new ArgumentNullException(nameof(x));`.
+- `SystemInfo.CreateArgumentOutOfRangeException(value, message)` names the parameter the same way:
+  pass the value itself, never a name.
 - Appenders never let exceptions escape to the caller. The house pattern is
   `catch (Exception e) when (!e.IsFatal()) { ErrorHandler.Error("...", e); }`.
 - **A catch of `Exception` always carries `when (!e.IsFatal())`.** The filter is not a licence to
@@ -154,7 +156,9 @@ almost always be doing.
   an expanded `params` argument trips CS8620 in a C# 14 extension block, which
   `WarningsAsErrors=nullable` makes a build error.
 - **NUnit constructs one fixture instance for the whole fixture**, so an instance field that
-  records what a test observed accumulates across the tests in it. Clear such state in `[SetUp]`.
+  records what a test observed accumulates across the tests in it. Clear such state in `[SetUp]`,
+  or give the fixture `[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]`, as
+  `BackgroundSenderTest` does.
 - Drive a test over a background thread with gates (`ManualResetEventSlim`), never with
   `Thread.Sleep`: park the worker, assert the state you care about, then release it. See
   `BackgroundSenderTest`, where every wait has a generous timeout and the assertions are exact.

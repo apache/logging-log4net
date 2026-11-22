@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
+using log4net.Tests.Util.Internal;
 using log4net.Util;
 
 using NUnit.Framework;
@@ -33,61 +34,16 @@ namespace log4net.Tests.Util;
 /// Tests for <see cref="BackgroundSender{T}"/>.
 /// </summary>
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 public class BackgroundSenderTest
 {
   /// <summary>How long a test waits for the background thread before calling it a failure.</summary>
   private const int WaitMillis = 30_000;
 
-  private readonly List<int> _sent = [];
-  private readonly List<string> _reported = [];
-
-  /// <summary>
-  /// NUnit reuses one fixture instance for every test in it, so the recordings have to be
-  /// cleared between them.
-  /// </summary>
-  [SetUp]
-  public void ClearRecordings()
-  {
-    lock (_sent)
-    {
-      _sent.Clear();
-    }
-
-    lock (_reported)
-    {
-      _reported.Clear();
-    }
-  }
-
-  private int[] Sent
-  {
-    get
-    {
-      lock (_sent)
-      {
-        return [.. _sent];
-      }
-    }
-  }
-
-  private void Record(int item)
-  {
-    lock (_sent)
-    {
-      _sent.Add(item);
-    }
-  }
-
-  private void Report(string message, Exception? exception)
-  {
-    lock (_reported)
-    {
-      _reported.Add(message);
-    }
-  }
+  private readonly RecordingSink _sink = new();
 
   private BackgroundSender<int> CreateSender(int capacity, Action<int, CancellationToken> send)
-    => new("test", capacity, send, Report);
+    => new("test", capacity, send, _sink.Report);
 
   /// <summary>
   /// A queue without room for at least one item cannot work.
@@ -105,7 +61,7 @@ public class BackgroundSenderTest
   public void ItemsAreSentInTheOrderTheyWereQueued()
   {
     const int itemCount = 100;
-    using BackgroundSender<int> sender = CreateSender(itemCount, (item, _) => Record(item));
+    using BackgroundSender<int> sender = CreateSender(itemCount, (item, _) => _sink.Send(item));
 
     for (int i = 0; i < itemCount; i++)
     {
@@ -113,7 +69,7 @@ public class BackgroundSenderTest
     }
 
     Assert.That(sender.Flush(WaitMillis), Is.True);
-    Assert.That(Sent, Is.EqualTo(Enumerable.Range(0, itemCount).ToArray()));
+    Assert.That(_sink.SentItems, Is.EqualTo(Enumerable.Range(0, itemCount).ToArray()));
     Assert.That(sender.DroppedItemCount, Is.EqualTo(0));
   }
 
@@ -131,7 +87,7 @@ public class BackgroundSenderTest
     {
       sendEntered.Set();
       release.Wait(WaitMillis);
-      Record(item);
+      _sink.Send(item);
     });
 
     // Park the only sending thread, so that nothing leaves the queue from here on.
@@ -151,7 +107,7 @@ public class BackgroundSenderTest
 
     release.Set();
     Assert.That(sender.Flush(WaitMillis), Is.True);
-    Assert.That(Sent, Is.EqualTo(new[] { 1, 2, 3 }));
+    Assert.That(_sink.SentItems, Is.EqualTo(new[] { 1, 2, 3 }));
   }
 
   /// <summary>
@@ -161,7 +117,7 @@ public class BackgroundSenderTest
   public void CloseSendsWhatIsStillQueued()
   {
     const int itemCount = 10;
-    BackgroundSender<int> sender = CreateSender(itemCount, (item, _) => Record(item));
+    BackgroundSender<int> sender = CreateSender(itemCount, (item, _) => _sink.Send(item));
     try
     {
       for (int i = 0; i < itemCount; i++)
@@ -170,7 +126,7 @@ public class BackgroundSenderTest
       }
 
       sender.Close(WaitMillis);
-      Assert.That(Sent, Has.Length.EqualTo(itemCount));
+      Assert.That(_sink.SentItems, Has.Length.EqualTo(itemCount));
       Assert.That(sender.DroppedItemCount, Is.EqualTo(0));
     }
     finally
@@ -193,7 +149,7 @@ public class BackgroundSenderTest
       sendEntered.Set();
       // Answers only when Close runs out of patience and cancels.
       token.WaitHandle.WaitOne(WaitMillis);
-      Record(item);
+      _sink.Send(item);
     });
     try
     {
@@ -208,7 +164,7 @@ public class BackgroundSenderTest
 
       Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(WaitMillis));
       Assert.That(sender.DroppedItemCount, Is.EqualTo(2));
-      Assert.That(_reported, Is.Not.Empty);
+      Assert.That(_sink.Reports, Is.Not.Empty);
     }
     finally
     {
@@ -222,7 +178,7 @@ public class BackgroundSenderTest
   [Test]
   public void NothingIsAcceptedAfterClose()
   {
-    BackgroundSender<int> sender = CreateSender(5, (item, _) => Record(item));
+    BackgroundSender<int> sender = CreateSender(5, (item, _) => _sink.Send(item));
     try
     {
       sender.Close(WaitMillis);
@@ -230,7 +186,7 @@ public class BackgroundSenderTest
       Assert.That(sender.IsFaulted, Is.True);
       Assert.That(sender.TryEnqueue(1, WaitMillis), Is.False);
       Assert.That(sender.Flush(WaitMillis), Is.False);
-      Assert.That(Sent, Is.Empty);
+      Assert.That(_sink.SentItems, Is.Empty);
     }
     finally
     {
@@ -251,7 +207,7 @@ public class BackgroundSenderTest
         throw new InvalidOperationException("simulated send failure");
       }
 
-      Record(item);
+      _sink.Send(item);
     });
 
     for (int i = 0; i < 4; i++)
@@ -260,12 +216,12 @@ public class BackgroundSenderTest
     }
 
     Assert.That(sender.Flush(WaitMillis), Is.True);
-    Assert.That(Sent, Is.EqualTo(new[] { 0, 2, 3 }));
+    Assert.That(_sink.SentItems, Is.EqualTo(new[] { 0, 2, 3 }));
     Assert.That(sender.DroppedItemCount, Is.EqualTo(1));
 
     // A failed send is not queue pressure and must not be reported as such.
-    Assert.That(_reported, Has.Some.Contains("Failed to send"));
-    Assert.That(_reported, Has.None.Contains("queue is full"));
+    Assert.That(_sink.Reports, Has.Some.Contains("Failed to send"));
+    Assert.That(_sink.Reports, Has.None.Contains("queue is full"));
   }
 
   /// <summary>
@@ -289,7 +245,7 @@ public class BackgroundSenderTest
             throw new InvalidOperationException("simulated send failure");
           }
 
-          Record(item);
+          _sink.Send(item);
         },
         (_, _) => throw new InvalidOperationException("simulated error handler failure"));
 
@@ -302,7 +258,142 @@ public class BackgroundSenderTest
       Assert.That(sender.IsFaulted, Is.False);
     });
 
-    Assert.That(Sent, Is.EqualTo(new[] { 0, 2, 3 }));
+    Assert.That(_sink.SentItems, Is.EqualTo(new[] { 0, 2, 3 }));
     Assert.That(internalMessages, Is.Not.Empty);
+  }
+
+  /// <summary>
+  /// <see cref="BackgroundSender{T}.Dispose"/> closes again, which must not repeat the summary.
+  /// </summary>
+  [Test]
+  public void CloseThenDisposeReportsTheSummaryOnce()
+  {
+    BackgroundSender<int> sender = CreateSender(5, (_, _) => throw new InvalidOperationException("simulated send failure"));
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.True);
+
+    sender.Close(WaitMillis);
+    sender.Dispose();
+
+    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 message(s) in total were not sent." }));
+  }
+
+  /// <summary>
+  /// Disposing without closing first reports the summary too.
+  /// </summary>
+  [Test]
+  public void DisposeAloneReportsTheSummaryOnce()
+  {
+    BackgroundSender<int> sender = CreateSender(5, (_, _) => throw new InvalidOperationException("simulated send failure"));
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.True);
+    Assert.That(sender.Flush(WaitMillis), Is.True);
+
+    sender.Dispose();
+
+    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 message(s) in total were not sent." }));
+  }
+
+  /// <summary>
+  /// A close with nothing dropped reports nothing, and a drop after it is still reported.
+  /// </summary>
+  [Test]
+  public void ACloseWithoutLossesLeavesTheSummaryForLater()
+  {
+    BackgroundSender<int> sender = CreateSender(5, (item, _) => _sink.Send(item));
+
+    sender.Close(WaitMillis);
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.False);
+    sender.Dispose();
+
+    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 message(s) in total were not sent." }));
+  }
+
+  /// <summary>
+  /// A count that grew after the first summary is reported again.
+  /// </summary>
+  [Test]
+  public void ACountThatGrewIsReportedAgain()
+  {
+    BackgroundSender<int> sender = CreateSender(5, (_, _) => throw new InvalidOperationException("simulated send failure"));
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.True);
+
+    sender.Close(WaitMillis);
+    Assert.That(sender.TryEnqueue(2, WaitMillis), Is.False);
+    sender.Dispose();
+
+    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[]
+    {
+      "[test] 1 message(s) in total were not sent.",
+      "[test] 2 message(s) in total were not sent."
+    }));
+  }
+
+  /// <summary>
+  /// After one timed out wait a full queue drops at once, until a send succeeds.
+  /// </summary>
+  [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2016:Forward the CancellationToken parameter to methods that take one",
+    Justification = "Stands for a sink that does not cooperate with cancellation.")]
+  public void AFullQueueWaitsOnceUntilASendSucceeds()
+  {
+    using ManualResetEventSlim sendEntered = new(false);
+    using ManualResetEventSlim release = new(false);
+    using BackgroundSender<int> sender = CreateSender(1, (item, _) =>
+    {
+      sendEntered.Set();
+      release.Wait(WaitMillis);
+      _sink.Send(item);
+    });
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.True);
+    Assert.That(sendEntered.Wait(WaitMillis), Is.True);
+    Assert.That(sender.TryEnqueue(2, WaitMillis), Is.True);
+
+    Assert.That(sender.TryEnqueue(3, 1), Is.False);
+    bool isCongestedAfterTheFirstTimeout = sender.GetFieldValue<bool>("_isCongested");
+    Stopwatch stopwatch = Stopwatch.StartNew();
+    for (int i = 4; i < 14; i++)
+    {
+      Assert.That(sender.TryEnqueue(i, 1_000), Is.False);
+    }
+
+    stopwatch.Stop();
+    bool isCongestedAfterTenMore = sender.GetFieldValue<bool>("_isCongested");
+    release.Set();
+    Assert.That(sender.Flush(WaitMillis), Is.True);
+
+    Assert.That(isCongestedAfterTheFirstTimeout, Is.True);
+    Assert.That(isCongestedAfterTenMore, Is.True);
+    // Ten waits of a second each without the flag.
+    Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5_000));
+    Assert.That(sender.DroppedItemCount, Is.EqualTo(11));
+    Assert.That(sender.GetFieldValue<bool>("_isCongested"), Is.False);
+    Assert.That(_sink.SentItems, Is.EqualTo(new[] { 1, 2 }));
+  }
+
+  /// <summary>
+  /// A send that throws is no sign the sink drains again, so a full queue still drops at once.
+  /// </summary>
+  [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2016:Forward the CancellationToken parameter to methods that take one",
+    Justification = "Stands for a sink that does not cooperate with cancellation.")]
+  public void AFailedSendKeepsTheQueueCongested()
+  {
+    using ManualResetEventSlim sendEntered = new(false);
+    using ManualResetEventSlim release = new(false);
+    using BackgroundSender<int> sender = CreateSender(1, (_, _) =>
+    {
+      sendEntered.Set();
+      release.Wait(WaitMillis);
+      throw new InvalidOperationException("simulated send failure");
+    });
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.True);
+    Assert.That(sendEntered.Wait(WaitMillis), Is.True);
+    Assert.That(sender.TryEnqueue(2, WaitMillis), Is.True);
+    Assert.That(sender.TryEnqueue(3, 1), Is.False);
+
+    release.Set();
+    Assert.That(sender.Flush(WaitMillis), Is.True);
+
+    Assert.That(sender.GetFieldValue<bool>("_isCongested"), Is.True);
+    Assert.That(sender.DroppedItemCount, Is.EqualTo(3));
   }
 }
