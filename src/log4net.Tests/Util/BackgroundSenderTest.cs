@@ -274,7 +274,7 @@ public class BackgroundSenderTest
     sender.Close(WaitMillis);
     sender.Dispose();
 
-    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 logging event(s) in total were not sent." }));
+    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 message(s) in total were not sent." }));
   }
 
   /// <summary>
@@ -289,7 +289,7 @@ public class BackgroundSenderTest
 
     sender.Dispose();
 
-    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 logging event(s) in total were not sent." }));
+    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 message(s) in total were not sent." }));
   }
 
   /// <summary>
@@ -304,7 +304,7 @@ public class BackgroundSenderTest
     Assert.That(sender.TryEnqueue(1, WaitMillis), Is.False);
     sender.Dispose();
 
-    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 logging event(s) in total were not sent." }));
+    Assert.That(_sink.CloseSummaries, Is.EqualTo(new[] { "[test] 1 message(s) in total were not sent." }));
   }
 
   /// <summary>
@@ -322,8 +322,78 @@ public class BackgroundSenderTest
 
     Assert.That(_sink.CloseSummaries, Is.EqualTo(new[]
     {
-      "[test] 1 logging event(s) in total were not sent.",
-      "[test] 2 logging event(s) in total were not sent."
+      "[test] 1 message(s) in total were not sent.",
+      "[test] 2 message(s) in total were not sent."
     }));
+  }
+
+  /// <summary>
+  /// After one timed out wait a full queue drops at once, until a send succeeds.
+  /// </summary>
+  [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2016:Forward the CancellationToken parameter to methods that take one",
+    Justification = "Stands for a sink that does not cooperate with cancellation.")]
+  public void AFullQueueWaitsOnceUntilASendSucceeds()
+  {
+    using ManualResetEventSlim sendEntered = new(false);
+    using ManualResetEventSlim release = new(false);
+    using BackgroundSender<int> sender = CreateSender(1, (item, _) =>
+    {
+      sendEntered.Set();
+      release.Wait(WaitMillis);
+      _sink.Send(item);
+    });
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.True);
+    Assert.That(sendEntered.Wait(WaitMillis), Is.True);
+    Assert.That(sender.TryEnqueue(2, WaitMillis), Is.True);
+
+    Assert.That(sender.TryEnqueue(3, 1), Is.False);
+    bool isCongestedAfterTheFirstTimeout = sender.GetFieldValue<bool>("_isCongested");
+    Stopwatch stopwatch = Stopwatch.StartNew();
+    for (int i = 4; i < 14; i++)
+    {
+      Assert.That(sender.TryEnqueue(i, 1_000), Is.False);
+    }
+
+    stopwatch.Stop();
+    bool isCongestedAfterTenMore = sender.GetFieldValue<bool>("_isCongested");
+    release.Set();
+    Assert.That(sender.Flush(WaitMillis), Is.True);
+
+    Assert.That(isCongestedAfterTheFirstTimeout, Is.True);
+    Assert.That(isCongestedAfterTenMore, Is.True);
+    // Ten waits of a second each without the flag.
+    Assert.That(stopwatch.ElapsedMilliseconds, Is.LessThan(5_000));
+    Assert.That(sender.DroppedItemCount, Is.EqualTo(11));
+    Assert.That(sender.GetFieldValue<bool>("_isCongested"), Is.False);
+    Assert.That(_sink.SentItems, Is.EqualTo(new[] { 1, 2 }));
+  }
+
+  /// <summary>
+  /// A send that throws is no sign the sink drains again, so a full queue still drops at once.
+  /// </summary>
+  [Test]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2016:Forward the CancellationToken parameter to methods that take one",
+    Justification = "Stands for a sink that does not cooperate with cancellation.")]
+  public void AFailedSendKeepsTheQueueCongested()
+  {
+    using ManualResetEventSlim sendEntered = new(false);
+    using ManualResetEventSlim release = new(false);
+    using BackgroundSender<int> sender = CreateSender(1, (_, _) =>
+    {
+      sendEntered.Set();
+      release.Wait(WaitMillis);
+      throw new InvalidOperationException("simulated send failure");
+    });
+    Assert.That(sender.TryEnqueue(1, WaitMillis), Is.True);
+    Assert.That(sendEntered.Wait(WaitMillis), Is.True);
+    Assert.That(sender.TryEnqueue(2, WaitMillis), Is.True);
+    Assert.That(sender.TryEnqueue(3, 1), Is.False);
+
+    release.Set();
+    Assert.That(sender.Flush(WaitMillis), Is.True);
+
+    Assert.That(sender.GetFieldValue<bool>("_isCongested"), Is.True);
+    Assert.That(sender.DroppedItemCount, Is.EqualTo(3));
   }
 }

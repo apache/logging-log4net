@@ -265,7 +265,7 @@ public sealed class TelnetAppenderTest
 
   /// <summary>
   /// Clients are written to from a background thread, so the queue has to be bounded and the wait
-  /// for room short: it is the only delay a connected client can impose on the application.
+  /// for room short: a full queue costs one such wait until a send succeeds.
   /// </summary>
   [Test]
   public void SendQueueDefaults()

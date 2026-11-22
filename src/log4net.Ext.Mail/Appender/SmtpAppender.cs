@@ -449,6 +449,9 @@ public class SmtpAppender : BufferingAppenderSkeleton
   /// <summary>
   /// How long a logging call waits for room in a full queue. Defaults to 5000, 0 never waits.
   /// </summary>
+  /// <remarks>
+  /// Once a wait timed out, logging calls drop without waiting until a send succeeds.
+  /// </remarks>
   /// <exception cref="ArgumentOutOfRangeException">The value specified is negative.</exception>
   public int EnqueueTimeoutMillis
   {

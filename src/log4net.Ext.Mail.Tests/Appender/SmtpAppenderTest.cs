@@ -523,7 +523,7 @@ public class SmtpAppenderTest
 
     Assert.DoesNotThrow(() => Append(appender));
 
-    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a message."));
     Assert.That(_errorHandler.Message, Does.Contain("relay refused"));
   }
 
@@ -869,7 +869,7 @@ public class SmtpAppenderTest
     Append(appender);
 
     Assert.That(_transport.SentMails, Is.Empty);
-    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a logging event."));
+    Assert.That(_errorHandler.Message, Does.Contain("Failed to send a message."));
     Assert.That(_transport.CancelledCalls, Is.EqualTo(new[] { "Send" }));
   }
 
