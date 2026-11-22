@@ -19,6 +19,7 @@
 
 using System;
 using System.Globalization;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using log4net.Appender.Internal;
@@ -258,6 +259,7 @@ public class RemoteSyslogAppender : UdpAppender
   }
 
   private const int CloseTimeoutMillis = 5_000;
+  private static readonly Type _declaringType = typeof(RemoteSyslogAppender);
   private IUdpConnection? _connection;
   private BackgroundSender<byte[]>? _sender;
   private int _sendQueueSize = 500;
@@ -572,7 +574,35 @@ public class RemoteSyslogAppender : UdpAppender
   }
 
   private void Send(byte[] datagram, CancellationToken cancellationToken)
-    => _connection?.SendAsync(datagram, datagram.Length).GetAwaiter().GetResult();
+  {
+    // StopSending clears the field while a stuck pump may still run.
+    if (_connection is not IUdpConnection connection)
+    {
+      return;
+    }
+
+    try
+    {
+      connection.SendAsync(datagram, datagram.Length).GetAwaiter().GetResult();
+    }
+    catch (SocketException e)
+    {
+      // On Linux a send can return the ICMP error of an earlier datagram and transmit nothing.
+      connection.SendAsync(datagram, datagram.Length).GetAwaiter().GetResult();
+      try
+      {
+        Report($"""
+          A send to remote syslog {RemoteAddress} on port {RemotePort} reported an error,
+          possibly for an earlier datagram; sent again.
+          """, e);
+      }
+      catch (Exception reportFailure) when (!reportFailure.IsFatal())
+      {
+        // The record went out, so the pump must not count it lost.
+        LogLog.Error(_declaringType, "The error handler threw.", reportFailure);
+      }
+    }
+  }
 
   private void Report(string message, Exception? exception)
   {

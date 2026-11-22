@@ -50,6 +50,11 @@ internal sealed class UdpMock : IUdpConnection
   /// </summary>
   internal Exception? ConnectException { get; set; }
 
+  /// <summary>
+  /// Each send takes the next of these, if any, and throws it instead of sending.
+  /// </summary>
+  internal Queue<Exception> SendExceptions { get; } = new();
+
   /// <inheritdoc/>
   public void Connect(int localPort, IPAddress host, int remotePort)
   {
@@ -66,6 +71,11 @@ internal sealed class UdpMock : IUdpConnection
   /// <inheritdoc/>
   public Task<int> SendAsync(byte[] datagram, int bytes)
   {
+    if (SendExceptions.Count > 0)
+    {
+      throw SendExceptions.Dequeue();
+    }
+
     Sent.Add((datagram, bytes));
     return Task.FromResult(bytes);
   }

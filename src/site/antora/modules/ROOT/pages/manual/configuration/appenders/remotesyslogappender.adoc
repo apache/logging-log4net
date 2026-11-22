@@ -147,3 +147,7 @@ However, there are size limitations associated with UDP:
 * **Message truncation:** If a log message exceeds these size limits, it will be **truncated**, which means some of the message content will be lost.
 
 To avoid truncation, ensure that log messages are kept within the size limits of your network setup.
+
+On Linux, a router with a smaller MTU than the sending host drops a datagram that fits the host but
+not the router, at most once every 10 minutes. The appender resends the record after it, so only that
+one is lost. To avoid this, set `maxDatagramSize` to the router's MTU minus 28 (IPv4).

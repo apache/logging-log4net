@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using log4net.Appender;
 using log4net.Appender.Internal;
@@ -295,6 +297,184 @@ public sealed class RemoteSyslogAppenderTest
     const string expectedData = "<14>My App: INFO  - Test message";
     Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Is.EqualTo(expectedData));
     Assert.That(messages.ConvertAll(m => m.Message), Has.None.Contains("Identity of appender"));
+  }
+
+  /// <summary>
+  /// A socket error may belong to an earlier datagram, so the record is sent once more and the error reported.
+  /// </summary>
+  [Test]
+  public void ASocketErrorIsAnsweredWithOneMoreSend()
+  {
+    RecordingErrorHandler errorHandler = new();
+    RemoteAppender appender = CreateMockAppender(errorHandler, new SocketException((int)SocketError.ConnectionRefused));
+
+    appender.DoAppend(CreateEvent("record"));
+    appender.Close();
+
+    Assert.That(appender.Mock.Sent, Has.Count.EqualTo(1));
+    Assert.That(errorHandler.Messages, Is.EqualTo(new[] { SentAgainMessage }));
+  }
+
+  /// <summary>
+  /// A second error is the record's own: it is lost and counted, as any failed send.
+  /// </summary>
+  [Test]
+  public void ASecondSocketErrorLosesTheRecord()
+  {
+    RecordingErrorHandler errorHandler = new();
+    RemoteAppender appender = CreateMockAppender(errorHandler,
+      new SocketException((int)SocketError.ConnectionRefused), new SocketException((int)SocketError.ConnectionRefused));
+
+    appender.DoAppend(CreateEvent("record"));
+    appender.Close();
+
+    Assert.That(appender.Mock.Sent, Is.Empty);
+    Assert.That(errorHandler.Messages, Is.EqualTo(_lostRecordMessages));
+  }
+
+  /// <summary>
+  /// Only a socket error can stand for an earlier datagram.
+  /// </summary>
+  [Test]
+  public void AnotherErrorIsNotAnsweredWithASecondSend()
+  {
+    RecordingErrorHandler errorHandler = new();
+    RemoteAppender appender = CreateMockAppender(errorHandler, new InvalidOperationException("simulated send failure"));
+
+    appender.DoAppend(CreateEvent("record"));
+    appender.Close();
+
+    Assert.That(appender.Mock.Sent, Is.Empty);
+    Assert.That(errorHandler.Messages, Is.EqualTo(_lostRecordMessages));
+  }
+
+  /// <summary>
+  /// An error handler that throws while told about the second send must not get the sent record counted as lost.
+  /// </summary>
+  [Test]
+  [NonParallelizable]
+  public void AThrowingErrorHandlerDoesNotLoseASentRecord()
+  {
+    ThrowingErrorHandler errorHandler = new();
+    RemoteAppender appender = CreateMockAppender(errorHandler, new SocketException((int)SocketError.ConnectionRefused));
+
+    LogLog.ExecuteWithoutEmittingInternalMessages(() =>
+    {
+      appender.DoAppend(CreateEvent("record"));
+      appender.Close();
+    });
+
+    Assert.That(appender.Mock.Sent, Has.Count.EqualTo(1));
+    Assert.That(errorHandler.Messages, Is.EqualTo(new[] { SentAgainMessage }));
+  }
+
+  /// <summary>
+  /// On Linux the ICMP error of a datagram to a closed port is returned by the next send, which then
+  /// transmits nothing. The next record must still arrive.
+  /// </summary>
+  [Test]
+  [Platform("Linux")]
+  public void TheRecordAfterAnIcmpErrorArrives()
+  {
+    int port = ReserveLoopbackPort();
+    RecordingErrorHandler errorHandler = new();
+    RemoteSyslogAppender appender = new()
+    {
+      RemoteAddress = IPAddress.Loopback,
+      RemotePort = port,
+      Layout = new PatternLayout("%message"),
+      ErrorHandler = errorHandler
+    };
+    appender.ActivateOptions();
+    try
+    {
+      appender.DoAppend(CreateEvent("earlier"));
+      Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
+      Socket socket = appender.GetFieldValue<IUdpConnection>("_connection").GetFieldValue<UdpClient>("_client").Client;
+      if (!socket.Poll(5_000_000, SelectMode.SelectError))
+      {
+        Assert.Ignore("No ICMP error arrived on loopback.");
+      }
+
+      using UdpClient collector = new(new IPEndPoint(IPAddress.Loopback, port));
+      collector.Client.ReceiveTimeout = FlushTimeoutMillis;
+      appender.DoAppend(CreateEvent("next"));
+      Assert.That(appender.Flush(FlushTimeoutMillis), Is.True);
+
+      IPEndPoint? sender = null;
+      Assert.That(Encoding.ASCII.GetString(collector.Receive(ref sender)), Does.EndWith("next"));
+    }
+    finally
+    {
+      appender.Close();
+    }
+  }
+
+  private const string SentAgainMessage = """
+    A send to remote syslog 127.0.0.1 on port 514 reported an error,
+    possibly for an earlier datagram; sent again.
+    """;
+
+  private static readonly string[] _lostRecordMessages =
+  [
+    "[RemoteSyslogAppender] Failed to send a message.",
+    "[RemoteSyslogAppender] 1 message(s) in total were not sent."
+  ];
+
+  private static RemoteAppender CreateMockAppender(IErrorHandler errorHandler, params Exception[] sendExceptions)
+  {
+    RemoteAppender appender = new()
+    {
+      RemoteAddress = new IPAddress([127, 0, 0, 1]),
+      Layout = new PatternLayout("%message"),
+      ErrorHandler = errorHandler
+    };
+    foreach (Exception exception in sendExceptions)
+    {
+      appender.Mock.SendExceptions.Enqueue(exception);
+    }
+
+    appender.ActivateOptions();
+    return appender;
+  }
+
+  private static LoggingEvent CreateEvent(string message)
+    => new(new() { Level = Level.Info, Message = message, LoggerName = "TestLogger" });
+
+  /// <summary>
+  /// A loopback port that was free a moment ago, so nothing listens on it.
+  /// </summary>
+  private static int ReserveLoopbackPort()
+  {
+    using UdpClient probe = new(new IPEndPoint(IPAddress.Loopback, 0));
+    return ((IPEndPoint)probe.Client.LocalEndPoint!).Port;
+  }
+
+  /// <summary>
+  /// Records each message, then throws.
+  /// </summary>
+  private sealed class ThrowingErrorHandler : IErrorHandler
+  {
+    internal List<string> Messages { get; } = [];
+
+    /// <inheritdoc/>
+    public void Error(string message) => Record(message);
+
+    /// <inheritdoc/>
+    public void Error(string message, Exception e) => Record(message);
+
+    /// <inheritdoc/>
+    public void Error(string message, Exception? e, ErrorCode errorCode) => Record(message);
+
+    private void Record(string message)
+    {
+      lock (Messages)
+      {
+        Messages.Add(message);
+      }
+
+      throw new InvalidOperationException("simulated error handler failure");
+    }
   }
 
   private static List<byte[]> ExecuteAppend(string message,

@@ -249,8 +249,8 @@ public class UdpAppender : AppenderSkeleton
   /// <value>A value from 512 to 65507, the maximum UDP payload of an IPv4 packet. Default 65507.</value>
   /// <remarks>
   /// The socket rejects a larger datagram, so a longer event is truncated to fit instead of lost.
-  /// Lower the value to match a receiver that accepts less. IPv6 would carry 20 bytes more, which
-  /// is not worth a second limit.
+  /// Lower the value to the receiver's limit, or to the path MTU minus 28 where a hop has a smaller
+  /// MTU. IPv6 would carry 20 bytes more, which is not worth a second limit.
   /// </remarks>
   /// <exception cref="ArgumentOutOfRangeException">The value specified is outside 512 to 65507.</exception>
   public int MaxDatagramSize
