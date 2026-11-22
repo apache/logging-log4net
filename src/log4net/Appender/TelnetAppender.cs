@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net.Appender.Internal;
 using log4net.Core;
 using log4net.Util;
 
@@ -51,6 +52,9 @@ namespace log4net.Appender;
 /// reach the port may read the application's log, so no authentication is performed and the stream
 /// is not encrypted. Keeping untrusted parties away from the port is the operator's
 /// responsibility, exactly as it is for a log file.
+/// </para>
+/// <para>
+/// A NUL character is written as <c>\0</c>, since a Telnet client drops it.
 /// </para>
 /// </remarks>
 /// <author>Keith Long</author>
@@ -293,7 +297,7 @@ public class TelnetAppender : AppenderSkeleton
     if (_handler is not null && _handler.HasConnections)
     {
       // Queued, not written: a client that stops reading must not hold up the logging thread.
-      _sender?.TryEnqueue(RenderLoggingEvent(loggingEvent), EnqueueTimeoutMillis);
+      _sender?.TryEnqueue(RenderLoggingEvent(loggingEvent).EscapeNulCharacters(), EnqueueTimeoutMillis);
     }
   }
 
@@ -342,8 +346,7 @@ public class TelnetAppender : AppenderSkeleton
         _socket = socket;
         try
         {
-          // Belt and braces. Send escapes what cannot be encoded; this keeps a future gap costing
-          // one character rather than failing the write.
+          // Belt and braces: an unencodable character becomes U+FFFD instead of failing the write.
           _writer = new(new NetworkStream(socket), new UTF8Encoding(false));
         }
         catch (Exception e) when (!e.IsFatal())

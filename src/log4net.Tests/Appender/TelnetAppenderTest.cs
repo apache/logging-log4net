@@ -59,6 +59,26 @@ public sealed class TelnetAppenderTest
   /// </summary>
   [Test]
   public void ContentThatCannotBeEncodedDoesNotDisconnectTheClient()
+    => Assert.That(ReceiveLogged("poison\ud800event"), Does.Contain(@"poison\ud800event"));
+
+  /// <summary>
+  /// A NUL is sent as <c>\0</c>, since a Telnet client drops it.
+  /// </summary>
+  [Test]
+  public void ANulIsSentEscaped()
+  {
+    string received = ReceiveLogged("adm\0in");
+
+    Assert.That(received, Does.Contain(@"adm\0in"));
+    // Ordinal, since Does.Not.Contain finds a NUL that is not there.
+    Assert.That(received.IndexOf("\0", StringComparison.Ordinal), Is.Negative);
+  }
+
+  /// <summary>
+  /// Logs <paramref name="content"/> and then a marker to a connected client, and returns what it received.
+  /// </summary>
+  /// <remarks>The marker only arrives if the client survived the content.</remarks>
+  private static string ReceiveLogged(string content)
   {
     StringBuilder received = new();
     object receivedSyncRoot = new();
@@ -91,10 +111,9 @@ public sealed class TelnetAppenderTest
         WaitFor("welcome message", WelcomeMessage);
 
         ILogger logger = repository.GetLogger("Telnet");
-        logger.Log(typeof(TelnetAppenderTest), Level.Info, "poison\ud800event", null);
-        // The event after it only arrives if the client survived the one before.
+        logger.Log(typeof(TelnetAppenderTest), Level.Info, content, null);
         logger.Log(typeof(TelnetAppenderTest), Level.Info, marker, null);
-        WaitFor("the event after the unencodable one", marker);
+        WaitFor("the marker after the content", marker);
       }
     }
     finally
@@ -102,7 +121,7 @@ public sealed class TelnetAppenderTest
       repository.Shutdown();
     }
 
-    Assert.That(ReceivedText(), Does.Contain(@"poison\ud800event"));
+    return ReceivedText();
 
     void Received(string message)
     {
