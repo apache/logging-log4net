@@ -377,10 +377,10 @@ public class LocalSyslogAppender : AppenderSkeleton
   {
     string[] records = NewLineHandling switch
     {
-      SyslogNewLineHandling.Split => SplitLines(message),
+      SyslogNewLineHandling.Split => Array.ConvertAll(SplitLines(message), line => line.EscapeOtherLineBreaks()),
       SyslogNewLineHandling.Keep => [message],
       // Escape, also for undefined values.
-      _ => [EscapeNewLines(message)]
+      _ => [EscapeNewLines(message).EscapeOtherLineBreaks()]
     };
 
     for (int i = 0; i < records.Length; i++)

@@ -87,6 +87,35 @@ internal static class ContentEscape
     }
 
     /// <summary>
+    /// Replaces the line breaks other than CR and LF with a visible <c>\uXXXX</c> escape: VT, FF, FS,
+    /// GS, RS, NEL, U+2028 and U+2029.
+    /// </summary>
+    /// <returns>The message with every such line break escaped.</returns>
+    /// <remarks>A reader that breaks lines at them would show one record as two.</remarks>
+    internal string EscapeOtherLineBreaks()
+    {
+      if (message.IndexOfAny(_otherLineBreaks) < 0)
+      {
+        return message;
+      }
+
+      StringBuilder builder = new(message.Length + 16);
+      foreach (char c in message)
+      {
+        if (Array.IndexOf(_otherLineBreaks, c) >= 0)
+        {
+          builder.Append(Escape(c));
+        }
+        else
+        {
+          builder.Append(c);
+        }
+      }
+
+      return builder.ToString();
+    }
+
+    /// <summary>
     /// Replaces a CR that is not followed by LF with a visible <c>\r</c> escape; a CRLF stays.
     /// </summary>
     /// <returns>The message with every lone CR escaped.</returns>
@@ -168,6 +197,8 @@ internal static class ContentEscape
     internal string FormatWithEscapedSurrogates(LoggingEvent loggingEvent)
       => layout.Format(loggingEvent).EscapeUnpairedSurrogates();
   }
+
+  private static readonly char[] _otherLineBreaks = ['\v', '\f', '\x1c', '\x1d', '\x1e', '\u0085', '\u2028', '\u2029'];
 
   /// <summary>A CR that is not followed by LF.</summary>
   private static readonly Regex _loneCarriageReturn = new("\r(?!\n)", RegexOptions.Compiled);
