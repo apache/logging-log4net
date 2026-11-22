@@ -239,6 +239,12 @@ public class LocalSyslogAppenderTest
   public void SplittingDropsTheEmptyLines()
     => Assert.That(SplitLines("first\r\nsecond\n\nthird\r"), Is.EqualTo(new[] { "first", "second", "third" }));
 
+  /// <summary>A render that is empty or only line breaks sends no record, on purpose.</summary>
+  [TestCase("")]
+  [TestCase("\r\n\n")]
+  public void SplittingNothingButLineBreaksGivesNoRecord(string message)
+    => Assert.That(SplitLines(message), Is.Empty);
+
   /// <summary>
   /// The record is the printf format string libc parses, so a percent sign in content would make
   /// the callee read an argument that was never passed.

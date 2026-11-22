@@ -29,7 +29,8 @@ Matters most:
   as a format string (`EscapePercent`).
 - `log4net.Appender.Internal.ContentEscape` and `RemoteSyslogAppender.AppendMessage`: the shared
   escapes are `\0` for NUL, `\r` and `\n`, and `\uXXXX` for anything else. A sink that cannot carry a
-  character escapes it visibly; it never drops the character, the rest of the record, or the event.
+  character escapes it visibly; it never drops the character, the rest of the record, or the event,
+  except as noted under severity.
   `AppenderSkeleton.RenderLoggingEvent` escapes lone surrogates for every appender, so a sink needs no
   call of its own for them. NUL stays per sink.
 - Anything where untrusted content reaches pattern converters, format expansion, or the appenders
@@ -72,6 +73,8 @@ reliability defect or hardening, and say so. That is more useful to us than a se
   thread, a stack overflow from recursion driven by content).
 - **Medium**: denial of service from content within normal size limits (unbounded memory, CPU, or a
   hang of the logging call), or an event or part of a record silently lost because of its content.
+  Not a finding: `RemoteSyslogAppender` for an empty render, and `LocalSyslogAppender` in `Split`
+  mode for a render that is empty or only CR and LF, send no record. No text is lost.
 - **Low**: resource leaks, missing escapes with no demonstrated parser impact, defense in depth.
 
 Only claim impact you can demonstrate with the reproducer.

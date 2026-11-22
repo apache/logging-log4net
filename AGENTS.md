@@ -317,7 +317,8 @@ What that leaves for this file is where the answers live in the code:
   for newlines, and `\uXXXX` for anything else, in `ContentEscape` and in
   `RemoteSyslogAppender.AppendMessage`. Put new ones in `ContentEscape` rather than in the
   appender: four appenders have needed the same two so far. Escaping before a length limit, not
-  after, since an escape is longer than what it replaces.
+  after, since an escape is longer than what it replaces. Exceptions to the never-drop rule are
+  noted in `.oss-scanner/threat_model.md`.
 - **Lone surrogates are the exception to escaping per sink.** `AppenderSkeleton.RenderLoggingEvent`
   escapes them for every appender and has no opt-out, so a sink adds no call of its own. Only text
   rendered around it needs one, such as the category of `TraceAppender`. NUL stays per sink.

@@ -377,6 +377,7 @@ public class LocalSyslogAppender : AppenderSkeleton
   {
     string[] records = NewLineHandling switch
     {
+      // Empty lines are dropped on purpose, see .oss-scanner/threat_model.md.
       SyslogNewLineHandling.Split => Array.ConvertAll(SplitLines(message), line => line.EscapeOtherLineBreaks()),
       SyslogNewLineHandling.Keep => [message],
       // Escape, also for undefined values.
