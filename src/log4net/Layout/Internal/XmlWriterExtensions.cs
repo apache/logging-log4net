@@ -80,6 +80,35 @@ internal static partial class XmlWriterExtensions
   {
     if (string.IsNullOrEmpty(value))
       return;
-    writer.WriteAttributeString(localName, Transform.MaskXmlInvalidCharacters(value!, mask));
+    string masked = Transform.MaskXmlInvalidCharacters(value!, mask);
+#if NETSTANDARD2_0_OR_GREATER
+    writer.WriteAttributeString(localName, masked);
+#else
+    writer.WriteAttributeWithTabReferences(localName, masked);
+#endif
   }
+
+#if !NETSTANDARD2_0_OR_GREATER
+  /// <summary>
+  /// Writes the attribute with each tab as a character reference, since <see cref="XmlTextWriter"/>
+  /// writes it literally and a parser reads that back as a space.
+  /// </summary>
+  private static void WriteAttributeWithTabReferences(this XmlWriter writer, string localName, string value)
+  {
+    if (value.IndexOf('\t') < 0)
+    {
+      writer.WriteAttributeString(localName, value);
+      return;
+    }
+    writer.WriteStartAttribute(localName);
+    string[] parts = value.Split('\t');
+    writer.WriteString(parts[0]);
+    for (int i = 1; i < parts.Length; i++)
+    {
+      writer.WriteCharEntity('\t');
+      writer.WriteString(parts[i]);
+    }
+    writer.WriteEndAttribute();
+  }
+#endif
 }

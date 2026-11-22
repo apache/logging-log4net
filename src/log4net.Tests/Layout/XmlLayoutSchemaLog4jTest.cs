@@ -142,5 +142,35 @@ namespace log4net.Tests.Layout
       Assert.That(XmlRecords.RawContent(record, element), Is.EqualTo("a&#xD;&#xA;b"));
       Assert.That(XmlRecords.ElementText(record, element), Is.EqualTo("a\r\nb"));
     }
+
+    /// <summary>
+    /// A tab in a property name, a property value and the identity reads back as a tab.
+    /// </summary>
+    [Test]
+    public void ATabInAnAttributeReadsBackExactly()
+    {
+      StringAppender stringAppender = new() { Layout = new XmlLayoutSchemaLog4J() };
+      ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      BasicConfigurator.Configure(repository, stringAppender);
+      ILog log = LogManager.GetLogger(repository.Name, "TestLogger");
+      LoggingEventData data = new()
+      {
+        LoggerName = "TestLogger",
+        Level = Level.Info,
+        TimeStampUtc = DateTime.UtcNow,
+        Message = "message",
+        Identity = "alice\tadmin",
+        Properties = new()
+      };
+      data.Properties["alice\tadmin"] = "alice\tadmin";
+
+      log.Logger.Log(new(null, repository, data));
+
+      string record = stringAppender.GetString();
+      Assert.That(record, Contains.Substring("name=\"alice&#x9;admin\" value=\"alice&#x9;admin\"").Using(StringComparison.Ordinal));
+      Assert.That(record, Contains.Substring("name=\"log4net:Identity\" value=\"alice&#x9;admin\"").Using(StringComparison.Ordinal));
+      Assert.That(XmlRecords.AttributeValues(record, "name"), Has.Member("alice\tadmin"));
+      Assert.That(XmlRecords.AttributeValues(record, "value"), Has.Exactly(2).EqualTo("alice\tadmin"));
+    }
   }
 }

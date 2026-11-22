@@ -35,10 +35,20 @@ internal static class XmlRecords
   /// <summary>
   /// Parses the records and returns the text of the one element named <paramref name="localName"/>.
   /// </summary>
-  /// <remarks>net462 writes the prefixes undeclared, so a wrapper declares them.</remarks>
   internal static string ElementText(string records, string localName)
-    => XDocument.Parse($"<events xmlns:log4net=\"log4net\" xmlns:log4j=\"log4j\">{records}</events>")
-      .Descendants().Single(element => element.Name.LocalName == localName).Value;
+    => Parse(records).Descendants().Single(element => element.Name.LocalName == localName).Value;
+
+  /// <summary>
+  /// Parses the records and returns the values of every attribute named <paramref name="name"/>.
+  /// </summary>
+  internal static string[] AttributeValues(string records, string name)
+    => [.. Parse(records).Descendants().Attributes(name).Select(attribute => attribute.Value)];
+
+  /// <summary>
+  /// Parses the records inside a wrapper that declares the prefixes, which net462 writes undeclared.
+  /// </summary>
+  private static XDocument Parse(string records)
+    => XDocument.Parse($"<events xmlns:log4net=\"log4net\" xmlns:log4j=\"log4j\">{records}</events>");
 
   /// <summary>
   /// Returns the content of the one element named <paramref name="localName"/> as written.
