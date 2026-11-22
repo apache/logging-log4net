@@ -57,6 +57,7 @@ public sealed class BackgroundSender<T> : IDisposable
   private readonly CancellationTokenSource _shutdown = new();
   private int _droppedItemCount;
   private int _dropReported;
+  private int _reportedDropCount;
   private int _faultReported;
   private volatile bool _isFaulted;
 
@@ -179,6 +180,7 @@ public sealed class BackgroundSender<T> : IDisposable
   /// <para>
   /// Never throws. Once the time is up the send in flight is cancelled and the remaining items
   /// are counted as dropped, so closing an appender cannot hang on an unresponsive sink.
+  /// The number dropped is reported once, and again only when it grew.
   /// </para>
   /// </remarks>
   public void Close(int millisecondsTimeout)
@@ -199,9 +201,9 @@ public sealed class BackgroundSender<T> : IDisposable
     }
 
     int dropped = DroppedItemCount;
-    if (dropped > 0)
+    if (dropped > Interlocked.Exchange(ref _reportedDropCount, dropped))
     {
-      Report($"[{_name}] {dropped} logging event(s) were not sent.", null);
+      Report($"[{_name}] {dropped} logging event(s) in total were not sent.", null);
     }
   }
 
