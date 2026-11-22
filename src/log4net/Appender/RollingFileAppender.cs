@@ -1801,7 +1801,7 @@ public partial class RollingFileAppender : FileAppender
     {
       if (value < 0 && value != Timeout.Infinite)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified for LockTimeoutMillis is negative and is not {nameof(Timeout)}.{nameof(Timeout.Infinite)}.");
       }
       _lockTimeoutMillis = value;

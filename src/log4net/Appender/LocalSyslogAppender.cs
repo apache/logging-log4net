@@ -303,7 +303,7 @@ public class LocalSyslogAppender : AppenderSkeleton
     base.ActivateOptions();
     if (NewLineHandling is not (SyslogNewLineHandling.Escape or SyslogNewLineHandling.Keep or SyslogNewLineHandling.Split))
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(NewLineHandling), NewLineHandling,
+      throw SystemInfo.CreateArgumentOutOfRangeException(NewLineHandling,
         $"The NewLineHandling is not {SyslogNewLineHandling.Escape} or {SyslogNewLineHandling.Keep} or {SyslogNewLineHandling.Split}.");
     }
 
@@ -413,7 +413,7 @@ public class LocalSyslogAppender : AppenderSkeleton
     {
       if (value < MinRecordSize)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified is less than {MinRecordSize}.");
       }
       field = value;

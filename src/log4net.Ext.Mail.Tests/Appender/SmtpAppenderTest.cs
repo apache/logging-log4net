@@ -888,7 +888,8 @@ public class SmtpAppenderTest
   [TestCase(-1)]
   public void SendQueueSizeRejectsValuesThatAreNotPositive(int value)
     => Assert.That(() => CreateAppender().SendQueueSize = value,
-      Throws.TypeOf<ArgumentOutOfRangeException>());
+      Throws.TypeOf<ArgumentOutOfRangeException>()
+        .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("value"));
 
   /// <summary>0 is allowed and never waits, a negative wait is meaningless.</summary>
   [Test]

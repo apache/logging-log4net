@@ -512,23 +512,23 @@ public class PluginCollection : ICollection, IList, IEnumerable, ICloneable
   public virtual void TrimToSize() => Capacity = _count;
 
   /// <exception cref="ArgumentOutOfRangeException">
-  /// <para><paramref name="i"/> is less than zero.</para>
+  /// <para><paramref name="index"/> is less than zero.</para>
   /// <para>-or-</para>
-  /// <para><paramref name="i"/> is equal to or greater than <see cref="Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
-  private void ValidateIndex(int i) => ValidateIndex(i, false);
+  private void ValidateIndex(int index) => ValidateIndex(index, false);
 
   /// <exception cref="ArgumentOutOfRangeException">
-  /// <para><paramref name="i"/> is less than zero.</para>
+  /// <para><paramref name="index"/> is less than zero.</para>
   /// <para>-or-</para>
-  /// <para><paramref name="i"/> is equal to or greater than <see cref="Count"/>.</para>
+  /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
   /// </exception>
-  private void ValidateIndex(int i, bool allowEqualEnd)
+  private void ValidateIndex(int index, bool allowEqualEnd)
   {
     int max = allowEqualEnd ? _count : (_count - 1);
-    if (i < 0 || i > max)
+    if (index < 0 || index > max)
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(i), i, $"Index was out of range. Must be non-negative and less than the size of the collection. [{i}] Specified argument was out of the range of valid values.");
+      throw SystemInfo.CreateArgumentOutOfRangeException(index, $"Index was out of range. Must be non-negative and less than the size of the collection. [{index}] Specified argument was out of the range of valid values.");
     }
   }
 

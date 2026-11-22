@@ -175,7 +175,7 @@ public class UdpAppender : AppenderSkeleton
     {
       if (value is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
       }
       _remotePort = value;
@@ -206,7 +206,7 @@ public class UdpAppender : AppenderSkeleton
     {
       if (value is not 0 and (< IPEndPoint.MinPort or > IPEndPoint.MaxPort))
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
       }
       _localPort = value;
@@ -260,7 +260,7 @@ public class UdpAppender : AppenderSkeleton
     {
       if (value is < MinDatagramSize or > MaxIPv4DatagramSize)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified is less than {MinDatagramSize} or greater than {MaxIPv4DatagramSize}.");
       }
       _maxDatagramSize = value;
@@ -321,12 +321,12 @@ public class UdpAppender : AppenderSkeleton
 
     if (RemotePort is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(RemotePort), RemotePort,
+      throw SystemInfo.CreateArgumentOutOfRangeException(RemotePort,
         $"The RemotePort is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
     }
     if (LocalPort is not 0 and (< IPEndPoint.MinPort or > IPEndPoint.MaxPort))
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(LocalPort), LocalPort,
+      throw SystemInfo.CreateArgumentOutOfRangeException(LocalPort,
         $"The LocalPort is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
     }
     RemoteEndPoint = new(RemoteAddress, RemotePort);

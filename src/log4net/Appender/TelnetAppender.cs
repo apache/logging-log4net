@@ -86,7 +86,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value <= 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendQueueSize is not positive.");
       }
       _sendQueueSize = value;
@@ -112,7 +112,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for EnqueueTimeoutMillis is negative.");
       }
       _enqueueTimeoutMillis = value;
@@ -170,7 +170,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value is < IPEndPoint.MinPort or > IPEndPoint.MaxPort)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified for Port is less than {IPEndPoint.MinPort} or greater than {IPEndPoint.MaxPort}.");
       }
       _listeningPort = value;
@@ -206,7 +206,7 @@ public class TelnetAppender : AppenderSkeleton
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendTimeoutMillis is negative.");
       }
       _sendTimeoutMillis = value;

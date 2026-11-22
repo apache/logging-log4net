@@ -509,7 +509,7 @@ public class RemoteSyslogAppender : UdpAppender
     base.ActivateOptions();
     if (NewLineHandling is not (SyslogNewLineHandling.Escape or SyslogNewLineHandling.Keep or SyslogNewLineHandling.Split))
     {
-      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(NewLineHandling), NewLineHandling,
+      throw SystemInfo.CreateArgumentOutOfRangeException(NewLineHandling,
         $"The NewLineHandling is not {SyslogNewLineHandling.Escape} or {SyslogNewLineHandling.Keep} or {SyslogNewLineHandling.Split}.");
     }
     _levelMapping.ActivateOptions();
@@ -545,7 +545,7 @@ public class RemoteSyslogAppender : UdpAppender
     {
       if (value <= 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendQueueSize is not positive.");
       }
       _sendQueueSize = value;
@@ -566,7 +566,7 @@ public class RemoteSyslogAppender : UdpAppender
     {
       if (value < 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for EnqueueTimeoutMillis is negative.");
       }
       _enqueueTimeoutMillis = value;

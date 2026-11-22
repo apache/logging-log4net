@@ -23,6 +23,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.IO;
 using System.Collections;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace log4net.Util;
@@ -601,17 +602,18 @@ public static class SystemInfo
   }
 
   /// <summary>
-  /// Creates an <see cref="ArgumentOutOfRangeException"/>
+  /// Creates an <see cref="ArgumentOutOfRangeException"/> named after the expression passed as <paramref name="actualValue"/>.
   /// </summary>
-  /// <param name="parameterName">The name of the parameter that caused the exception</param>
-  /// <param name="actualValue">The value of the argument that causes this exception</param>
-  /// <param name="message">The message that describes the error</param>
-  /// <returns>
-  /// A new instance of the <see cref="ArgumentOutOfRangeException"/> class 
-  /// with the specified error message, parameter name, and value
-  /// of the argument.
-  /// </returns>
-  public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(string parameterName, object actualValue, string message) 
+  /// <param name="actualValue">The value of the argument that causes this exception.</param>
+  /// <param name="message">The message that describes the error.</param>
+  /// <param name="parameterName">Filled in by the compiler; do not pass it.</param>
+  /// <returns>The exception, for the caller to throw.</returns>
+  /// <remarks>
+  /// Public only because <c>log4net.Ext.Mail</c> is not strong named and so cannot be a friend assembly.
+  /// </remarks>
+  [EditorBrowsable(EditorBrowsableState.Never)]
+  public static ArgumentOutOfRangeException CreateArgumentOutOfRangeException(object actualValue, string message,
+    [CallerArgumentExpression(nameof(actualValue))] string parameterName = "")
     => new(parameterName, actualValue, message);
 
   /// <summary>

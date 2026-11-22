@@ -17,6 +17,8 @@
 //
 #endregion
 
+using System;
+
 using log4net.Core;
 
 using NUnit.Framework;
@@ -64,4 +66,13 @@ public sealed class LevelMapTest
     Assert.That(map["level1234"], Is.Null);
     Assert.That(map["LEVEL5678"], Is.Null);
   }
+
+  /// <summary>
+  /// The name is a string, so a call that still passes it twice would compile with the arguments shifted.
+  /// </summary>
+  [Test]
+  public void AnEmptyLevelNameNamesItsParameter()
+    => Assert.That(() => new LevelMap().Add(string.Empty, 1, null),
+      Throws.TypeOf<ArgumentOutOfRangeException>()
+        .With.Property(nameof(ArgumentOutOfRangeException.ParamName)).EqualTo("name"));
 }

@@ -314,7 +314,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     {
       if (value < MailBodies.MinBodySize)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           $"The value specified is less than {MailBodies.MinBodySize}.");
       }
       field = value;
@@ -371,7 +371,7 @@ public class SmtpAppender : BufferingAppenderSkeleton
     {
       if (value <= 0)
       {
-        throw SystemInfo.CreateArgumentOutOfRangeException(nameof(value), value,
+        throw SystemInfo.CreateArgumentOutOfRangeException(value,
           "The value specified for SendTimeoutMillis is not positive.");
       }
       _sendTimeoutMillis = value;
