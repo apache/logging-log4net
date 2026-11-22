@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="375" link="https://github.com/apache/logging-log4net/issues/375"/>
+  <issue id="376" link="https://github.com/apache/logging-log4net/pull/376"/>
+  <description format="asciidoc">`XmlLayoutSchemaLog4J` formats from a copy of the event's properties and
+  no longer adds `log4jmachinename`, `log4japp`, `log4net:Identity` and `log4net:UserName` to the
+  event. Adding them could break a concurrent flush of a buffering appender. Visible change: appenders
+  that run after it on the same event no longer see these four keys (ANT-2026-L9XQVDSD, fixed by
+  @FreeAndNil)</description>
+</entry>

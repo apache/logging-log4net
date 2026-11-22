@@ -18,6 +18,7 @@
 #endregion
 
 using System;
+using System.IO;
 using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
@@ -172,5 +173,87 @@ namespace log4net.Tests.Layout
       Assert.That(XmlRecords.AttributeValues(record, "name"), Has.Member("alice\tadmin"));
       Assert.That(XmlRecords.AttributeValues(record, "value"), Has.Exactly(2).EqualTo("alice\tadmin"));
     }
+
+    /// <summary>
+    /// Formatting leaves the event's properties as they were: the event is shared with other appenders.
+    /// </summary>
+    [TestCase(true, TestName = "FixedEvent")]
+    [TestCase(false, TestName = "UnfixedEvent")]
+    public void FormattingLeavesTheEventsPropertiesAlone(bool isFixed)
+    {
+      ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      LoggingEvent loggingEvent = isFixed
+        ? new(null, repository, CreateData())
+        : new(typeof(XmlLayoutSchemaLog4JTest), repository, "TestLogger", Level.Info, "message", null);
+      string[] keys = loggingEvent.GetProperties().GetKeys();
+      using StringWriter writer = new();
+
+      new XmlLayoutSchemaLog4J().Format(writer, loggingEvent);
+
+      Assert.That(loggingEvent.GetProperties().GetKeys(), Is.EquivalentTo(keys));
+      Assert.That(loggingEvent.LookupProperty("log4japp"), Is.Null);
+    }
+
+    /// <summary>
+    /// The translated properties still reach the output.
+    /// </summary>
+    [Test]
+    public void TheTranslatedPropertiesAreWritten()
+    {
+      ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      using StringWriter writer = new();
+
+      new XmlLayoutSchemaLog4J().Format(writer, new(null, repository, CreateData()));
+
+      string record = writer.ToString();
+      Assert.That(record, Does.Contain("name=\"log4jmachinename\" value=\"host\""));
+      Assert.That(record, Does.Contain("name=\"log4japp\" value=\"domain\""));
+      Assert.That(record, Does.Contain("name=\"log4net:Identity\" value=\"alice\""));
+      Assert.That(record, Does.Contain("name=\"log4net:UserName\" value=\"bob\""));
+    }
+
+    /// <summary>
+    /// A property the event already has wins over the translated value.
+    /// </summary>
+    [Test]
+    public void AnExistingPropertyWins()
+    {
+      ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      LoggingEventData data = CreateData();
+      data.Properties!["log4japp"] = "mine";
+      using StringWriter writer = new();
+
+      new XmlLayoutSchemaLog4J().Format(writer, new(null, repository, data));
+
+      Assert.That(XmlRecords.AttributeValues(writer.ToString(), "value"), Has.Member("mine").And.No.Member("domain"));
+    }
+
+    /// <summary>
+    /// An empty identity is not translated.
+    /// </summary>
+    [Test]
+    public void AnEmptyValueIsNotTranslated()
+    {
+      ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+      LoggingEventData data = CreateData();
+      data.Identity = "";
+      using StringWriter writer = new();
+
+      new XmlLayoutSchemaLog4J().Format(writer, new(null, repository, data));
+
+      Assert.That(XmlRecords.AttributeValues(writer.ToString(), "name"), Has.No.Member(LoggingEvent.IdentityProperty));
+    }
+
+    private static LoggingEventData CreateData() => new()
+    {
+      LoggerName = "TestLogger",
+      Level = Level.Info,
+      TimeStampUtc = DateTime.UtcNow,
+      Message = "message",
+      Domain = "domain",
+      Identity = "alice",
+      UserName = "bob",
+      Properties = new() { [LoggingEvent.HostNameProperty] = "host" }
+    };
   }
 }

@@ -126,34 +126,12 @@ method="run" file="Generator.java" line="94"/>
   /// </remarks>
   protected override void FormatXml(XmlWriter writer, LoggingEvent loggingEvent)
   {
-    // Translate logging events for log4j
-
-    // Translate hostname property
-    if (loggingEvent.EnsureNotNull().LookupProperty(LoggingEvent.HostNameProperty) is not null
-        && loggingEvent.LookupProperty("log4jmachinename") is null)
-    {
-      loggingEvent.GetProperties()["log4jmachinename"] = loggingEvent.LookupProperty(LoggingEvent.HostNameProperty);
-    }
-
-    // translate appdomain name
-    if (loggingEvent.LookupProperty("log4japp") is null && loggingEvent.Domain?.Length > 0)
-    {
-      loggingEvent.GetProperties()["log4japp"] = loggingEvent.Domain;
-    }
-
-    // translate identity name
-    if (loggingEvent.Identity?.Length > 0 &&
-      loggingEvent.LookupProperty(LoggingEvent.IdentityProperty) is null)
-    {
-      loggingEvent.GetProperties()[LoggingEvent.IdentityProperty] = loggingEvent.Identity;
-    }
-
-    // translate user name
-    if (loggingEvent.UserName.Length > 0 &&
-        loggingEvent.LookupProperty(LoggingEvent.UserNameProperty) is null)
-    {
-      loggingEvent.GetProperties()[LoggingEvent.UserNameProperty] = loggingEvent.UserName;
-    }
+    // Translate logging events for log4j, on a copy: the event is shared with other appenders.
+    PropertiesDictionary properties = new(loggingEvent.EnsureNotNull().GetProperties());
+    SetIfMissing("log4jmachinename", properties[LoggingEvent.HostNameProperty]);
+    SetIfMissing("log4japp", loggingEvent.Domain);
+    SetIfMissing(LoggingEvent.IdentityProperty, loggingEvent.Identity);
+    SetIfMissing(LoggingEvent.UserNameProperty, loggingEvent.UserName);
 
     // Write the start element
     writer.EnsureNotNull().WriteStartElement("log4j:event", "log4j", "event", "log4net");
@@ -194,7 +172,6 @@ method="run" file="Generator.java" line="94"/>
     }
 
     // Append the properties text
-    PropertiesDictionary properties = loggingEvent.GetProperties();
     if (properties.Count > 0)
     {
       writer.WriteStartElement("log4j:properties", "log4j", "properties", "log4net");
@@ -238,5 +215,13 @@ method="run" file="Generator.java" line="94"/>
     }
 
     writer.WriteEndElement();
+
+    void SetIfMissing(string key, object? value)
+    {
+      if (value is not (null or "") && properties[key] is null)
+      {
+        properties[key] = value;
+      }
+    }
   }
 }
