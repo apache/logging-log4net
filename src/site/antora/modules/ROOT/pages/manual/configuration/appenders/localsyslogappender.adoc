@@ -38,7 +38,8 @@ You can also specify:
 
 * Facility (default: user)
 * Identity (default: application name)
-* NewLineHandling (default: Escape), one of `Escape`, `Split` or `Keep`
+* NewLineHandling (default: Escape), one of `Escape`, `Split` or `Keep`; any other value fails the
+appender's activation with an error
 * MaxRecordSize (default: 204800), in UTF-8 bytes, at least 512
 
 A newline in logged content ends the record for a syslog daemon that writes the message through to

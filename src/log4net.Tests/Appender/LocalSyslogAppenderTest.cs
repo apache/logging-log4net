@@ -140,6 +140,57 @@ public class LocalSyslogAppenderTest
     => Assert.That(new LocalSyslogAppender().NewLineHandling,
       Is.EqualTo(SyslogNewLineHandling.Escape));
 
+  /// <summary>
+  /// <c>newLineHandling</c> binds through <see cref="Enum.Parse(Type, string)"/>, which accepts any number, so an
+  /// undefined value must not turn the escaping off unnoticed.
+  /// </summary>
+  [TestCase(3)]
+  [TestCase(5)]
+  [TestCase(-1)]
+  public void AnUndefinedNewLineHandlingIsRejected(int value)
+  {
+    LocalSyslogAppender appender = new() { NewLineHandling = (SyslogNewLineHandling)value };
+
+    Assert.That(appender.ActivateOptions, Throws.TypeOf<ArgumentOutOfRangeException>());
+  }
+
+  /// <summary>Each defined value passes the check.</summary>
+  [TestCase(SyslogNewLineHandling.Keep)]
+  [TestCase(SyslogNewLineHandling.Split)]
+  [TestCase(SyslogNewLineHandling.Escape)]
+  [Platform("Linux")]
+  [NonParallelizable]
+  public void EveryDefinedNewLineHandlingIsAccepted(SyslogNewLineHandling value)
+  {
+    LocalSyslogAppender appender = new()
+    {
+      NewLineHandling = value,
+      Identity = "log4net-test",
+      Layout = new PatternLayout("%message")
+    };
+
+    Assert.That(appender.ActivateOptions, Throws.Nothing);
+    appender.Close();
+  }
+
+  /// <summary>An undefined value set after activation escapes, as the default does.</summary>
+  [Test]
+  public void AnUndefinedNewLineHandlingEscapes()
+  {
+    LocalSyslogAppender appender = new() { NewLineHandling = (SyslogNewLineHandling)5 };
+
+    Assert.That(GetRecords(appender, "a\nb"), Is.EqualTo(new[] { "a\\nb" }));
+  }
+
+  /// <summary><see cref="SyslogNewLineHandling.Keep"/> passes the newlines through.</summary>
+  [Test]
+  public void KeepLeavesTheNewLines()
+  {
+    LocalSyslogAppender appender = new() { NewLineHandling = SyslogNewLineHandling.Keep };
+
+    Assert.That(GetRecords(appender, "a\nb"), Is.EqualTo(new[] { "a\nb" }));
+  }
+
   /// <summary>One record per line, and a blank line is no record at all.</summary>
   [Test]
   public void SplittingDropsTheEmptyLines()

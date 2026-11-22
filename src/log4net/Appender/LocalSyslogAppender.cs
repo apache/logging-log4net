@@ -301,6 +301,11 @@ public class LocalSyslogAppender : AppenderSkeleton
   public override void ActivateOptions()
   {
     base.ActivateOptions();
+    if (NewLineHandling is not (SyslogNewLineHandling.Escape or SyslogNewLineHandling.Keep or SyslogNewLineHandling.Split))
+    {
+      throw SystemInfo.CreateArgumentOutOfRangeException(nameof(NewLineHandling), NewLineHandling,
+        $"The NewLineHandling is not {SyslogNewLineHandling.Escape} or {SyslogNewLineHandling.Keep} or {SyslogNewLineHandling.Split}.");
+    }
 
     _levelMapping.ActivateOptions();
 
@@ -373,8 +378,9 @@ public class LocalSyslogAppender : AppenderSkeleton
     string[] records = NewLineHandling switch
     {
       SyslogNewLineHandling.Split => SplitLines(message),
-      SyslogNewLineHandling.Escape => [EscapeNewLines(message)],
-      _ => [message]
+      SyslogNewLineHandling.Keep => [message],
+      // Escape, also for undefined values.
+      _ => [EscapeNewLines(message)]
     };
 
     for (int i = 0; i < records.Length; i++)
