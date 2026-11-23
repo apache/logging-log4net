@@ -462,30 +462,22 @@ public class RemoteSyslogAppender : UdpAppender
       {
         builder.Append(c);
       }
-      // If character is newline
-      else if (c is '\r' or '\n')
+      else if (HasBreakAt(characterIndex))
       {
-        if (NewLineHandling == SyslogNewLineHandling.Escape)
+        if (NewLineHandling == SyslogNewLineHandling.Split)
         {
-          // escape
-          builder.Append(c == '\r' ? "\\r" : "\\n");
+          // A break and the one right after it count as one; the next record starts after them.
+          characterIndex += HasBreakAt(characterIndex + 1) ? 2 : 1;
+          return;
         }
-        else if (NewLineHandling == SyslogNewLineHandling.Keep)
+        if (NewLineHandling == SyslogNewLineHandling.Keep)
         {
-          // keep
           builder.Append(c);
         }
-        else if (NewLineHandling == SyslogNewLineHandling.Split)
+        else
         {
-          // break and send the current line
-          // Check the next character to handle \r\n or \n\r
-          if ((message.Length > characterIndex + 1)
-              && ((message[characterIndex + 1] == '\r') || (message[characterIndex + 1] == '\n')))
-          {
-            characterIndex++;
-          }
-          characterIndex++;
-          break;
+          // Escape, also for undefined values.
+          builder.Append(c == '\r' ? "\\r" : "\\n");
         }
       }
       else
@@ -495,6 +487,8 @@ public class RemoteSyslogAppender : UdpAppender
         builder.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
       }
     }
+
+    bool HasBreakAt(int index) => index < message.Length && message[index] is '\r' or '\n';
   }
 
   /// <summary>

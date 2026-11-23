@@ -242,6 +242,26 @@ public sealed class RemoteSyslogAppenderTest
   }
   
   /// <summary>
+  /// <see cref="SyslogNewLineHandling.Split"/> takes an LF CR pair as one break, and a trailing break
+  /// sends no empty record.
+  /// </summary>
+  [TestCase("Test\r", 1, TestName = "TrailingCr")]
+  [TestCase("Test\n\rmessage", 2, TestName = "LfCrPair")]
+  public void SplitTakesAPairAsOneBreak(string message, int records)
+    => Assert.That(ExecuteAppend(message, SyslogNewLineHandling.Split), Has.Count.EqualTo(records));
+
+  /// <summary>
+  /// An undefined value set after activation escapes CR and LF instead of dropping them.
+  /// </summary>
+  [Test]
+  public void AnUndefinedNewLineHandlingSetLaterEscapes()
+  {
+    List<byte[]> sentBytes = ExecuteAppend("Test\r\nmessage", laterNewLineHandling: (SyslogNewLineHandling)5);
+    Assert.That(sentBytes, Has.Count.EqualTo(1));
+    Assert.That(Encoding.ASCII.GetString(sentBytes[0]), Is.EqualTo(@"<14>TestDomain: INFO  - Test\r\nmessage"));
+  }
+
+  /// <summary>
   /// The Identity becomes the TAG of the record. A control character in it would end the record,
   /// so that the rest is read as a second record with its own facility and severity.
   /// </summary>
@@ -481,7 +501,8 @@ public sealed class RemoteSyslogAppenderTest
     SyslogNewLineHandling newLineHandling = default,
     string? identity = null,
     int? maxDatagramSize = null,
-    Encoding? encoding = null)
+    Encoding? encoding = null,
+    SyslogNewLineHandling? laterNewLineHandling = null)
   {
     System.Net.IPAddress ipAddress = new([127, 0, 0, 1]);
     RemoteAppender appender = new()
@@ -500,6 +521,10 @@ public sealed class RemoteSyslogAppenderTest
       appender.Encoding = encoding;
     }
     appender.ActivateOptions();
+    if (laterNewLineHandling is SyslogNewLineHandling later)
+    {
+      appender.NewLineHandling = later;
+    }
     LoggingEvent loggingEvent = new(new()
     {
       Level = Level.Info,

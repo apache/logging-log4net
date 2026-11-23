@@ -1161,7 +1161,7 @@ public partial class RollingFileAppender : FileAppender
     }
 
     // initialize the mutex that is used to lock rolling
-    _mutexForRolling = new Mutex(false, MutexName(_baseFileName, "_rolling"));
+    _mutexForRolling = TryCreateMutex(MutexName(_baseFileName, "_rolling"), ConcurrentRolls);
 
     if (_rollDate && File is not null && _scheduledFilename is null)
     {
@@ -1774,6 +1774,9 @@ public partial class RollingFileAppender : FileAppender
   /// A mutex that is used to lock rolling of files.
   /// </summary>
   private Mutex? _mutexForRolling;
+
+  /// <summary>What rolling risks without its named mutex, for the warning.</summary>
+  private const string ConcurrentRolls = "other processes may roll the same files at the same time";
 
   private int _lockTimeoutMillis = 10_000;
 
