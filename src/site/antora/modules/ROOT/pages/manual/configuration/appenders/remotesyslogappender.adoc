@@ -106,7 +106,7 @@ logger.Error("A\nB\r\nC");
 Output (one syslog entry):
 
 [source,log]
-... ERROR ... - A\nB\rC
+... ERROR ... - A\nB\r\nC
 
 === Example: Split
 

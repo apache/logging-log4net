@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="fixed">
+  <issue id="377" link="https://github.com/apache/logging-log4net/issues/377"/>
+  <issue id="380" link="https://github.com/apache/logging-log4net/pull/380"/>
+  <description format="asciidoc">`RemoteSyslogAppender` escapes CR and LF for a `NewLineHandling` other
+  than `Keep` and `Split`, also for an undefined value set after activation, which dropped them
+  (fixed by @FreeAndNil)</description>
+</entry>
