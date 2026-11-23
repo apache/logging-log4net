@@ -78,6 +78,7 @@ Outside Windows `MinimalLock` takes the same mutex around each write, as a share
 second writer out there; readers are not held up, and its wait is fixed at 10000 milliseconds.
 Outside Windows only the processes of one user account on one host are guaranteed to share that
 mutex, which needs a writable home directory.
+If the home directory is missing or read-only, the appender writes without the mutex and warns once.
 The wait for it happens while the appender lock is held, so a lock nobody releases would suspend
 every thread logging through the appender.
 

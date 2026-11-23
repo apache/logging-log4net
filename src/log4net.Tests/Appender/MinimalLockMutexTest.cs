@@ -128,7 +128,7 @@ public sealed class MinimalLockMutexTest
     {
       using LogLog.LogReceivedAdapter _ = new(messages);
       // A name the runtime refuses with the same IOException.
-      mutex = typeof(FileAppender.MinimalLock).Invoke<Mutex?>("TryCreateMutex", ["Global\\no/such"]);
+      mutex = typeof(FileAppender).Invoke<Mutex?>("TryCreateMutex", ["Global\\no/such", "nothing"]);
     });
 
     Assert.That(mutex, Is.Null);

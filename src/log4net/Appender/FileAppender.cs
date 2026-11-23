@@ -590,7 +590,7 @@ public class FileAppender : TextWriterAppender
     {
       if (_mutex is null && !SystemInfo.IsWindows && CurrentAppender?.File is string file)
       {
-        _mutex = TryCreateMutex(MutexName(file, string.Empty));
+        _mutex = TryCreateMutex(MutexName(file, string.Empty), ConcurrentWrites);
       }
     }
 
@@ -601,28 +601,6 @@ public class FileAppender : TextWriterAppender
     {
       _mutex?.Dispose();
       _mutex = null;
-    }
-
-    /// <summary>
-    /// Creates the named mutex, or reports once and returns <see langword="null"/> where the runtime
-    /// cannot, as without a writable home directory; logging then goes on as without the mutex.
-    /// </summary>
-    internal static Mutex? TryCreateMutex(string name)
-    {
-      try
-      {
-        return new(false, name);
-      }
-      // The constructor's documented exceptions, and the one of runtimes without named mutexes.
-      catch (Exception e) when (e is IOException
-                                  or UnauthorizedAccessException
-                                  or WaitHandleCannotBeOpenedException
-                                  or PlatformNotSupportedException)
-      {
-        LogLog.Warn(typeof(MinimalLock),
-          $"No named mutex {name}, so other processes writing the file are not kept out. {e.Message}");
-        return null;
-      }
     }
 
     private bool TryEnterMutex()
@@ -840,7 +818,9 @@ public class FileAppender : TextWriterAppender
         {
           if (CurrentAppender.File is not null)
           {
-            _mutex = new Mutex(false, MutexName(CurrentAppender.File, string.Empty));
+            _mutex = TryCreateMutex(MutexName(CurrentAppender.File, string.Empty), ConcurrentWrites);
+            // Unnamed if the named one fails: this process still serializes, the warning says the rest.
+            _mutex ??= new Mutex(false);
           }
           else
           {
@@ -1607,6 +1587,35 @@ public class FileAppender : TextWriterAppender
 
   /// <summary>The longest mutex name Unix accepts, in UTF-8 bytes. Windows has no limit. Measured.</summary>
   private const int MaxMutexNameBytes = 255;
+
+  /// <summary>What the lock models risk without their named mutex, for the warning.</summary>
+  internal const string ConcurrentWrites = "other processes may write the file at the same time";
+
+  /// <summary>Creates a named mutex; a test replaces it with one that fails.</summary>
+  private static Func<string, Mutex> _mutexFactory = name => new(false, name);
+
+  /// <summary>
+  /// Creates the named mutex, or reports once and returns <see langword="null"/> where the runtime
+  /// cannot, as without a writable home directory.
+  /// </summary>
+  /// <param name="name">The name of the mutex.</param>
+  /// <param name="consequence">What is lost without it, for the warning.</param>
+  internal static Mutex? TryCreateMutex(string name, string consequence)
+  {
+    try
+    {
+      return _mutexFactory(name);
+    }
+    // The constructor's documented exceptions, and the one of runtimes without named mutexes.
+    catch (Exception e) when (e is IOException
+                                or UnauthorizedAccessException
+                                or WaitHandleCannotBeOpenedException
+                                or PlatformNotSupportedException)
+    {
+      LogLog.Warn(_declaringType, $"No named mutex {name}, so {consequence}. {e.Message}");
+      return null;
+    }
+  }
 
   /// <summary>
   /// The name of the log file.
