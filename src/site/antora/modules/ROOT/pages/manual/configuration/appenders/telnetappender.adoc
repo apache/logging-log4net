@@ -25,6 +25,8 @@ Unlike every other appender, it does not write to a destination you configure: i
 connections from clients that reach it.
 It is intended for diagnostic use on trusted networks; see <<telnetappender-trust>>.
 
+A NUL character shows as `\0`, since a telnet client drops it.
+
 At most 20 clients may be connected at the same time; further connection attempts are answered
 with a message and closed.
 

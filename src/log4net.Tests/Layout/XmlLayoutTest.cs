@@ -503,6 +503,44 @@ public sealed class XmlLayoutTest
     Assert.That(XmlRecords.ElementText(record, "exception"), Is.EqualTo(evt.ExceptionString));
   }
 
+  /// <summary>
+  /// A tab in an attribute is a character reference, since a parser reads a literal one back as a space.
+  /// </summary>
+  [TestCase("alice\tadmin", "alice&#x9;admin", TestName = "TabInTheMiddle")]
+  [TestCase("\ta\t\tb\t", "&#x9;a&#x9;&#x9;b&#x9;", TestName = "LeadingDoubledAndTrailingTabs")]
+  public void ATabInAPropertyReadsBackExactly(string text, string expected)
+  {
+    LoggingEventData evt = CreateBaseEvent();
+    evt.Properties![text] = text;
+    StringAppender stringAppender = new() { Layout = new XmlLayout() };
+    ILoggerRepository repository = LogManager.CreateRepository(Guid.NewGuid().ToString());
+    BasicConfigurator.Configure(repository, stringAppender);
+
+    LogManager.GetLogger(repository.Name, "TestLogger").Logger.Log(new LoggingEvent(evt));
+
+    string record = stringAppender.GetString();
+    Assert.That(record, Is.EqualTo(CreateEventNode(expected, expected)));
+    Assert.That(XmlRecords.AttributeValues(record, "name"), Is.EqualTo(new[] { text }));
+    Assert.That(XmlRecords.AttributeValues(record, "value"), Is.EqualTo(new[] { text }));
+  }
+
+  /// <summary>
+  /// A tab in the identity reads back as a tab.
+  /// </summary>
+  [Test]
+  public void ATabInTheIdentityReadsBackExactly()
+  {
+    LoggingEventData evt = CreateBaseEvent();
+    evt.Identity = "alice\tadmin";
+    using StringWriter writer = new();
+
+    new XmlLayout().Format(writer, new LoggingEvent(evt));
+
+    string record = writer.ToString();
+    Assert.That(record, Contains.Substring(" identity=\"alice&#x9;admin\" ").Using(StringComparison.Ordinal));
+    Assert.That(XmlRecords.AttributeValues(record, "identity"), Is.EqualTo(new[] { "alice\tadmin" }));
+  }
+
   private string FormatMessage(string message)
   {
     LoggingEventData evt = CreateBaseEvent();

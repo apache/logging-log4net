@@ -355,6 +355,7 @@ public class RemoteSyslogAppender : UdpAppender
 
       StringBuilder builder = new();
 
+      // An empty render sends no record on purpose, see .oss-scanner/threat_model.md.
       while (i < message.Length)
       {
         // Clear StringBuilder
