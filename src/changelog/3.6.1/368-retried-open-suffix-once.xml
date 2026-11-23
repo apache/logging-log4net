@@ -7,5 +7,5 @@
   <issue id="369" link="https://github.com/apache/logging-log4net/pull/369"/>
   <description format="asciidoc">`RollingFileAppender` with `StaticLogFileName=false` retries a failed
   open under the right file name; each retry used to add the roll suffix again and leave one more empty
-  file behind (fixed by @FreeAndNil)</description>
+  file behind (ANT-2026-VPDB2R3O, fixed by @FreeAndNil)</description>
 </entry>
